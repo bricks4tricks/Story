@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logic and Stories</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Pacifico&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Nunito', sans-serif; }
+        .font-pacifico { font-family: 'Pacifico', cursive; }
+        .gradient-text { background: linear-gradient(to right, #fde047, #fb923c); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .solution-hidden { display: none; }
+        /* Interactive element specific styles (example) */
+        .interactive-element-container { /* Added for consistent styling */
+            background-color: #1a2233; /* slate-900 darker */
+            border: 1px dashed #475569; /* slate-600 */
+            padding: 1rem;
+            border-radius: 0.5rem;
+            color: #e2e8f0;
+            text-align: center;
+            margin-top: 1rem;
+        }
+        .fraction-display {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #fde047; /* yellow-400 */
+        }
+        .equation-display {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #a78bfa; /* violet-400 */
+        }
+        .shape-canvas {
+            background-color: #2d3748; /* slate-700 */
+            border-radius: 8px;
+            margin: 1rem auto;
+            display: block; /* Center canvas */
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-gray-200 flex flex-col min-h-screen">
+
+    <script>
+        // Basic authentication check
+        if (!localStorage.getItem('userId')) { window.location.href = 'index.html'; }
+    </script>
+
+    <header class="bg-slate-800 border-b border-slate-700">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="index.html" class="text-3xl font-pacifico gradient-text">Logic and Stories</a>
+            <div class="flex items-center space-x-4">
+                <button id="flag-story-btn" class="text-gray-400 hover:text-red-400 text-sm flex items-center space-x-1 py-2 px-3 rounded-full hover:bg-slate-700 transition-colors" title="Flag this story for review">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9m0 3.5V12"></path></svg>
+                    <span>Flag Story</span>
+                </button>
+                <a href="dashboard.html" class="bg-gray-600 text-white font-bold py-2 px-5 rounded-full hover:bg-gray-500">Exit to Dashboard</a>
+            </div>
+        </nav>
+    </header>
+
+    <main id="story-container" class="container mx-auto px-6 py-12 flex-grow flex flex-col justify-center items-center">
+        <!-- Story content is rendered here by JavaScript -->
+        <div id="loader" class="text-center">
+            <h2 class="text-2xl font-bold">Loading your adventure...</h2>
+        </div>
+        <div id="story-content" class="w-full max-w-3xl hidden">
+            <h2 id="section-title" class="text-3xl font-bold text-center mb-6 text-yellow-400"></h2>
+            <div id="section-body" class="bg-slate-800 p-8 rounded-2xl border border-slate-700">
+                <!-- Paragraphs or interactive elements appear here -->
+            </div>
+            <!-- No separate solution area for questions anymore as questions are now part of interactive stories -->
+            <div id="navigation-area" class="mt-8 text-center space-x-4">
+                <button id="prev-btn" class="bg-gray-600 text-white font-bold py-3 px-12 rounded-full text-lg" disabled>Previous</button>
+                <button id="next-btn" class="bg-yellow-400 text-slate-900 font-bold py-3 px-12 rounded-full text-lg">Next</button>
+            </div>
+        </div>
+        <div id="error-display" class="text-center text-red-400 hidden"></div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const userId = localStorage.getItem('userId');
+            const urlParams = new URLSearchParams(window.location.search);
+            const topicId = urlParams.get('topicId'); // This is the ID for the story itself
+
+            if (!topicId) {
+                document.getElementById('loader').innerHTML = `<h2 class="text-2xl font-bold text-red-500">Error: No Topic ID provided.</h2><a href="dashboard.html" class="text-yellow-400 hover:underline">Return to Dashboard</a>`;
+                return;
+            }
+
+            // --- DOM Elements ---
+            const loader = document.getElementById('loader');
+            const storyContent = document.getElementById('story-content');
+            const errorDisplay = document.getElementById('error-display');
+            const sectionTitle = document.getElementById('section-title');
+            const sectionBody = document.getElementById('section-body');
+            const prevBtn = document.getElementById('prev-btn'); // NEW
+            const nextBtn = document.getElementById('next-btn');
+            const flagStoryBtn = document.getElementById('flag-story-btn');
+
+            let storySectionsData = [];
+            let currentSectionIndex = 0;
+
+            // Simple function to draw shapes on a canvas (for ShapeManipulator)
+            function drawShape(canvas, shape, size, color = '#fde047') {
+                const ctx = canvas.getContext('2d');
+                ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear previous drawing
+                ctx.fillStyle = color;
+                const centerX = canvas.width / 2;
+                const centerY = canvas.height / 2;
+
+                switch (shape) {
+                    case 'square':
+                        ctx.fillRect(centerX - size / 2, centerY - size / 2, size, size);
+                        break;
+                    case 'circle':
+                        ctx.beginPath();
+                        ctx.arc(centerX, centerY, size / 2, 0, Math.PI * 2);
+                        ctx.fill();
+                        break;
+                    case 'triangle':
+                        ctx.beginPath();
+                        ctx.moveTo(centerX, centerY - size / 2);
+                        ctx.lineTo(centerX - size / 2, centerY + size / 2);
+                        ctx.lineTo(centerX + size / 2, centerY + size / 2);
+                        ctx.closePath();
+                        ctx.fill();
+                        break;
+                    default:
+                        // No drawing for unknown shapes
+                        break;
+                }
+            }
+
+            // Function to render interactive elements
+            function renderInteractiveElement(elementBody, elementType, config) {
+                elementBody.innerHTML = ''; // Clear previous content
+
+                // Assign a base class to allow specific styling for all interactive elements
+                elementBody.classList.remove('bg-slate-800', 'p-8', 'rounded-2xl', 'border', 'border-slate-700'); // Remove default sectionBody styling
+                elementBody.classList.add('interactive-element-container', 'p-8', 'rounded-2xl', 'border', 'border-slate-700', 'bg-slate-800'); // Add consistent interactive container styling
+
+                switch (elementType) {
+                    case 'FractionBuilder':
+                        elementBody.className += ' fraction-builder-interactive'; // Apply specific styles
+                        elementBody.innerHTML = `
+                            <p class="text-xl font-semibold mb-2">Build a Fraction:</p>
+                            <div class="fraction-display">${config.whole !== 0 ? config.whole + ' ' : ''}${config.numerator}/${config.denominator}</div>
+                            <p class="text-sm text-gray-400 mt-2">Interact with this fraction builder! (Frontend interaction not yet implemented for demo).</p>
+                        `;
+                        break;
+                    case 'EquationBalancer':
+                        elementBody.className += ' equation-balancer-interactive'; // Apply specific styles
+                        elementBody.innerHTML = `
+                            <p class="text-xl font-semibold mb-2">Balance the Equation:</p>
+                            <div class="equation-display">${config.equation}</div>
+                            <p class="text-sm text-gray-400 mt-2">Use the balance scale to solve for X! (Frontend interaction not yet implemented for demo).</p>
+                        `;
+                        break;
+                    case 'ShapeManipulator':
+                        elementBody.className += ' shape-manipulator-interactive'; // Apply specific styles
+                        elementBody.innerHTML = `
+                            <p class="text-xl font-semibold mb-2">Manipulate the Shape:</p>
+                            <canvas class="shape-canvas" width="200" height="200"></canvas>
+                            <p class="text-sm text-gray-400 mt-2">Change its size or rotation! (Frontend interaction not yet implemented for demo).</p>
+                        `;
+                        const canvas = elementBody.querySelector('.shape-canvas');
+                        if (canvas) {
+                            // Initial draw
+                            drawShape(canvas, config.shape, config.size);
+                        }
+                        break;
+                    default:
+                        elementBody.innerHTML = `<p class="text-red-400">Unknown interactive element type: ${elementType}</p>`;
+                        break;
+                }
+            }
+
+            async function updateProgress(status) {
+                // This function is still important for students
+                if (localStorage.getItem('userType') === 'Student') {
+                    try {
+                        await fetch('http://127.0.0.1:5000/api/progress/update', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ userId, topicId, status })
+                        });
+                    } catch (e) { console.error("Failed to update progress", e); }
+                }
+            }
+
+            async function fetchStory() {
+                try {
+                    const response = await fetch(`http://127.0.0.1:5000/api/story/${topicId}`);
+                    if (!response.ok) {
+                        const err = await response.json();
+                        throw new Error(err.message || 'Could not fetch story.');
+                    }
+                    const storyPayload = await response.json();
+                    storySectionsData = storyPayload.sections;
+
+                    if (storySectionsData.length === 0) {
+                        loader.classList.add('hidden');
+                        errorDisplay.classList.remove('hidden');
+                        errorDisplay.innerHTML = `<h2>No story content available for this topic.</h2><a href="dashboard.html" class="text-yellow-400 hover:underline">Return to Dashboard</a>`;
+                        return;
+                    }
+
+                    loader.classList.add('hidden');
+                    storyContent.classList.remove('hidden');
+                    renderSection(currentSectionIndex);
+
+                    // Only update progress for students when they start a story
+                    if (localStorage.getItem('userType') === 'Student') {
+                        updateProgress('inProgress');
+                    }
+                } catch (error) {
+                    loader.classList.add('hidden');
+                    errorDisplay.classList.remove('hidden');
+                    errorDisplay.innerHTML = `<h2>Error: ${error.message}</h2><a href="dashboard.html" class="text-yellow-400 hover:underline">Return to Dashboard</a>`;
+                }
+            }
+
+            function renderSection(index) {
+                nextBtn.disabled = false;
+                nextBtn.textContent = 'Next';
+                // Reset sectionBody class for paragraph content, or let interactive elements override
+                sectionBody.className = 'bg-slate-800 p-8 rounded-2xl border border-slate-700';
+
+                const section = storySectionsData[index];
+                sectionTitle.textContent = section.sectionName;
+
+                if (section.contentType === 'Paragraph') {
+                    sectionBody.innerHTML = `<p class="text-lg leading-relaxed">${section.content}</p>`;
+                } else if (section.contentType === 'Interactive') {
+                    const interactiveElement = section.content;
+                    renderInteractiveElement(sectionBody, interactiveElement.elementType, interactiveElement.configuration);
+                } else {
+                    // Fallback for unexpected content types
+                    sectionBody.innerHTML = `<p class="text-red-400">Error: Unknown content type for this section.</p>`;
+                }
+
+                // Enable/disable previous button based on current section index
+                if (currentSectionIndex === 0) {
+                    prevBtn.disabled = true;
+                    prevBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                } else {
+                    prevBtn.disabled = false;
+                    prevBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+                }
+
+                if (index === storySectionsData.length - 1) {
+                    nextBtn.textContent = 'Start Quiz!';
+                }
+            }
+
+            async function flagItem(flaggedItemId, itemType) {
+                const reason = prompt(`Please describe why you are flagging this ${itemType} (optional, e.g., "Content issue", "Typo", "Inappropriate"):`);
+                if (reason === null) {
+                    alert('Flagging cancelled.');
+                    return;
+                }
+
+                try {
+                    const response = await fetch('http://127.0.0.1:5000/api/flag-item', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            userId: parseInt(userId),
+                            flaggedItemId: parseInt(flaggedItemId),
+                            itemType: itemType,
+                            reason: reason.trim()
+                        })
+                    });
+
+                    const result = await response.json();
+                    if (response.ok) {
+                        alert(result.message || `Thank you! This ${itemType} has been flagged for review.`);
+                        flagStoryBtn.disabled = true;
+                        flagStoryBtn.textContent = 'Flagged';
+                        flagStoryBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                    } else {
+                        alert(`Failed to flag ${itemType}: ` + (result.message || 'An unknown error occurred.'));
+                    }
+                } catch (error) {
+                    console.error("Error flagging item:", error);
+                    alert(`Could not flag ${itemType}. Please check your connection.`);
+                }
+            }
+
+            nextBtn.addEventListener('click', () => {
+                if (currentSectionIndex < storySectionsData.length - 1) {
+                    currentSectionIndex++;
+                    renderSection(currentSectionIndex);
+                } else {
+                    if (localStorage.getItem('userType') === 'Student') {
+                        updateProgress('completed');
+                    }
+                    window.location.href = `quiz-player.html?topicId=${topicId}`;
+                }
+            });
+
+            // NEW: Event listener for Previous button
+            prevBtn.addEventListener('click', () => {
+                if (currentSectionIndex > 0) {
+                    currentSectionIndex--;
+                    renderSection(currentSectionIndex);
+                }
+            });
+
+            flagStoryBtn.addEventListener('click', () => {
+                if (topicId) {
+                    flagItem(topicId, 'Story');
+                } else {
+                    alert('No story ID available to flag.');
+                }
+            });
+
+            fetchStory();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logic and Stories | Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Pacifico&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Nunito', sans-serif;
+        }
+        .font-pacifico {
+            font-family: 'Pacifico', cursive;
+        }
+        .gradient-text {
+            background: linear-gradient(to right, #fde047, #fb923c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .glow-button {
+            box-shadow: 0 0 15px rgba(253, 224, 71, 0.5), 0 0 5px rgba(251, 146, 60, 0.4);
+        }
+        .active-grade-tab {
+            border-color: #fde047; /* yellow-200 */
+            color: #fde047; /* yellow-200 */
+        }
+        .active-curriculum-tab {
+            background-color: #fb923c; /* orange-400 */
+            color: #1e293b; /* slate-900 */
+        }
+        .active-unit-tab {
+            background-color: #a78bfa; /* violet-400 */
+            color: #1e293b; /* slate-900 */
+        }
+        /* Custom scrollbar for topic list */
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #1e293b; /* slate-900 */
+            border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #475569; /* slate-600 */
+            border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #64748b; /* slate-500 */
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-gray-200 flex flex-col min-h-screen">
+
+    <script>
+        // Redirect to home if not logged in as student or parent
+        if (!localStorage.getItem('userId') || (localStorage.getItem('userType') !== 'Student' && localStorage.getItem('userType') !== 'Parent')) {
+            window.location.href = 'index.html';
+        }
+    </script>
+
+    <header class="bg-slate-900/80 backdrop-blur-sm sticky top-0 z-50 border-b border-slate-800">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="index.html" class="text-3xl font-pacifico gradient-text">Logic and Stories</a>
+            <div class="flex items-center space-x-4">
+                <span id="welcome-username" class="font-semibold text-white"></span>
+                <button id="signOutButton" class="bg-gray-700 text-white font-bold py-2 px-5 rounded-full hover:bg-gray-600 transition-colors">
+                    Sign Out
+                </button>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-6 py-12 flex-grow">
+        <h1 class="text-4xl md:text-5xl font-extrabold text-white mb-6">Your Learning Adventures</h1>
+        <p class="text-lg text-gray-400 mb-8">Choose your grade, curriculum, and topic to begin a new story.</p>
+
+        <section class="mb-10">
+            <h2 class="text-2xl font-bold text-white mb-4">Select Grade Level</h2>
+            <div id="grade-tabs" class="flex flex-wrap gap-3">
+                <p class="text-gray-400">Loading grades...</p>
+            </div>
+        </section>
+
+        <section class="mb-10" id="curriculum-section">
+            <h2 class="text-2xl font-bold text-white mb-4">Select Curriculum</h2>
+            <div id="curriculum-tabs" class="flex flex-wrap gap-3">
+                <p class="text-gray-400">Select a grade first.</p>
+            </div>
+        </section>
+
+        <section class="mb-10" id="unit-section">
+            <h2 class="text-2xl font-bold text-white mb-4">Select Unit</h2>
+            <div id="unit-tabs" class="flex flex-wrap gap-3">
+                <p class="text-gray-400">Select a curriculum first.</p>
+            </div>
+        </section>
+
+        <section id="topics-section">
+            <h2 class="text-2xl font-bold text-white mb-4">Available Topics</h2>
+            <div id="topics-list" class="bg-slate-800 rounded-lg p-6 border border-slate-700 max-h-96 overflow-y-auto custom-scrollbar">
+                <p class="text-gray-400">Select a unit to see topics.</p>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const userId = localStorage.getItem('userId');
+            const username = localStorage.getItem('username');
+            const userType = localStorage.getItem('userType'); // Get userType
+
+            // Adjust welcome message based on user type
+            if (userType === 'Student') {
+                document.getElementById('welcome-username').textContent = `Welcome, ${username}!`;
+            } else if (userType === 'Parent') {
+                document.getElementById('welcome-username').textContent = `Welcome to Dashboard, ${username}!`;
+            }
+
+
+            const gradeTabsContainer = document.getElementById('grade-tabs');
+            const curriculumTabsContainer = document.getElementById('curriculum-tabs');
+            const unitTabsContainer = document.getElementById('unit-tabs');
+            const topicsListContainer = document.getElementById('topics-list');
+            const signOutButton = document.getElementById('signOutButton');
+
+            let allCurriculumData = {};
+            let userProgress = {}; // To store user progress
+
+            let selectedGrade = null;
+            let selectedCurriculum = null;
+            let selectedUnit = null;
+
+            const fetchCurriculum = async () => {
+                try {
+                    const response = await fetch('http://127.0.0.1:5000/api/curriculum');
+                    if (!response.ok) throw new Error('Failed to fetch curriculum data.');
+                    allCurriculumData = await response.json();
+                    renderGradeTabs();
+                } catch (error) {
+                    console.error('Error fetching curriculum:', error);
+                    gradeTabsContainer.innerHTML = `<p class="text-red-400">Error loading curriculum: ${error.message}</p>`;
+                }
+            };
+
+            const fetchUserProgress = async () => {
+                // Only fetch progress if the user is a Student
+                if (userType === 'Student') {
+                    try {
+                        const response = await fetch(`http://127.0.0.1:5000/api/progress/${userId}`);
+                        if (!response.ok) throw new Error('Failed to fetch user progress.');
+                        const progressData = await response.json();
+                        userProgress = {};
+                        progressData.forEach(p => {
+                            userProgress[p.TopicID] = p.Status;
+                        });
+                    } catch (error) {
+                        console.error('Error fetching user progress:', error);
+                        // Continue even if progress can't be fetched, just won't show status
+                    }
+                }
+            };
+
+            const renderGradeTabs = () => {
+                gradeTabsContainer.innerHTML = '';
+                Object.keys(allCurriculumData).sort((a, b) => {
+                    // Custom sort for grades
+                    const gradeOrder = ["4th Grade", "5th Grade", "6th Grade", "7th Grade", "8th Grade", "9th Grade", "10th Grade", "11th Grade", "Pre-Calculus", "Calculus", "Statistics", "Contest Math (AMC)", "IB Math AA SL", "IB Math AA HL", "IB Math AI SL", "IB Math AI HL"];
+                    const indexA = gradeOrder.indexOf(a);
+                    const indexB = gradeOrder.indexOf(b);
+                    if (indexA !== -1 && indexB !== -1) return indexA - indexB;
+                    if (indexA !== -1) return -1;
+                    if (indexB !== -1) return 1;
+                    return a.localeCompare(b); // Fallback for other grades
+                }).forEach(gradeName => {
+                    const gradeData = allCurriculumData[gradeName];
+                    const button = document.createElement('button');
+                    button.className = `px-5 py-2 rounded-full font-semibold border-2 border-slate-700 hover:border-${gradeData.color} text-gray-300 hover:text-white transition-all`;
+                    button.style.borderColor = `#${gradeData.color}`; /* Apply color to border dynamically */
+                    button.style.color = `#${gradeData.color}`;       /* Apply color to text dynamically */
+                    button.textContent = gradeName;
+                    button.dataset.gradeName = gradeName;
+                    button.onclick = () => selectGrade(gradeName);
+                    gradeTabsContainer.appendChild(button);
+                });
+            };
+
+            const selectGrade = (gradeName) => {
+                selectedGrade = gradeName;
+                selectedCurriculum = null;
+                selectedUnit = null;
+
+                // Update active state for grade tabs
+                document.querySelectorAll('#grade-tabs button').forEach(btn => {
+                    btn.classList.remove('active-grade-tab');
+                    // Reset custom style.borderColor / color to original state if not active
+                    const originalColor = allCurriculumData[btn.dataset.gradeName].color;
+                    btn.style.borderColor = `#${originalColor}`;
+                    btn.style.color = `#${originalColor}`;
+                });
+                const activeBtn = document.querySelector(`#grade-tabs button[data-grade-name="${gradeName}"]`);
+                if (activeBtn) {
+                    activeBtn.classList.add('active-grade-tab');
+                    activeBtn.style.borderColor = `#fde047`; // Highlight color
+                    activeBtn.style.color = `#fde047`;       // Highlight color
+                }
+
+                renderCurriculumTabs();
+                renderUnitTabs(); // Clear units
+                renderTopicsList(); // Clear topics
+            };
+
+            const renderCurriculumTabs = () => {
+                curriculumTabsContainer.innerHTML = '';
+                if (selectedGrade && allCurriculumData[selectedGrade]?.curriculums) {
+                    Object.keys(allCurriculumData[selectedGrade].curriculums).sort().forEach(curriculumName => {
+                        const button = document.createElement('button');
+                        button.className = `px-5 py-2 rounded-full font-semibold bg-slate-700 hover:bg-slate-600 text-white transition-colors`;
+                        button.textContent = curriculumName;
+                        button.dataset.curriculumName = curriculumName;
+                        button.onclick = () => selectCurriculum(curriculumName);
+                        curriculumTabsContainer.appendChild(button);
+                    });
+                } else {
+                    curriculumTabsContainer.innerHTML = '<p class="text-gray-400">Select a grade first.</p>';
+                }
+            };
+
+            const selectCurriculum = (curriculumName) => {
+                selectedCurriculum = curriculumName;
+                selectedUnit = null;
+
+                document.querySelectorAll('#curriculum-tabs button').forEach(btn => {
+                    btn.classList.remove('active-curriculum-tab');
+                });
+                const activeBtn = document.querySelector(`#curriculum-tabs button[data-curriculum-name="${curriculumName}"]`);
+                if (activeBtn) {
+                    activeBtn.classList.add('active-curriculum-tab');
+                }
+
+                renderUnitTabs();
+                renderTopicsList(); // Clear topics
+            };
+
+            const renderUnitTabs = () => {
+                unitTabsContainer.innerHTML = '';
+                if (selectedGrade && selectedCurriculum && allCurriculumData[selectedGrade]?.curriculums[selectedCurriculum]?.units) {
+                    Object.keys(allCurriculumData[selectedGrade].curriculums[selectedCurriculum].units).sort().forEach(unitName => {
+                        const button = document.createElement('button');
+                        button.className = `px-5 py-2 rounded-full font-semibold bg-slate-700 hover:bg-slate-600 text-white transition-colors`;
+                        button.textContent = unitName;
+                        button.dataset.unitName = unitName;
+                        button.onclick = () => selectUnit(unitName);
+                        unitTabsContainer.appendChild(button);
+                    });
+                } else {
+                    unitTabsContainer.innerHTML = '<p class="text-gray-400">Select a curriculum first.</p>';
+                }
+            };
+
+            const selectUnit = (unitName) => {
+                selectedUnit = unitName;
+
+                document.querySelectorAll('#unit-tabs button').forEach(btn => {
+                    btn.classList.remove('active-unit-tab');
+                });
+                const activeBtn = document.querySelector(`#unit-tabs button[data-unit-name="${unitName}"]`);
+                if (activeBtn) {
+                    activeBtn.classList.add('active-unit-tab');
+                }
+
+                renderTopicsList();
+            };
+
+            const renderTopicsList = () => {
+                topicsListContainer.innerHTML = '';
+                if (selectedGrade && selectedCurriculum && selectedUnit && allCurriculumData[selectedGrade]?.curriculums[selectedCurriculum]?.units[selectedUnit]) {
+                    const topics = allCurriculumData[selectedGrade].curriculums[selectedCurriculum].units[selectedUnit];
+                    if (topics.length === 0) {
+                        topicsListContainer.innerHTML = '<p class="text-gray-400">No topics found for this unit.</p>';
+                        return;
+                    }
+                    topics.forEach(topic => {
+                        const progressStatus = userProgress[topic.id] || 'notStarted'; // Default status
+                        let statusColor = 'text-gray-400';
+                        let statusText = 'Not Started';
+                        let buttonClasses = 'bg-blue-600 hover:bg-blue-500';
+
+                        if (progressStatus === 'inProgress') {
+                            statusColor = 'text-yellow-400';
+                            statusText = 'In Progress';
+                            buttonClasses = 'bg-amber-600 hover:bg-amber-500';
+                        } else if (progressStatus === 'completed') {
+                            statusColor = 'text-green-400';
+                            statusText = 'Completed';
+                            buttonClasses = 'bg-green-600 hover:bg-green-500';
+                        }
+
+                        const topicDiv = document.createElement('div');
+                        topicDiv.className = 'bg-slate-700 rounded-lg p-4 mb-3 flex justify-between items-center border border-slate-600';
+                        topicDiv.innerHTML = `
+                            <div>
+                                <h3 class="text-xl font-bold text-white mb-1">${topic.name}</h3>
+                                <p class="text-sm ${statusColor}">Status: ${statusText}</p>
+                            </div>
+                            <button
+                                class="start-lesson-btn ${buttonClasses} text-white font-bold py-2 px-6 rounded-full transition-colors"
+                                data-topic-id="${topic.id}"
+                                data-topic-name="${topic.name}"
+                            >
+                                Start Lesson
+                            </button>
+                        `;
+                        topicsListContainer.appendChild(topicDiv);
+                    });
+                } else {
+                    topicsListContainer.innerHTML = '<p class="text-gray-400">Select a unit to see topics.</p>';
+                }
+            };
+
+            // Event listener for starting a lesson
+            topicsListContainer.addEventListener('click', async (event) => {
+                const startButton = event.target.closest('.start-lesson-btn');
+                if (startButton) {
+                    event.preventDefault();
+
+                    const topicId = startButton.dataset.topicId;
+                    const topicName = startButton.dataset.topicName;
+
+                    if (!topicId) {
+                        alert('Error: Topic ID not found for this lesson.');
+                        return;
+                    }
+
+                    // For Parent users, clicking "Start Lesson" takes them to the Admin page's story editing for that topic
+                    // For Student users, it takes them to story-player.html
+                    if (userType === 'Parent') {
+                        // Parents manage content, so redirect them to the admin story management tab
+                        // You might need a more sophisticated way to pass topicId to admin.html and select the tab/populate form
+                        alert(`Parent mode: You can manage the story content for "${topicName}" via the Admin dashboard.`);
+                        // window.location.href = `admin.html#stories-tab&topicId=${topicId}`; // Example, requires admin.html to handle URL params
+                        // For now, just alerting them.
+                    } else if (userType === 'Student') {
+                        // First, check if a story exists for this topic
+                        try {
+                            const response = await fetch(`http://127.0.0.1:5000/api/story_exists/${topicId}`);
+                            const result = await response.json();
+
+                            if (response.ok && result.storyExists) {
+                                // Story exists, redirect to story player
+                                window.location.href = `story-player.html?topicId=${topicId}`;
+                            } else if (response.ok && !result.storyExists) {
+                                // No story found for this topic
+                                alert(`No interactive story content available yet for "${topicName}". Please try another topic or check back later.`);
+                                // Optionally, implement a fallback here (e.g., redirect to a static lesson page if you have one)
+                            } else {
+                                // API call failed for some reason
+                                alert(`Error checking story availability: ${result.message || 'An unknown error occurred.'}`);
+                            }
+                        } catch (error) {
+                            console.error('Error fetching story availability:', error);
+                            alert('Could not connect to the server to check story availability. Please ensure the backend is running.');
+                        }
+                    }
+                }
+            });
+
+
+            signOutButton.addEventListener('click', () => {
+                localStorage.clear();
+                window.location.href = 'index.html';
+            });
+
+            // Initial data load
+            await fetchCurriculum();
+            if (userId && userType === 'Student') { // Only fetch progress if userId exists and is a Student
+                await fetchUserProgress();
+            }
+            // Initial render of grade tabs is done within fetchCurriculum
+        });
+    </script>
+</body>
+</html>
