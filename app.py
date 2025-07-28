@@ -8,6 +8,7 @@ import traceback
 import json
 import random
 import re # Import regex module for password validation
+import os # Import os module to access environment variables
 
 # --- NEW IMPORTS FOR EMAIL ---
 import smtplib
@@ -52,23 +53,22 @@ def validate_password(password):
         return False, PASSWORD_REQUIREMENTS_MESSAGE
     return True, None
 
-# --- NEW: EMAIL CONFIGURATION ---
-# IMPORTANT: Replace with your actual SMTP details.
-# For security, consider using environment variables for these.
-# Example:
-# import os
-# SMTP_SERVER = os.environ.get('SMTP_SERVER', 'smtp.example.com')
-# SMTP_PORT = int(os.environ.get('SMTP_PORT', 587))
-# SMTP_USERNAME = os.environ.get('SMTP_USERNAME', 'your_email@example.com')
-# SMTP_PASSWORD = os.environ.get('SMTP_PASSWORD', 'your_email_password')
-# SENDER_EMAIL = os.environ.get('SENDER_EMAIL', 'no-reply@logicandstories.com')
+# --- UPDATED: EMAIL CONFIGURATION FOR GOOGLE WORKSPACE (GMAIL SMTP) ---
+# IMPORTANT: You MUST generate an App Password for your Google account
+# if you have 2-Step Verification enabled. Do NOT use your regular password.
+# See instructions below on how to generate an App Password.
 
-# For SendGrid, the SMTP_USERNAME is typically 'apikey' and SMTP_PASSWORD is your SendGrid API Key.
-SMTP_SERVER = 'smtp.sendgrid.net' # Example for SendGrid. Adjust for your service.
-SMTP_PORT = 587 # Typically 587 for TLS, or 465 for SSL. Check your provider.
-SMTP_USERNAME = 'apikey' # For SendGrid, username is 'apikey'
-SMTP_PASSWORD = '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' # <--- REPLACE THIS WITH YOUR ACTUAL SENDGRID API KEY
-SENDER_EMAIL = 'admin@bricks4tricks.com' # The email address that will send the reset link. Must be verified in SendGrid.
+SMTP_SERVER = 'smtp.gmail.com' # Google's SMTP server
+SMTP_PORT = 587 # Standard port for TLS
+SMTP_USERNAME = 'admin@bricks4tricks.com' # <--- REPLACE WITH YOUR GOOGLE WORKSPACE EMAIL
+SMTP_PASSWORD = 'jxuf jldh muge nwry' # <--- REPLACE WITH THE APP PASSWORD YOU GENERATE
+SENDER_EMAIL = 'admin@bricks4tricks.com' # <--- REPLACE WITH YOUR GOOGLE WORKSPACE EMAIL (should match SMTP_USERNAME)
+
+# --- NEW: Frontend Base URL Configuration ---
+# This will allow you to set the frontend URL dynamically based on your deployment.
+# For local development, it defaults to http://127.0.0.1:5500
+# For production, set an environment variable named FRONTEND_BASE_URL
+FRONTEND_BASE_URL = os.environ.get('FRONTEND_BASE_URL', 'http://127.0.0.1:5500')
 
 # Function to send email
 def send_email(receiver_email, subject, html_content):
@@ -1160,8 +1160,8 @@ def forgot_password():
             cursor.execute("UPDATE tbl_User SET ResetToken = %s, ResetTokenExpiry = %s WHERE ID = %s", (token, expiry, user['ID']))
             conn.commit()
             
-            # --- NEW: Send email with reset link ---
-            reset_link = f"http://127.0.0.1:5500/reset-password.html?token={token}" # Adjust this URL if your frontend is hosted differently
+            # --- UPDATED: Use FRONTEND_BASE_URL for the reset link ---
+            reset_link = f"{FRONTEND_BASE_URL}/reset-password.html?token={token}" # Dynamically construct URL
             email_content = RESET_PASSWORD_EMAIL_TEMPLATE_HTML.replace('{{RESET_LINK}}', reset_link)
             
             if send_email(email, "Logic and Stories - Password Reset", email_content):
@@ -1170,7 +1170,7 @@ def forgot_password():
                 # If email sending fails, still return success to avoid leaking user existence
                 print(f"Warning: Failed to send password reset email to {email}")
                 return jsonify({"status": "success", "message": "If an account exists, a password reset link has been sent to your email (but there was an issue sending the email)."}), 200
-            # --- END NEW: Send email with reset link ---
+            # --- END UPDATED: Send email with reset link ---
         else:
             # Always return success to avoid leaking whether an email exists in the system
             return jsonify({"status": "success", "message": "If an account exists, a password reset link has been sent to your email."}), 200
