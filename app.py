@@ -9,6 +9,12 @@ import json
 import random
 import re # Import regex module for password validation
 
+# --- NEW IMPORTS FOR EMAIL ---
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+# --- END NEW IMPORTS ---
+
 # =================================================================
 #  1. SETUP & CONFIGURATION
 # =================================================================
@@ -18,7 +24,7 @@ CORS(app)
 
 db_config = {
     'user': 'root',
-    'password': 'Dragon@123',  # YOUR PASSWORD HERE
+    'password': 'Dragon@123',  # <--- YOUR MYSQL PASSWORD HERE
     'host': '127.0.0.1',
     'database': 'educational_platform_db'
 }
@@ -45,6 +51,143 @@ def validate_password(password):
     if not re.fullmatch(PASSWORD_REGEX, password):
         return False, PASSWORD_REQUIREMENTS_MESSAGE
     return True, None
+
+# --- NEW: EMAIL CONFIGURATION ---
+# IMPORTANT: Replace with your actual SMTP details.
+# For security, consider using environment variables for these.
+# Example:
+# import os
+# SMTP_SERVER = os.environ.get('SMTP_SERVER', 'smtp.example.com')
+# SMTP_PORT = int(os.environ.get('SMTP_PORT', 587))
+# SMTP_USERNAME = os.environ.get('SMTP_USERNAME', 'your_email@example.com')
+# SMTP_PASSWORD = os.environ.get('SMTP_PASSWORD', 'your_email_password')
+# SENDER_EMAIL = os.environ.get('SENDER_EMAIL', 'no-reply@logicandstories.com')
+
+# For SendGrid, the SMTP_USERNAME is typically 'apikey' and SMTP_PASSWORD is your SendGrid API Key.
+SMTP_SERVER = 'smtp.sendgrid.net' # Example for SendGrid. Adjust for your service.
+SMTP_PORT = 587 # Typically 587 for TLS, or 465 for SSL. Check your provider.
+SMTP_USERNAME = 'apikey' # For SendGrid, username is 'apikey'
+SMTP_PASSWORD = 'YOUR_SENDGRID_API_KEY_HERE' # <--- REPLACE THIS WITH YOUR ACTUAL SENDGRID API KEY
+SENDER_EMAIL = 'no-reply@logicandstories.com' # The email address that will send the reset link. Must be verified in SendGrid.
+
+# Function to send email
+def send_email(receiver_email, subject, html_content):
+    """Sends an HTML email."""
+    try:
+        msg = MIMEMultipart('alternative')
+        msg['From'] = SENDER_EMAIL
+        msg['To'] = receiver_email
+        msg['Subject'] = subject
+
+        # Attach HTML content
+        msg.attach(MIMEText(html_content, 'html'))
+
+        with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
+            server.starttls() # Use TLS encryption
+            server.login(SMTP_USERNAME, SMTP_PASSWORD)
+            server.send_message(msg)
+        print(f"Email sent successfully to {receiver_email}")
+        return True
+    except Exception as e:
+        print(f"Failed to send email to {receiver_email}: {e}")
+        traceback.print_exc()
+        return False
+
+# --- NEW: Load email template content ---
+# This template is embedded directly in the Python script for simplicity.
+# In a larger application, you might load this from a separate HTML file.
+RESET_PASSWORD_EMAIL_TEMPLATE_HTML = """
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logic and Stories - Password Reset Request</title>
+    <style>
+        /* Inlining basic styles for better email client compatibility */
+        body {
+            font-family: 'Nunito', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #0f172a; /* slate-900 */
+            color: #e2e8f0; /* gray-200 */
+        }
+        .font-pacifico {
+            font-family: 'Pacifico', cursive;
+        }
+        .gradient-text {
+            background: linear-gradient(to right, #fde047, #fb923c);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .glow-button {
+            box-shadow: 0 0 15px rgba(253, 224, 71, 0.5), 0 0 5px rgba(251, 146, 60, 0.4);
+        }
+        /* Ensure responsive behavior for email clients */
+        @media only screen and (max-width: 600px) {
+            .container {
+                padding: 10px !important;
+            }
+            .content-block {
+                padding: 20px !important;
+            }
+            .button {
+                padding: 12px 25px !important;
+                font-size: 16px !important;
+            }
+        }
+    </style>
+</head>
+<body style="background-color: #0f172a; color: #e2e8f0; margin: 0; padding: 0; font-family: 'Nunito', sans-serif;">
+    <div style="max-width: 600px; margin: 0 auto; padding: 32px 16px; box-sizing: border-box;">
+        <!-- Header/Logo -->
+        <div style="text-align: center; margin-bottom: 32px;">
+            <a href="#" style="font-size: 36px; font-family: 'Pacifico', cursive; background: linear-gradient(to right, #fde047, #fb923c); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-decoration: none;">Logic and Stories</a>
+        </div>
+
+        <!-- Email Content Block -->
+        <div style="background-color: #1e293b; border-radius: 16px; padding: 24px 32px; border: 1px solid #334155;">
+            <h2 style="font-size: 28px; font-weight: bold; color: #ffffff; text-align: center; margin-bottom: 24px;">Password Reset Request</h2>
+
+            <p style="font-size: 18px; color: #cbd5e1; margin-bottom: 16px;">Hi there,</p>
+
+            <p style="font-size: 18px; color: #cbd5e1; margin-bottom: 24px;">
+                We received a request to reset the password for your Logic and Stories account.
+                To reset your password, please click the button below:
+            </p>
+
+            <div style="text-align: center; margin-bottom: 32px;">
+                <a href="{{RESET_LINK}}" style="display: inline-block; background-color: #fde047; color: #1e293b; font-weight: bold; padding: 12px 32px; border-radius: 9999px; text-decoration: none; transition: all 0.2s ease-in-out; box-shadow: 0 0 15px rgba(253, 224, 71, 0.5), 0 0 5px rgba(251, 146, 60, 0.4);">
+                    Reset Your Password
+                </a>
+            </div>
+
+            <p style="font-size: 18px; color: #cbd5e1; margin-bottom: 16px;">
+                This link is valid for <strong>1 hour</strong>. If you do not reset your password within this time,
+                you will need to submit another request.
+            </p>
+
+            <p style="font-size: 18px; color: #cbd5e1; margin-bottom: 24px;">
+                If you did not request a password reset, please ignore this email. Your password will remain unchanged.
+            </p>
+
+            <p style="font-size: 18px; color: #cbd5e1;">Thanks,</p>
+            <p style="font-size: 18px; color: #cbd5e1;">The Logic and Stories Team</p>
+        </div>
+
+        <!-- Footer -->
+        <div style="text-align: center; color: #64748b; font-size: 14px; margin-top: 32px;">
+            <p>&copy; 2024 Logic and Stories. All Rights Reserved.</p>
+            <p style="margin-top: 8px;">
+                If you have any questions, please contact our support team at
+                <a href="mailto:support@logicandstories.com" style="color: #fde047; text-decoration: underline;">support@logicandstories.com</a>.
+            </p>
+        </div>
+    </div>
+</body>
+</html>
+"""
+# --- END NEW EMAIL CONFIGURATION AND TEMPLATE ---
 
 
 # =================================================================
@@ -1016,9 +1159,21 @@ def forgot_password():
             token, expiry = secrets.token_hex(32), datetime.now() + timedelta(hours=1)
             cursor.execute("UPDATE tbl_User SET ResetToken = %s, ResetTokenExpiry = %s WHERE ID = %s", (token, expiry, user['ID']))
             conn.commit()
-            reset_link = f"http://127.0.0.1:5500/reset-password.html?token={token}"
-            print(f"\n--- PASSWORD RESET LINK (for {email}): {reset_link} ---\n")
-        return jsonify({"status": "success", "message": "If an account exists, a reset link has been sent."}), 200
+            
+            # --- NEW: Send email with reset link ---
+            reset_link = f"http://127.0.0.1:5500/reset-password.html?token={token}" # Adjust this URL if your frontend is hosted differently
+            email_content = RESET_PASSWORD_EMAIL_TEMPLATE_HTML.replace('{{RESET_LINK}}', reset_link)
+            
+            if send_email(email, "Logic and Stories - Password Reset", email_content):
+                return jsonify({"status": "success", "message": "If an account exists, a password reset link has been sent to your email."}), 200
+            else:
+                # If email sending fails, still return success to avoid leaking user existence
+                print(f"Warning: Failed to send password reset email to {email}")
+                return jsonify({"status": "success", "message": "If an account exists, a password reset link has been sent to your email (but there was an issue sending the email)."}), 200
+            # --- END NEW: Send email with reset link ---
+        else:
+            # Always return success to avoid leaking whether an email exists in the system
+            return jsonify({"status": "success", "message": "If an account exists, a password reset link has been sent to your email."}), 200
     except Exception as e:
         print(f"Forgot Password API Error: {e}")
         traceback.print_exc()
@@ -1031,7 +1186,7 @@ def forgot_password():
 def reset_password():
     if request.method == 'OPTIONS': return jsonify(success=True)
     data = request.get_json()
-    token, new_password = data.get('token'), data.get('password')
+    token, new_password = data.get('token'), data.get('newPassword') # Changed 'password' to 'newPassword' for clarity as per HTML
     if not all([token, new_password]):
         return jsonify({"status": "error", "message": "Token and new password are required."}), 400
 
@@ -1093,6 +1248,8 @@ def get_curriculum():
         rows = cursor.fetchall()
 
         curriculum_data = {}
+        # This mapping is for frontend display, so it's kept here.
+        # In a very large app, this might come from a config or DB.
         grade_color_map = { "4th Grade": { "icon": "4th", "color": "fde047" }, "5th Grade": { "icon": "5th", "color": "fb923c" }, "6th Grade": { "icon": "6th", "color": "a78bfa" }, "7th Grade": { "icon": "7th", "color": "60a5fa" }, "8th Grade": { "icon": "8th", "color": "f472b6" }, "9th Grade": { "icon": "9th", "color": "818cf8" }, "10th Grade": { "icon": "10th", "color": "34d399" }, "11th Grade": { "icon": "11th", "color": "22d3ee" }, "Pre-Calculus": { "icon": "Pre-C", "color": "a3e635" }, "Calculus": { "icon": "Calc", "color": "f87171" }, "Statistics": { "icon": "Stats", "color": "c084fc" }, "Contest Math (AMC)": { "icon": "AMC", "color": "e11d48" }, "IB Math AA SL": { "icon": "AA SL", "color": "f9a8d4" }, "IB Math AA HL": { "icon": "AA HL", "color": "f0abfc" }, "IB Math AI SL": { "icon": "AI SL", "color": "a5f3fc" }, "IB Math AI HL": { "icon": "AI HL", "color": "bbf7d0" }, "Florida": { "icon": "FL", "color": "60a5fa" }, "ICSE": { "icon": "ICSE", "color": "f472b6" }, "CBSE": { "icon": "CBSE", "color": "818cf8" }, "IB": { "icon": "IB", "color": "34d399" }, "Singapore": { "icon": "SG", "color": "a3e635" }, "Canada": { "icon": "CAN", "color": "f87171" }, "Kangaroo": { "icon": "K", "color": "c084fc" }, "Math count": { "icon": "MCT", "color": "e11d48" }, "MOEM E": { "icon": "ME", "color": "f9a8d4" }, "MOEM M": { "icon": "MM", "color": "f0abfc" }, "AMC 8": { "icon": "A8", "color": "a5f3fc" }, "AMC 10": { "icon": "A10", "color": "bbf7d0" } }
         for row in rows:
             grade_name, curriculum_type, unit_name, topic_name, topic_id, available_themes_str, default_theme = \
