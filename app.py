@@ -67,8 +67,8 @@ def validate_password(password):
 SMTP_SERVER = 'smtp.sendgrid.net' # Example for SendGrid. Adjust for your service.
 SMTP_PORT = 587 # Typically 587 for TLS, or 465 for SSL. Check your provider.
 SMTP_USERNAME = 'apikey' # For SendGrid, username is 'apikey'
-SMTP_PASSWORD = 'YOUR_SENDGRID_API_KEY_HERE' # <--- REPLACE THIS WITH YOUR ACTUAL SENDGRID API KEY
-SENDER_EMAIL = 'no-reply@logicandstories.com' # The email address that will send the reset link. Must be verified in SendGrid.
+SMTP_PASSWORD = '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' # <--- REPLACE THIS WITH YOUR ACTUAL SENDGRID API KEY
+SENDER_EMAIL = 'admin@bricks4tricks.com' # The email address that will send the reset link. Must be verified in SendGrid.
 
 # Function to send email
 def send_email(receiver_email, subject, html_content):
