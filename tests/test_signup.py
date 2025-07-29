@@ -23,14 +23,16 @@ class DummyCursor:
 class DummyConnection:
     def __init__(self):
         self.cursor_obj = DummyCursor()
-    def cursor(self, dictionary=False):
+        self.closed = 0
+        self.autocommit = False
+    def cursor(self, dictionary=False, cursor_factory=None):
         return self.cursor_obj
     def commit(self):
         pass
-    def is_connected(self):
-        return True
-    def close(self):
+    def rollback(self):
         pass
+    def close(self):
+        self.closed = 1
 
 @pytest.fixture
 def client():
@@ -44,7 +46,7 @@ def test_signup_success(client):
         "email": "test@example.com",
         "password": "ValidPass123!"
     }
-    with patch('app.mysql.connector.connect', return_value=DummyConnection()):
+    with patch('app.psycopg2.connect', return_value=DummyConnection()):
         response = client.post('/api/signup', json=payload)
     assert response.status_code == 201
     data = response.get_json()

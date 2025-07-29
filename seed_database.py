@@ -1,5 +1,5 @@
 import csv
-import mysql.connector
+import psycopg2
 import os # Import os for environment variables
 
 # --- UPDATE YOUR DATABASE CREDENTIALS HERE ---
@@ -17,7 +17,7 @@ def seed_data():
     Reads the curriculum CSV, cleans the data, and populates the database tables.
     """
     try:
-        conn = mysql.connector.connect(**db_config)
+        conn = psycopg2.connect(**db_config)
         cursor = conn.cursor()
         print("Successfully connected to the database for seeding.")
 
@@ -62,26 +62,38 @@ def seed_data():
 
                 # 1. Get or Create Grade ID
                 if grade_name not in grades_map:
-                    cursor.execute("INSERT INTO tbl_Grade (GradeName, CreatedBy) VALUES (%s, %s)", (grade_name, 'SEEDER'))
-                    grades_map[grade_name] = cursor.lastrowid
+                    cursor.execute(
+                        "INSERT INTO tbl_Grade (GradeName, CreatedBy) VALUES (%s, %s) RETURNING ID",
+                        (grade_name, 'SEEDER'),
+                    )
+                    grades_map[grade_name] = cursor.fetchone()[0]
                 grade_id = grades_map[grade_name]
 
                 # 2. Get or Create Subject (Curriculum) ID
                 if curriculum_type not in subjects_map:
-                    cursor.execute("INSERT INTO tbl_Subject (SubjectName, SubjectType, CreatedBy) VALUES (%s, %s, %s)", (curriculum_type, 'Curriculum', 'SEEDER'))
-                    subjects_map[curriculum_type] = cursor.lastrowid
+                    cursor.execute(
+                        "INSERT INTO tbl_Subject (SubjectName, SubjectType, CreatedBy) VALUES (%s, %s, %s) RETURNING ID",
+                        (curriculum_type, 'Curriculum', 'SEEDER'),
+                    )
+                    subjects_map[curriculum_type] = cursor.fetchone()[0]
                 subject_id = subjects_map[curriculum_type]
 
                 # 3. Get or Create Unit (as a Parent Topic) ID
                 unit_key = f"{unit_name}_{subject_id}"
                 if unit_key not in units_map:
-                    cursor.execute("INSERT INTO tbl_Topic (TopicName, SubjectID, ParentTopicID, CreatedBy) VALUES (%s, %s, NULL, %s)", (unit_name, subject_id, 'SEEDER'))
-                    units_map[unit_key] = cursor.lastrowid
+                    cursor.execute(
+                        "INSERT INTO tbl_Topic (TopicName, SubjectID, ParentTopicID, CreatedBy) VALUES (%s, %s, NULL, %s) RETURNING ID",
+                        (unit_name, subject_id, 'SEEDER'),
+                    )
+                    units_map[unit_key] = cursor.fetchone()[0]
                 unit_topic_id = units_map[unit_key]
 
                 # 4. Create the actual Topic (as a child of the Unit)
-                cursor.execute("INSERT INTO tbl_Topic (TopicName, SubjectID, ParentTopicID, CreatedBy) VALUES (%s, %s, %s, %s)", (topic_name, subject_id, unit_topic_id, 'SEEDER'))
-                child_topic_id = cursor.lastrowid
+                cursor.execute(
+                    "INSERT INTO tbl_Topic (TopicName, SubjectID, ParentTopicID, CreatedBy) VALUES (%s, %s, %s, %s) RETURNING ID",
+                    (topic_name, subject_id, unit_topic_id, 'SEEDER'),
+                )
+                child_topic_id = cursor.fetchone()[0]
                 
                 # 5. Link the child Topic to the Grade
                 cursor.execute("INSERT INTO tbl_TopicGrade (TopicID, GradeID, CreatedBy) VALUES (%s, %s, %s)", (child_topic_id, grade_id, 'SEEDER'))
@@ -92,11 +104,11 @@ def seed_data():
         conn.commit()
         print(f"\nDatabase seeding completed successfully! Processed {rows_processed} valid rows.")
 
-    except mysql.connector.Error as err: print(f"Database Error: {err}")
+    except psycopg2.Error as err: print(f"Database Error: {err}")
     except FileNotFoundError: print(f"Error: The file '{CSV_FILE_NAME}' was not found.")
     except Exception as e: print(f"An unexpected error occurred: {e}")
     finally:
-        if 'conn' in locals() and conn.is_connected():
+        if 'conn' in locals() and conn.closed == 0:
             cursor.close()
             conn.close()
             print("Database connection closed.")

@@ -1,7 +1,7 @@
 Flask
 Flask-Cors
 Flask-Bcrypt
-mysql-connector-python
+psycopg2-binary
 python-dotenv
 PyJWT
 requests
