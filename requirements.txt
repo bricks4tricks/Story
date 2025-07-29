@@ -1,0 +1,9 @@
+Flask
+Flask-Cors
+Flask-Bcrypt
+mysql-connector-python
+python-dotenv
+PyJWT # Comm
+requests
+smtplib
+email
