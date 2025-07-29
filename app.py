@@ -75,8 +75,9 @@ SENDER_EMAIL = os.environ.get('SENDER_EMAIL', 'admin@bricks4tricks.com')
 
 # --- UPDATED: Frontend Base URL Configuration ---
 # This will allow you to set the frontend URL dynamically based on your deployment.
-# For local development, it defaults to http://127.0.0.1:5500
-# For production, set an environment variable named FRONTEND_BASE_URL in Vercel.
+# For production, you can override it by setting FRONTEND_BASE_URL
+# as an environment variable. By default, this is set to
+# https://logicandstories.com.
 FRONTEND_BASE_URL = os.environ.get('FRONTEND_BASE_URL', 'https://logicandstories.com')
 
 # Function to send email
