@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 import traceback
 import json
 import random
-import re # Import regex module for password validation
+import re
 import os # Import os module to access environment variables
 
 # --- NEW IMPORTS FOR EMAIL ---
@@ -23,11 +23,14 @@ app = Flask(__name__)
 bcrypt = Bcrypt(app)
 CORS(app)
 
+# --- UPDATED: DATABASE CONFIGURATION FROM ENVIRONMENT VARIABLES ---
+# Use os.environ.get() to retrieve environment variables.
+# The second argument is a default value used if the environment variable is not set (e.g., for local development).
 db_config = {
-    'user': 'root',
-    'password': 'Dragon@123',  # <--- YOUR MYSQL PASSWORD HERE
-    'host': '127.0.0.1',
-    'database': 'educational_platform_db'
+    'user': os.environ.get('DB_USER', 'root'),
+    'password': os.environ.get('SQL_PASSWORD', 'Dragon@123'),
+    'host': os.environ.get('DB_HOST', '127.0.0.1'),
+    'database': os.environ.get('DB_DATABASE', 'educational_platform_db')
 }
 
 # Define a mapping for QuestionType (if using integer in DB)
@@ -53,21 +56,18 @@ def validate_password(password):
         return False, PASSWORD_REQUIREMENTS_MESSAGE
     return True, None
 
-# --- UPDATED: EMAIL CONFIGURATION FOR GOOGLE WORKSPACE (GMAIL SMTP) ---
-# IMPORTANT: You MUST generate an App Password for your Google account
-# if you have 2-Step Verification enabled. Do NOT use your regular password.
-# See instructions below on how to generate an App Password.
+# --- UPDATED: EMAIL CONFIGURATION FROM ENVIRONMENT VARIABLES ---
+# Retrieve SMTP settings from environment variables with sensible defaults for local testing.
+SMTP_SERVER = os.environ.get('SMTP_SERVER', 'smtp.gmail.com')
+SMTP_PORT = int(os.environ.get('SMTP_PORT', 587)) # Ensure port is an integer
+SMTP_USERNAME = os.environ.get('SMTP_USERNAME', 'admin@bricks4tricks.com')
+SMTP_PASSWORD = os.environ.get('SMTP_PASSWORD', 'jxuf jldh muge nwry') # This should be your App Password, not your regular email password
+SENDER_EMAIL = os.environ.get('SENDER_EMAIL', 'admin@bricks4tricks.com')
 
-SMTP_SERVER = 'smtp.gmail.com' # Google's SMTP server
-SMTP_PORT = 587 # Standard port for TLS
-SMTP_USERNAME = 'admin@bricks4tricks.com' # <--- REPLACE WITH YOUR GOOGLE WORKSPACE EMAIL
-SMTP_PASSWORD = 'jxuf jldh muge nwry' # <--- REPLACE WITH THE APP PASSWORD YOU GENERATE
-SENDER_EMAIL = 'admin@bricks4tricks.com' # <--- REPLACE WITH YOUR GOOGLE WORKSPACE EMAIL (should match SMTP_USERNAME)
-
-# --- NEW: Frontend Base URL Configuration ---
+# --- UPDATED: Frontend Base URL Configuration ---
 # This will allow you to set the frontend URL dynamically based on your deployment.
 # For local development, it defaults to http://127.0.0.1:5500
-# For production, set an environment variable named FRONTEND_BASE_URL
+# For production, set an environment variable named FRONTEND_BASE_URL in Vercel.
 FRONTEND_BASE_URL = os.environ.get('FRONTEND_BASE_URL', 'http://127.0.0.1:5500')
 
 # Function to send email
@@ -374,7 +374,7 @@ def delete_user(user_id):
         if not user:
             return jsonify({"status": "error", "message": "User not found."}), 404
 
-        user_type = user['UserType']
+        user_type = user[0] # Access by index as cursor is not dictionary=True here
 
         if user_type == 'Admin':
             return jsonify({"status": "error", "message": "Admin accounts cannot be deleted."}), 403
