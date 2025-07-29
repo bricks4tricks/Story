@@ -21,6 +21,7 @@ from email.mime.text import MIMEText
 #  1. SETUP & CONFIGURATION
 # =================================================================
 app = Flask(__name__)
+bcrypt = Bcrypt(app)
 # Configure Flask-CORS to allow requests from your frontend domain
 # It's crucial to specify the exact origin of your frontend.
 # If your frontend is hosted at 'https://www.logicandstories.com', use that.
