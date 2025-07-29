@@ -1,13 +1,13 @@
 {
   "functions": {
-    "api/app.py": {
-      "runtime": "@vercel/python@3.9.x"
+    "app.py": { 
+      "runtime": "@vercel/python@3.8.x"
     }
   },
   "rewrites": [
     {
       "source": "/api/:path*",
-      "destination": "/api/app.py"
+      "destination": "/app.py"
     }
   ],
   "headers": [
