@@ -24,7 +24,10 @@ app = Flask(__name__)
 # It's crucial to specify the exact origin of your frontend.
 # If your frontend is hosted at 'https://www.logicandstories.com', use that.
 # If it's just 'https://logicandstories.com', use that. Be precise.
-CORS(app, origins=["https://logicandstories.com", "https://www.logicandstories.com"])
+# Also, ensure methods and headers are allowed for preflight.
+CORS(app, origins=["https://logicandstories.com", "https://www.logicandstories.com"],
+     methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+     headers=["Content-Type", "Authorization"])
 
 
 # --- UPDATED: DATABASE CONFIGURATION FROM ENVIRONMENT VARIABLES ---
@@ -649,8 +652,7 @@ def edit_question(question_id):
             if 'text' not in step:
                  raise ValueError("Each step must have a 'text' field.")
             step_values.append((question_id, idx + 1, step['text'], 'Admin'))
-        if step_values:
-            cursor.executemany(step_query, step_values)
+        cursor.executemany(step_query, step_values)
 
         conn.commit()
 
@@ -1254,7 +1256,7 @@ def get_curriculum():
         curriculum_data = {}
         # This mapping is for frontend display, so it's kept here.
         # In a very large app, this might come from a config or DB.
-        grade_color_map = { "4th Grade": { "icon": "4th", "color": "fde047" }, "5th Grade": { "icon": "5th", "color": "fb923c" }, "6th Grade": { "icon": "6th", "color": "a78bfa" }, "7th Grade": { "icon": "7th", "color": "60a5fa" }, "8th Grade": { "icon": "8th", "color": "f472b6" }, "9th Grade": { "icon": "9th", "color": "818cf8" }, "10th Grade": { "icon": "10th", "color": "34d399" }, "11th Grade": { "icon": "11th", "color": "22d3ee" }, "Pre-Calculus": { "icon": "Pre-C", "color": "a3e635" }, "Calculus": { "icon": "Calc", "color": "f87171" }, "Statistics": { "icon": "Stats", "color": "c084fc" }, "Contest Math (AMC)": { "icon": "AMC", "color": "e11d48" }, "IB Math AA SL": { "icon": "AA SL", "color": "f9a8d4" }, "IB Math AA HL": { "icon": "AA HL", "color": "f0abfc" }, "IB Math AI SL": { "icon": "AI SL", "color": "a5f3fc" }, "IB Math AI HL": { "icon": "AI HL", "color": "bbf7d0" }, "Florida": { "icon": "FL", "color": "60a5fa" }, "ICSE": { "icon": "ICSE", "color": "f472b6" }, "CBSE": { "icon": "CBSE", "color": "818cf8" }, "IB": { "icon": "IB", "color": "34d399" }, "Singapore": { "icon": "SG", "color": "a3e635" }, "Canada": { "icon": "CAN", "color": "f87171" }, "Kangaroo": { "icon": "K", "color": "c084fc" }, "Math count": { "icon": "MCT", "color": "e11d48" }, "MOEM E": { "icon": "ME", "color": "f9a8d4" }, "MOEM M": { "icon": "MM", "color": "f0abfc" }, "AMC 8": { "icon": "A8", "color": "a5f3fc" }, "AMC 10": { "icon": "A10", "color": "bbf7d0" } }
+        grade_color_map = { "4th Grade": { "icon": "4th", "color": "fde047" }, "5th Grade": { "icon": "5th", "color": "fb923c" }, "6th Grade": { "icon": "6th", "color": "a78bfa" }, "7th Grade": { "icon": "7th", "color": "60a5fa" }, "8th Grade": { "icon": "8th", "color": "f472b6" }, "9th Grade": { "icon": "9th", "color": "818cf8" }, "10th Grade": { "icon": "10th", "color": "34d399" }, "11th Grade": { "icon": "11th", "color": "22d3ee" }, "Pre-Calculus": { "icon": "Pre-C", "color": "a3e635" }, "Calculus": { "icon": "Calc", "color": "f87171" }, "Statistics": { "icon": "Stats", "color": "c084fc" }, "Contest Math (AMC)": { "icon": "AMC", "color": "e11d48" }, "IB Math AA SL": { "icon": "AA SL", "color": "f9a8d4" }, "IB Math AA HL": { "icon": "AA HL", "color": "f0abfc" }, "IB Math AI SL": { "icon": "AI SL", "color": "a5f3fc" }, "IB Math AI HL": { "icon": "AI HL", "color": "bbf7d0" } }
         for row in rows:
             grade_name, curriculum_type, unit_name, topic_name, topic_id, available_themes_str, default_theme = \
                 row['GradeName'], row['CurriculumType'], row['UnitName'], row['TopicName'], row['TopicID'], row['AvailableThemes'], row['DefaultTheme']
