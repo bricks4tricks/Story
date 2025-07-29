@@ -25,9 +25,10 @@ def seed_data():
         grades_map, subjects_map, units_map = {}, {}, {}
         
         print("Starting to process CSV file...")
+        rows_processed = 0  # Counter for successfully processed rows
         with open(CSV_FILE_NAME, mode='r', encoding='utf-8') as csvfile:
             reader = csv.reader(csvfile)
-            next(reader, None) # Skip header row
+            next(reader, None)  # Skip header row
 
             for i, row in enumerate(reader):
                 # Ensure the row has enough columns before processing
@@ -85,8 +86,11 @@ def seed_data():
                 # 5. Link the child Topic to the Grade
                 cursor.execute("INSERT INTO tbl_TopicGrade (TopicID, GradeID, CreatedBy) VALUES (%s, %s, %s)", (child_topic_id, grade_id, 'SEEDER'))
 
+                # Successfully processed this row
+                rows_processed += 1
+
         conn.commit()
-        print(f"\nDatabase seeding completed successfully! Processed {i+1} valid rows.")
+        print(f"\nDatabase seeding completed successfully! Processed {rows_processed} valid rows.")
 
     except mysql.connector.Error as err: print(f"Database Error: {err}")
     except FileNotFoundError: print(f"Error: The file '{CSV_FILE_NAME}' was not found.")
