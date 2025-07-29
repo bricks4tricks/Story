@@ -1,6 +1,6 @@
 import psycopg2
 import psycopg2.extras
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, render_template, send_from_directory
 from flask_cors import CORS
 from flask_bcrypt import Bcrypt
 import secrets
@@ -1644,6 +1644,63 @@ def get_all_question_attempts():
     finally:
         if conn and conn.closed == 0:
             conn.close()
+
+
+# =================================================================
+#  3. FRONTEND ROUTES (Serve HTML Pages)
+# =================================================================
+
+@app.route('/')
+def serve_index():
+    return render_template('index.html')
+
+@app.route('/admin-login.html')
+def serve_admin_login():
+    return render_template('admin-login.html')
+
+@app.route('/admin.html')
+def serve_admin():
+    return render_template('admin.html')
+
+@app.route('/dashboard.html')
+def serve_dashboard():
+    return render_template('dashboard.html')
+
+@app.route('/forgot-password.html')
+def serve_forgot_password():
+    return render_template('forgot-password.html')
+
+@app.route('/parent-login.html')
+def serve_parent_login():
+    return render_template('parent-login.html')
+
+@app.route('/parent-portal.html')
+def serve_parent_portal():
+    return render_template('parent-portal.html')
+
+@app.route('/quiz-player.html')
+def serve_quiz_player():
+    return render_template('quiz-player.html')
+
+@app.route('/reset-password.html')
+def serve_reset_password():
+    return render_template('reset-password.html')
+
+@app.route('/signup.html')
+def serve_signup():
+    return render_template('signup.html')
+
+@app.route('/story-player.html')
+def serve_story_player():
+    return render_template('story-player.html')
+
+@app.route('/favicon.ico')
+def favicon():
+    return send_from_directory(os.path.join(app.root_path, 'static'), 'favicon.ico', mimetype='image/vnd.microsoft.icon')
+
+@app.route('/static/<path:filename>')
+def serve_static(filename):
+    return send_from_directory(os.path.join(app.root_path, 'static'), filename)
 
 
 # =================================================================
