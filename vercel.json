@@ -1,7 +1,7 @@
 {
   "functions": {
     "api/app.py": {
-      "runtime": "@vercel/python"
+      "runtime": "@vercel/python@3.9.x"
     }
   },
   "rewrites": [
@@ -19,10 +19,5 @@
         { "key": "Access-Control-Allow-Headers", "value": "Content-Type, Authorization" }
       ]
     }
-  ],
-  "build": {
-    "env": {
-      "PYTHON_VERSION": "3.9.x"
-    }
-  }
+  ]
 }
