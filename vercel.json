@@ -1,0 +1,84 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "app.py",
+      "use": "@vercel/python",
+      "config": { "maxLambdaSize": "15mb" }
+    },
+    {
+      "src": "*.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "favicon.ico",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "admin.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "admin-login.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "parent-login.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "parent-portal.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "dashboard.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "quiz-player.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "story-player.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "signup.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "forgot-password.html",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "reset-password.html",
+      "use": "@vercel/static"
+    },
+    {
+        "src": "static/**",
+        "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "app.py"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ],
+  "env": {
+    "DB_USER": "@db_user",
+    "SQL_PASSWORD": "@sql_password",
+    "DB_HOST": "@db_host",
+    "DB_DATABASE": "@db_database",
+    "SMTP_SERVER": "@smtp_server",
+    "SMTP_PORT": "@smtp_port",
+    "SMTP_USERNAME": "@smtp_username",
+    "SMTP_PASSWORD": "@smtp_password",
+    "SENDER_EMAIL": "@sender_email",
+    "FRONTEND_BASE_URL": "https://logicandstories.com"
+  }
+}
