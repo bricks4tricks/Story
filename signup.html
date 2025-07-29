@@ -35,9 +35,9 @@
     <!-- Header -->
     <header class="bg-slate-900/80 backdrop-blur-sm sticky top-0 z-50 border-b border-slate-800">
         <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <a href="index.html" class="text-3xl font-pacifico gradient-text">Logic and Stories</a>
+            <a href="https://logicandstories.com" class="text-3xl font-pacifico gradient-text">Logic and Stories</a>
             <div class="flex items-center space-x-4">
-                <a href="index.html" id="signInLink" class="hover:text-yellow-400 transition-colors cursor-pointer">Already have an account? Sign In</a>
+                <a href="https://logicandstories.com" id="signInLink" class="hover:text-yellow-400 transition-colors cursor-pointer">Already have an account? Sign In</a>
             </div>
         </nav>
     </header>
@@ -129,7 +129,7 @@
                 }
 
                 const userData = { username, email, password };
-                const apiUrl = 'http://127.0.0.1:5000/api/signup';
+                const apiUrl = 'https://logicandstories.com/api/signup';
 
                 console.log(`Sending data to API at: ${apiUrl}`);
                 console.log("Data being sent:", userData);
@@ -149,7 +149,7 @@
                     if (response.ok) {
                         messageDiv.textContent = 'Account created successfully! Redirecting...';
                         messageDiv.className = 'text-center text-green-400 mb-4';
-                        setTimeout(() => { window.location.href = 'index.html'; }, 2000);
+                        setTimeout(() => { window.location.href = 'https://logicandstories.com'; }, 2000);
                     } else {
                         messageDiv.textContent = result.message || 'An error occurred.';
                         // Class already set for errors.
@@ -163,4 +163,4 @@
         });
     </script>
 </body>
-</html> 
+</html>
