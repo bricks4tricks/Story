@@ -57,13 +57,13 @@
     <script>
         // Redirect to home if not logged in as student or parent
         if (!localStorage.getItem('userId') || (localStorage.getItem('userType') !== 'Student' && localStorage.getItem('userType') !== 'Parent')) {
-            window.location.href = 'index.html';
+            window.location.href = 'https://logicandstories.com';
         }
     </script>
 
     <header class="bg-slate-900/80 backdrop-blur-sm sticky top-0 z-50 border-b border-slate-800">
         <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <a href="index.html" class="text-3xl font-pacifico gradient-text">Logic and Stories</a>
+            <a href="https://logicandstories.com" class="text-3xl font-pacifico gradient-text">Logic and Stories</a>
             <div class="flex items-center space-x-4">
                 <span id="welcome-username" class="font-semibold text-white"></span>
                 <button id="signOutButton" class="bg-gray-700 text-white font-bold py-2 px-5 rounded-full hover:bg-gray-600 transition-colors">
@@ -135,7 +135,7 @@
 
             const fetchCurriculum = async () => {
                 try {
-                    const response = await fetch('http://127.0.0.1:5000/api/curriculum');
+                    const response = await fetch('https://logicandstories.com/api/curriculum');
                     if (!response.ok) throw new Error('Failed to fetch curriculum data.');
                     allCurriculumData = await response.json();
                     renderGradeTabs();
@@ -149,7 +149,7 @@
                 // Only fetch progress if the user is a Student
                 if (userType === 'Student') {
                     try {
-                        const response = await fetch(`http://127.0.0.1:5000/api/progress/${userId}`);
+                        const response = await fetch(`https://logicandstories.com/api/progress/${userId}`);
                         if (!response.ok) throw new Error('Failed to fetch user progress.');
                         const progressData = await response.json();
                         userProgress = {};
@@ -345,12 +345,12 @@
                     } else if (userType === 'Student') {
                         // First, check if a story exists for this topic
                         try {
-                            const response = await fetch(`http://127.0.0.1:5000/api/story_exists/${topicId}`);
+                            const response = await fetch(`https://logicandstories.com/api/story_exists/${topicId}`);
                             const result = await response.json();
 
                             if (response.ok && result.storyExists) {
                                 // Story exists, redirect to story player
-                                window.location.href = `story-player.html?topicId=${topicId}`;
+                                window.location.href = `https://logicandstories.com/story-player.html?topicId=${topicId}`;
                             } else if (response.ok && !result.storyExists) {
                                 // No story found for this topic
                                 alert(`No interactive story content available yet for "${topicName}". Please try another topic or check back later.`);
@@ -370,7 +370,7 @@
 
             signOutButton.addEventListener('click', () => {
                 localStorage.clear();
-                window.location.href = 'index.html';
+                window.location.href = 'https://logicandstories.com';
             });
 
             // Initial data load
