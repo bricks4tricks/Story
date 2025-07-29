@@ -10,6 +10,7 @@ import random
 import re
 import os # Import os module to access environment variables
 
+# ----------------------------
 # --- NEW IMPORTS FOR EMAIL ---
 import smtplib
 from email.mime.multipart import MIMEMultipart
