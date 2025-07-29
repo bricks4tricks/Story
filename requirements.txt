@@ -3,7 +3,25 @@ Flask-Cors
 Flask-Bcrypt
 mysql-connector-python
 python-dotenv
-PyJWT # Comm
+PyJWT
 requests
 smtplib
 email
+mysql.connector
+Flask 
+jsonify 
+request
+CORS
+Bcrypt
+secrets
+datetime
+timedelta
+traceback
+json
+random
+re
+os
+smtplib
+email.mime.multipart
+MIMEMultipart
+MIMEText
