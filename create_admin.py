@@ -1,18 +1,20 @@
 import mysql.connector
 from flask_bcrypt import Bcrypt
+import os # Import os for environment variables
 
 # --- CONFIGURATION ---
 db_config = {
-    'user': 'root',
-    'password': 'Dragon@123',  # YOUR MYSQL PASSWORD HERE
-    'host': '127.0.0.1',
-    'database': 'educational_platform_db'
+    'user': os.environ.get('DB_USER', 'root'), # Use environment variable, default to 'root'
+    'password': os.environ.get('SQL_PASSWORD', 'Dragon@123'),  # Use environment variable for password, default for local
+    'host': os.environ.get('DB_HOST', '127.0.0.1'), # Use environment variable, default to '127.0.0.1'
+    'database': os.environ.get('DB_DATABASE', 'educational_platform_db') # Use environment variable, default database name
 }
 
 # --- SET YOUR ADMIN CREDENTIALS HERE ---
 admin_username = 'admin'
 admin_email = 'admin@logicandstories.com'
-admin_password = '9j*kX%NK^8snHd3aW8US' # CHOOSE A STRONG PASSWORD
+# Use an environment variable for the admin password, with a strong default for initial setup
+admin_password = os.environ.get('ADMIN_PASSWORD', '9j*kX%NK^8snHd3aW8US') 
 
 # --- SCRIPT LOGIC ---
 bcrypt = Bcrypt()
