@@ -1,4 +1,5 @@
-import mysql.connector
+import psycopg2
+import psycopg2.extras
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 from flask_bcrypt import Bcrypt
@@ -219,8 +220,8 @@ def signup_user():
 
     conn = None
     try:
-        conn = mysql.connector.connect(**db_config)
-        cursor = conn.cursor(dictionary=True)
+        conn = psycopg2.connect(**db_config)
+        cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
         cursor.execute("SELECT ID FROM tbl_User WHERE Username = %s OR Email = %s", (username, email))
         if cursor.fetchone():
             return jsonify({"status": "error", "message": "Username or email already exists"}), 409
@@ -237,7 +238,7 @@ def signup_user():
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error"}), 500
     finally:
-        if conn and conn.is_connected():
+        if conn and conn.closed == 0:
             conn.close()
 
 @app.route('/api/signin', methods=['POST', 'OPTIONS'])
@@ -250,8 +251,8 @@ def signin_user():
 
     conn = None
     try:
-        conn = mysql.connector.connect(**db_config)
-        cursor = conn.cursor(dictionary=True)
+        conn = psycopg2.connect(**db_config)
+        cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
         cursor.execute("SELECT * FROM tbl_User WHERE Username = %s", (username,))
         user = cursor.fetchone()
         if user and bcrypt.check_password_hash(user['PasswordHash'], password):
@@ -271,7 +272,7 @@ def signin_user():
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error"}), 500
     finally:
-        if conn and conn.is_connected():
+        if conn and conn.closed == 0:
             conn.close()
 
 @app.route('/api/admin-signin', methods=['POST', 'OPTIONS'])
@@ -284,8 +285,8 @@ def admin_signin():
 
     conn = None
     try:
-        conn = mysql.connector.connect(**db_config)
-        cursor = conn.cursor(dictionary=True)
+        conn = psycopg2.connect(**db_config)
+        cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
         cursor.execute("SELECT * FROM tbl_User WHERE Username = %s", (username,))
         user = cursor.fetchone()
         if user and bcrypt.check_password_hash(user['PasswordHash'], password) and user['UserType'] == 'Admin':
@@ -301,15 +302,15 @@ def admin_signin():
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error"}), 500
     finally:
-        if conn and conn.is_connected():
+        if conn and conn.closed == 0:
             conn.close()
 
 @app.route('/api/admin/all-users', methods=['GET'])
 def get_all_users():
     conn = None
     try:
-        conn = mysql.connector.connect(**db_config)
-        cursor = conn.cursor(dictionary=True)
+        conn = psycopg2.connect(**db_config)
+        cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
         query = """
             SELECT u.ID, u.Username, u.Email, u.UserType, u.CreatedOn, p.Username AS ParentUsername
             FROM tbl_User u
@@ -324,7 +325,7 @@ def get_all_users():
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error"}), 500
     finally:
-        if conn and conn.is_connected():
+        if conn and conn.closed == 0:
             conn.close()
 
 
@@ -343,8 +344,8 @@ def edit_user(user_id):
 
     conn = None
     try:
-        conn = mysql.connector.connect(**db_config)
-        cursor = conn.cursor(dictionary=True)
+        conn = psycopg2.connect(**db_config)
+        cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
         cursor.execute(
             "SELECT ID FROM tbl_User WHERE (Username = %s OR Email = %s) AND ID != %s",
@@ -368,7 +369,7 @@ def edit_user(user_id):
         traceback.print_exc()
         return jsonify({"status": "error", "message": "An internal error occurred."}), 500
     finally:
-        if conn and conn.is_connected():
+        if conn and conn.closed == 0:
             conn.close()
 
 @app.route('/api/admin/delete-user/<int:user_id>', methods=['DELETE', 'OPTIONS'])
@@ -376,7 +377,7 @@ def delete_user(user_id):
     if request.method == 'OPTIONS': return jsonify(success=True)
     conn = None
     try:
-        conn = mysql.connector.connect(**db_config)
+        conn = psycopg2.connect(**db_config)
         cursor = conn.cursor()
 
         cursor.execute("SELECT UserType FROM tbl_User WHERE ID = %s", (user_id,))
@@ -402,7 +403,7 @@ def delete_user(user_id):
 
         return jsonify({"status": "success", "message": "User deleted successfully."}), 200
 
-    except mysql.connector.Error as err:
+    except psycopg2.Error as err:
         print(f"Delete User DB Error: {err}")
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Database error during deletion."}), 500
@@ -411,7 +412,7 @@ def delete_user(user_id):
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal server error."}), 500
     finally:
-        if conn and conn.is_connected():
+        if conn and conn.closed == 0:
             conn.close()
 
 
@@ -419,8 +420,8 @@ def delete_user(user_id):
 def get_topics_list():
     conn = None
     try:
-        conn = mysql.connector.connect(**db_config)
-        cursor = conn.cursor(dictionary=True)
+        conn = psycopg2.connect(**db_config)
+        cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
         query = """
             SELECT
                 t.ID,
@@ -442,7 +443,7 @@ def get_topics_list():
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error"}), 500
     finally:
-        if conn and conn.is_connected():
+        if conn and conn.closed == 0:
             conn.close()
 
 @app.route('/api/admin/add-question', methods=['POST', 'OPTIONS'])
@@ -472,14 +473,20 @@ def add_question():
 
     conn = None
     try:
-        conn = mysql.connector.connect(**db_config)
+        conn = psycopg2.connect(**db_config)
         cursor = conn.cursor()
 
-        conn.start_transaction()
+        conn.autocommit = False
 
-        question_query = "INSERT INTO tbl_Question (TopicID, QuestionName, QuestionType, DifficultyRating, CreatedBy) VALUES (%s, %s, %s, %s, %s)"
-        cursor.execute(question_query, (topic_id, question_text, question_type_to_insert, difficulty_rating, 'Admin'))
-        question_id = cursor.lastrowid
+        question_query = (
+            "INSERT INTO tbl_Question (TopicID, QuestionName, QuestionType, DifficultyRating, CreatedBy) "
+            "VALUES (%s, %s, %s, %s, %s) RETURNING ID"
+        )
+        cursor.execute(
+            question_query,
+            (topic_id, question_text, question_type_to_insert, difficulty_rating, 'Admin'),
+        )
+        question_id = cursor.fetchone()[0]
 
         answer_query = "INSERT INTO tbl_Answer (QuestionID, AnswerName, IsCorrect, CreatedBy) VALUES (%s, %s, %s, %s)"
         answer_values = []
@@ -505,15 +512,15 @@ def add_question():
         traceback.print_exc()
         return jsonify({"status": "error", "message": "An unexpected error occurred."}), 500
     finally:
-        if conn and conn.is_connected():
+        if conn and conn.closed == 0:
             conn.close()
 
 @app.route('/api/admin/questions', methods=['GET'])
 def get_all_questions():
     conn = None
     try:
-        conn = mysql.connector.connect(**db_config)
-        cursor = conn.cursor(dictionary=True)
+        conn = psycopg2.connect(**db_config)
+        cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
         query = """
             SELECT
                 q.ID,
@@ -535,15 +542,15 @@ def get_all_questions():
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error"}), 500
     finally:
-        if conn and conn.is_connected():
+        if conn and conn.closed == 0:
             conn.close()
 
 @app.route('/api/admin/question/<int:question_id>', methods=['GET'])
 def get_question_details(question_id):
     conn = None
     try:
-        conn = mysql.connector.connect(**db_config)
-        cursor = conn.cursor(dictionary=True)
+        conn = psycopg2.connect(**db_config)
+        cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
         cursor.execute("SELECT ID, TopicID, QuestionName, QuestionType, DifficultyRating FROM tbl_Question WHERE ID = %s", (question_id,))
         question = cursor.fetchone()
@@ -591,7 +598,7 @@ def get_question_details(question_id):
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error fetching question details."}), 500
     finally:
-        if conn and conn.is_connected():
+        if conn and conn.closed == 0:
             conn.close()
 
 @app.route('/api/admin/edit-question/<int:question_id>', methods=['PUT', 'OPTIONS'])
@@ -625,10 +632,10 @@ def edit_question(question_id):
 
     conn = None
     try:
-        conn = mysql.connector.connect(**db_config)
+        conn = psycopg2.connect(**db_config)
         cursor = conn.cursor()
 
-        conn.start_transaction()
+        conn.autocommit = False
 
         question_update_query = "UPDATE tbl_Question SET TopicID = %s, QuestionName = %s, QuestionType = %s, DifficultyRating = %s, LastUpdatedOn = NOW(), LastUpdatedBy = %s WHERE ID = %s"
         cursor.execute(question_update_query, (topic_id, question_text, question_type_to_update, difficulty_rating, 'Admin', question_id))
@@ -667,7 +674,7 @@ def edit_question(question_id):
         traceback.print_exc()
         return jsonify({"status": "error", "message": "An unexpected error occurred during question update."}), 500
     finally:
-        if conn and conn.is_connected():
+        if conn and conn.closed == 0:
             conn.close()
 
 
@@ -677,10 +684,10 @@ def delete_question(question_id):
 
     conn = None
     try:
-        conn = mysql.connector.connect(**db_config)
+        conn = psycopg2.connect(**db_config)
         cursor = conn.cursor()
 
-        conn.start_transaction()
+        conn.autocommit = False
 
         cursor.execute("DELETE FROM tbl_Step WHERE QuestionID = %s", (question_id,))
         cursor.execute("DELETE FROM tbl_Answer WHERE QuestionID = %s", (question_id,))
@@ -693,7 +700,7 @@ def delete_question(question_id):
 
         return jsonify({"status": "success", "message": "Question and its related data deleted successfully."}), 200
 
-    except mysql.connector.Error as err:
+    except psycopg2.Error as err:
         if conn: conn.rollback()
         print(f"Delete Question DB Error: {err}")
         traceback.print_exc()
@@ -704,7 +711,7 @@ def delete_question(question_id):
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal server error during deletion."}), 500
     finally:
-        if conn and conn.is_connected():
+        if conn and conn.closed == 0:
             conn.close()
 
 
@@ -712,8 +719,8 @@ def delete_question(question_id):
 def get_all_stories():
     conn = None
     try:
-        conn = mysql.connector.connect(**db_config)
-        cursor = conn.cursor(dictionary=True)
+        conn = psycopg2.connect(**db_config)
+        cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
         query = """
             SELECT DISTINCT
                 t.ID AS TopicID,
@@ -731,7 +738,7 @@ def get_all_stories():
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error"}), 500
     finally:
-        if conn and conn.is_connected():
+        if conn and conn.closed == 0:
             conn.close()
 
 @app.route('/api/admin/delete-story/<int:topic_id>', methods=['DELETE', 'OPTIONS'])
@@ -740,10 +747,10 @@ def delete_story(topic_id):
 
     conn = None
     try:
-        conn = mysql.connector.connect(**db_config)
+        conn = psycopg2.connect(**db_config)
         cursor = conn.cursor()
 
-        conn.start_transaction()
+        conn.autocommit = False
 
         # Delete from tbl_TopicTheme first
         cursor.execute("DELETE FROM tbl_TopicTheme WHERE TopicID = %s", (topic_id,))
@@ -764,7 +771,7 @@ def delete_story(topic_id):
 
         return jsonify({"status": "success", "message": f"Story for topic ID {topic_id} and its associated interactive elements deleted successfully."}), 200
 
-    except mysql.connector.Error as err:
+    except psycopg2.Error as err:
         if conn: conn.rollback()
         print(f"Delete Story DB Error: {err}")
         traceback.print_exc()
@@ -775,7 +782,7 @@ def delete_story(topic_id):
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal server error during deletion."}), 500
     finally:
-        if conn and conn.is_connected():
+        if conn and conn.closed == 0:
             conn.close()
 
 
@@ -793,10 +800,10 @@ def save_story():
 
     conn = None
     try:
-        conn = mysql.connector.connect(**db_config)
+        conn = psycopg2.connect(**db_config)
         cursor = conn.cursor()
 
-        conn.start_transaction()
+        conn.autocommit = False
 
         # Delete existing interactive elements and descriptions for this topic
         cursor.execute("SELECT InteractiveElementID FROM tbl_Description WHERE TopicID = %s AND InteractiveElementID IS NOT NULL", (topic_id,))
@@ -851,9 +858,15 @@ def save_story():
                     conn.rollback()
                     return jsonify({"status": "error", "message": f"Interactive element in Section '{section_name}' is incomplete (missing element type or invalid configuration)."}, 400)
 
-                interactive_query = "INSERT INTO tbl_InteractiveElement (ElementType, Configuration, CreatedBy) VALUES (%s, %s, %s)"
-                cursor.execute(interactive_query, (element_type, json.dumps(configuration), 'Admin'))
-                interactive_element_id_for_db = cursor.lastrowid
+                interactive_query = (
+                    "INSERT INTO tbl_InteractiveElement (ElementType, Configuration, CreatedBy) "
+                    "VALUES (%s, %s, %s) RETURNING ID"
+                )
+                cursor.execute(
+                    interactive_query,
+                    (element_type, json.dumps(configuration), 'Admin'),
+                )
+                interactive_element_id_for_db = cursor.fetchone()[0]
             else:
                 conn.rollback()
                 return jsonify({"status": "error", "message": f"Section {order} has an invalid content type: {content_type}"}), 400
@@ -864,7 +877,7 @@ def save_story():
         conn.commit()
         return jsonify({"status": "success", "message": f"Story for topic {topic_id} saved successfully."}), 201
 
-    except mysql.connector.Error as err:
+    except psycopg2.Error as err:
         if conn: conn.rollback()
         print(f"Save Story DB Error: {err}")
         traceback.print_exc()
@@ -875,7 +888,7 @@ def save_story():
         traceback.print_exc()
         return jsonify({"status": "error", "message": "An unexpected server error occurred."}), 500
     finally:
-        if conn and conn.is_connected():
+        if conn and conn.closed == 0:
             conn.close()
 
 @app.route('/api/story/<int:topic_id>', methods=['GET'])
@@ -883,8 +896,8 @@ def get_story_for_topic(topic_id):
     conn = None
     story_payload = {"sections": [], "defaultTheme": None, "availableThemes": []}
     try:
-        conn = mysql.connector.connect(**db_config)
-        cursor = conn.cursor(dictionary=True)
+        conn = psycopg2.connect(**db_config)
+        cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
         # Fetch the default theme for this topic
         cursor.execute("""
@@ -955,14 +968,14 @@ def get_story_for_topic(topic_id):
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error"}), 500
     finally:
-        if conn and conn.is_connected():
+        if conn and conn.closed == 0:
             conn.close()
 
 @app.route('/api/story_exists/<int:topic_id>', methods=['GET'])
 def story_exists(topic_id):
     conn = None
     try:
-        conn = mysql.connector.connect(**db_config)
+        conn = psycopg2.connect(**db_config)
         cursor = conn.cursor()
 
         cursor.execute("SELECT COUNT(*) FROM tbl_Description WHERE TopicID = %s", (topic_id,))
@@ -978,7 +991,7 @@ def story_exists(topic_id):
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error checking story availability."}), 500
     finally:
-        if conn and conn.is_connected():
+        if conn and conn.closed == 0:
             conn.close()
 
 
@@ -986,8 +999,8 @@ def story_exists(topic_id):
 def get_user_progress(user_id):
     conn = None
     try:
-        conn = mysql.connector.connect(**db_config)
-        cursor = conn.cursor(dictionary=True)
+        conn = psycopg2.connect(**db_config)
+        cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
         query = """
             SELECT up.TopicID, up.Status, t.TopicName, unit.TopicName AS UnitName, s.SubjectName AS CurriculumType
             FROM tbl_UserProgress up
@@ -1004,7 +1017,7 @@ def get_user_progress(user_id):
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error"}), 500
     finally:
-        if conn and conn.is_connected():
+        if conn and conn.closed == 0:
             conn.close()
 
 @app.route('/api/progress/update', methods=['POST'])
@@ -1019,7 +1032,7 @@ def update_user_progress():
 
     conn = None
     try:
-        conn = mysql.connector.connect(**db_config)
+        conn = psycopg2.connect(**db_config)
         cursor = conn.cursor()
 
         query = """
@@ -1036,7 +1049,7 @@ def update_user_progress():
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error"}), 500
     finally:
-        if conn and conn.is_connected():
+        if conn and conn.closed == 0:
             conn.close()
 
 @app.route('/api/create-student', methods=['POST', 'OPTIONS'])
@@ -1054,8 +1067,8 @@ def create_student():
 
     conn = None
     try:
-        conn = mysql.connector.connect(**db_config)
-        cursor = conn.cursor(dictionary=True)
+        conn = psycopg2.connect(**db_config)
+        cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
         cursor.execute("SELECT ID FROM tbl_User WHERE Username = %s", (username,))
         if cursor.fetchone():
             return jsonify({"status": "error", "message": "This username is already taken"}), 409
@@ -1074,15 +1087,15 @@ def create_student():
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error"}), 500
     finally:
-        if conn and conn.is_connected():
+        if conn and conn.closed == 0:
             conn.close()
 
 @app.route('/api/my-students/<int:parent_id>', methods=['GET'])
 def get_my_students(parent_id):
     conn = None
     try:
-        conn = mysql.connector.connect(**db_config)
-        cursor = conn.cursor(dictionary=True)
+        conn = psycopg2.connect(**db_config)
+        cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
         cursor.execute("SELECT ID, Username, CreatedOn FROM tbl_User WHERE ParentUserID = %s", (parent_id,))
         students = cursor.fetchall()
         return jsonify(students), 200
@@ -1091,7 +1104,7 @@ def get_my_students(parent_id):
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error"}), 500
     finally:
-        if conn and conn.is_connected():
+        if conn and conn.closed == 0:
             conn.close()
 
 @app.route('/api/modify-student', methods=['POST', 'OPTIONS'])
@@ -1109,7 +1122,7 @@ def modify_student():
 
     conn = None
     try:
-        conn = mysql.connector.connect(**db_config)
+        conn = psycopg2.connect(**db_config)
         cursor = conn.cursor()
         hashed_password = bcrypt.generate_password_hash(new_password).decode('utf-8')
         cursor.execute(
@@ -1126,7 +1139,7 @@ def modify_student():
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error"}), 500
     finally:
-        if conn and conn.is_connected():
+        if conn and conn.closed == 0:
             conn.close()
 
 @app.route('/api/delete-student/<int:student_id>', methods=['DELETE', 'OPTIONS'])
@@ -1134,7 +1147,7 @@ def delete_student_from_parent_portal(student_id):
     if request.method == 'OPTIONS': return jsonify(success=True)
     conn = None
     try:
-        conn = mysql.connector.connect(**db_config)
+        conn = psycopg2.connect(**db_config)
         cursor = conn.cursor()
         cursor.execute("DELETE FROM tbl_User WHERE ID = %s AND UserType = 'Student'", (student_id,))
         if cursor.rowcount == 0:
@@ -1147,7 +1160,7 @@ def delete_student_from_parent_portal(student_id):
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error"}), 500
     finally:
-        if conn and conn.is_connected():
+        if conn and conn.closed == 0:
             conn.close()
 
 @app.route('/api/forgot-password', methods=['POST', 'OPTIONS'])
@@ -1160,8 +1173,8 @@ def forgot_password():
 
     conn = None
     try:
-        conn = mysql.connector.connect(**db_config)
-        cursor = conn.cursor(dictionary=True)
+        conn = psycopg2.connect(**db_config)
+        cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
         cursor.execute("SELECT ID FROM tbl_User WHERE Email = %s", (email,))
         user = cursor.fetchone()
         if user:
@@ -1188,7 +1201,7 @@ def forgot_password():
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error"}), 500
     finally:
-        if conn and conn.is_connected():
+        if conn and conn.closed == 0:
             conn.close()
 
 @app.route('/api/reset-password', methods=['POST', 'OPTIONS'])
@@ -1206,8 +1219,8 @@ def reset_password():
 
     conn = None
     try:
-        conn = mysql.connector.connect(**db_config)
-        cursor = conn.cursor(dictionary=True)
+        conn = psycopg2.connect(**db_config)
+        cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
         cursor.execute("SELECT ID FROM tbl_User WHERE ResetToken = %s AND ResetTokenExpiry > NOW()", (token,))
         user = cursor.fetchone()
         if not user:
@@ -1224,15 +1237,15 @@ def reset_password():
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error"}), 500
     finally:
-        if conn and conn.is_connected():
+        if conn and conn.closed == 0:
             conn.close()
 
 @app.route('/api/curriculum', methods=['GET'])
 def get_curriculum():
     conn = None
     try:
-        conn = mysql.connector.connect(**db_config)
-        cursor = conn.cursor(dictionary=True)
+        conn = psycopg2.connect(**db_config)
+        cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
         query = """
             SELECT
                 g.GradeName,
@@ -1288,7 +1301,7 @@ def get_curriculum():
         traceback.print_exc()
         return jsonify({ "status": "error", "message": str(e) }), 500
     finally:
-        if conn and conn.is_connected():
+        if conn and conn.closed == 0:
             conn.close()
 
 # --- QUIZ ENDPOINTS ---
@@ -1297,8 +1310,8 @@ def get_curriculum():
 def get_user_topic_difficulty(user_id, topic_id):
     conn = None
     try:
-        conn = mysql.connector.connect(**db_config)
-        cursor = conn.cursor(dictionary=True)
+        conn = psycopg2.connect(**db_config)
+        cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
         query = "SELECT CurrentDifficulty FROM tbl_UserTopicDifficulty WHERE UserID = %s AND TopicID = %s"
         cursor.execute(query, (user_id, topic_id))
         result = cursor.fetchone()
@@ -1309,7 +1322,7 @@ def get_user_topic_difficulty(user_id, topic_id):
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error fetching user difficulty."}), 500
     finally:
-        if conn and conn.is_connected():
+        if conn and conn.closed == 0:
             conn.close()
 
 @app.route('/api/user/update-topic-difficulty', methods=['POST', 'OPTIONS'])
@@ -1332,7 +1345,7 @@ def update_user_topic_difficulty():
 
     conn = None
     try:
-        conn = mysql.connector.connect(**db_config)
+        conn = psycopg2.connect(**db_config)
         cursor = conn.cursor()
         query = """
             INSERT INTO tbl_UserTopicDifficulty (UserID, TopicID, CurrentDifficulty)
@@ -1347,7 +1360,7 @@ def update_user_topic_difficulty():
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error updating user difficulty."}), 500
     finally:
-        if conn and conn.is_connected():
+        if conn and conn.closed == 0:
             conn.close()
 
 
@@ -1355,8 +1368,8 @@ def update_user_topic_difficulty():
 def get_quiz_question(user_id, topic_id, difficulty_level):
     conn = None
     try:
-        conn = mysql.connector.connect(**db_config)
-        cursor = conn.cursor(dictionary=True)
+        conn = psycopg2.connect(**db_config)
+        cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
         difficulty_level = max(1, min(5, difficulty_level))
 
@@ -1432,7 +1445,7 @@ def get_quiz_question(user_id, topic_id, difficulty_level):
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error fetching quiz question."}), 500
     finally:
-        if conn and conn.is_connected():
+        if conn and conn.closed == 0:
             conn.close()
 
 # --- FLAGGING ENDPOINTS ---
@@ -1454,7 +1467,7 @@ def flag_item():
 
     conn = None
     try:
-        conn = mysql.connector.connect(**db_config)
+        conn = psycopg2.connect(**db_config)
         cursor = conn.cursor()
 
         insert_query = """
@@ -1470,7 +1483,7 @@ def flag_item():
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error while flagging item."}), 500
     finally:
-        if conn and conn.is_connected():
+        if conn and conn.closed == 0:
             conn.close()
 
 
@@ -1478,8 +1491,8 @@ def flag_item():
 def get_flagged_items():
     conn = None
     try:
-        conn = mysql.connector.connect(**db_config)
-        cursor = conn.cursor(dictionary=True)
+        conn = psycopg2.connect(**db_config)
+        cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
         query = """
             SELECT
@@ -1514,7 +1527,7 @@ def get_flagged_items():
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error fetching flagged items."}), 500
     finally:
-        if conn and conn.is_connected():
+        if conn and conn.closed == 0:
             conn.close()
 
 
@@ -1533,7 +1546,7 @@ def update_flag_status(flag_id):
 
     conn = None
     try:
-        conn = mysql.connector.connect(**db_config)
+        conn = psycopg2.connect(**db_config)
         cursor = conn.cursor()
 
         update_query = """
@@ -1553,7 +1566,7 @@ def update_flag_status(flag_id):
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error updating flag status."}), 500
     finally:
-        if conn and conn.is_connected():
+        if conn and conn.closed == 0:
             conn.close()
 
 # --- QUESTION ATTEMPT LOGGING ENDPOINT ---
@@ -1572,7 +1585,7 @@ def record_question_attempt():
 
     conn = None
     try:
-        conn = mysql.connector.connect(**db_config)
+        conn = psycopg2.connect(**db_config)
         cursor = conn.cursor()
         insert_query = """
             INSERT INTO tbl_QuestionAttempt (UserID, QuestionID, UserAnswer, IsCorrect, DifficultyAtAttempt)
@@ -1586,7 +1599,7 @@ def record_question_attempt():
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error recording question attempt."}), 500
     finally:
-        if conn and conn.is_connected():
+        if conn and conn.closed == 0:
             conn.close()
 
 # --- ADMIN ENDPOINT TO GET ALL QUESTION ATTEMPTS ---
@@ -1594,8 +1607,8 @@ def record_question_attempt():
 def get_all_question_attempts():
     conn = None
     try:
-        conn = mysql.connector.connect(**db_config)
-        cursor = conn.cursor(dictionary=True)
+        conn = psycopg2.connect(**db_config)
+        cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
         query = """
             SELECT
@@ -1629,7 +1642,7 @@ def get_all_question_attempts():
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error fetching question attempts."}), 500
     finally:
-        if conn and conn.is_connected():
+        if conn and conn.closed == 0:
             conn.close()
 
 

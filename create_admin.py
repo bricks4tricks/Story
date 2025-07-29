@@ -1,4 +1,4 @@
-import mysql.connector
+import psycopg2
 from flask_bcrypt import Bcrypt
 import os # Import os for environment variables
 
@@ -21,7 +21,7 @@ bcrypt = Bcrypt()
 
 print("--- Admin Creation Script ---")
 try:
-    conn = mysql.connector.connect(**db_config)
+    conn = psycopg2.connect(**db_config)
     cursor = conn.cursor()
     print("Connected to database.")
 
@@ -43,12 +43,12 @@ try:
         print(f"\nSUCCESS! Admin user '{admin_username}' created.")
         print("You can now log in using the Admin Login page.")
 
-except mysql.connector.Error as err:
+except psycopg2.Error as err:
     print(f"DATABASE ERROR: {err}")
 except Exception as e:
     print(f"An unexpected error occurred: {e}")
 finally:
-    if 'conn' in locals() and conn.is_connected():
+    if 'conn' in locals() and conn.closed == 0:
         cursor.close()
         conn.close()
         print("Database connection closed.")
