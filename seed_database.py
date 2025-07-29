@@ -1,12 +1,13 @@
 import csv
 import mysql.connector
+import os # Import os for environment variables
 
 # --- UPDATE YOUR DATABASE CREDENTIALS HERE ---
 db_config = {
-    'user': 'root',
-    'password': 'Dragon@123', # <--- PUT YOUR MYSQL PASSWORD HERE
-    'host': '127.0.0.1',
-    'database': 'educational_platform_db'
+    'user': os.environ.get('DB_USER', 'root'), # Use environment variable, default to 'root'
+    'password': os.environ.get('SQL_PASSWORD', 'Dragon@123'), # Use environment variable for password, default for local
+    'host': os.environ.get('DB_HOST', '127.0.0.1'), # Use environment variable, default to '127.0.0.1'
+    'database': os.environ.get('DB_DATABASE', 'educational_platform_db') # Use environment variable, default database name
 }
 
 CSV_FILE_NAME = 'Untitled spreadsheet - Mapped Math Syllabus.csv'
@@ -95,6 +96,3 @@ def seed_data():
             cursor.close()
             conn.close()
             print("Database connection closed.")
-
-if __name__ == '__main__':
-    seed_data()
