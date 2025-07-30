@@ -472,7 +472,7 @@
 
             const initializeTopicData = async () => {
                 try {
-                    const response = await fetch('https://logicandstories.com/api/admin/topics-list');
+                    const response = await fetch('/api/admin/topics-list');
                     if (!response.ok) throw new Error('Failed to fetch topics');
                     const topics = await response.json();
                     hierarchicalTopics = {};
