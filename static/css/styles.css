@@ -1,0 +1,39 @@
+/* Minimal styles for admin login using Tailwind-inspired classes */
+
+body.bg-slate-900 { background-color: #0f172a; color: #e5e7eb; }
+.text-gray-200 { color: #e5e7eb; }
+.text-gray-300 { color: #d1d5db; }
+.text-white { color: #ffffff; }
+.bg-slate-800 { background-color: #1e293b; }
+.bg-slate-700 { background-color: #374151; }
+.border { border-width: 1px; }
+.border-slate-700 { border-color: #334155; }
+.border-slate-600 { border-color: #475569; }
+.rounded-2xl { border-radius: 1rem; }
+.rounded-lg { border-radius: 0.5rem; }
+.rounded-full { border-radius: 9999px; }
+.block { display: block; }
+.flex { display: flex; }
+.items-center { align-items: center; }
+.justify-center { justify-content: center; }
+.container { width: 100%; margin-left: auto; margin-right: auto; }
+.mx-auto { margin-left: auto; margin-right: auto; }
+.px-6 { padding-left: 1.5rem; padding-right: 1.5rem; }
+.px-3 { padding-left: 0.75rem; padding-right: 0.75rem; }
+.py-12 { padding-top: 3rem; padding-bottom: 3rem; }
+.py-3 { padding-top: 0.75rem; padding-bottom: 0.75rem; }
+.py-2 { padding-top: 0.5rem; padding-bottom: 0.5rem; }
+.p-8 { padding: 2rem; }
+.mb-6 { margin-bottom: 1.5rem; }
+.mb-4 { margin-bottom: 1rem; }
+.mb-2 { margin-bottom: 0.5rem; }
+.w-full { width: 100%; }
+.max-w-sm { max-width: 24rem; }
+.min-h-screen { min-height: 100vh; }
+.font-bold { font-weight: 700; }
+.text-3xl { font-size: 1.875rem; line-height: 2.25rem; }
+.bg-red-600 { background-color: #dc2626; }
+.hover\:bg-red-500:hover { background-color: #ef4444; }
+.text-red-400 { color: #f87171; }
+.h-5 { height: 1.25rem; }
+.glow-button { box-shadow: 0 0 15px rgba(239, 68, 68, 0.5); }
