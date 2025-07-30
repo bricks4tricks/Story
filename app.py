@@ -35,7 +35,7 @@ CORS(app, origins=["https://logicandstories.com", "https://www.logicandstories.c
 
 # --- DATABASE CONFIGURATION ---
 # Moved to db_utils for reuse across scripts
-from db_utils import get_db_connection
+from db_utils import get_db_connection, release_db_connection
 
 # Define a mapping for QuestionType (if using integer in DB)
 QUESTION_TYPE_MAP = {
@@ -239,8 +239,8 @@ def signup_user():
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error"}), 500
     finally:
-        if conn and conn.closed == 0:
-            conn.close()
+        if conn:
+            release_db_connection(conn)
 
 @app.route('/api/signin', methods=['POST', 'OPTIONS'])
 def signin_user():
@@ -286,8 +286,8 @@ def signin_user():
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error"}), 500
     finally:
-        if conn and conn.closed == 0:
-            conn.close()
+        if conn:
+            release_db_connection(conn)
 
 @app.route('/api/admin-signin', methods=['POST', 'OPTIONS'])
 def admin_signin():
@@ -339,8 +339,8 @@ def admin_signin():
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal server error"}), 500
     finally:
-        if conn and conn.closed == 0:
-            conn.close()
+        if conn:
+            release_db_connection(conn)
 
 @app.route('/api/admin/all-users', methods=['GET'])
 def get_all_users():
@@ -362,8 +362,8 @@ def get_all_users():
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error"}), 500
     finally:
-        if conn and conn.closed == 0:
-            conn.close()
+        if conn:
+            release_db_connection(conn)
 
 
 @app.route('/api/admin/edit-user/<int:user_id>', methods=['PUT', 'OPTIONS'])
@@ -406,8 +406,8 @@ def edit_user(user_id):
         traceback.print_exc()
         return jsonify({"status": "error", "message": "An internal error occurred."}), 500
     finally:
-        if conn and conn.closed == 0:
-            conn.close()
+        if conn:
+            release_db_connection(conn)
 
 @app.route('/api/admin/delete-user/<int:user_id>', methods=['DELETE', 'OPTIONS'])
 def delete_user(user_id):
@@ -449,8 +449,8 @@ def delete_user(user_id):
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal server error."}), 500
     finally:
-        if conn and conn.closed == 0:
-            conn.close()
+        if conn:
+            release_db_connection(conn)
 
 
 @app.route('/api/admin/topics-list', methods=['GET'])
@@ -480,8 +480,8 @@ def get_topics_list():
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error"}), 500
     finally:
-        if conn and conn.closed == 0:
-            conn.close()
+        if conn:
+            release_db_connection(conn)
 
 @app.route('/api/admin/add-question', methods=['POST', 'OPTIONS'])
 def add_question():
@@ -549,8 +549,8 @@ def add_question():
         traceback.print_exc()
         return jsonify({"status": "error", "message": "An unexpected error occurred."}), 500
     finally:
-        if conn and conn.closed == 0:
-            conn.close()
+        if conn:
+            release_db_connection(conn)
 
 @app.route('/api/admin/questions', methods=['GET'])
 def get_all_questions():
@@ -579,8 +579,8 @@ def get_all_questions():
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error"}), 500
     finally:
-        if conn and conn.closed == 0:
-            conn.close()
+        if conn:
+            release_db_connection(conn)
 
 @app.route('/api/admin/question/<int:question_id>', methods=['GET'])
 def get_question_details(question_id):
@@ -635,8 +635,8 @@ def get_question_details(question_id):
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error fetching question details."}), 500
     finally:
-        if conn and conn.closed == 0:
-            conn.close()
+        if conn:
+            release_db_connection(conn)
 
 @app.route('/api/admin/edit-question/<int:question_id>', methods=['PUT', 'OPTIONS'])
 def edit_question(question_id):
@@ -711,8 +711,8 @@ def edit_question(question_id):
         traceback.print_exc()
         return jsonify({"status": "error", "message": "An unexpected error occurred during question update."}), 500
     finally:
-        if conn and conn.closed == 0:
-            conn.close()
+        if conn:
+            release_db_connection(conn)
 
 
 @app.route('/api/admin/delete-question/<int:question_id>', methods=['DELETE', 'OPTIONS'])
@@ -748,8 +748,8 @@ def delete_question(question_id):
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal server error during deletion."}), 500
     finally:
-        if conn and conn.closed == 0:
-            conn.close()
+        if conn:
+            release_db_connection(conn)
 
 
 @app.route('/api/admin/stories', methods=['GET'])
@@ -775,8 +775,8 @@ def get_all_stories():
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error"}), 500
     finally:
-        if conn and conn.closed == 0:
-            conn.close()
+        if conn:
+            release_db_connection(conn)
 
 @app.route('/api/admin/delete-story/<int:topic_id>', methods=['DELETE', 'OPTIONS'])
 def delete_story(topic_id):
@@ -819,8 +819,8 @@ def delete_story(topic_id):
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal server error during deletion."}), 500
     finally:
-        if conn and conn.closed == 0:
-            conn.close()
+        if conn:
+            release_db_connection(conn)
 
 
 @app.route('/api/admin/save-story', methods=['POST', 'OPTIONS'])
@@ -925,8 +925,8 @@ def save_story():
         traceback.print_exc()
         return jsonify({"status": "error", "message": "An unexpected server error occurred."}), 500
     finally:
-        if conn and conn.closed == 0:
-            conn.close()
+        if conn:
+            release_db_connection(conn)
 
 @app.route('/api/story/<int:topic_id>', methods=['GET'])
 def get_story_for_topic(topic_id):
@@ -1005,8 +1005,8 @@ def get_story_for_topic(topic_id):
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error"}), 500
     finally:
-        if conn and conn.closed == 0:
-            conn.close()
+        if conn:
+            release_db_connection(conn)
 
 @app.route('/api/story_exists/<int:topic_id>', methods=['GET'])
 def story_exists(topic_id):
@@ -1028,8 +1028,8 @@ def story_exists(topic_id):
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error checking story availability."}), 500
     finally:
-        if conn and conn.closed == 0:
-            conn.close()
+        if conn:
+            release_db_connection(conn)
 
 
 @app.route('/api/progress/<int:user_id>', methods=['GET'])
@@ -1054,8 +1054,8 @@ def get_user_progress(user_id):
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error"}), 500
     finally:
-        if conn and conn.closed == 0:
-            conn.close()
+        if conn:
+            release_db_connection(conn)
 
 @app.route('/api/progress/update', methods=['POST'])
 def update_user_progress():
@@ -1086,8 +1086,8 @@ def update_user_progress():
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error"}), 500
     finally:
-        if conn and conn.closed == 0:
-            conn.close()
+        if conn:
+            release_db_connection(conn)
 
 @app.route('/api/create-student', methods=['POST', 'OPTIONS'])
 def create_student():
@@ -1124,8 +1124,8 @@ def create_student():
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error"}), 500
     finally:
-        if conn and conn.closed == 0:
-            conn.close()
+        if conn:
+            release_db_connection(conn)
 
 @app.route('/api/my-students/<int:parent_id>', methods=['GET'])
 def get_my_students(parent_id):
@@ -1141,8 +1141,8 @@ def get_my_students(parent_id):
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error"}), 500
     finally:
-        if conn and conn.closed == 0:
-            conn.close()
+        if conn:
+            release_db_connection(conn)
 
 @app.route('/api/modify-student', methods=['POST', 'OPTIONS'])
 def modify_student():
@@ -1176,8 +1176,8 @@ def modify_student():
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error"}), 500
     finally:
-        if conn and conn.closed == 0:
-            conn.close()
+        if conn:
+            release_db_connection(conn)
 
 @app.route('/api/delete-student/<int:student_id>', methods=['DELETE', 'OPTIONS'])
 def delete_student_from_parent_portal(student_id):
@@ -1197,8 +1197,8 @@ def delete_student_from_parent_portal(student_id):
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error"}), 500
     finally:
-        if conn and conn.closed == 0:
-            conn.close()
+        if conn:
+            release_db_connection(conn)
 
 @app.route('/api/forgot-password', methods=['POST', 'OPTIONS'])
 def forgot_password():
@@ -1238,8 +1238,8 @@ def forgot_password():
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error"}), 500
     finally:
-        if conn and conn.closed == 0:
-            conn.close()
+        if conn:
+            release_db_connection(conn)
 
 @app.route('/api/reset-password', methods=['POST', 'OPTIONS'])
 def reset_password():
@@ -1274,8 +1274,8 @@ def reset_password():
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error"}), 500
     finally:
-        if conn and conn.closed == 0:
-            conn.close()
+        if conn:
+            release_db_connection(conn)
 
 @app.route('/api/curriculum', methods=['GET'])
 def get_curriculum():
@@ -1338,8 +1338,8 @@ def get_curriculum():
         traceback.print_exc()
         return jsonify({ "status": "error", "message": str(e) }), 500
     finally:
-        if conn and conn.closed == 0:
-            conn.close()
+        if conn:
+            release_db_connection(conn)
 
 # --- QUIZ ENDPOINTS ---
 
@@ -1359,8 +1359,8 @@ def get_user_topic_difficulty(user_id, topic_id):
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error fetching user difficulty."}), 500
     finally:
-        if conn and conn.closed == 0:
-            conn.close()
+        if conn:
+            release_db_connection(conn)
 
 @app.route('/api/user/update-topic-difficulty', methods=['POST', 'OPTIONS'])
 def update_user_topic_difficulty():
@@ -1397,8 +1397,8 @@ def update_user_topic_difficulty():
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error updating user difficulty."}), 500
     finally:
-        if conn and conn.closed == 0:
-            conn.close()
+        if conn:
+            release_db_connection(conn)
 
 
 @app.route('/api/quiz/question/<int:user_id>/<int:topic_id>/<int:difficulty_level>', methods=['GET'])
@@ -1482,8 +1482,8 @@ def get_quiz_question(user_id, topic_id, difficulty_level):
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error fetching quiz question."}), 500
     finally:
-        if conn and conn.closed == 0:
-            conn.close()
+        if conn:
+            release_db_connection(conn)
 
 # --- FLAGGING ENDPOINTS ---
 
@@ -1520,8 +1520,8 @@ def flag_item():
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error while flagging item."}), 500
     finally:
-        if conn and conn.closed == 0:
-            conn.close()
+        if conn:
+            release_db_connection(conn)
 
 
 @app.route('/api/admin/flagged-items', methods=['GET'])
@@ -1564,8 +1564,8 @@ def get_flagged_items():
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error fetching flagged items."}), 500
     finally:
-        if conn and conn.closed == 0:
-            conn.close()
+        if conn:
+            release_db_connection(conn)
 
 
 @app.route('/api/admin/update-flag-status/<int:flag_id>', methods=['PUT', 'OPTIONS'])
@@ -1603,8 +1603,8 @@ def update_flag_status(flag_id):
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error updating flag status."}), 500
     finally:
-        if conn and conn.closed == 0:
-            conn.close()
+        if conn:
+            release_db_connection(conn)
 
 # --- QUESTION ATTEMPT LOGGING ENDPOINT ---
 @app.route('/api/record-question-attempt', methods=['POST', 'OPTIONS'])
@@ -1636,8 +1636,8 @@ def record_question_attempt():
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error recording question attempt."}), 500
     finally:
-        if conn and conn.closed == 0:
-            conn.close()
+        if conn:
+            release_db_connection(conn)
 
 # --- ADMIN ENDPOINT TO GET ALL QUESTION ATTEMPTS ---
 @app.route('/api/admin/question-attempts', methods=['GET'])
@@ -1679,8 +1679,8 @@ def get_all_question_attempts():
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error fetching question attempts."}), 500
     finally:
-        if conn and conn.closed == 0:
-            conn.close()
+        if conn:
+            release_db_connection(conn)
 
 
 # =================================================================

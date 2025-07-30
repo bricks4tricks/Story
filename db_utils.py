@@ -1,5 +1,6 @@
 import os
 import psycopg2
+from psycopg2.pool import SimpleConnectionPool
 import traceback
 from dotenv import load_dotenv, find_dotenv
 
@@ -54,14 +55,45 @@ def _load_db_config():
 # Centralized database configuration loaded once at import time
 db_config = _load_db_config()
 
+# Global connection pool. Initialized lazily on first connection request.
+connection_pool = None
+
+
+def _get_pool():
+    """Lazily create and return a global connection pool."""
+    global connection_pool
+    if connection_pool is None:
+        try:
+            if "dsn" in db_config:
+                connection_pool = SimpleConnectionPool(1, 10, db_config["dsn"])
+            else:
+                connection_pool = SimpleConnectionPool(1, 10, **db_config)
+        except Exception as e:
+            print(f"Database connection pool creation error: {e}")
+            traceback.print_exc()
+            raise
+    return connection_pool
+
 
 def get_db_connection():
-    """Return a new database connection with error logging."""
+    """Obtain a database connection from the global pool."""
     try:
-        if "dsn" in db_config:
-            return psycopg2.connect(db_config["dsn"])
-        return psycopg2.connect(**db_config)
+        pool = _get_pool()
+        return pool.getconn()
     except Exception as e:
         print(f"Database connection error: {e}")
         traceback.print_exc()
         raise
+
+
+def release_db_connection(conn):
+    """Return a connection to the pool or close it if no pool is available."""
+    try:
+        if connection_pool:
+            connection_pool.putconn(conn)
+        else:
+            conn.close()
+    except Exception as e:
+        print(f"Error releasing connection: {e}")
+        traceback.print_exc()
+
