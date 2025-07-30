@@ -792,7 +792,16 @@ def get_all_stories():
             ORDER BY t.TopicName;
         """
         cursor.execute(query)
-        stories = cursor.fetchall()
+        stories_raw = cursor.fetchall()
+
+        stories = []
+        for row in stories_raw:
+            stories.append({
+                'TopicID': row.get('TopicID') or row.get('topicid'),
+                'TopicName': row.get('TopicName') or row.get('topicname'),
+                'DefaultTheme': row.get('DefaultTheme') or row.get('defaulttheme')
+            })
+
         return jsonify(stories)
     except Exception as e:
         print(f"Get All Stories API Error: {e}")
