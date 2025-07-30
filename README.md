@@ -16,3 +16,16 @@ development to rebuild on changes.
 
 The application exposes a simple health check endpoint at `/health`.
 Send a `GET` request to this URL to verify that the server is running.
+
+## Environment Configuration
+
+Configuration values such as database credentials and SMTP settings are read
+from environment variables. For local development you can create a `.env` file.
+
+```bash
+cp .env.example .env
+# then edit .env with your credentials
+```
+
+The application automatically loads variables from this file at startup using
+`python-dotenv`.

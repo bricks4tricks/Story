@@ -1,6 +1,11 @@
 import os
 import psycopg2
 import traceback
+from dotenv import load_dotenv
+
+# Load variables from a .env file if present. This allows developers to
+# configure database credentials without hardcoding them in the source.
+load_dotenv()
 
 # Centralized database configuration
 # Environment variables provide credentials; defaults support local dev.
