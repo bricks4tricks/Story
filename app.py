@@ -1290,7 +1290,7 @@ def get_curriculum():
                 unit.TopicName AS UnitName,
                 topic.TopicName,
                 topic.ID AS TopicID,
-                GROUP_CONCAT(DISTINCT th.ThemeName ORDER BY th.ThemeName SEPARATOR ',') AS AvailableThemes,
+                string_agg(DISTINCT th.ThemeName, ',' ORDER BY th.ThemeName) AS AvailableThemes,
                 (SELECT dth.ThemeName FROM tbl_TopicTheme tth JOIN tbl_Theme dth ON tth.ThemeID = dth.ID WHERE tth.TopicID = topic.ID AND tth.IsDefault = TRUE LIMIT 1) AS DefaultTheme
             FROM tbl_Topic topic
             JOIN tbl_Topic unit ON topic.ParentTopicID = unit.ID
@@ -1659,7 +1659,7 @@ def get_all_question_attempts():
                 t.TopicName AS TopicName,
                 unit.TopicName AS UnitName,
                 s.SubjectName AS CurriculumType,
-                GROUP_CONCAT(TRIM(CASE WHEN a.IsCorrect = TRUE THEN a.AnswerName ELSE NULL END)) AS CorrectAnswer
+                string_agg(TRIM(a.AnswerName), ',' ) FILTER (WHERE a.IsCorrect = TRUE) AS CorrectAnswer
             FROM tbl_QuestionAttempt qa
             JOIN tbl_User u ON qa.UserID = u.ID
             JOIN tbl_Question q ON qa.QuestionID = q.ID
