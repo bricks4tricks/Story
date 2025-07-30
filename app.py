@@ -33,15 +33,9 @@ CORS(app, origins=["https://logicandstories.com", "https://www.logicandstories.c
      headers=["Content-Type", "Authorization"])
 
 
-# --- UPDATED: DATABASE CONFIGURATION FROM ENVIRONMENT VARIABLES ---
-# Use os.environ.get() to retrieve environment variables.
-# The second argument is a default value used if the environment variable is not set (e.g., for local development).
-db_config = {
-    'user': os.environ.get('DB_USER', 'root'),
-    'password': os.environ.get('SQL_PASSWORD', 'Dragon@123'),
-    'host': os.environ.get('DB_HOST', '127.0.0.1'),
-    'database': os.environ.get('DB_DATABASE', 'educational_platform_db')
-}
+# --- DATABASE CONFIGURATION ---
+# Moved to db_utils for reuse across scripts
+from db_utils import get_db_connection
 
 # Define a mapping for QuestionType (if using integer in DB)
 QUESTION_TYPE_MAP = {
@@ -65,6 +59,8 @@ def validate_password(password):
     if not re.fullmatch(PASSWORD_REGEX, password):
         return False, PASSWORD_REQUIREMENTS_MESSAGE
     return True, None
+
+
 
 # --- UPDATED: EMAIL CONFIGURATION FROM ENVIRONMENT VARIABLES ---
 # Retrieve SMTP settings from environment variables with sensible defaults for local testing.
@@ -220,7 +216,7 @@ def signup_user():
 
     conn = None
     try:
-        conn = psycopg2.connect(**db_config)
+        conn = get_db_connection()
         cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
         cursor.execute("SELECT ID FROM tbl_User WHERE Username = %s OR Email = %s", (username, email))
         if cursor.fetchone():
@@ -251,7 +247,7 @@ def signin_user():
 
     conn = None
     try:
-        conn = psycopg2.connect(**db_config)
+        conn = get_db_connection()
         cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
         cursor.execute("SELECT * FROM tbl_User WHERE Username = %s", (username,))
         user = cursor.fetchone()
@@ -277,15 +273,18 @@ def signin_user():
 
 @app.route('/api/admin-signin', methods=['POST', 'OPTIONS'])
 def admin_signin():
-    if request.method == 'OPTIONS': return jsonify(success=True)
-    data = request.get_json()
-    username, password = data.get('username'), data.get('password')
-    if not all([username, password]):
-        return jsonify({"status": "error", "message": "Missing fields"}), 400
+    if request.method == 'OPTIONS':
+        return jsonify(success=True)
+
+    data = request.get_json(silent=True) or {}
+    username = data.get('username', '').strip()
+    password = data.get('password', '').strip()
+    if not username or not password:
+        return jsonify({"status": "error", "message": "Missing username or password"}), 400
 
     conn = None
     try:
-        conn = psycopg2.connect(**db_config)
+        conn = get_db_connection()
         cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
         cursor.execute("SELECT * FROM tbl_User WHERE Username = %s", (username,))
         user = cursor.fetchone()
@@ -293,14 +292,18 @@ def admin_signin():
             return jsonify({
                 "status": "success",
                 "message": "Admin login successful!",
-                "user": { "id": user['ID'], "username": user['Username'], "userType": user['UserType'] }
+                "user": {"id": user['ID'], "username": user['Username'], "userType": user['UserType']}
             }), 200
         else:
             return jsonify({"status": "error", "message": "Invalid credentials or not an admin"}), 401
+    except psycopg2.Error as e:
+        print(f"Admin Signin DB Error: {e}")
+        traceback.print_exc()
+        return jsonify({"status": "error", "message": "Database error"}), 500
     except Exception as e:
         print(f"Admin Signin API Error: {e}")
         traceback.print_exc()
-        return jsonify({"status": "error", "message": "Internal error"}), 500
+        return jsonify({"status": "error", "message": "Internal server error"}), 500
     finally:
         if conn and conn.closed == 0:
             conn.close()
@@ -309,7 +312,7 @@ def admin_signin():
 def get_all_users():
     conn = None
     try:
-        conn = psycopg2.connect(**db_config)
+        conn = get_db_connection()
         cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
         query = """
             SELECT u.ID, u.Username, u.Email, u.UserType, u.CreatedOn, p.Username AS ParentUsername
@@ -344,7 +347,7 @@ def edit_user(user_id):
 
     conn = None
     try:
-        conn = psycopg2.connect(**db_config)
+        conn = get_db_connection()
         cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
         cursor.execute(
@@ -377,7 +380,7 @@ def delete_user(user_id):
     if request.method == 'OPTIONS': return jsonify(success=True)
     conn = None
     try:
-        conn = psycopg2.connect(**db_config)
+        conn = get_db_connection()
         cursor = conn.cursor()
 
         cursor.execute("SELECT UserType FROM tbl_User WHERE ID = %s", (user_id,))
@@ -420,7 +423,7 @@ def delete_user(user_id):
 def get_topics_list():
     conn = None
     try:
-        conn = psycopg2.connect(**db_config)
+        conn = get_db_connection()
         cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
         query = """
             SELECT
@@ -473,7 +476,7 @@ def add_question():
 
     conn = None
     try:
-        conn = psycopg2.connect(**db_config)
+        conn = get_db_connection()
         cursor = conn.cursor()
 
         conn.autocommit = False
@@ -519,7 +522,7 @@ def add_question():
 def get_all_questions():
     conn = None
     try:
-        conn = psycopg2.connect(**db_config)
+        conn = get_db_connection()
         cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
         query = """
             SELECT
@@ -549,7 +552,7 @@ def get_all_questions():
 def get_question_details(question_id):
     conn = None
     try:
-        conn = psycopg2.connect(**db_config)
+        conn = get_db_connection()
         cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
         cursor.execute("SELECT ID, TopicID, QuestionName, QuestionType, DifficultyRating FROM tbl_Question WHERE ID = %s", (question_id,))
@@ -632,7 +635,7 @@ def edit_question(question_id):
 
     conn = None
     try:
-        conn = psycopg2.connect(**db_config)
+        conn = get_db_connection()
         cursor = conn.cursor()
 
         conn.autocommit = False
@@ -684,7 +687,7 @@ def delete_question(question_id):
 
     conn = None
     try:
-        conn = psycopg2.connect(**db_config)
+        conn = get_db_connection()
         cursor = conn.cursor()
 
         conn.autocommit = False
@@ -719,7 +722,7 @@ def delete_question(question_id):
 def get_all_stories():
     conn = None
     try:
-        conn = psycopg2.connect(**db_config)
+        conn = get_db_connection()
         cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
         query = """
             SELECT DISTINCT
@@ -747,7 +750,7 @@ def delete_story(topic_id):
 
     conn = None
     try:
-        conn = psycopg2.connect(**db_config)
+        conn = get_db_connection()
         cursor = conn.cursor()
 
         conn.autocommit = False
@@ -800,7 +803,7 @@ def save_story():
 
     conn = None
     try:
-        conn = psycopg2.connect(**db_config)
+        conn = get_db_connection()
         cursor = conn.cursor()
 
         conn.autocommit = False
@@ -896,7 +899,7 @@ def get_story_for_topic(topic_id):
     conn = None
     story_payload = {"sections": [], "defaultTheme": None, "availableThemes": []}
     try:
-        conn = psycopg2.connect(**db_config)
+        conn = get_db_connection()
         cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
         # Fetch the default theme for this topic
@@ -975,7 +978,7 @@ def get_story_for_topic(topic_id):
 def story_exists(topic_id):
     conn = None
     try:
-        conn = psycopg2.connect(**db_config)
+        conn = get_db_connection()
         cursor = conn.cursor()
 
         cursor.execute("SELECT COUNT(*) FROM tbl_Description WHERE TopicID = %s", (topic_id,))
@@ -999,7 +1002,7 @@ def story_exists(topic_id):
 def get_user_progress(user_id):
     conn = None
     try:
-        conn = psycopg2.connect(**db_config)
+        conn = get_db_connection()
         cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
         query = """
             SELECT up.TopicID, up.Status, t.TopicName, unit.TopicName AS UnitName, s.SubjectName AS CurriculumType
@@ -1032,7 +1035,7 @@ def update_user_progress():
 
     conn = None
     try:
-        conn = psycopg2.connect(**db_config)
+        conn = get_db_connection()
         cursor = conn.cursor()
 
         query = """
@@ -1067,7 +1070,7 @@ def create_student():
 
     conn = None
     try:
-        conn = psycopg2.connect(**db_config)
+        conn = get_db_connection()
         cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
         cursor.execute("SELECT ID FROM tbl_User WHERE Username = %s", (username,))
         if cursor.fetchone():
@@ -1094,7 +1097,7 @@ def create_student():
 def get_my_students(parent_id):
     conn = None
     try:
-        conn = psycopg2.connect(**db_config)
+        conn = get_db_connection()
         cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
         cursor.execute("SELECT ID, Username, CreatedOn FROM tbl_User WHERE ParentUserID = %s", (parent_id,))
         students = cursor.fetchall()
@@ -1122,7 +1125,7 @@ def modify_student():
 
     conn = None
     try:
-        conn = psycopg2.connect(**db_config)
+        conn = get_db_connection()
         cursor = conn.cursor()
         hashed_password = bcrypt.generate_password_hash(new_password).decode('utf-8')
         cursor.execute(
@@ -1147,7 +1150,7 @@ def delete_student_from_parent_portal(student_id):
     if request.method == 'OPTIONS': return jsonify(success=True)
     conn = None
     try:
-        conn = psycopg2.connect(**db_config)
+        conn = get_db_connection()
         cursor = conn.cursor()
         cursor.execute("DELETE FROM tbl_User WHERE ID = %s AND UserType = 'Student'", (student_id,))
         if cursor.rowcount == 0:
@@ -1173,7 +1176,7 @@ def forgot_password():
 
     conn = None
     try:
-        conn = psycopg2.connect(**db_config)
+        conn = get_db_connection()
         cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
         cursor.execute("SELECT ID FROM tbl_User WHERE Email = %s", (email,))
         user = cursor.fetchone()
@@ -1219,7 +1222,7 @@ def reset_password():
 
     conn = None
     try:
-        conn = psycopg2.connect(**db_config)
+        conn = get_db_connection()
         cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
         cursor.execute("SELECT ID FROM tbl_User WHERE ResetToken = %s AND ResetTokenExpiry > NOW()", (token,))
         user = cursor.fetchone()
@@ -1244,7 +1247,7 @@ def reset_password():
 def get_curriculum():
     conn = None
     try:
-        conn = psycopg2.connect(**db_config)
+        conn = get_db_connection()
         cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
         query = """
             SELECT
@@ -1310,7 +1313,7 @@ def get_curriculum():
 def get_user_topic_difficulty(user_id, topic_id):
     conn = None
     try:
-        conn = psycopg2.connect(**db_config)
+        conn = get_db_connection()
         cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
         query = "SELECT CurrentDifficulty FROM tbl_UserTopicDifficulty WHERE UserID = %s AND TopicID = %s"
         cursor.execute(query, (user_id, topic_id))
@@ -1345,7 +1348,7 @@ def update_user_topic_difficulty():
 
     conn = None
     try:
-        conn = psycopg2.connect(**db_config)
+        conn = get_db_connection()
         cursor = conn.cursor()
         query = """
             INSERT INTO tbl_UserTopicDifficulty (UserID, TopicID, CurrentDifficulty)
@@ -1368,7 +1371,7 @@ def update_user_topic_difficulty():
 def get_quiz_question(user_id, topic_id, difficulty_level):
     conn = None
     try:
-        conn = psycopg2.connect(**db_config)
+        conn = get_db_connection()
         cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
         difficulty_level = max(1, min(5, difficulty_level))
@@ -1467,7 +1470,7 @@ def flag_item():
 
     conn = None
     try:
-        conn = psycopg2.connect(**db_config)
+        conn = get_db_connection()
         cursor = conn.cursor()
 
         insert_query = """
@@ -1491,7 +1494,7 @@ def flag_item():
 def get_flagged_items():
     conn = None
     try:
-        conn = psycopg2.connect(**db_config)
+        conn = get_db_connection()
         cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
         query = """
@@ -1546,7 +1549,7 @@ def update_flag_status(flag_id):
 
     conn = None
     try:
-        conn = psycopg2.connect(**db_config)
+        conn = get_db_connection()
         cursor = conn.cursor()
 
         update_query = """
@@ -1585,7 +1588,7 @@ def record_question_attempt():
 
     conn = None
     try:
-        conn = psycopg2.connect(**db_config)
+        conn = get_db_connection()
         cursor = conn.cursor()
         insert_query = """
             INSERT INTO tbl_QuestionAttempt (UserID, QuestionID, UserAnswer, IsCorrect, DifficultyAtAttempt)
@@ -1607,7 +1610,7 @@ def record_question_attempt():
 def get_all_question_attempts():
     conn = None
     try:
-        conn = psycopg2.connect(**db_config)
+        conn = get_db_connection()
         cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
         query = """
