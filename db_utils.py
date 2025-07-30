@@ -1,7 +1,9 @@
 import os
 import psycopg2
+import psycopg2.extras
 from psycopg2.pool import SimpleConnectionPool
 import traceback
+from contextlib import contextmanager
 from dotenv import load_dotenv, find_dotenv
 
 # Load variables from a .env file if present. This allows developers to
@@ -106,4 +108,32 @@ def release_db_connection(conn):
     except Exception as e:
         print(f"Error releasing connection: {e}")
         traceback.print_exc()
+
+
+@contextmanager
+def db_connection():
+    """Provide a context manager for a database connection."""
+    conn = get_db_connection()
+    try:
+        yield conn
+        conn.commit()
+    except Exception:
+        conn.rollback()
+        raise
+    finally:
+        release_db_connection(conn)
+
+
+@contextmanager
+def db_cursor(dictionary=False):
+    """Yield a cursor with automatic commit/rollback and cleanup."""
+    with db_connection() as conn:
+        if dictionary:
+            cur = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        else:
+            cur = conn.cursor()
+        try:
+            yield cur
+        finally:
+            cur.close()
 
