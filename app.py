@@ -201,6 +201,11 @@ RESET_PASSWORD_EMAIL_TEMPLATE_HTML = """
 #  2. API ENDPOINTS
 # =================================================================
 
+@app.route('/health', methods=['GET'])
+def health_check():
+    """Simple health check endpoint."""
+    return jsonify({"status": "ok"}), 200
+
 @app.route('/api/signup', methods=['POST', 'OPTIONS'])
 def signup_user():
     if request.method == 'OPTIONS': return jsonify(success=True)
