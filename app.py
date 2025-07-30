@@ -583,7 +583,17 @@ def get_all_questions():
             ORDER BY q.ID DESC;
         """
         cursor.execute(query)
-        questions = cursor.fetchall()
+        rows = cursor.fetchall()
+        questions = []
+        for row in rows:
+            questions.append({
+                'ID': row.get('ID') or row.get('id'),
+                'QuestionName': row.get('QuestionName') or row.get('questionname'),
+                'QuestionType': row.get('QuestionType') or row.get('questiontype'),
+                'DifficultyRating': row.get('DifficultyRating') or row.get('difficultyrating'),
+                'TopicName': row.get('TopicName') or row.get('topicname'),
+                'UnitName': row.get('UnitName') or row.get('unitname')
+            })
         return jsonify(questions)
     except Exception as e:
         print(f"Get All Questions API Error: {e}")
@@ -605,7 +615,7 @@ def get_question_details(question_id):
         if not question:
             return jsonify({"status": "error", "message": "Question not found."}), 404
 
-        question_type_display = question['QuestionType']
+        question_type_display = question.get('QuestionType') or question.get('questiontype')
 
         cursor.execute("SELECT AnswerName, IsCorrect FROM tbl_Answer WHERE QuestionID = %s", (question_id,))
         answers = cursor.fetchall()
@@ -627,16 +637,19 @@ def get_question_details(question_id):
         topic_info = cursor.fetchone()
 
         question_details = {
-            "ID": question['ID'],
-            "TopicID": question['TopicID'],
-            "TopicName": topic_info['TopicName'] if topic_info else None,
-            "UnitName": topic_info['UnitName'] if topic_info else None,
-            "CurriculumType": topic_info['CurriculumType'] if topic_info else None,
-            "QuestionName": question['QuestionName'],
+            "ID": question.get('ID') or question.get('id'),
+            "TopicID": question.get('TopicID') or question.get('topicid'),
+            "TopicName": topic_info.get('TopicName') if topic_info else None,
+            "UnitName": topic_info.get('UnitName') if topic_info else None,
+            "CurriculumType": topic_info.get('CurriculumType') if topic_info else None,
+            "QuestionName": question.get('QuestionName') or question.get('questionname'),
             "QuestionType": question_type_display,
-            "DifficultyRating": question['DifficultyRating'],
-            "Answers": answers,
-            "Steps": [s['StepName'] for s in steps]
+            "DifficultyRating": question.get('DifficultyRating') or question.get('difficultyrating'),
+            "Answers": [{
+                'AnswerName': a.get('AnswerName') or a.get('answername'),
+                'IsCorrect': a.get('IsCorrect') or a.get('iscorrect')
+            } for a in answers],
+            "Steps": [s.get('StepName') or s.get('stepname') for s in steps]
         }
 
         return jsonify(question_details), 200
