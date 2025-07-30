@@ -29,3 +29,21 @@ cp .env.example .env
 
 The application automatically loads variables from this file at startup using
 `python-dotenv`.
+
+Install Python dependencies including the PostgreSQL driver with:
+
+```bash
+pip install -r requirements.txt
+```
+
+### PostgreSQL Database
+
+LogicAndStories uses PostgreSQL exclusively via `psycopg2`. Provide a
+`DATABASE_URL` connection string or the individual `DB_USER`, `DB_PASSWORD`,
+`DB_HOST`, `DB_PORT`, and `DB_NAME` variables. A local PostgreSQL server must be
+running for the application and test suite to function correctly.
+
+All Python scripts interact with the database through parameterized queries
+using the helpers in `db_utils.py`. This ensures compatibility with PostgreSQL
+and guards against SQL injection. The HTML files issue requests to the API
+endpoints rather than executing SQL directly.

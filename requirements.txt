@@ -1,7 +1,7 @@
 Flask
 Flask-Cors
 Flask-Bcrypt
-psycopg2
+psycopg2-binary>=2.9
 python-dotenv
 PyJWT
 gunicorn
