@@ -1554,6 +1554,26 @@
 
             document.getElementById('signOutButton').addEventListener('click', () => { localStorage.clear(); window.location.href = 'https://logicandstories.com'; });
 
+            const POLL_INTERVAL_MS = 5000; // poll every 5 seconds
+            setInterval(() => {
+                if (document.hidden) return; // don't poll when tab not visible
+                if (usersTabBtn.classList.contains('active') && window.refreshUsers) {
+                    window.refreshUsers();
+                }
+                if (questionsTabBtn.classList.contains('active')) {
+                    fetchAndDisplayQuestions();
+                }
+                if (storiesTabBtn.classList.contains('active')) {
+                    fetchAndDisplayStories();
+                }
+                if (flagsTabBtn.classList.contains('active')) {
+                    fetchAndDisplayFlaggedItems();
+                }
+                if (attemptsTabBtn.classList.contains('active')) {
+                    fetchAndDisplayQuestionAttempts();
+                }
+            }, POLL_INTERVAL_MS);
+
             const initializeApp = () => {
                 if (window.refreshUsers) window.refreshUsers();
                 initializeTopicData();
