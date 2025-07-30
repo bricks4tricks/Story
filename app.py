@@ -1015,14 +1015,25 @@ def get_story_for_topic(topic_id):
 
             if section['InteractiveElementID']:
                 interactive_id = section['InteractiveElementID']
-                cursor.execute("SELECT ElementType, Configuration FROM tbl_InteractiveElement WHERE ID = %s", (interactive_id,))
+                cursor.execute(
+                    "SELECT ElementType, Configuration FROM tbl_InteractiveElement WHERE ID = %s",
+                    (interactive_id,)
+                )
                 interactive_row = cursor.fetchone()
 
                 if interactive_row:
                     section_data['contentType'] = 'Interactive'
+                    config_data = {}
+                    if interactive_row['Configuration']:
+                        try:
+                            config_data = json.loads(interactive_row['Configuration'])
+                        except Exception as json_err:
+                            print(
+                                f"JSON decode error for interactive element {interactive_id}: {json_err}"
+                            )
                     section_data['content'] = {
                         "elementType": interactive_row['ElementType'],
-                        "configuration": json.loads(interactive_row['Configuration']) # Ensure JSON is parsed
+                        "configuration": config_data,
                     }
                 else:
                     section_data['contentType'] = 'Paragraph'
