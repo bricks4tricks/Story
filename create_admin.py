@@ -1,15 +1,9 @@
 import psycopg2
 from flask_bcrypt import Bcrypt
-import os # Import os for environment variables
-
-# --- CONFIGURATION ---
-db_config = {
-    'user': os.environ.get('DB_USER', 'root'),
-    'password': os.environ.get('DB_PASSWORD', 'Dragon@123'),
-    'host': os.environ.get('DB_HOST', '127.0.0.1'),
-    'port': os.environ.get('DB_PORT', '5432'),
-    'database': os.environ.get('DB_NAME', 'educational_platform_db')
-}
+import os  # Import os for environment variables
+import traceback
+from db_utils import get_db_connection
+# Database settings are read from environment variables in db_utils
 
 # --- SET YOUR ADMIN CREDENTIALS HERE ---
 admin_username = 'admin'
@@ -22,7 +16,7 @@ bcrypt = Bcrypt()
 
 print("--- Admin Creation Script ---")
 try:
-    conn = psycopg2.connect(**db_config)
+    conn = get_db_connection()
     cursor = conn.cursor()
     print("Connected to database.")
 
@@ -46,8 +40,10 @@ try:
 
 except psycopg2.Error as err:
     print(f"DATABASE ERROR: {err}")
+    traceback.print_exc()
 except Exception as e:
     print(f"An unexpected error occurred: {e}")
+    traceback.print_exc()
 finally:
     if 'conn' in locals() and conn.closed == 0:
         cursor.close()

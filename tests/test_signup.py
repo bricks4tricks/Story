@@ -46,7 +46,7 @@ def test_signup_success(client):
         "email": "test@example.com",
         "password": "ValidPass123!"
     }
-    with patch('app.psycopg2.connect', return_value=DummyConnection()):
+    with patch('app.get_db_connection', return_value=DummyConnection()):
         response = client.post('/api/signup', json=payload)
     assert response.status_code == 201
     data = response.get_json()

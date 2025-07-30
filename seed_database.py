@@ -1,15 +1,10 @@
 import csv
 import psycopg2
-import os # Import os for environment variables
+import os  # Import os for environment variables
+import traceback
+from db_utils import get_db_connection
 
-# --- UPDATE YOUR DATABASE CREDENTIALS HERE ---
-db_config = {
-    'user': os.environ.get('DB_USER', 'root'),
-    'password': os.environ.get('DB_PASSWORD', 'Dragon@123'),
-    'host': os.environ.get('DB_HOST', '127.0.0.1'),
-    'port': os.environ.get('DB_PORT', '5432'),
-    'database': os.environ.get('DB_NAME', 'educational_platform_db')
-}
+# Database credentials are pulled from environment variables via db_utils
 
 CSV_FILE_NAME = 'Untitled spreadsheet - Mapped Math Syllabus.csv'
 
@@ -18,7 +13,7 @@ def seed_data():
     Reads the curriculum CSV, cleans the data, and populates the database tables.
     """
     try:
-        conn = psycopg2.connect(**db_config)
+        conn = get_db_connection()
         cursor = conn.cursor()
         print("Successfully connected to the database for seeding.")
 
@@ -105,9 +100,15 @@ def seed_data():
         conn.commit()
         print(f"\nDatabase seeding completed successfully! Processed {rows_processed} valid rows.")
 
-    except psycopg2.Error as err: print(f"Database Error: {err}")
-    except FileNotFoundError: print(f"Error: The file '{CSV_FILE_NAME}' was not found.")
-    except Exception as e: print(f"An unexpected error occurred: {e}")
+    except psycopg2.Error as err:
+        print(f"Database Error: {err}")
+        traceback.print_exc()
+    except FileNotFoundError:
+        print(f"Error: The file '{CSV_FILE_NAME}' was not found.")
+        traceback.print_exc()
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
+        traceback.print_exc()
     finally:
         if 'conn' in locals() and conn.closed == 0:
             cursor.close()
