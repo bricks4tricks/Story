@@ -64,10 +64,20 @@ def _get_pool():
     global connection_pool
     if connection_pool is None:
         try:
+            pool_kwargs = {
+                "keepalives": 1,
+                "keepalives_idle": 60,
+                "keepalives_interval": 30,
+                "keepalives_count": 5,
+            }
             if "dsn" in db_config:
-                connection_pool = SimpleConnectionPool(1, 10, db_config["dsn"])
+                connection_pool = SimpleConnectionPool(
+                    1, 10, db_config["dsn"], **pool_kwargs
+                )
             else:
-                connection_pool = SimpleConnectionPool(1, 10, **db_config)
+                connection_pool = SimpleConnectionPool(
+                    1, 10, **db_config, **pool_kwargs
+                )
         except Exception as e:
             print(f"Database connection pool creation error: {e}")
             traceback.print_exc()
