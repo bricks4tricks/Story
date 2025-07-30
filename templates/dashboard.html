@@ -135,7 +135,7 @@
 
             const fetchCurriculum = async () => {
                 try {
-                    const response = await fetch('/api/curriculum');
+                    const response = await fetch(`${window.location.origin}/api/curriculum`);
                     if (!response.ok) throw new Error('Failed to fetch curriculum data.');
                     allCurriculumData = await response.json();
                     renderGradeTabs();
@@ -149,7 +149,7 @@
                 // Only fetch progress if the user is a Student
                 if (userType === 'Student') {
                     try {
-                        const response = await fetch(`/api/progress/${userId}`);
+                        const response = await fetch(`${window.location.origin}/api/progress/${userId}`);
                         if (!response.ok) throw new Error('Failed to fetch user progress.');
                         const progressData = await response.json();
                         userProgress = {};
@@ -345,7 +345,7 @@
                     } else if (userType === 'Student') {
                         // First, check if a story exists for this topic
                         try {
-                            const response = await fetch(`/api/story_exists/${topicId}`);
+                            const response = await fetch(`${window.location.origin}/api/story_exists/${topicId}`);
                             const result = await response.json();
 
                             if (response.ok && result.storyExists) {
