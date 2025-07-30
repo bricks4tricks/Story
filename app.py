@@ -38,9 +38,10 @@ CORS(app, origins=["https://logicandstories.com", "https://www.logicandstories.c
 # The second argument is a default value used if the environment variable is not set (e.g., for local development).
 db_config = {
     'user': os.environ.get('DB_USER', 'root'),
-    'password': os.environ.get('SQL_PASSWORD', 'Dragon@123'),
+    'password': os.environ.get('DB_PASSWORD', 'Dragon@123'),
     'host': os.environ.get('DB_HOST', '127.0.0.1'),
-    'database': os.environ.get('DB_DATABASE', 'educational_platform_db')
+    'port': os.environ.get('DB_PORT', '5432'),
+    'database': os.environ.get('DB_NAME', 'educational_platform_db')
 }
 
 # Define a mapping for QuestionType (if using integer in DB)
@@ -65,6 +66,15 @@ def validate_password(password):
     if not re.fullmatch(PASSWORD_REGEX, password):
         return False, PASSWORD_REQUIREMENTS_MESSAGE
     return True, None
+
+# Helper to obtain a database connection with logging
+def get_db_connection():
+    try:
+        return psycopg2.connect(**db_config)
+    except Exception as e:
+        print(f"Database connection error: {e}")
+        traceback.print_exc()
+        raise
 
 # --- UPDATED: EMAIL CONFIGURATION FROM ENVIRONMENT VARIABLES ---
 # Retrieve SMTP settings from environment variables with sensible defaults for local testing.
@@ -277,15 +287,18 @@ def signin_user():
 
 @app.route('/api/admin-signin', methods=['POST', 'OPTIONS'])
 def admin_signin():
-    if request.method == 'OPTIONS': return jsonify(success=True)
-    data = request.get_json()
-    username, password = data.get('username'), data.get('password')
-    if not all([username, password]):
-        return jsonify({"status": "error", "message": "Missing fields"}), 400
+    if request.method == 'OPTIONS':
+        return jsonify(success=True)
+
+    data = request.get_json(silent=True) or {}
+    username = data.get('username', '').strip()
+    password = data.get('password', '').strip()
+    if not username or not password:
+        return jsonify({"status": "error", "message": "Missing username or password"}), 400
 
     conn = None
     try:
-        conn = psycopg2.connect(**db_config)
+        conn = get_db_connection()
         cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
         cursor.execute("SELECT * FROM tbl_User WHERE Username = %s", (username,))
         user = cursor.fetchone()
@@ -293,14 +306,18 @@ def admin_signin():
             return jsonify({
                 "status": "success",
                 "message": "Admin login successful!",
-                "user": { "id": user['ID'], "username": user['Username'], "userType": user['UserType'] }
+                "user": {"id": user['ID'], "username": user['Username'], "userType": user['UserType']}
             }), 200
         else:
             return jsonify({"status": "error", "message": "Invalid credentials or not an admin"}), 401
+    except psycopg2.Error as e:
+        print(f"Admin Signin DB Error: {e}")
+        traceback.print_exc()
+        return jsonify({"status": "error", "message": "Database error"}), 500
     except Exception as e:
         print(f"Admin Signin API Error: {e}")
         traceback.print_exc()
-        return jsonify({"status": "error", "message": "Internal error"}), 500
+        return jsonify({"status": "error", "message": "Internal server error"}), 500
     finally:
         if conn and conn.closed == 0:
             conn.close()

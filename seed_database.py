@@ -4,10 +4,11 @@ import os # Import os for environment variables
 
 # --- UPDATE YOUR DATABASE CREDENTIALS HERE ---
 db_config = {
-    'user': os.environ.get('DB_USER', 'root'), # Use environment variable, default to 'root'
-    'password': os.environ.get('SQL_PASSWORD', 'Dragon@123'), # Use environment variable for password, default for local
-    'host': os.environ.get('DB_HOST', '127.0.0.1'), # Use environment variable, default to '127.0.0.1'
-    'database': os.environ.get('DB_DATABASE', 'educational_platform_db') # Use environment variable, default database name
+    'user': os.environ.get('DB_USER', 'root'),
+    'password': os.environ.get('DB_PASSWORD', 'Dragon@123'),
+    'host': os.environ.get('DB_HOST', '127.0.0.1'),
+    'port': os.environ.get('DB_PORT', '5432'),
+    'database': os.environ.get('DB_NAME', 'educational_platform_db')
 }
 
 CSV_FILE_NAME = 'Untitled spreadsheet - Mapped Math Syllabus.csv'
