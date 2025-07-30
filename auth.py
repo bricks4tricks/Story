@@ -4,6 +4,7 @@ import secrets
 import traceback
 import os
 import smtplib
+from version_cache import update_users_version
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from extensions import bcrypt
@@ -63,6 +64,7 @@ def signup_user():
             (username, email, hashed_password)
         )
         conn.commit()
+        update_users_version()
         return jsonify({"status": "success", "message": "Parent account created successfully!"}), 201
     except Exception as e:
         print(f"Signup API Error: {e}")

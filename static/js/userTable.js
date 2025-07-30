@@ -5,6 +5,7 @@
   const userTableBody = document.getElementById('user-table-body');
   if (!userTableBody) return;
 
+  let usersVersion = null;
   let usersHash = null;
 
   async function fetchAndRenderUsers() {
@@ -20,6 +21,19 @@
     } catch (err) {
       console.error('Fetch users error:', err);
       userTableBody.innerHTML = '<tr><td colspan="7" class="text-center py-4 text-red-400">Error loading users.</td></tr>';
+    }
+  }
+  async function refreshIfChanged() {
+    try {
+      const verRes = await fetch('/api/admin/users-version');
+      if (!verRes.ok) throw new Error("Failed to fetch version");
+      const { version } = await verRes.json();
+      if (version !== usersVersion) {
+        usersVersion = version;
+        await fetchAndRenderUsers();
+      }
+    } catch (err) {
+      console.error("Version check error:", err);
     }
   }
 
@@ -50,8 +64,8 @@
   }
 
   // Expose refresh function to global scope for other scripts.
-  window.refreshUsers = fetchAndRenderUsers;
+  window.refreshUsers = refreshIfChanged;
 
   // Initial fetch when script loads.
-  fetchAndRenderUsers();
+  refreshIfChanged();
 })();

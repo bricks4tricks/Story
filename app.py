@@ -6,6 +6,7 @@ from flask_cors import CORS
 from extensions import bcrypt
 import secrets
 from datetime import datetime, timedelta
+from version_cache import update_users_version
 import traceback
 import json
 import random
@@ -115,6 +116,7 @@ def edit_user(user_id):
             (username, email, user_type, user_id)
         )
         conn.commit()
+        update_users_version()
 
         if cursor.rowcount == 0:
             return jsonify({"status": "error", "message": "User not found or no changes made."}), 404
@@ -153,6 +155,7 @@ def delete_user(user_id):
 
         cursor.execute("DELETE FROM tbl_User WHERE ID = %s", (user_id,))
         conn.commit()
+        update_users_version()
 
         if cursor.rowcount == 0:
             return jsonify({"status": "error", "message": "User not found or already deleted."}), 404
