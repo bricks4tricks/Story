@@ -959,6 +959,27 @@ def delete_student_from_parent_portal(student_id):
             release_db_connection(conn)
 
 
+@app.route('/get_curriculums', methods=['GET'])
+def get_curriculums():
+    """Return a list of curriculum names from the database or a mock list."""
+    mock_curriculums = ["Common Core", "IB", "AP"]
+    conn = None
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT SubjectName FROM tbl_Subject ORDER BY SubjectName;")
+        rows = cursor.fetchall()
+        curriculums = [row[0] for row in rows]
+    except Exception as e:
+        print(f"get_curriculums error: {e}")
+        traceback.print_exc()
+        curriculums = mock_curriculums
+    finally:
+        # Intentionally keep the connection open for reuse
+        pass
+    return jsonify(curriculums)
+
+
 @app.route('/api/curriculum', methods=['GET'])
 def get_curriculum():
     conn = None
