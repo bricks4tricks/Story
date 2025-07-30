@@ -256,7 +256,13 @@ def signin_user():
         cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
         cursor.execute("SELECT * FROM tbl_User WHERE Username = %s", (username,))
         user = cursor.fetchone()
-        if user and bcrypt.check_password_hash(user['PasswordHash'], password):
+        # Column names returned by psycopg2 are lowercase unless explicitly
+        # quoted when the table was created. Handle either case gracefully.
+        password_hash = None
+        if user:
+            password_hash = user.get('PasswordHash') or user.get('passwordhash')
+
+        if password_hash and bcrypt.check_password_hash(password_hash, password):
             return jsonify({
                 "status": "success",
                 "message": "Login successful!",
@@ -293,7 +299,11 @@ def admin_signin():
         cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
         cursor.execute("SELECT * FROM tbl_User WHERE Username = %s", (username,))
         user = cursor.fetchone()
-        if user and bcrypt.check_password_hash(user['PasswordHash'], password) and user['UserType'] == 'Admin':
+        password_hash = None
+        if user:
+            password_hash = user.get('PasswordHash') or user.get('passwordhash')
+
+        if password_hash and bcrypt.check_password_hash(password_hash, password) and user['UserType'] == 'Admin':
             return jsonify({
                 "status": "success",
                 "message": "Admin login successful!",
