@@ -637,9 +637,12 @@
 
             let questionsHash = null;
             const fetchAndDisplayQuestions = async () => {
-                existingQuestionsList.innerHTML = '<p class="text-center text-gray-400">Loading questions...</p>';
+                const showLoading = questionsHash === null;
+                if (showLoading) {
+                    existingQuestionsList.innerHTML = '<p class="text-center text-gray-400">Loading questions...</p>';
+                }
                 try {
-                    const response = await fetch('https://logicandstories.com/api/admin/questions');
+                    const response = await fetch('/api/admin/questions');
                     if (!response.ok) throw new Error('Failed to fetch questions');
                     const questions = await response.json();
                     const newHash = JSON.stringify(questions);
