@@ -10,8 +10,8 @@ from version_cache import update_users_version
 import traceback
 import json
 import random
-import re
-import os # Import os module to access environment variables
+import os  # Import os module to access environment variables
+from utils import validate_password
 
 # ---------------------------------
 # --- NEW IMPORTS FOR EMAIL ---
@@ -62,26 +62,6 @@ QUESTION_TYPE_REVERSE_MAP = {
     2: 'OpenEnded'
 }
 
-# Password validation regex and message
-# Compile the regex once at import time to avoid repeatedly parsing the
-# expression each time ``validate_password`` is invoked.
-PASSWORD_REGEX = re.compile(
-    r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d!@#$%^&*()_+]{8,}$"
-)
-PASSWORD_REQUIREMENTS_MESSAGE = (
-    "Password must be at least 8 characters long and include at least one "
-    "uppercase letter, one lowercase letter, one number, and one special "
-    "character (!@#$%^&*()_+)."
-)
-
-def validate_password(password):
-    """
-    Validates a password against predefined security requirements.
-    Returns True and None on success, False and an error message on failure.
-    """
-    if not PASSWORD_REGEX.fullmatch(password):
-        return False, PASSWORD_REQUIREMENTS_MESSAGE
-    return True, None
 
 
 
