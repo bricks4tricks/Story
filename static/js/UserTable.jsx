@@ -60,8 +60,23 @@ function UsersTable() {
             <td className="px-6 py-4">{user.ParentUsername || 'N/A'}</td>
             <td className="px-6 py-4">{new Date(user.CreatedOn).toLocaleDateString()}</td>
             <td className="px-6 py-4 text-center flex justify-center space-x-2">
-              <button onClick={() => handleOpenEditModal(user.ID)} className={`edit-user-btn bg-blue-800 text-white font-semibold py-1 px-3 text-sm rounded-full hover:bg-blue-700 ${isUserAdmin ? 'opacity-50 cursor-not-allowed' : ''}`} disabled={isUserAdmin}>Edit</button>
-              <button onClick={() => handleDeleteUser(user.ID, user.Username)} className={`delete-user-btn bg-red-800 text-white font-semibold py-1 px-3 text-sm rounded-full hover:bg-red-700 ${isUserAdmin ? 'opacity-50 cursor-not-allowed' : ''}`} disabled={isUserAdmin}>Delete</button>
+              <button
+                data-userid={user.ID}
+                onClick={() => handleOpenEditModal(user.ID)}
+                className={`edit-user-btn bg-blue-800 text-white font-semibold py-1 px-3 text-sm rounded-full hover:bg-blue-700 ${isUserAdmin ? 'opacity-50 cursor-not-allowed' : ''}`}
+                disabled={isUserAdmin}
+              >
+                Edit
+              </button>
+              <button
+                data-userid={user.ID}
+                data-username={user.Username}
+                onClick={() => handleDeleteUser(user.ID, user.Username)}
+                className={`delete-user-btn bg-red-800 text-white font-semibold py-1 px-3 text-sm rounded-full hover:bg-red-700 ${isUserAdmin ? 'opacity-50 cursor-not-allowed' : ''}`}
+                disabled={isUserAdmin}
+              >
+                Delete
+              </button>
             </td>
           </tr>
         );
