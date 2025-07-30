@@ -2,7 +2,7 @@ import psycopg2
 from flask_bcrypt import Bcrypt
 import os  # Import os for environment variables
 import traceback
-from db_utils import get_db_connection
+from db_utils import get_db_connection, release_db_connection
 # Database settings are read from environment variables in db_utils
 
 # --- SET YOUR ADMIN CREDENTIALS HERE ---
@@ -45,7 +45,7 @@ except Exception as e:
     print(f"An unexpected error occurred: {e}")
     traceback.print_exc()
 finally:
-    if 'conn' in locals() and conn.closed == 0:
+    if 'conn' in locals() and conn:
         cursor.close()
-        conn.close()
-        print("Database connection closed.")
+        release_db_connection(conn)
+        print("Database connection returned to pool.")
