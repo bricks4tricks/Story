@@ -259,8 +259,10 @@ def signin_user():
         # Column names returned by psycopg2 are lowercase unless explicitly
         # quoted when the table was created. Handle either case gracefully.
         password_hash = None
+        user_type = None
         if user:
             password_hash = user.get('PasswordHash') or user.get('passwordhash')
+            user_type = user.get('UserType') or user.get('usertype')
 
         if password_hash and bcrypt.check_password_hash(password_hash, password):
             return jsonify({
@@ -269,7 +271,7 @@ def signin_user():
                 "user": {
                     "id": user['ID'],
                     "username": user['Username'],
-                    "userType": user['UserType']
+                    "userType": user_type
                 }
             }), 200
         else:
@@ -300,14 +302,22 @@ def admin_signin():
         cursor.execute("SELECT * FROM tbl_User WHERE Username = %s", (username,))
         user = cursor.fetchone()
         password_hash = None
+        user_type = None
         if user:
             password_hash = user.get('PasswordHash') or user.get('passwordhash')
+            # Handle case variations for the UserType column returned by the
+            # database (e.g. "usertype" vs "UserType").
+            user_type = user.get('UserType') or user.get('usertype')
 
-        if password_hash and bcrypt.check_password_hash(password_hash, password) and user['UserType'] == 'Admin':
+        if (
+            password_hash
+            and bcrypt.check_password_hash(password_hash, password)
+            and user_type == 'Admin'
+        ):
             return jsonify({
                 "status": "success",
                 "message": "Admin login successful!",
-                "user": {"id": user['ID'], "username": user['Username'], "userType": user['UserType']}
+                "user": {"id": user['ID'], "username": user['Username'], "userType": user_type}
             }), 200
         else:
             return jsonify({"status": "error", "message": "Invalid credentials or not an admin"}), 401
