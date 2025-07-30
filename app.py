@@ -1682,6 +1682,10 @@ def serve_forgot_password():
 def serve_parent_login():
     return render_template('parent-login.html')
 
+@app.route('/student-login.html')
+def serve_student_login():
+    return render_template('student-login.html')
+
 @app.route('/parent-portal.html')
 def serve_parent_portal():
     return render_template('parent-portal.html')
