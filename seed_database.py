@@ -2,7 +2,7 @@ import csv
 import psycopg2
 import os  # Import os for environment variables
 import traceback
-from db_utils import get_db_connection
+from db_utils import get_db_connection, release_db_connection
 
 # Database credentials are pulled from environment variables via db_utils
 
@@ -110,7 +110,7 @@ def seed_data():
         print(f"An unexpected error occurred: {e}")
         traceback.print_exc()
     finally:
-        if 'conn' in locals() and conn.closed == 0:
+        if 'conn' in locals() and conn:
             cursor.close()
-            conn.close()
-            print("Database connection closed.")
+            release_db_connection(conn)
+            print("Database connection returned to pool.")

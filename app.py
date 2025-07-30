@@ -294,7 +294,7 @@ def admin_signin():
     if request.method == 'OPTIONS':
         return jsonify(success=True)
 
-    data = request.get_json(silent=True) or {}
+    data = request.get_json() or {}
     username = data.get('username', '').strip()
     password = data.get('password', '').strip()
     if not username or not password:
