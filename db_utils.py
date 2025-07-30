@@ -1,21 +1,45 @@
 import os
 import psycopg2
 import traceback
-from dotenv import load_dotenv
+from dotenv import load_dotenv, find_dotenv
 
 # Load variables from a .env file if present. This allows developers to
 # configure database credentials without hardcoding them in the source.
-load_dotenv()
+# ``find_dotenv`` searches parent directories to locate the file, ensuring
+# it is loaded even when the application is executed from another path.
+load_dotenv(find_dotenv())
 
-# Centralized database configuration
-# Environment variables provide credentials; defaults support local dev.
-db_config = {
-    'user': os.environ.get('DB_USER', 'root'),
-    'password': os.environ.get('DB_PASSWORD', 'Dragon@123'),
-    'host': os.environ.get('DB_HOST', '127.0.0.1'),
-    'port': os.environ.get('DB_PORT', '5432'),
-    'database': os.environ.get('DB_NAME', 'educational_platform_db')
-}
+
+def _load_db_config():
+    """Return DB connection settings loaded from environment variables.
+
+    Raises a RuntimeError if any expected variable is missing.
+    """
+    required = ["DB_USER", "DB_PASSWORD", "DB_HOST", "DB_PORT", "DB_NAME"]
+    config = {}
+    missing = []
+    for var in required:
+        value = os.environ.get(var)
+        if not value:
+            missing.append(var)
+        config[var] = value
+
+    if missing:
+        raise RuntimeError(
+            f"Missing required database environment variables: {', '.join(missing)}"
+        )
+
+    return {
+        'user': config['DB_USER'],
+        'password': config['DB_PASSWORD'],
+        'host': config['DB_HOST'],
+        'port': config['DB_PORT'],
+        'database': config['DB_NAME'],
+    }
+
+
+# Centralized database configuration loaded once at import time
+db_config = _load_db_config()
 
 
 def get_db_connection():
