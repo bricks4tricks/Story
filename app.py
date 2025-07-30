@@ -469,7 +469,7 @@ def get_topics_list():
             FROM tbl_Topic t
             JOIN tbl_Topic unit ON t.ParentTopicID = unit.ID
             JOIN tbl_Subject s ON unit.SubjectID = s.ID
-            WHERE t.Active = 1
+            WHERE t.Active = TRUE
             ORDER BY s.SubjectName, unit.TopicName, t.TopicName;
         """
         cursor.execute(query)
@@ -1299,7 +1299,7 @@ def get_curriculum():
             JOIN tbl_Grade g ON tg.GradeID = g.ID
             LEFT JOIN tbl_TopicTheme tt ON topic.ID = tt.TopicID
             LEFT JOIN tbl_Theme th ON tt.ThemeID = th.ID
-            WHERE topic.Active = 1 AND unit.Active = 1
+            WHERE topic.Active = TRUE AND unit.Active = TRUE
             GROUP BY g.ID, s.ID, unit.ID, topic.ID, g.GradeName, s.SubjectName, unit.TopicName, topic.TopicName
             ORDER BY g.ID, s.ID, unit.ID, topic.ID;
         """
