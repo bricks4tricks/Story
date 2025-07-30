@@ -331,7 +331,9 @@ def get_question_details(question_id):
         cursor.execute("SELECT StepName FROM tbl_Step WHERE QuestionID = %s ORDER BY SequenceNo", (question_id,))
         steps = cursor.fetchall()
 
-        cursor.execute("""
+        topic_id = question.get('TopicID') or question.get('topicid')
+        cursor.execute(
+            """
             SELECT
                 t.ID AS TopicID,
                 t.TopicName,
@@ -341,7 +343,9 @@ def get_question_details(question_id):
             JOIN tbl_Topic unit ON t.ParentTopicID = unit.ID
             JOIN tbl_Subject s ON unit.SubjectID = s.ID
             WHERE t.ID = %s
-        """, (question['TopicID'],))
+            """,
+            (topic_id,),
+        )
         topic_info = cursor.fetchone()
 
         question_details = {
@@ -695,7 +699,10 @@ def get_story_for_topic(topic_id):
         """, (topic_id,))
         default_theme_row = cursor.fetchone()
         if default_theme_row:
-            story_payload["defaultTheme"] = default_theme_row['ThemeName']
+            story_payload["defaultTheme"] = (
+                default_theme_row.get('themename')
+                or default_theme_row.get('ThemeName')
+            )
 
         # Fetch all available themes for this topic
         cursor.execute("""
@@ -706,7 +713,10 @@ def get_story_for_topic(topic_id):
             ORDER BY th.ThemeName
         """, (topic_id,))
         available_themes_rows = cursor.fetchall()
-        story_payload["availableThemes"] = [row['ThemeName'] for row in available_themes_rows]
+        story_payload["availableThemes"] = [
+            row.get('themename') or row.get('ThemeName')
+            for row in available_themes_rows
+        ]
 
 
         cursor.execute("SELECT ID, SectionName, DescriptionText, InteractiveElementID, DescriptionOrder, ContentType FROM tbl_Description WHERE TopicID = %s ORDER BY DescriptionOrder", (topic_id,))
@@ -722,13 +732,13 @@ def get_story_for_topic(topic_id):
 
         for section in sections:
             section_data = {
-                "sectionName": section['SectionName'],
-                "order": section['DescriptionOrder'],
-                "contentType": section['ContentType']
+                "sectionName": section.get('sectionname') or section.get('SectionName'),
+                "order": section.get('descriptionorder') or section.get('DescriptionOrder'),
+                "contentType": section.get('contenttype') or section.get('ContentType'),
             }
 
-            if section['InteractiveElementID']:
-                interactive_id = section['InteractiveElementID']
+            if section.get('interactiveelementid') or section.get('InteractiveElementID'):
+                interactive_id = section.get('interactiveelementid') or section.get('InteractiveElementID')
                 cursor.execute(
                     "SELECT ElementType, Configuration FROM tbl_InteractiveElement WHERE ID = %s",
                     (interactive_id,)
@@ -738,23 +748,27 @@ def get_story_for_topic(topic_id):
                 if interactive_row:
                     section_data['contentType'] = 'Interactive'
                     config_data = {}
-                    if interactive_row['Configuration']:
+                    if interactive_row.get('configuration') or interactive_row.get('Configuration'):
                         try:
-                            config_data = json.loads(interactive_row['Configuration'])
+                            config_data = json.loads(
+                                interactive_row.get('configuration')
+                                or interactive_row.get('Configuration')
+                            )
                         except Exception as json_err:
                             print(
                                 f"JSON decode error for interactive element {interactive_id}: {json_err}"
                             )
                     section_data['content'] = {
-                        "elementType": interactive_row['ElementType'],
+                        "elementType": interactive_row.get('elementtype')
+                        or interactive_row.get('ElementType'),
                         "configuration": config_data,
                     }
                 else:
                     section_data['contentType'] = 'Paragraph'
-                    section_data['content'] = section['DescriptionText']
+                    section_data['content'] = section.get('descriptiontext') or section.get('DescriptionText')
             else:
                 section_data['contentType'] = 'Paragraph'
-                section_data['content'] = section['DescriptionText']
+                section_data['content'] = section.get('descriptiontext') or section.get('DescriptionText')
 
             story_payload["sections"].append(section_data)
 
@@ -996,8 +1010,13 @@ def get_curriculum():
         # In a very large app, this might come from a config or DB.
         grade_color_map = { "4th Grade": { "icon": "4th", "color": "fde047" }, "5th Grade": { "icon": "5th", "color": "fb923c" }, "6th Grade": { "icon": "6th", "color": "a78bfa" }, "7th Grade": { "icon": "7th", "color": "60a5fa" }, "8th Grade": { "icon": "8th", "color": "f472b6" }, "9th Grade": { "icon": "9th", "color": "818cf8" }, "10th Grade": { "icon": "10th", "color": "34d399" }, "11th Grade": { "icon": "11th", "color": "22d3ee" }, "Pre-Calculus": { "icon": "Pre-C", "color": "a3e635" }, "Calculus": { "icon": "Calc", "color": "f87171" }, "Statistics": { "icon": "Stats", "color": "c084fc" }, "Contest Math (AMC)": { "icon": "AMC", "color": "e11d48" }, "IB Math AA SL": { "icon": "AA SL", "color": "f9a8d4" }, "IB Math AA HL": { "icon": "AA HL", "color": "f0abfc" }, "IB Math AI SL": { "icon": "AI SL", "color": "a5f3fc" }, "IB Math AI HL": { "icon": "AI HL", "color": "bbf7d0" } }
         for row in rows:
-            grade_name, curriculum_type, unit_name, topic_name, topic_id, available_themes_str, default_theme = \
-                row['GradeName'], row['CurriculumType'], row['UnitName'], row['TopicName'], row['TopicID'], row['AvailableThemes'], row['DefaultTheme']
+            grade_name = row.get('gradename') or row.get('GradeName')
+            curriculum_type = row.get('curriculumtype') or row.get('CurriculumType')
+            unit_name = row.get('unitname') or row.get('UnitName')
+            topic_name = row.get('topicname') or row.get('TopicName')
+            topic_id = row.get('topicid') or row.get('TopicID')
+            available_themes_str = row.get('availablethemes') or row.get('AvailableThemes')
+            default_theme = row.get('defaulttheme') or row.get('DefaultTheme')
             
             clean_grade_name = ' '.join(grade_name.replace('grade', 'Grade').split()).strip()
             if clean_grade_name not in curriculum_data:
@@ -1132,8 +1151,8 @@ def get_quiz_question(user_id, topic_id, difficulty_level):
         if not question:
             return jsonify({"status": "error", "message": "No questions found for this topic."}), 404
 
-        question_id = question['ID']
-        question_type = question['QuestionType']
+        question_id = question.get('id') or question.get('ID')
+        question_type = question.get('questiontype') or question.get('QuestionType')
 
         answers = []
         steps = []
@@ -1145,18 +1164,27 @@ def get_quiz_question(user_id, topic_id, difficulty_level):
             cursor.execute("SELECT AnswerName, IsCorrect FROM tbl_Answer WHERE QuestionID = %s AND IsCorrect = TRUE", (question_id,))
             correct_answer_row = cursor.fetchone()
             if correct_answer_row:
-                answers = [{"AnswerName": correct_answer_row['AnswerName'], "IsCorrect": True}]
+                answers = [
+                    {
+                        "AnswerName": correct_answer_row.get('answername')
+                        or correct_answer_row.get('AnswerName'),
+                        "IsCorrect": True,
+                    }
+                ]
 
         cursor.execute("SELECT StepName FROM tbl_Step WHERE QuestionID = %s ORDER BY SequenceNo", (question_id,))
-        steps = [s['StepName'] for s in cursor.fetchall()]
+        steps = [
+            s.get('stepname') or s.get('StepName')
+            for s in cursor.fetchall()
+        ]
 
         response_data = {
             "status": "success",
             "question": {
-                "id": question['ID'],
-                "text": question['QuestionName'],
-                "type": question['QuestionType'],
-                "difficulty": question['DifficultyRating'],
+                "id": question.get('id') or question.get('ID'),
+                "text": question.get('questionname') or question.get('QuestionName'),
+                "type": question.get('questiontype') or question.get('QuestionType'),
+                "difficulty": question.get('difficultyrating') or question.get('DifficultyRating'),
                 "answers": answers,
                 "steps": steps
             }
