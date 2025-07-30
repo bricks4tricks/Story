@@ -64,12 +64,15 @@ def validate_password(password):
 
 
 # --- UPDATED: EMAIL CONFIGURATION FROM ENVIRONMENT VARIABLES ---
-# Retrieve SMTP settings from environment variables with sensible defaults for local testing.
-SMTP_SERVER = os.environ.get('SMTP_SERVER', 'smtp.gmail.com')
-SMTP_PORT = int(os.environ.get('SMTP_PORT', 587)) # Ensure port is an integer
-SMTP_USERNAME = os.environ.get('SMTP_USERNAME', 'admin@bricks4tricks.com')
-SMTP_PASSWORD = os.environ.get('SMTP_PASSWORD', 'jxuf jldh muge nwry') # This should be your App Password, not your regular email password
-SENDER_EMAIL = os.environ.get('SENDER_EMAIL', 'admin@bricks4tricks.com')
+# Retrieve SMTP settings strictly from environment variables.
+# No default values are provided to avoid accidentally using development
+# credentials in production environments.
+SMTP_SERVER = os.environ.get('SMTP_SERVER')
+smtp_port = os.environ.get('SMTP_PORT')
+SMTP_PORT = int(smtp_port) if smtp_port else None
+SMTP_USERNAME = os.environ.get('SMTP_USERNAME')
+SMTP_PASSWORD = os.environ.get('SMTP_PASSWORD')  # App password
+SENDER_EMAIL = os.environ.get('SENDER_EMAIL')
 
 # --- UPDATED: Frontend Base URL Configuration ---
 # This will allow you to set the frontend URL dynamically based on your deployment.
@@ -255,22 +258,31 @@ def signin_user():
     try:
         conn = get_db_connection()
         cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-        cursor.execute("SELECT * FROM tbl_User WHERE Username = %s", (username,))
+        cursor.execute(
+            """
+            SELECT
+                ID AS id,
+                Username AS username,
+                PasswordHash AS passwordhash,
+                UserType AS usertype
+            FROM tbl_User
+            WHERE Username = %s
+            """,
+            (username,)
+        )
         user = cursor.fetchone()
-        # Column names returned by psycopg2 are lowercase unless explicitly
-        # quoted when the table was created. Handle either case gracefully.
         password_hash = None
         user_type = None
         if user:
-            password_hash = user.get('PasswordHash') or user.get('passwordhash')
-            user_type = user.get('UserType') or user.get('usertype')
+            password_hash = user['passwordhash']
+            user_type = user['usertype']
 
         if password_hash and bcrypt.check_password_hash(password_hash, password):
             # Column case may vary depending on how the table was created. Use
             # ``get`` with fallbacks to avoid ``KeyError`` if the database
             # returns lowercase column names such as ``id`` or ``username``.
-            user_id = user.get('ID') or user.get('id')
-            user_name = user.get('Username') or user.get('username')
+            user_id = user['id']
+            user_name = user['username']
             return jsonify({
                 "status": "success",
                 "message": "Login successful!",
@@ -305,15 +317,24 @@ def admin_signin():
     try:
         conn = get_db_connection()
         cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-        cursor.execute("SELECT * FROM tbl_User WHERE Username = %s", (username,))
+        cursor.execute(
+            """
+            SELECT
+                ID AS id,
+                Username AS username,
+                PasswordHash AS passwordhash,
+                UserType AS usertype
+            FROM tbl_User
+            WHERE Username = %s
+            """,
+            (username,)
+        )
         user = cursor.fetchone()
         password_hash = None
         user_type = None
         if user:
-            password_hash = user.get('PasswordHash') or user.get('passwordhash')
-            # Handle case variations for the UserType column returned by the
-            # database (e.g. "usertype" vs "UserType").
-            user_type = user.get('UserType') or user.get('usertype')
+            password_hash = user['passwordhash']
+            user_type = user['usertype']
 
         if (
             password_hash
@@ -322,8 +343,8 @@ def admin_signin():
         ):
             # As above, support lowercase column names to avoid ``KeyError`` if
             # the database was created without quoting identifiers.
-            user_id = user.get('ID') or user.get('id')
-            user_name = user.get('Username') or user.get('username')
+            user_id = user['id']
+            user_name = user['username']
             return jsonify({
                 "status": "success",
                 "message": "Admin login successful!",
@@ -350,7 +371,13 @@ def get_all_users():
         conn = get_db_connection()
         cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
         query = """
-            SELECT u.ID, u.Username, u.Email, u.UserType, u.CreatedOn, p.Username AS ParentUsername
+            SELECT
+                u.ID AS id,
+                u.Username AS username,
+                u.Email AS email,
+                u.UserType AS usertype,
+                u.CreatedOn AS createdon,
+                p.Username AS parentusername
             FROM tbl_User u
             LEFT JOIN tbl_User p ON u.ParentUserID = p.ID
             ORDER BY u.ID;
@@ -360,12 +387,12 @@ def get_all_users():
         users = []
         for row in rows:
             users.append({
-                'ID': row.get('ID') or row.get('id'),
-                'Username': row.get('Username') or row.get('username'),
-                'Email': row.get('Email') or row.get('email'),
-                'UserType': row.get('UserType') or row.get('usertype'),
-                'CreatedOn': row.get('CreatedOn') or row.get('createdon'),
-                'ParentUsername': row.get('ParentUsername') or row.get('parentusername')
+                'ID': row['id'],
+                'Username': row['username'],
+                'Email': row['email'],
+                'UserType': row['usertype'],
+                'CreatedOn': row['createdon'],
+                'ParentUsername': row['parentusername']
             })
         return jsonify(users)
     except Exception as e:
@@ -571,12 +598,12 @@ def get_all_questions():
         cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
         query = """
             SELECT
-                q.ID,
-                q.QuestionName,
-                q.QuestionType,
-                q.DifficultyRating,
-                t.TopicName,
-                unit.TopicName AS UnitName
+                q.ID AS id,
+                q.QuestionName AS questionname,
+                q.QuestionType AS questiontype,
+                q.DifficultyRating AS difficultyrating,
+                t.TopicName AS topicname,
+                unit.TopicName AS unitname
             FROM tbl_Question q
             JOIN tbl_Topic t ON q.TopicID = t.ID
             JOIN tbl_Topic unit ON t.ParentTopicID = unit.ID
@@ -587,12 +614,12 @@ def get_all_questions():
         questions = []
         for row in rows:
             questions.append({
-                'ID': row.get('ID') or row.get('id'),
-                'QuestionName': row.get('QuestionName') or row.get('questionname'),
-                'QuestionType': row.get('QuestionType') or row.get('questiontype'),
-                'DifficultyRating': row.get('DifficultyRating') or row.get('difficultyrating'),
-                'TopicName': row.get('TopicName') or row.get('topicname'),
-                'UnitName': row.get('UnitName') or row.get('unitname')
+                'ID': row['id'],
+                'QuestionName': row['questionname'],
+                'QuestionType': row['questiontype'],
+                'DifficultyRating': row['difficultyrating'],
+                'TopicName': row['topicname'],
+                'UnitName': row['unitname']
             })
         return jsonify(questions)
     except Exception as e:
@@ -784,9 +811,15 @@ def get_all_stories():
         cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
         query = """
             SELECT DISTINCT
-                t.ID AS TopicID,
-                t.TopicName,
-                (SELECT th.ThemeName FROM tbl_TopicTheme tth JOIN tbl_Theme th ON tth.ThemeID = th.ID WHERE tth.TopicID = t.ID AND tth.IsDefault = TRUE LIMIT 1) AS DefaultTheme
+                t.ID AS topicid,
+                t.TopicName AS topicname,
+                (
+                    SELECT th.ThemeName
+                    FROM tbl_TopicTheme tth
+                    JOIN tbl_Theme th ON tth.ThemeID = th.ID
+                    WHERE tth.TopicID = t.ID AND tth.IsDefault = TRUE
+                    LIMIT 1
+                ) AS defaulttheme
             FROM tbl_Description td
             JOIN tbl_Topic t ON td.TopicID = t.ID
             ORDER BY t.TopicName;
@@ -797,9 +830,9 @@ def get_all_stories():
         stories = []
         for row in stories_raw:
             stories.append({
-                'TopicID': row.get('TopicID') or row.get('topicid'),
-                'TopicName': row.get('TopicName') or row.get('topicname'),
-                'DefaultTheme': row.get('DefaultTheme') or row.get('defaulttheme')
+                'TopicID': row['topicid'],
+                'TopicName': row['topicname'],
+                'DefaultTheme': row['defaulttheme']
             })
 
         return jsonify(stories)
