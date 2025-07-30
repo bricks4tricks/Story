@@ -1,5 +1,6 @@
 import psycopg2
 import psycopg2.extras
+from psycopg2 import sql
 from flask import Flask, jsonify, request, render_template, send_from_directory
 from flask_cors import CORS
 from flask_bcrypt import Bcrypt
@@ -796,8 +797,9 @@ def delete_story(topic_id):
         interactive_element_ids_to_delete = [row[0] for row in cursor.fetchall()]
 
         if interactive_element_ids_to_delete:
-            placeholders = ','.join(['%s'] * len(interactive_element_ids_to_delete))
-            cursor.execute(f"DELETE FROM tbl_InteractiveElement WHERE ID IN ({placeholders})", tuple(interactive_element_ids_to_delete))
+            placeholders = sql.SQL(',').join(sql.Placeholder() * len(interactive_element_ids_to_delete))
+            delete_query = sql.SQL("DELETE FROM tbl_InteractiveElement WHERE ID IN ({})").format(placeholders)
+            cursor.execute(delete_query, tuple(interactive_element_ids_to_delete))
 
         cursor.execute("DELETE FROM tbl_Description WHERE TopicID = %s", (topic_id,))
 
@@ -847,8 +849,9 @@ def save_story():
         interactive_element_ids_to_delete = [row[0] for row in cursor.fetchall()]
 
         if interactive_element_ids_to_delete:
-            placeholders = ','.join(['%s'] * len(interactive_element_ids_to_delete))
-            cursor.execute(f"DELETE FROM tbl_InteractiveElement WHERE ID IN ({placeholders})", tuple(interactive_element_ids_to_delete))
+            placeholders = sql.SQL(',').join(sql.Placeholder() * len(interactive_element_ids_to_delete))
+            delete_query = sql.SQL("DELETE FROM tbl_InteractiveElement WHERE ID IN ({})").format(placeholders)
+            cursor.execute(delete_query, tuple(interactive_element_ids_to_delete))
 
         cursor.execute("DELETE FROM tbl_Description WHERE TopicID = %s", (topic_id,))
 
