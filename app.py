@@ -3,7 +3,7 @@ import psycopg2.extras
 from psycopg2 import sql
 from flask import Flask, jsonify, request, render_template, send_from_directory
 from flask_cors import CORS
-from flask_bcrypt import Bcrypt
+from extensions import bcrypt
 import secrets
 from datetime import datetime, timedelta
 import traceback
@@ -23,7 +23,7 @@ from email.mime.text import MIMEText
 #  1. SETUP & CONFIGURATION
 # =================================================================
 app = Flask(__name__)
-bcrypt = Bcrypt(app)
+bcrypt.init_app(app)
 # Configure Flask-CORS to allow requests from your frontend domain
 # It's crucial to specify the exact origin of your frontend.
 # If your frontend is hosted at 'https://www.logicandstories.com', use that.
@@ -37,6 +37,19 @@ CORS(app, origins=["https://logicandstories.com", "https://www.logicandstories.c
 # --- DATABASE CONFIGURATION ---
 # Moved to db_utils for reuse across scripts
 from db_utils import get_db_connection, release_db_connection
+from auth import auth_bp
+from admin import admin_bp
+from quiz import quiz_bp
+app.register_blueprint(auth_bp)
+app.register_blueprint(admin_bp)
+app.register_blueprint(quiz_bp)
+
+
+
+@app.route("/health", methods=["GET"])
+def health_check():
+    return jsonify({"status": "ok"}), 200
+
 
 # Define a mapping for QuestionType (if using integer in DB)
 QUESTION_TYPE_MAP = {
@@ -70,346 +83,6 @@ def validate_password(password):
     return True, None
 
 
-
-# --- UPDATED: EMAIL CONFIGURATION FROM ENVIRONMENT VARIABLES ---
-# Retrieve SMTP settings strictly from environment variables.
-# No default values are provided to avoid accidentally using development
-# credentials in production environments.
-SMTP_SERVER = os.environ.get('SMTP_SERVER')
-smtp_port = os.environ.get('SMTP_PORT')
-SMTP_PORT = int(smtp_port) if smtp_port else None
-SMTP_USERNAME = os.environ.get('SMTP_USERNAME')
-SMTP_PASSWORD = os.environ.get('SMTP_PASSWORD')  # App password
-SENDER_EMAIL = os.environ.get('SENDER_EMAIL')
-
-# --- UPDATED: Frontend Base URL Configuration ---
-# This will allow you to set the frontend URL dynamically based on your deployment.
-# For production, you can override it by setting FRONTEND_BASE_URL
-# as an environment variable. By default, this is set to
-# https://logicandstories.com.
-FRONTEND_BASE_URL = os.environ.get('FRONTEND_BASE_URL', 'https://logicandstories.com')
-
-# Function to send email
-def send_email(receiver_email, subject, html_content):
-    """Sends an HTML email."""
-    try:
-        msg = MIMEMultipart('alternative')
-        msg['From'] = SENDER_EMAIL
-        msg['To'] = receiver_email
-        msg['Subject'] = subject
-
-        # Attach HTML content
-        msg.attach(MIMEText(html_content, 'html'))
-
-        with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
-            server.starttls() # Use TLS encryption
-            server.login(SMTP_USERNAME, SMTP_PASSWORD)
-            server.send_message(msg)
-        print(f"Email sent successfully to {receiver_email}")
-        return True
-    except Exception as e:
-        print(f"Failed to send email to {receiver_email}: {e}")
-        traceback.print_exc()
-        return False
-
-# --- NEW: Load email template content ---
-# This template is embedded directly in the Python script for simplicity.
-# In a larger application, you might load this from a separate HTML file.
-RESET_PASSWORD_EMAIL_TEMPLATE_HTML = """
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Logic and Stories - Password Reset Request</title>
-    <style>
-        /* Inlining basic styles for better email client compatibility */
-        body {
-            font-family: 'Nunito', sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #0f172a; /* slate-900 */
-            color: #e2e8f0; /* gray-200 */
-        }
-        .font-pacifico {
-            font-family: 'Pacifico', cursive;
-        }
-        .gradient-text {
-            background: linear-gradient(to right, #fde047, #fb923c);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .glow-button {
-            box-shadow: 0 0 15px rgba(253, 224, 71, 0.5), 0 0 5px rgba(251, 146, 60, 0.4);
-        }
-        /* Ensure responsive behavior for email clients */
-        @media only screen and (max-width: 600px) {
-            .container {
-                padding: 10px !important;
-            }
-            .content-block {
-                padding: 20px !important;
-            }
-            .button {
-                padding: 12px 25px !important;
-                font-size: 16px !important;
-            }
-        }
-    </style>
-</head>
-<body style="background-color: #0f172a; color: #e2e8f0; margin: 0; padding: 0; font-family: 'Nunito', sans-serif;">
-    <div style="max-width: 600px; margin: 0 auto; padding: 32px 16px; box-sizing: border-box;">
-        <!-- Header/Logo -->
-        <div style="text-align: center; margin-bottom: 32px;">
-            <a href="#" style="font-size: 36px; font-family: 'Pacifico', cursive; background: linear-gradient(to right, #fde047, #fb923c); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-decoration: none;">Logic and Stories</a>
-        </div>
-
-        <!-- Email Content Block -->
-        <div style="background-color: #1e293b; border-radius: 16px; padding: 24px 32px; border: 1px solid #334155;">
-            <h2 style="font-size: 28px; font-weight: bold; color: #ffffff; text-align: center; margin-bottom: 24px;">Password Reset Request</h2>
-
-            <p style="font-size: 18px; color: #cbd5e1; margin-bottom: 16px;">Hi there,</p>
-
-            <p style="font-size: 18px; color: #cbd5e1; margin-bottom: 24px;">
-                We received a request to reset the password for your Logic and Stories account.
-                To reset your password, please click the button below:
-            </p>
-
-            <div style="text-align: center; margin-bottom: 32px;">
-                <a href="{{RESET_LINK}}" style="display: inline-block; background-color: #fde047; color: #1e293b; font-weight: bold; padding: 12px 32px; border-radius: 9999px; text-decoration: none; transition: all 0.2s ease-in-out; box-shadow: 0 0 15px rgba(253, 224, 71, 0.5), 0 0 5px rgba(251, 146, 60, 0.4);">
-                    Reset Your Password
-                </a>
-            </div>
-
-            <p style="font-size: 18px; color: #cbd5e1; margin-bottom: 16px;">
-                This link is valid for <strong>1 hour</strong>. If you do not reset your password within this time,
-                you will need to submit another request.
-            </p>
-
-            <p style="font-size: 18px; color: #cbd5e1; margin-bottom: 24px;">
-                If you did not request a password reset, please ignore this email. Your password will remain unchanged.
-            </p>
-
-            <p style="font-size: 18px; color: #cbd5e1;">Thanks,</p>
-            <p style="font-size: 18px; color: #cbd5e1;">The Logic and Stories Team</p>
-        </div>
-
-        <!-- Footer -->
-        <div style="text-align: center; color: #64748b; font-size: 14px; margin-top: 32px;">
-            <p>&copy; 2024 Logic and Stories. All Rights Reserved.</p>
-            <p style="margin-top: 8px;">
-                If you have any questions, please contact our support team at
-                <a href="mailto:support@logicandstories.com" style="color: #fde047; text-decoration: underline;">support@logicandstories.com</a>.
-            </p>
-        </div>
-    </div>
-</body>
-</html>
-"""
-# --- END NEW EMAIL CONFIGURATION AND TEMPLATE ---
-
-
-# =================================================================
-#  2. API ENDPOINTS
-# =================================================================
-
-@app.route('/health', methods=['GET'])
-def health_check():
-    """Simple health check endpoint."""
-    return jsonify({"status": "ok"}), 200
-
-@app.route('/api/signup', methods=['POST', 'OPTIONS'])
-def signup_user():
-    if request.method == 'OPTIONS': return jsonify(success=True)
-    data = request.get_json()
-    username, email, password = data.get('username'), data.get('email'), data.get('password')
-    if not all([username, email, password]):
-        return jsonify({"status": "error", "message": "Missing fields"}), 400
-
-    # Server-side password validation
-    is_valid, message = validate_password(password)
-    if not is_valid:
-        return jsonify({"status": "error", "message": message}), 400
-
-    conn = None
-    try:
-        conn = get_db_connection()
-        cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-        cursor.execute("SELECT ID FROM tbl_User WHERE Username = %s OR Email = %s", (username, email))
-        if cursor.fetchone():
-            return jsonify({"status": "error", "message": "Username or email already exists"}), 409
-
-        hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
-        cursor.execute(
-            "INSERT INTO tbl_User (Username, Email, PasswordHash, UserType) VALUES (%s, %s, %s, 'Parent')",
-            (username, email, hashed_password)
-        )
-        conn.commit()
-        return jsonify({"status": "success", "message": "Parent account created successfully!"}), 201
-    except Exception as e:
-        print(f"Signup API Error: {e}")
-        traceback.print_exc()
-        return jsonify({"status": "error", "message": "Internal error"}), 500
-    finally:
-        if conn:
-            release_db_connection(conn)
-
-@app.route('/api/signin', methods=['POST', 'OPTIONS'])
-def signin_user():
-    if request.method == 'OPTIONS': return jsonify(success=True)
-    data = request.get_json()
-    username, password = data.get('username'), data.get('password')
-    if not all([username, password]):
-        return jsonify({"status": "error", "message": "Missing fields"}), 400
-
-    conn = None
-    try:
-        conn = get_db_connection()
-        cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-        cursor.execute(
-            """
-            SELECT
-                ID AS id,
-                Username AS username,
-                PasswordHash AS passwordhash,
-                UserType AS usertype
-            FROM tbl_User
-            WHERE Username = %s
-            """,
-            (username,)
-        )
-        user = cursor.fetchone()
-        password_hash = None
-        user_type = None
-        if user:
-            password_hash = user['passwordhash']
-            user_type = user['usertype']
-
-        if password_hash and bcrypt.check_password_hash(password_hash, password):
-            # Column case may vary depending on how the table was created. Use
-            # ``get`` with fallbacks to avoid ``KeyError`` if the database
-            # returns lowercase column names such as ``id`` or ``username``.
-            user_id = user['id']
-            user_name = user['username']
-            return jsonify({
-                "status": "success",
-                "message": "Login successful!",
-                "user": {
-                    "id": user_id,
-                    "username": user_name,
-                    "userType": user_type
-                }
-            }), 200
-        else:
-            return jsonify({"status": "error", "message": "Invalid username or password"}), 401
-    except Exception as e:
-        print(f"Signin API Error: {e}")
-        traceback.print_exc()
-        return jsonify({"status": "error", "message": "Internal error"}), 500
-    finally:
-        if conn:
-            release_db_connection(conn)
-
-@app.route('/api/admin-signin', methods=['POST', 'OPTIONS'])
-def admin_signin():
-    if request.method == 'OPTIONS':
-        return jsonify(success=True)
-
-    data = request.get_json() or {}
-    username = data.get('username', '').strip()
-    password = data.get('password', '').strip()
-    if not username or not password:
-        return jsonify({"status": "error", "message": "Missing username or password"}), 400
-
-    conn = None
-    try:
-        conn = get_db_connection()
-        cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-        cursor.execute(
-            """
-            SELECT
-                ID AS id,
-                Username AS username,
-                PasswordHash AS passwordhash,
-                UserType AS usertype
-            FROM tbl_User
-            WHERE Username = %s
-            """,
-            (username,)
-        )
-        user = cursor.fetchone()
-        password_hash = None
-        user_type = None
-        if user:
-            password_hash = user['passwordhash']
-            user_type = user['usertype']
-
-        if (
-            password_hash
-            and bcrypt.check_password_hash(password_hash, password)
-            and user_type == 'Admin'
-        ):
-            # As above, support lowercase column names to avoid ``KeyError`` if
-            # the database was created without quoting identifiers.
-            user_id = user['id']
-            user_name = user['username']
-            return jsonify({
-                "status": "success",
-                "message": "Admin login successful!",
-                "user": {"id": user_id, "username": user_name, "userType": user_type}
-            }), 200
-        else:
-            return jsonify({"status": "error", "message": "Invalid credentials or not an admin"}), 401
-    except psycopg2.Error as e:
-        print(f"Admin Signin DB Error: {e}")
-        traceback.print_exc()
-        return jsonify({"status": "error", "message": "Database error"}), 500
-    except Exception as e:
-        print(f"Admin Signin API Error: {e}")
-        traceback.print_exc()
-        return jsonify({"status": "error", "message": "Internal server error"}), 500
-    finally:
-        if conn:
-            release_db_connection(conn)
-
-@app.route('/api/admin/all-users', methods=['GET'])
-def get_all_users():
-    conn = None
-    try:
-        conn = get_db_connection()
-        cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-        query = """
-            SELECT
-                u.ID AS id,
-                u.Username AS username,
-                u.Email AS email,
-                u.UserType AS usertype,
-                u.CreatedOn AS createdon,
-                p.Username AS parentusername
-            FROM tbl_User u
-            LEFT JOIN tbl_User p ON u.ParentUserID = p.ID
-            ORDER BY u.ID;
-        """
-        cursor.execute(query)
-        rows = cursor.fetchall()
-        users = []
-        for row in rows:
-            users.append({
-                'ID': row['id'],
-                'Username': row['username'],
-                'Email': row['email'],
-                'UserType': row['usertype'],
-                'CreatedOn': row['createdon'],
-                'ParentUsername': row['parentusername']
-            })
-        return jsonify(users)
-    except Exception as e:
-        print(f"Get All Users API Error: {e}")
-        traceback.print_exc()
-        return jsonify({"status": "error", "message": "Internal error"}), 500
-    finally:
-        if conn:
-            release_db_connection(conn)
 
 
 @app.route('/api/admin/edit-user/<int:user_id>', methods=['PUT', 'OPTIONS'])
@@ -1288,82 +961,6 @@ def delete_student_from_parent_portal(student_id):
         if conn:
             release_db_connection(conn)
 
-@app.route('/api/forgot-password', methods=['POST', 'OPTIONS'])
-def forgot_password():
-    if request.method == 'OPTIONS': return jsonify(success=True)
-    data = request.get_json()
-    email = data.get('email')
-    if not email:
-        return jsonify({"status": "error", "message": "Email is required"}), 400
-
-    conn = None
-    try:
-        conn = get_db_connection()
-        cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-        cursor.execute("SELECT ID FROM tbl_User WHERE Email = %s", (email,))
-        user = cursor.fetchone()
-        if user:
-            token, expiry = secrets.token_hex(32), datetime.now() + timedelta(hours=1)
-            cursor.execute("UPDATE tbl_User SET ResetToken = %s, ResetTokenExpiry = %s WHERE ID = %s", (token, expiry, user['ID']))
-            conn.commit()
-            
-            # --- UPDATED: Use FRONTEND_BASE_URL for the reset link ---
-            reset_link = f"{FRONTEND_BASE_URL}/reset-password.html?token={token}" # Dynamically construct URL
-            email_content = RESET_PASSWORD_EMAIL_TEMPLATE_HTML.replace('{{RESET_LINK}}', reset_link)
-            
-            if send_email(email, "Logic and Stories - Password Reset", email_content):
-                return jsonify({"status": "success", "message": "If an account exists, a password reset link has been sent to your email."}), 200
-            else:
-                # If email sending fails, still return success to avoid leaking user existence
-                print(f"Warning: Failed to send password reset email to {email}")
-                return jsonify({"status": "success", "message": "If an account exists, a password reset link has been sent to your email (but there was an issue sending the email)."}), 200
-            # --- END UPDATED: Send email with reset link ---
-        else:
-            # Always return success to avoid leaking whether an email exists in the system
-            return jsonify({"status": "success", "message": "If an account exists, a password reset link has been sent to your email."}), 200
-    except Exception as e:
-        print(f"Forgot Password API Error: {e}")
-        traceback.print_exc()
-        return jsonify({"status": "error", "message": "Internal error"}), 500
-    finally:
-        if conn:
-            release_db_connection(conn)
-
-@app.route('/api/reset-password', methods=['POST', 'OPTIONS'])
-def reset_password():
-    if request.method == 'OPTIONS': return jsonify(success=True)
-    data = request.get_json()
-    token, new_password = data.get('token'), data.get('newPassword') # Changed 'password' to 'newPassword' for clarity as per HTML
-    if not all([token, new_password]):
-        return jsonify({"status": "error", "message": "Token and new password are required."}), 400
-
-    # Server-side password validation
-    is_valid, message = validate_password(new_password)
-    if not is_valid:
-        return jsonify({"status": "error", "message": message}), 400
-
-    conn = None
-    try:
-        conn = get_db_connection()
-        cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-        cursor.execute("SELECT ID FROM tbl_User WHERE ResetToken = %s AND ResetTokenExpiry > NOW()", (token,))
-        user = cursor.fetchone()
-        if not user:
-            return jsonify({"status": "error", "message": "Invalid or expired reset token."}), 400
-        hashed_password = bcrypt.generate_password_hash(new_password).decode('utf-8')
-        cursor.execute(
-            "UPDATE tbl_User SET PasswordHash = %s, ResetToken = NULL, ResetTokenExpiry = NULL WHERE ID = %s",
-            (hashed_password, user['ID'])
-        )
-        conn.commit()
-        return jsonify({"status": "success", "message": "Password has been reset successfully."}), 200
-    except Exception as e:
-        print(f"Reset Password API Error: {e}")
-        traceback.print_exc()
-        return jsonify({"status": "error", "message": "Internal error"}), 500
-    finally:
-        if conn:
-            release_db_connection(conn)
 
 @app.route('/api/curriculum', methods=['GET'])
 def get_curriculum():
