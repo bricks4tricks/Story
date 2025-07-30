@@ -467,11 +467,28 @@
                         if (!hierarchicalTopics[CurriculumType][UnitName]) hierarchicalTopics[CurriculumType][UnitName] = [];
                         hierarchicalTopics[CurriculumType][UnitName].push({ id: ID, name: TopicName });
                     });
-                    [questionSelectors, storySelectors, editQuestionSelectors].forEach(selectorSet => {
-                        selectorSet.curriculumSelect.innerHTML = '<option value="">-- Select Curriculum --</option>';
-                        Object.keys(hierarchicalTopics).sort().forEach(curriculum => { selectorSet.curriculumSelect.innerHTML += `<option value="${curriculum}">${curriculum}</option>`; });
+                } catch (error) {
+                    console.error("Fetch topics error:", error);
+                }
+            };
+
+            const loadCurriculums = async () => {
+                try {
+                    const resp = await fetch(`${window.location.origin}/get_curriculums`);
+                    if (!resp.ok) throw new Error('Failed to fetch curriculums');
+                    const curriculums = await resp.json();
+                    [questionSelectors, storySelectors, editQuestionSelectors].forEach(set => {
+                        set.curriculumSelect.innerHTML = '<option value="">-- Select Curriculum --</option>';
+                        curriculums.forEach(name => { set.curriculumSelect.innerHTML += `<option value="${name}">${name}</option>`; });
                     });
-                } catch (error) { console.error("Fetch topics error:", error); }
+                } catch (error) {
+                    console.error('Fetch curriculums error:', error);
+                    const msg = document.getElementById('admin-message');
+                    if (msg) {
+                        msg.textContent = 'Error loading curriculums.';
+                        msg.className = 'text-red-400 mb-4';
+                    }
+                }
             };
 
             const addAnswerInput = (container, isCorrect = false, text = '', isFirst = false) => {
@@ -1583,9 +1600,10 @@
                 }
             }, POLL_INTERVAL_MS);
 
-            const initializeApp = () => {
+            const initializeApp = async () => {
                 if (window.refreshUsers) window.refreshUsers();
-                initializeTopicData();
+                await loadCurriculums();
+                await initializeTopicData();
                 addAnswerInput(answersContainer, true, '', true); // Pass container
                 addAnswerInput(answersContainer, false, '', false); // Pass container
                 addStepInput(stepsContainer, '', true); // Pass container
