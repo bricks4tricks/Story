@@ -9,5 +9,5 @@ This project uses a PostCSS build pipeline for Tailwind. After installing the
 npm run build:css
 ```
 
-to generate `static/css/style.css`. You can also run `npm run watch:css` during
+to generate `static/css/styles.css`. You can also run `npm run watch:css` during
 development to rebuild on changes.
