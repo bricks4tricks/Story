@@ -265,12 +265,17 @@ def signin_user():
             user_type = user.get('UserType') or user.get('usertype')
 
         if password_hash and bcrypt.check_password_hash(password_hash, password):
+            # Column case may vary depending on how the table was created. Use
+            # ``get`` with fallbacks to avoid ``KeyError`` if the database
+            # returns lowercase column names such as ``id`` or ``username``.
+            user_id = user.get('ID') or user.get('id')
+            user_name = user.get('Username') or user.get('username')
             return jsonify({
                 "status": "success",
                 "message": "Login successful!",
                 "user": {
-                    "id": user['ID'],
-                    "username": user['Username'],
+                    "id": user_id,
+                    "username": user_name,
                     "userType": user_type
                 }
             }), 200
@@ -314,10 +319,14 @@ def admin_signin():
             and bcrypt.check_password_hash(password_hash, password)
             and user_type == 'Admin'
         ):
+            # As above, support lowercase column names to avoid ``KeyError`` if
+            # the database was created without quoting identifiers.
+            user_id = user.get('ID') or user.get('id')
+            user_name = user.get('Username') or user.get('username')
             return jsonify({
                 "status": "success",
                 "message": "Admin login successful!",
-                "user": {"id": user['ID'], "username": user['Username'], "userType": user_type}
+                "user": {"id": user_id, "username": user_name, "userType": user_type}
             }), 200
         else:
             return jsonify({"status": "error", "message": "Invalid credentials or not an admin"}), 401
