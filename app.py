@@ -49,15 +49,23 @@ QUESTION_TYPE_REVERSE_MAP = {
 }
 
 # Password validation regex and message
-PASSWORD_REGEX = r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d!@#$%^&*()_+]{8,}$"
-PASSWORD_REQUIREMENTS_MESSAGE = "Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character (!@#$%^&*()_+)."
+# Compile the regex once at import time to avoid repeatedly parsing the
+# expression each time ``validate_password`` is invoked.
+PASSWORD_REGEX = re.compile(
+    r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d!@#$%^&*()_+]{8,}$"
+)
+PASSWORD_REQUIREMENTS_MESSAGE = (
+    "Password must be at least 8 characters long and include at least one "
+    "uppercase letter, one lowercase letter, one number, and one special "
+    "character (!@#$%^&*()_+)."
+)
 
 def validate_password(password):
     """
     Validates a password against predefined security requirements.
     Returns True and None on success, False and an error message on failure.
     """
-    if not re.fullmatch(PASSWORD_REGEX, password):
+    if not PASSWORD_REGEX.fullmatch(password):
         return False, PASSWORD_REQUIREMENTS_MESSAGE
     return True, None
 
