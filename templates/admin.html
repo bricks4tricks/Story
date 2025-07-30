@@ -350,40 +350,63 @@
             // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
             // createCascadingSelectors FUNCTION DEFINITION - MOVED HERE
             // This entire function block must be defined BEFORE it is used below.
-            // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-            const createCascadingSelectors = (prefix) => {
-                const curriculumContainer = document.getElementById(`${prefix}-curriculum-container`);
-                const unitContainer = document.getElementById(`${prefix}-unit-container`);
-                const topicContainer = document.getElementById(`${prefix}-topic-container`);
-                curriculumContainer.innerHTML = `<select id="${prefix}-curriculum-select" class="w-full bg-slate-700 p-3 rounded-lg" required><option value="">-- Select Curriculum --</option></select>`;
-                unitContainer.innerHTML = `<select id="${prefix}-unit-select" class="w-full bg-slate-700 p-3 rounded-lg" required disabled><option value="">-- Select Unit --</option></select>`;
-                topicContainer.innerHTML = `<select id="${prefix}-topic-select" class="w-full bg-slate-700 p-3 rounded-lg" required disabled><option value="">-- Select Topic --</option></select>`;
-                const curriculumSelect = document.getElementById(`${prefix}-curriculum-select`);
-                const unitSelect = document.getElementById(`${prefix}-unit-select`);
-                const topicSelect = document.getElementById(`${prefix}-topic-select`);
-                curriculumSelect.addEventListener('change', () => {
-                    const selectedCurriculum = curriculumSelect.value;
-                    unitSelect.innerHTML = '<option value="">-- Select Unit --</option>';
-                    topicSelect.innerHTML = '<option value="">-- Select Topic --</option>';
-                    unitSelect.disabled = true; topicSelect.disabled = true;
-                    if (selectedCurriculum && hierarchicalTopics[selectedCurriculum]) {
-                        Object.keys(hierarchicalTopics[selectedCurriculum]).sort().forEach(unit => { unitSelect.innerHTML += `<option value="${unit}">${unit}</option>`; });
-                        unitSelect.disabled = false;
-                    }
-                });
-                unitSelect.addEventListener('change', () => {
-                    const selectedCurriculum = curriculumSelect.value;
-                    const selectedUnit = unitSelect.value;
-                    topicSelect.innerHTML = '<option value="">-- Select Topic --</option>'; topicSelect.disabled = true;
-                    if (selectedUnit && hierarchicalTopics[selectedCurriculum]?.[selectedUnit]) {
-                        hierarchicalTopics[selectedCurriculum][selectedUnit].forEach(topic => { topicSelect.innerHTML += `<option value="${topic.id}">${topic.name}</option>`; });
-                        topicSelect.disabled = false;
-                    }
-                });
-                return { curriculumSelect, unitSelect, topicSelect };
-            };
             // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
+const createCascadingSelectors = (prefix) => {
+    const curriculumContainer = document.getElementById(`${prefix}-curriculum-container`);
+    const unitContainer = document.getElementById(`${prefix}-unit-container`);
+    const topicContainer = document.getElementById(`${prefix}-topic-container`);
+    curriculumContainer.innerHTML = `<select id="${prefix}-curriculum-select" class="w-full bg-slate-700 p-3 rounded-lg" required><option value="">-- Select Curriculum --</option></select>`;
+    unitContainer.innerHTML = `<select id="${prefix}-unit-select" class="w-full bg-slate-700 p-3 rounded-lg" required disabled><option value="">-- Select Unit --</option></select>`;
+    topicContainer.innerHTML = `<select id="${prefix}-topic-select" class="w-full bg-slate-700 p-3 rounded-lg" required disabled><option value="">-- Select Topic --</option></select>`;
+
+    const curriculumSelect = document.getElementById(`${prefix}-curriculum-select`);
+    const unitSelect = document.getElementById(`${prefix}-unit-select`);
+    const topicSelect = document.getElementById(`${prefix}-topic-select`);
+
+    curriculumSelect.addEventListener('change', async () => {
+        const selectedCurriculum = curriculumSelect.value;
+        unitSelect.innerHTML = '<option value="">-- Select Unit --</option>';
+        topicSelect.innerHTML = '<option value="">-- Select Topic --</option>';
+        unitSelect.disabled = true;
+        topicSelect.disabled = true;
+        if (selectedCurriculum) {
+            try {
+                const resp = await fetch(`${window.location.origin}/get_units/${encodeURIComponent(selectedCurriculum)}`);
+                if (!resp.ok) throw new Error('Failed to load units');
+                const units = await resp.json();
+                const uniqueUnits = [...new Set(units)];
+                uniqueUnits.forEach(u => { unitSelect.innerHTML += `<option value="${u}">${u}</option>`; });
+                if (uniqueUnits.length > 0) unitSelect.disabled = false;
+                if (!hierarchicalTopics[selectedCurriculum]) hierarchicalTopics[selectedCurriculum] = {};
+            } catch (err) {
+                console.error('Error fetching units:', err);
+            }
+        }
+    });
+
+    unitSelect.addEventListener('change', async () => {
+        const selectedCurriculum = curriculumSelect.value;
+        const selectedUnit = unitSelect.value;
+        topicSelect.innerHTML = '<option value="">-- Select Topic --</option>';
+        topicSelect.disabled = true;
+        if (selectedUnit) {
+            try {
+                const resp = await fetch(`${window.location.origin}/get_topics/${encodeURIComponent(selectedCurriculum)}/${encodeURIComponent(selectedUnit)}`);
+                if (!resp.ok) throw new Error('Failed to load topics');
+                const topics = await resp.json();
+                topics.forEach(t => { topicSelect.innerHTML += `<option value="${t.id}">${t.name}</option>`; });
+                if (topics.length > 0) topicSelect.disabled = false;
+                if (!hierarchicalTopics[selectedCurriculum]) hierarchicalTopics[selectedCurriculum] = {};
+                hierarchicalTopics[selectedCurriculum][selectedUnit] = topics;
+            } catch (err) {
+                console.error('Error fetching topics:', err);
+            }
+        }
+    });
+
+    return { curriculumSelect, unitSelect, topicSelect };
+};
 
             // These declarations must now come AFTER createCascadingSelectors is defined.
             const questionSelectors = createCascadingSelectors('q');
@@ -477,9 +500,10 @@
                     const resp = await fetch(`${window.location.origin}/get_curriculums`);
                     if (!resp.ok) throw new Error('Failed to fetch curriculums');
                     const curriculums = await resp.json();
+                    const uniqueCurriculums = [...new Set(curriculums)];
                     [questionSelectors, storySelectors, editQuestionSelectors].forEach(set => {
                         set.curriculumSelect.innerHTML = '<option value="">-- Select Curriculum --</option>';
-                        curriculums.forEach(name => { set.curriculumSelect.innerHTML += `<option value="${name}">${name}</option>`; });
+                        uniqueCurriculums.forEach(name => { set.curriculumSelect.innerHTML += `<option value="${name}">${name}</option>`; });
                     });
                 } catch (error) {
                     console.error('Fetch curriculums error:', error);

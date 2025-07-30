@@ -970,6 +970,8 @@ def get_curriculums():
         cursor.execute("SELECT SubjectName FROM tbl_Subject ORDER BY SubjectName;")
         rows = cursor.fetchall()
         curriculums = [row[0] for row in rows]
+        # Deduplicate while preserving order
+        curriculums = list(dict.fromkeys(curriculums))
     except Exception as e:
         print(f"get_curriculums error: {e}")
         traceback.print_exc()
@@ -978,6 +980,69 @@ def get_curriculums():
         # Intentionally keep the connection open for reuse
         pass
     return jsonify(curriculums)
+
+
+@app.route('/get_units/<curriculum>', methods=['GET'])
+def get_units(curriculum):
+    """Return distinct unit names for the given curriculum."""
+    conn = None
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        query = sql.SQL(
+            """
+            SELECT DISTINCT unit.TopicName
+            FROM tbl_Topic unit
+            JOIN tbl_Subject s ON unit.SubjectID = s.ID
+            WHERE unit.ParentTopicID IS NULL
+              AND unit.Active = TRUE
+              AND s.SubjectName = %s
+            ORDER BY unit.TopicName;
+            """
+        )
+        cursor.execute(query, (curriculum,))
+        rows = cursor.fetchall()
+        units = [r[0] for r in rows]
+    except Exception as e:
+        print(f"get_units error: {e}")
+        traceback.print_exc()
+        units = []
+    finally:
+        if conn:
+            release_db_connection(conn)
+    return jsonify(units)
+
+
+@app.route('/get_topics/<curriculum>/<unit>', methods=['GET'])
+def get_topics(curriculum, unit):
+    """Return topics for the given curriculum and unit."""
+    conn = None
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        query = sql.SQL(
+            """
+            SELECT t.ID, t.TopicName
+            FROM tbl_Topic t
+            JOIN tbl_Topic unit ON t.ParentTopicID = unit.ID
+            JOIN tbl_Subject s ON unit.SubjectID = s.ID
+            WHERE t.Active = TRUE
+              AND unit.Active = TRUE
+              AND s.SubjectName = %s
+              AND unit.TopicName = %s
+            ORDER BY t.TopicName;
+            """
+        )
+        cursor.execute(query, (curriculum, unit))
+        topics = [{"id": row["id"], "name": row["topicname"]} for row in cursor.fetchall()]
+    except Exception as e:
+        print(f"get_topics error: {e}")
+        traceback.print_exc()
+        topics = []
+    finally:
+        if conn:
+            release_db_connection(conn)
+    return jsonify(topics)
 
 
 @app.route('/api/curriculum', methods=['GET'])
