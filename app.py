@@ -1686,17 +1686,17 @@ def get_all_question_attempts():
 
         query = """
             SELECT
-                qa.ID AS AttemptID,
-                qa.AttemptTime,
-                qa.UserAnswer,
-                qa.IsCorrect,
-                qa.DifficultyAtAttempt,
-                u.Username AS AttemptingUsername,
-                q.QuestionName AS QuestionText,
-                t.TopicName AS TopicName,
-                unit.TopicName AS UnitName,
-                s.SubjectName AS CurriculumType,
-                string_agg(TRIM(a.AnswerName), ',' ) FILTER (WHERE a.IsCorrect = TRUE) AS CorrectAnswer
+                qa.ID AS "AttemptID",
+                qa.AttemptTime AS "AttemptTime",
+                qa.UserAnswer AS "UserAnswer",
+                qa.IsCorrect AS "IsCorrect",
+                qa.DifficultyAtAttempt AS "DifficultyAtAttempt",
+                u.Username AS "AttemptingUsername",
+                q.QuestionName AS "QuestionText",
+                t.TopicName AS "TopicName",
+                unit.TopicName AS "UnitName",
+                s.SubjectName AS "CurriculumType",
+                string_agg(TRIM(a.AnswerName), ',' ) FILTER (WHERE a.IsCorrect = TRUE) AS "CorrectAnswer"
             FROM tbl_QuestionAttempt qa
             JOIN tbl_User u ON qa.UserID = u.ID
             JOIN tbl_Question q ON qa.QuestionID = q.ID
