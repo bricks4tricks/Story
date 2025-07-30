@@ -6,3 +6,4 @@ python-dotenv
 PyJWT
 requests
 gunicorn
+pytest
