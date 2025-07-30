@@ -290,7 +290,6 @@
             const adminUsername = localStorage.getItem('username');
             document.getElementById('welcome-username').textContent = `Welcome, ${adminUsername}!`;
             const adminMessageDiv = document.getElementById('admin-message');
-            let allUsersData = [];
             let hierarchicalTopics = {};
 
             const userTableBody = document.getElementById('user-table-body');
@@ -456,7 +455,8 @@ const createCascadingSelectors = (prefix) => {
                 setTimeout(() => { adminMessageDiv.textContent = ''; }, 5000);
             };
             const handleOpenEditModal = (userId) => {
-                const userData = allUsersData.find(user => user.ID == userId);
+                const users = window.allUsersData || [];
+                const userData = users.find(user => user.ID == userId);
                 if (!userData) return;
                 document.getElementById('edit-userid').value = userData.ID;
                 document.getElementById('edit-username').value = userData.Username;
