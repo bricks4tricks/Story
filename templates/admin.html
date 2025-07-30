@@ -404,22 +404,7 @@
                 setTimeout(() => modal.classList.add('modal-hidden'), 300);
             };
 
-            let usersHash = null;
-            const fetchAndDisplayUsers = async () => {
-                try {
-                    const response = await fetch('/api/admin/all-users');
-                    if (!response.ok) throw new Error('Failed to fetch users');
-                    const fetched = await response.json();
-                    const newHash = JSON.stringify(fetched);
-                    if (newHash === usersHash) return; // no change, skip update
-                    usersHash = newHash;
-                    allUsersData = fetched;
-                    if (window.setUsersData) window.setUsersData(allUsersData);
-                } catch (error) {
-                    console.error("Fetch users error:", error);
-                    if (window.setUsersData) window.setUsersData([]);
-                }
-            };
+            // user list is handled by static/js/userTable.js
             const handleDeleteUser = async (userId, username) => {
                 if (!confirm(`Are you sure you want to delete the user "${username}"? This action cannot be undone.`)) return;
 
@@ -1608,9 +1593,6 @@
             initializeApp();
         });
     </script>
-    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-    <script crossorigin src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <script type="text/babel" src="/static/js/UserTable.jsx"></script>
+    <script src="/static/js/userTable.js"></script>
 </body>
 </html>
