@@ -1075,9 +1075,10 @@ def update_user_progress():
         query = """
             INSERT INTO tbl_UserProgress (UserID, TopicID, Status)
             VALUES (%s, %s, %s)
-            ON DUPLICATE KEY UPDATE Status = %s;
+            ON CONFLICT (UserID, TopicID)
+            DO UPDATE SET Status = EXCLUDED.Status;
         """
-        cursor.execute(query, (user_id, topic_id, status, status))
+        cursor.execute(query, (user_id, topic_id, status))
         conn.commit()
 
         return jsonify({"status": "success", "message": "Progress updated."}), 200
@@ -1387,9 +1388,10 @@ def update_user_topic_difficulty():
         query = """
             INSERT INTO tbl_UserTopicDifficulty (UserID, TopicID, CurrentDifficulty)
             VALUES (%s, %s, %s)
-            ON DUPLICATE KEY UPDATE CurrentDifficulty = %s;
+            ON CONFLICT (UserID, TopicID)
+            DO UPDATE SET CurrentDifficulty = EXCLUDED.CurrentDifficulty;
         """
-        cursor.execute(query, (user_id, topic_id, new_difficulty, new_difficulty))
+        cursor.execute(query, (user_id, topic_id, new_difficulty))
         conn.commit()
         return jsonify({"status": "success", "message": "User difficulty updated."}), 200
     except Exception as e:
@@ -1414,7 +1416,7 @@ def get_quiz_question(user_id, topic_id, difficulty_level):
             SELECT Q.ID, Q.QuestionName, Q.QuestionType, Q.DifficultyRating
             FROM tbl_Question Q
             WHERE Q.TopicID = %s AND Q.DifficultyRating = %s
-            ORDER BY RAND() LIMIT 1;
+            ORDER BY RANDOM() LIMIT 1;
         """
         cursor.execute(query, (topic_id, difficulty_level))
         question = cursor.fetchone()
@@ -1438,7 +1440,7 @@ def get_quiz_question(user_id, topic_id, difficulty_level):
                     SELECT Q.ID, Q.QuestionName, Q.QuestionType, Q.DifficultyRating
                     FROM tbl_Question Q
                     WHERE Q.TopicID = %s
-                    ORDER BY RAND() LIMIT 1;
+                    ORDER BY RANDOM() LIMIT 1;
                 """
                 cursor.execute(query_any, (topic_id,))
                 question = cursor.fetchone()
