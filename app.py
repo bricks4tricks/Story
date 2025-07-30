@@ -1460,6 +1460,37 @@ def get_all_question_attempts():
         if conn:
             release_db_connection(conn)
 
+@app.route('/api/flag-page-error', methods=['POST', 'OPTIONS'])
+def flag_page_error():
+    if request.method == 'OPTIONS':
+        return jsonify(success=True)
+    data = request.get_json()
+    user_id = data.get('userId')
+    page_path = data.get('pagePath')
+    description = data.get('description')
+
+    if not all([user_id, page_path, description]):
+        return jsonify({"status": "error", "message": "Missing required fields."}), 400
+
+    conn = None
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        insert_query = """
+            INSERT INTO tbl_PageErrorReport (UserID, PagePath, Description)
+            VALUES (%s, %s, %s);
+        """
+        cursor.execute(insert_query, (user_id, page_path, description))
+        conn.commit()
+        return jsonify({"status": "success", "message": "Error reported. Thank you!"}), 201
+    except Exception as e:
+        print(f"Flag Page Error API Error: {e}")
+        traceback.print_exc()
+        return jsonify({"status": "error", "message": "Internal error while reporting."}), 500
+    finally:
+        if conn:
+            release_db_connection(conn)
+
 
 # =================================================================
 #  3. FRONTEND ROUTES (Serve HTML Pages)

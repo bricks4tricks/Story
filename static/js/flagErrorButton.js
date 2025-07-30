@@ -1,0 +1,34 @@
+(function() {
+  function createButton() {
+    const btn = document.createElement('button');
+    btn.id = 'flag-error-btn';
+    btn.textContent = 'Flag Error';
+    btn.className = 'fixed bottom-4 right-4 bg-red-600 text-white px-4 py-2 rounded-full shadow-lg hover:bg-red-500 z-50';
+    btn.addEventListener('click', function() {
+      const description = prompt('Describe the error you found on this page:');
+      if (description === null) return;
+      fetch('/api/flag-page-error', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: parseInt(localStorage.getItem('userId')) || null,
+          pagePath: window.location.pathname,
+          description: description.trim()
+        })
+      })
+        .then(res => res.json())
+        .then(data => {
+          alert(data.message || (data.status === 'success'
+            ? 'Thank you! Your report has been submitted.'
+            : 'Error submitting report.'));
+        })
+        .catch(() => {
+          alert('Could not submit flag. Please try again later.');
+        });
+    });
+    return btn;
+  }
+  document.addEventListener('DOMContentLoaded', function() {
+    document.body.appendChild(createButton());
+  });
+})();
