@@ -356,7 +356,17 @@ def get_all_users():
             ORDER BY u.ID;
         """
         cursor.execute(query)
-        users = cursor.fetchall()
+        rows = cursor.fetchall()
+        users = []
+        for row in rows:
+            users.append({
+                'ID': row.get('ID') or row.get('id'),
+                'Username': row.get('Username') or row.get('username'),
+                'Email': row.get('Email') or row.get('email'),
+                'UserType': row.get('UserType') or row.get('usertype'),
+                'CreatedOn': row.get('CreatedOn') or row.get('createdon'),
+                'ParentUsername': row.get('ParentUsername') or row.get('parentusername')
+            })
         return jsonify(users)
     except Exception as e:
         print(f"Get All Users API Error: {e}")
