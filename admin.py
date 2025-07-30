@@ -1,9 +1,15 @@
 from flask import Blueprint, request, jsonify
 import traceback
+from version_cache import users_version, update_users_version
 from db_utils import get_db_connection, release_db_connection
 from extensions import bcrypt
 
+
 admin_bp = Blueprint('admin', __name__, url_prefix='/api/admin')
+
+@admin_bp.route("/users-version", methods=["GET"])
+def get_users_version():
+    return jsonify({"version": users_version.isoformat()})
 
 @admin_bp.route('/all-users', methods=['GET'])
 def get_all_users():
