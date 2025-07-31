@@ -1,8 +1,7 @@
 from flask import Blueprint, request, jsonify
 import traceback
-from version_cache import users_version, update_users_version
+from version_cache import users_version
 from db_utils import get_db_connection, release_db_connection
-from extensions import bcrypt
 
 
 admin_bp = Blueprint('admin', __name__, url_prefix='/api/admin')
