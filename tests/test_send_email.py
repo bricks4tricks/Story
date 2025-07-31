@@ -1,0 +1,18 @@
+import os
+import sys
+from unittest.mock import patch
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
+import auth
+
+
+def test_send_email_missing_env_vars():
+    with patch.object(auth, "SMTP_SERVER", None), \
+         patch.object(auth, "SMTP_PORT", None), \
+         patch.object(auth, "SMTP_USERNAME", None), \
+         patch.object(auth, "SMTP_PASSWORD", None), \
+         patch("smtplib.SMTP") as smtp_mock:
+        result = auth.send_email("user@example.com", "Subject", "<p>Hi</p>")
+        smtp_mock.assert_not_called()
+        assert result is False
