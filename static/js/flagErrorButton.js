@@ -37,32 +37,8 @@
   }
 
   function openFlagsModal() {
-    return new Promise(async resolve => {
+    return new Promise(resolve => {
       flagsList.innerHTML = '<p class="text-center text-gray-400">Loading...</p>';
-      try {
-        const resp = await fetch('/api/open-flags');
-        if (resp.ok) {
-          const flags = await resp.json();
-          if (flags.length === 0) {
-            flagsList.innerHTML = '<p class="text-center text-gray-400">No open flagged items.</p>';
-          } else {
-            const ul = document.createElement('ul');
-            ul.className = 'list-disc pl-5 text-left';
-            flags.forEach(f => {
-              const li = document.createElement('li');
-              li.textContent = `${f.ItemType}: ${f.ItemName || 'ID: ' + f.FlaggedItemID}`;
-              ul.appendChild(li);
-            });
-            flagsList.innerHTML = '';
-            flagsList.appendChild(ul);
-          }
-        } else {
-          flagsList.innerHTML = '<p class="text-center text-red-400">Failed to load flags.</p>';
-        }
-      } catch (err) {
-        console.error('Failed fetching open flags:', err);
-        flagsList.innerHTML = '<p class="text-center text-red-400">Error loading flags.</p>';
-      }
 
       function cleanup(value) {
         hideFlagsModal();
@@ -80,6 +56,28 @@
       reportIssueBtn.addEventListener('click', onReport);
 
       showFlagsModal();
+
+      fetch('/api/open-flags')
+        .then(resp => resp.ok ? resp.json() : Promise.reject('Failed to load'))
+        .then(flags => {
+          if (flags.length === 0) {
+            flagsList.innerHTML = '<p class="text-center text-gray-400">No open flagged items.</p>';
+          } else {
+            const ul = document.createElement('ul');
+            ul.className = 'list-disc pl-5 text-left';
+            flags.forEach(f => {
+              const li = document.createElement('li');
+              li.textContent = `${f.ItemType}: ${f.ItemName || 'ID: ' + f.FlaggedItemID}`;
+              ul.appendChild(li);
+            });
+            flagsList.innerHTML = '';
+            flagsList.appendChild(ul);
+          }
+        })
+        .catch(err => {
+          console.error('Failed fetching open flags:', err);
+          flagsList.innerHTML = '<p class="text-center text-red-400">Error loading flags.</p>';
+        });
     });
   }
 
