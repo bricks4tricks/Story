@@ -965,9 +965,11 @@ const createCascadingSelectors = (prefix) => {
 
             let storiesHash = null;
             const fetchAndDisplayStories = async () => {
-                existingStoriesList.innerHTML = '<p class="text-center text-gray-400">Loading stories...</p>';
+                if (storiesHash === null) {
+                    existingStoriesList.innerHTML = '<p class="text-center text-gray-400">Loading stories...</p>';
+                }
                 try {
-                    const response = await fetch('https://logicandstories.com/api/admin/stories');
+                    const response = await fetch('/api/admin/stories');
                     if (!response.ok) throw new Error('Failed to fetch stories');
                     const stories = await response.json();
                     const newHash = JSON.stringify(stories);
@@ -1007,7 +1009,7 @@ const createCascadingSelectors = (prefix) => {
                     const topicId = event.target.dataset.topicId;
                     if (confirm(`Are you sure you want to delete the story for Topic ID: ${topicId}? This will remove all sections. This action cannot be undone.`)) {
                         try {
-                            const response = await fetch(`https://logicandstories.com/api/admin/delete-story/${topicId}`, {
+                            const response = await fetch(`/api/admin/delete-story/${topicId}`, {
                                 method: 'DELETE'
                             });
                             const result = await response.json();
@@ -1394,7 +1396,7 @@ const createCascadingSelectors = (prefix) => {
                 }
 
                 try {
-                    const response = await fetch('https://logicandstories.com/api/admin/save-story', {
+                    const response = await fetch('/api/admin/save-story', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ topicId, storySections: storySectionsPayload, defaultTheme: defaultTheme }) // NEW: Include defaultTheme
@@ -1416,9 +1418,11 @@ const createCascadingSelectors = (prefix) => {
 
             let flagsHash = null;
             const fetchAndDisplayFlaggedItems = async () => {
-                flaggedItemsList.innerHTML = '<p class="text-center text-gray-400">Loading flagged items...</p>';
+                if (flagsHash === null) {
+                    flaggedItemsList.innerHTML = '<p class="text-center text-gray-400">Loading flagged items...</p>';
+                }
                 try {
-                    const response = await fetch('https://logicandstories.com/api/admin/flagged-items');
+                    const response = await fetch('/api/admin/flagged-items');
                     if (!response.ok) throw new Error('Failed to fetch flagged items');
                     const flags = await response.json();
                     const newHash = JSON.stringify(flags);
@@ -1462,7 +1466,7 @@ const createCascadingSelectors = (prefix) => {
                     const newStatus = target.dataset.status;
                     if (confirm(`Are you sure you want to change status of flag ${flagId} to "${newStatus}"?`)) {
                         try {
-                            const response = await fetch(`https://logicandstories.com/api/admin/update-flag-status/${flagId}`, {
+                            const response = await fetch(`/api/admin/update-flag-status/${flagId}`, {
                                 method: 'PUT',
                                 headers: { 'Content-Type': 'application/json' },
                                 body: JSON.stringify({ status: newStatus, adminId: parseInt(adminId) })
@@ -1487,9 +1491,11 @@ const createCascadingSelectors = (prefix) => {
             // NEW: Fetch and Display Question Attempts
             let attemptsHash = null;
             const fetchAndDisplayQuestionAttempts = async () => {
-                attemptsTableBody.innerHTML = '<tr><td colspan="9" class="text-center py-4 text-gray-400">Loading attempts...</td></tr>'; // Adjusted colspan
+                if (attemptsHash === null) {
+                    attemptsTableBody.innerHTML = '<tr><td colspan="9" class="text-center py-4 text-gray-400">Loading attempts...</td></tr>'; // Adjusted colspan
+                }
                 try {
-                    const response = await fetch('https://logicandstories.com/api/admin/question-attempts');
+                    const response = await fetch('/api/admin/question-attempts');
                     if (!response.ok) throw new Error('Failed to fetch question attempts');
                     const attempts = await response.json();
                     const newHash = JSON.stringify(attempts);
