@@ -4,6 +4,9 @@
 (function() {
   const userTableBody = document.getElementById('user-table-body');
   if (!userTableBody) return;
+  const filterInput = document.getElementById('user-filter');
+
+  let allUsers = [];
 
   let usersVersion = null;
   let usersHash = null;
@@ -17,7 +20,9 @@
       const newHash = JSON.stringify(users);
       if (newHash === usersHash) return; // no change
       usersHash = newHash;
-      renderUsers(Array.isArray(users) ? users : []);
+      allUsers = Array.isArray(users) ? users : [];
+      window.allUsersData = allUsers;
+      applyFilter();
     } catch (err) {
       console.error('Fetch users error:', err);
       userTableBody.innerHTML = '<tr><td colspan="7" class="text-center py-4 text-red-400">Error loading users.</td></tr>';
@@ -43,7 +48,6 @@
       userTableBody.innerHTML = '<tr><td colspan="7" class="text-center py-4 text-gray-400">No users found.</td></tr>';
       return;
     }
-    window.allUsersData = users;
     users.forEach(user => {
       const isUserAdmin = user.UserType === 'Admin';
       const row = document.createElement('tr');
@@ -63,9 +67,32 @@
     });
   }
 
+  function applyFilter() {
+    if (!filterInput) {
+      renderUsers(allUsers);
+      return;
+    }
+    const query = filterInput.value.trim().toLowerCase();
+    if (!query) {
+      renderUsers(allUsers);
+      return;
+    }
+    const filtered = allUsers.filter(u =>
+      u.Username.toLowerCase().includes(query) ||
+      (u.Email || '').toLowerCase().includes(query) ||
+      (u.UserType || '').toLowerCase().includes(query) ||
+      (u.ParentUsername || '').toLowerCase().includes(query)
+    );
+    renderUsers(filtered);
+  }
+
   // Expose refresh function to global scope for other scripts.
   window.refreshUsers = refreshIfChanged;
   window.forceRefreshUsers = fetchAndRenderUsers;
+
+  if (filterInput) {
+    filterInput.addEventListener('input', applyFilter);
+  }
 
   // Initial fetch when script loads.
   refreshIfChanged();
