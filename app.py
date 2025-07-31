@@ -1674,7 +1674,7 @@ def flag_page_error():
     page_path = data.get('pagePath')
     description = data.get('description')
 
-    if not all([user_id, page_path, description]):
+    if not all([page_path, description]):
         return jsonify({"status": "error", "message": "Missing required fields."}), 400
 
     conn = None

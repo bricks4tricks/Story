@@ -36,7 +36,6 @@ def client():
 
 def test_flag_page_error(client):
     payload = {
-        "userId": 1,
         "pagePath": "/index.html",
         "description": "typo"
     }
