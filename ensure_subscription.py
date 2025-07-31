@@ -12,7 +12,7 @@ with db_cursor() as cursor:
     cursor.execute(
         """
         CREATE TABLE IF NOT EXISTS tbl_subscription (
-            user_id INTEGER PRIMARY KEY REFERENCES tbl_user(id),
+            user_id INTEGER PRIMARY KEY REFERENCES tbl_user(id) ON DELETE CASCADE,
             active BOOLEAN NOT NULL DEFAULT TRUE,
             expires_on TIMESTAMP,
             cancelled_on TIMESTAMP

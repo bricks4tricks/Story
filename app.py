@@ -133,6 +133,10 @@ def delete_user(user_id):
             if cursor.fetchone():
                 return jsonify({"status": "error", "message": "Cannot delete a parent with student accounts. Please delete the student profiles first."}), 409
 
+        # Remove any subscription rows referencing this user first to avoid
+        # foreign key violations when deleting from ``tbl_user``.
+        cursor.execute("DELETE FROM tbl_subscription WHERE user_id = %s", (user_id,))
+
         cursor.execute("DELETE FROM tbl_user WHERE id = %s", (user_id,))
         conn.commit()
         update_users_version()
