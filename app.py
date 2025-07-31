@@ -1479,6 +1479,45 @@ def get_all_question_attempts():
         if conn:
             release_db_connection(conn)
 
+
+@app.route('/api/open-flags', methods=['GET'])
+def get_open_flags():
+    """Return all flags that are still pending review."""
+    conn = None
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+
+        query = """
+            SELECT
+                fr.ID AS FlagID,
+                fr.UserID,
+                fr.FlaggedItemID,
+                fr.ItemType,
+                CASE
+                    WHEN fr.ItemType = 'Question' THEN q.QuestionName
+                    WHEN fr.ItemType = 'Story' THEN t.TopicName
+                    ELSE 'N/A'
+                END AS ItemName,
+                fr.Reason,
+                fr.ReportedOn
+            FROM tbl_FlagReport fr
+            LEFT JOIN tbl_Question q ON fr.ItemType = 'Question' AND fr.FlaggedItemID = q.ID
+            LEFT JOIN tbl_Topic t ON fr.ItemType = 'Story' AND fr.FlaggedItemID = t.ID
+            WHERE fr.Status = 'Pending'
+            ORDER BY fr.ReportedOn DESC;
+        """
+        cursor.execute(query)
+        flags = cursor.fetchall()
+        return jsonify(flags), 200
+    except Exception as e:
+        print(f"Get Open Flags API Error: {e}")
+        traceback.print_exc()
+        return jsonify({"status": "error", "message": "Internal error fetching open flags."}), 500
+    finally:
+        if conn:
+            release_db_connection(conn)
+
 @app.route('/api/flag-page-error', methods=['POST', 'OPTIONS'])
 def flag_page_error():
     if request.method == 'OPTIONS':

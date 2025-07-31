@@ -5,6 +5,19 @@
     btn.textContent = 'Flag Error';
     btn.className = 'fixed bottom-4 right-4 bg-red-600 text-white px-4 py-2 rounded-full shadow-lg hover:bg-red-500 z-50';
     btn.addEventListener('click', async function() {
+      try {
+        const resp = await fetch('/api/open-flags');
+        if (resp.ok) {
+          const flags = await resp.json();
+          const list = flags.length
+            ? flags.map(f => `${f.ItemType}: ${f.ItemName}`).join('\n')
+            : 'No open flagged items.';
+          alert('Open flagged items:\n' + list);
+        }
+      } catch (err) {
+        console.error('Failed fetching open flags:', err);
+      }
+
       let description = '';
       if (typeof openFlagModal === 'function') {
         description = await openFlagModal();
