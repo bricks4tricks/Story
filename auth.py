@@ -45,8 +45,11 @@ def signup_user():
         return jsonify(success=True)
     from app import get_db_connection, release_db_connection
     data = request.get_json()
-    username, email, password = data.get('username'), data.get('email'), data.get('password')
-    if not all([username, email, password]):
+    username = data.get('username')
+    email = data.get('email')
+    password = data.get('password')
+    plan = data.get('plan')
+    if not all([username, email, password, plan]):
         return jsonify({"status": "error", "message": "Missing fields"}), 400
     is_valid_email, email_msg = validate_email(email)
     if not is_valid_email:
@@ -54,6 +57,9 @@ def signup_user():
     is_valid, message = validate_password(password)
     if not is_valid:
         return jsonify({"status": "error", "message": message}), 400
+    allowed_plans = {'Monthly', 'Annual', 'Family'}
+    if plan not in allowed_plans:
+        return jsonify({"status": "error", "message": "Invalid plan selected"}), 400
     conn = None
     try:
         conn = get_db_connection()
@@ -63,8 +69,8 @@ def signup_user():
             return jsonify({"status": "error", "message": "Username or email already exists"}), 409
         hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
         cursor.execute(
-            "INSERT INTO tbl_user (username, email, passwordhash, usertype) VALUES (%s, %s, %s, 'Parent')",
-            (username, email, hashed_password)
+            "INSERT INTO tbl_user (username, email, passwordhash, usertype, plan) VALUES (%s, %s, %s, 'Parent', %s)",
+            (username, email, hashed_password, plan)
         )
         conn.commit()
         update_users_version()
