@@ -5,6 +5,7 @@
   const userTableBody = document.getElementById('user-table-body');
   if (!userTableBody) return;
   const filterInput = document.getElementById('user-filter');
+  const filterColumnSelect = document.getElementById('user-filter-column');
 
   let allUsers = [];
 
@@ -77,12 +78,23 @@
       renderUsers(allUsers);
       return;
     }
-    const filtered = allUsers.filter(u =>
-      u.Username.toLowerCase().includes(query) ||
-      (u.Email || '').toLowerCase().includes(query) ||
-      (u.UserType || '').toLowerCase().includes(query) ||
-      (u.ParentUsername || '').toLowerCase().includes(query)
-    );
+
+    const column = filterColumnSelect ? filterColumnSelect.value : 'all';
+    let filtered;
+    if (column === 'all') {
+      filtered = allUsers.filter(u =>
+        String(u.ID).toLowerCase().includes(query) ||
+        u.Username.toLowerCase().includes(query) ||
+        (u.Email || '').toLowerCase().includes(query) ||
+        (u.UserType || '').toLowerCase().includes(query) ||
+        (u.ParentUsername || '').toLowerCase().includes(query)
+      );
+    } else {
+      filtered = allUsers.filter(u => {
+        const val = u[column] !== undefined && u[column] !== null ? String(u[column]).toLowerCase() : '';
+        return val.includes(query);
+      });
+    }
     renderUsers(filtered);
   }
 
@@ -92,6 +104,9 @@
 
   if (filterInput) {
     filterInput.addEventListener('input', applyFilter);
+  }
+  if (filterColumnSelect) {
+    filterColumnSelect.addEventListener('change', applyFilter);
   }
 
   // Initial fetch when script loads.
