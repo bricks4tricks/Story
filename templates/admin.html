@@ -62,6 +62,7 @@
                 <button id="stories-tab-btn" class="tab-button text-lg font-medium text-gray-400 hover:text-amber-500 py-4 px-1 border-b-2 border-transparent">Story Management</button>
                 <button id="flags-tab-btn" class="tab-button text-lg font-medium text-gray-400 hover:text-amber-500 py-4 px-1 border-b-2 border-transparent">Flagged Items</button>
                 <button id="attempts-tab-btn" class="tab-button text-lg font-medium text-gray-400 hover:text-amber-500 py-4 px-1 border-b-2 border-transparent">Question Attempts</button>
+                <button id="curriculums-tab-btn" class="tab-button text-lg font-medium text-gray-400 hover:text-amber-500 py-4 px-1 border-b-2 border-transparent">Curriculum Management</button>
             </nav>
         </div>
 
@@ -265,7 +266,16 @@
                     </tbody>
                 </table>
             </div>
+
+        <div id="curriculums-section" class="hidden">
+            <h2 class="text-3xl font-bold text-white mb-6">Curriculums</h2>
+            <div class="bg-slate-800 rounded-2xl border border-slate-700 p-6">
+                <div id="existing-curriculums-list" class="space-y-4">
+                    <p class="text-center text-gray-400">Loading curriculums...</p>
+                </div>
+            </div>
         </div>
+
     </main>
 
     <div id="editUserModal" class="modal modal-hidden fixed inset-0 bg-black bg-opacity-70 z-50 flex justify-center items-center opacity-0"><div class="modal-content bg-slate-800 rounded-2xl p-8 max-w-lg w-full mx-4 relative scale-95"><button class="close-modal absolute top-4 right-4 text-gray-400 hover:text-white text-3xl leading-none">×</button><h2 class="text-2xl font-bold text-white text-center mb-6">Edit User</h2><form id="editUserForm"><input type="hidden" id="edit-userid"><div class="mb-4"><label for="edit-username" class="block text-gray-300 mb-2">Username</label><input type="text" id="edit-username" class="w-full bg-slate-700 rounded-lg p-2" required></div><div class="mb-4"><label for="edit-email" class="block text-gray-300 mb-2">Email</label><input type="email" id="edit-email" class="w-full bg-slate-700 rounded-lg p-2" required></div><div class="mb-6"><label for="edit-usertype" class="block text-gray-300 mb-2">User Type</label><select id="edit-usertype" class="w-full bg-slate-700 rounded-lg p-2"><option value="Parent">Parent</option><option value="Student">Student</option></select></div><div id="edit-message" class="text-center mb-4 h-5"></div><button type="submit" class="w-full bg-blue-600 text-white font-bold py-3 rounded-full">Save Changes</button></form></div></div>
@@ -333,6 +343,21 @@
                 </div>
                 <div id="edit-question-form-message" class="text-center mb-4 h-5"></div>
                 <button type="submit" class="w-full bg-green-600 text-white font-bold py-3 rounded-full text-lg">Save Changes</button>
+            </form>
+        </div>
+    </div>
+    <div id="editCurriculumModal" class="modal modal-hidden fixed inset-0 bg-black bg-opacity-70 z-50 flex justify-center items-center opacity-0">
+        <div class="modal-content bg-slate-800 rounded-2xl p-8 max-w-lg w-full mx-4 relative scale-95">
+            <button class="close-modal absolute top-4 right-4 text-gray-400 hover:text-white text-3xl leading-none">×</button>
+            <h2 class="text-2xl font-bold text-white text-center mb-6">Edit Curriculum</h2>
+            <form id="editCurriculumForm">
+                <input type="hidden" id="edit-curriculum-id">
+                <div class="mb-4">
+                    <label for="edit-curriculum-name" class="block text-gray-300 mb-2">Name</label>
+                    <input type="text" id="edit-curriculum-name" class="w-full bg-slate-700 rounded-lg p-2" required>
+                </div>
+                <div id="edit-curriculum-message" class="text-center mb-4 h-5"></div>
+                <button type="submit" class="w-full bg-blue-600 text-white font-bold py-3 rounded-full">Save Changes</button>
             </form>
         </div>
     </div>
@@ -427,6 +452,15 @@
 
             const editMultipleChoiceSection = document.getElementById('edit-multiple-choice-section');
             const editOpenEndedSection = document.getElementById('edit-open-ended-section');
+
+            const curriculumsTabBtn = document.getElementById('curriculums-tab-btn');
+            const curriculumsSection = document.getElementById('curriculums-section');
+            const existingCurriculumsList = document.getElementById('existing-curriculums-list');
+            const editCurriculumModal = document.getElementById('editCurriculumModal');
+            const editCurriculumForm = document.getElementById('editCurriculumForm');
+            const editCurriculumIdInput = document.getElementById('edit-curriculum-id');
+            const editCurriculumNameInput = document.getElementById('edit-curriculum-name');
+            const editCurriculumMessage = document.getElementById('edit-curriculum-message');
 
             // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
             // createCascadingSelectors FUNCTION DEFINITION - MOVED HERE
@@ -1737,6 +1771,78 @@ const createCascadingSelectors = (prefix) => {
                 renderAttempts(filtered);
             };
 
+            let curriculumsHash = null;
+            let allCurriculums = [];
+            const fetchAndDisplayCurriculums = async () => {
+                if (curriculumsHash === null) {
+                    existingCurriculumsList.innerHTML = '<p class="text-center text-gray-400">Loading curriculums...</p>';
+                }
+                try {
+                    const response = await fetch('/api/admin/curriculums');
+                    if (!response.ok) throw new Error('Failed to fetch curriculums');
+                    const curriculums = await response.json();
+                    const newHash = JSON.stringify(curriculums);
+                    if (newHash === curriculumsHash) return;
+                    curriculumsHash = newHash;
+                    allCurriculums = Array.isArray(curriculums) ? curriculums : [];
+                    renderCurriculums(allCurriculums);
+                } catch (error) {
+                    console.error('Fetch curriculums error:', error);
+                    existingCurriculumsList.innerHTML = `<p class="text-red-400">Error loading curriculums: ${error.message}</p>`;
+                }
+            };
+
+            const renderCurriculums = (list) => {
+                existingCurriculumsList.innerHTML = '';
+                if (!list.length) {
+                    existingCurriculumsList.innerHTML = '<p class="text-center text-gray-400">No curriculums found.</p>';
+                    return;
+                }
+                list.forEach(c => {
+                    const div = document.createElement('div');
+                    div.className = 'bg-slate-700/50 p-4 rounded-lg flex justify-between items-center';
+                    div.innerHTML = `<span class="font-bold text-white">${c.subjectname}</span>
+                        <button data-id="${c.id}" class="edit-curriculum-btn bg-blue-600 text-white font-semibold py-1 px-3 text-sm rounded-full hover:bg-blue-500">Edit</button>`;
+                    existingCurriculumsList.appendChild(div);
+                });
+            };
+
+            existingCurriculumsList.addEventListener('click', (e) => {
+                if (e.target.classList.contains('edit-curriculum-btn')) {
+                    const id = e.target.dataset.id;
+                    const curr = allCurriculums.find(c => c.id == id);
+                    if (!curr) return;
+                    editCurriculumIdInput.value = curr.id;
+                    editCurriculumNameInput.value = curr.subjectname;
+                    editCurriculumMessage.textContent = '';
+                    showModal(editCurriculumModal);
+                }
+            });
+
+            editCurriculumForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const id = editCurriculumIdInput.value;
+                const name = editCurriculumNameInput.value.trim();
+                if (!name) return;
+                try {
+                    const resp = await fetch(`/api/admin/update-curriculum/${id}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ name })
+                    });
+                    const result = await resp.json();
+                    editCurriculumMessage.textContent = result.message;
+                    editCurriculumMessage.className = resp.ok ? 'text-green-400' : 'text-red-400';
+                    if (resp.ok) {
+                        fetchAndDisplayCurriculums();
+                        setTimeout(() => hideModal(editCurriculumModal), 1500);
+                    }
+                } catch (error) {
+                    editCurriculumMessage.textContent = 'Server connection error.';
+                    editCurriculumMessage.className = 'text-red-400';
+                }
+            });
+
 
             // --- INIT ---
             usersTabBtn.addEventListener('click', () => {
@@ -1745,11 +1851,13 @@ const createCascadingSelectors = (prefix) => {
                 storiesSection.classList.add('hidden');
                 flagsSection.classList.add('hidden');
                 attemptsSection.classList.add('hidden'); // NEW
+                curriculumsSection.classList.add('hidden');
                 usersTabBtn.classList.add('active');
                 questionsTabBtn.classList.remove('active');
                 storiesTabBtn.classList.remove('active');
                 flagsTabBtn.classList.remove('active');
                 attemptsTabBtn.classList.remove('active'); // NEW
+                curriculumsTabBtn.classList.remove('active');
             });
             questionsTabBtn.addEventListener('click', () => {
                 usersSection.classList.add('hidden');
@@ -1757,11 +1865,13 @@ const createCascadingSelectors = (prefix) => {
                 storiesSection.classList.add('hidden');
                 flagsSection.classList.add('hidden');
                 attemptsSection.classList.add('hidden'); // NEW
+                curriculumsSection.classList.add('hidden');
                 usersTabBtn.classList.remove('active');
                 questionsTabBtn.classList.add('active');
                 storiesTabBtn.classList.remove('active');
                 flagsTabBtn.classList.remove('active');
                 attemptsTabBtn.classList.remove('active'); // NEW
+                curriculumsTabBtn.classList.remove('active');
                 fetchAndDisplayQuestions();
             });
             storiesTabBtn.addEventListener('click', () => {
@@ -1770,11 +1880,13 @@ const createCascadingSelectors = (prefix) => {
                 storiesSection.classList.remove('hidden');
                 flagsSection.classList.add('hidden');
                 attemptsSection.classList.add('hidden'); // NEW
+                curriculumsSection.classList.add('hidden');
                 usersTabBtn.classList.remove('active');
                 questionsTabBtn.classList.remove('active');
                 storiesTabBtn.classList.add('active');
                 flagsTabBtn.classList.remove('active');
                 attemptsTabBtn.classList.remove('active'); // NEW
+                curriculumsTabBtn.classList.remove('active');
                 fetchAndDisplayStories();
             });
             flagsTabBtn.addEventListener('click', () => {
@@ -1783,11 +1895,13 @@ const createCascadingSelectors = (prefix) => {
                 storiesSection.classList.add('hidden');
                 flagsSection.classList.remove('hidden');
                 attemptsSection.classList.add('hidden'); // NEW
+                curriculumsSection.classList.add('hidden');
                 usersTabBtn.classList.remove('active');
                 questionsTabBtn.classList.remove('active');
                 storiesTabBtn.classList.remove('active');
                 flagsTabBtn.classList.add('active');
                 attemptsTabBtn.classList.remove('active'); // NEW
+                curriculumsTabBtn.classList.remove('active');
                 fetchAndDisplayFlaggedItems();
             });
             // NEW: Event listener for Attempts tab
@@ -1797,12 +1911,29 @@ const createCascadingSelectors = (prefix) => {
                 storiesSection.classList.add('hidden');
                 flagsSection.classList.add('hidden');
                 attemptsSection.classList.remove('hidden'); // NEW
+                curriculumsSection.classList.add('hidden');
                 usersTabBtn.classList.remove('active');
                 questionsTabBtn.classList.remove('active');
                 storiesTabBtn.classList.remove('active');
                 flagsTabBtn.classList.remove('active');
                 attemptsTabBtn.classList.add('active'); // NEW
+                curriculumsTabBtn.classList.remove('active');
                 fetchAndDisplayQuestionAttempts(); // Fetch attempts when tab is clicked
+            });
+            curriculumsTabBtn.addEventListener('click', () => {
+                usersSection.classList.add('hidden');
+                questionsSection.classList.add('hidden');
+                storiesSection.classList.add('hidden');
+                flagsSection.classList.add('hidden');
+                attemptsSection.classList.add('hidden');
+                curriculumsSection.classList.remove('hidden');
+                usersTabBtn.classList.remove('active');
+                questionsTabBtn.classList.remove('active');
+                storiesTabBtn.classList.remove('active');
+                flagsTabBtn.classList.remove('active');
+                attemptsTabBtn.classList.remove('active');
+                curriculumsTabBtn.classList.add('active');
+                fetchAndDisplayCurriculums();
             });
 
 
@@ -1839,6 +1970,7 @@ const createCascadingSelectors = (prefix) => {
             document.querySelectorAll('.close-modal').forEach(btn => btn.addEventListener('click', () => {
                 hideModal(editUserModal);
                 hideModal(editQuestionModal);
+                hideModal(editCurriculumModal);
             }));
 
             document.getElementById('signOutButton').addEventListener('click', () => { localStorage.clear(); window.location.href = 'https://logicandstories.com'; });
@@ -1867,12 +1999,16 @@ const createCascadingSelectors = (prefix) => {
                 if (attemptsTabBtn.classList.contains('active')) {
                     fetchAndDisplayQuestionAttempts();
                 }
+                if (curriculumsTabBtn.classList.contains('active')) {
+                    fetchAndDisplayCurriculums();
+                }
             }, POLL_INTERVAL_MS);
 
             const initializeApp = async () => {
                 if (window.refreshUsers) window.refreshUsers();
                 await loadCurriculums();
                 await initializeTopicData();
+                fetchAndDisplayCurriculums();
                 addAnswerInput(answersContainer, true, '', true); // Pass container
                 addAnswerInput(answersContainer, false, '', false); // Pass container
                 addStepInput(stepsContainer, '', true); // Pass container
