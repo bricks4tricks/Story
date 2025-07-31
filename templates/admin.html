@@ -1449,6 +1449,7 @@ const createCascadingSelectors = (prefix) => {
                             <div class="flex space-x-2 flex-shrink-0">
                                 <button data-flag-id="${flag.FlagID}" data-status="Reviewed" class="resolve-flag-btn bg-green-600 text-white font-semibold py-1 px-3 text-sm rounded-full hover:bg-green-500 ${flag.Status !== 'Pending' ? 'opacity-50 cursor-not-allowed' : ''}" ${flag.Status !== 'Pending' ? 'disabled' : ''}>Mark Reviewed</button>
                                 <button data-flag-id="${flag.FlagID}" data-status="Dismissed" class="resolve-flag-btn bg-gray-600 text-white font-semibold py-1 px-3 text-sm rounded-full hover:bg-gray-500 ${flag.Status !== 'Pending' ? 'opacity-50 cursor-not-allowed' : ''}" ${flag.Status !== 'Pending' ? 'disabled' : ''}>Dismiss</button>
+                                <button data-flag-id="${flag.FlagID}" class="delete-flag-btn bg-red-600 text-white font-semibold py-1 px-3 text-sm rounded-full hover:bg-red-500">Delete</button>
                             </div>
                         `;
                         flaggedItemsList.appendChild(flagDiv);
@@ -1481,6 +1482,25 @@ const createCascadingSelectors = (prefix) => {
                         } catch (error) {
                             console.error("Update flag status error:", error);
                             adminMessageDiv.textContent = 'A connection error occurred during status update.';
+                            adminMessageDiv.className = 'text-center text-red-400 mb-4 h-6';
+                            setTimeout(() => { adminMessageDiv.textContent = ''; }, 5000);
+                        }
+                    }
+                } else if (target.classList.contains('delete-flag-btn')) {
+                    const flagId = target.dataset.flagId;
+                    if (confirm(`Delete flag ${flagId}?`)) {
+                        try {
+                            const response = await fetch(`/api/admin/delete-flag/${flagId}`, { method: 'DELETE' });
+                            const result = await response.json();
+                            adminMessageDiv.textContent = result.message;
+                            adminMessageDiv.className = response.ok ? 'text-center text-green-400 mb-4 h-6' : 'text-center text-red-400 mb-4 h-6';
+                            if (response.ok) {
+                                fetchAndDisplayFlaggedItems();
+                            }
+                            setTimeout(() => { adminMessageDiv.textContent = ''; }, 5000);
+                        } catch (error) {
+                            console.error('Delete flag error:', error);
+                            adminMessageDiv.textContent = 'A connection error occurred during deletion.';
                             adminMessageDiv.className = 'text-center text-red-400 mb-4 h-6';
                             setTimeout(() => { adminMessageDiv.textContent = ''; }, 5000);
                         }

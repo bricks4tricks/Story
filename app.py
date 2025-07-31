@@ -1403,6 +1403,35 @@ def update_flag_status(flag_id):
         if conn:
             release_db_connection(conn)
 
+@app.route('/api/admin/delete-flag/<int:flag_id>', methods=['DELETE', 'OPTIONS'])
+def delete_flag(flag_id):
+    """Delete a flag report by its ID."""
+    if request.method == 'OPTIONS':
+        return jsonify(success=True)
+
+    conn = None
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        delete_query = "DELETE FROM tbl_flagreport WHERE id = %s;"
+        cursor.execute(delete_query, (flag_id,))
+        conn.commit()
+
+        if cursor.rowcount == 0:
+            return jsonify({"status": "error", "message": "Flag not found or already deleted."}), 404
+
+        return jsonify({"status": "success", "message": "Flag deleted successfully."}), 200
+    except Exception as e:
+        if conn:
+            conn.rollback()
+        print(f"Delete Flag API Error: {e}")
+        traceback.print_exc()
+        return jsonify({"status": "error", "message": "Internal error deleting flag."}), 500
+    finally:
+        if conn:
+            release_db_connection(conn)
+
 # --- QUESTION ATTEMPT LOGGING ENDPOINT ---
 @app.route('/api/record-question-attempt', methods=['POST', 'OPTIONS'])
 def record_question_attempt():
