@@ -23,6 +23,9 @@ RESET_PASSWORD_EMAIL_TEMPLATE_HTML = """<html><body><a href='{{RESET_LINK}}'>Res
 
 
 def send_email(receiver_email, subject, html_content):
+    if not all([SMTP_SERVER, SMTP_PORT, SMTP_USERNAME, SMTP_PASSWORD]):
+        print("SMTP configuration incomplete. Email not sent.")
+        return False
     try:
         msg = MIMEMultipart('alternative')
         msg['From'] = SENDER_EMAIL
@@ -254,7 +257,8 @@ def forgot_password():
             conn.commit()
             reset_link = f"{FRONTEND_BASE_URL}/reset-password.html?token={token}"
             email_content = RESET_PASSWORD_EMAIL_TEMPLATE_HTML.replace('{{RESET_LINK}}', reset_link)
-            send_email(email, "Logic and Stories - Password Reset", email_content)
+            if not send_email(email, "Logic and Stories - Password Reset", email_content):
+                return jsonify({"status": "error", "message": "Failed to send password reset email."}), 500
         return jsonify({"status": "success", "message": "If an account exists, a password reset link has been sent to your email."}), 200
     except Exception as e:
         print(f"Forgot Password API Error: {e}")
