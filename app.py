@@ -862,8 +862,16 @@ def record_quiz_result():
     topic_id = data.get('topicId')
     score = data.get('score')
 
-    if not all([user_id, topic_id, score]):
+    if user_id is None or topic_id is None or score is None:
         return jsonify({"status": "error", "message": "Missing required fields."}), 400
+
+    try:
+        score = int(score)
+    except (ValueError, TypeError):
+        return jsonify({"status": "error", "message": "Score must be an integer between 0 and 100."}), 400
+
+    if not 0 <= score <= 100:
+        return jsonify({"status": "error", "message": "Score must be an integer between 0 and 100."}), 400
 
     conn = None
     try:
