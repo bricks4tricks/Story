@@ -854,7 +854,7 @@ def record_quiz_result():
         return jsonify(success=True)
 
     data = request.get_json()
-    user_id = data.get('userId')
+    user_id = data.get('userId') or 0
     topic_id = data.get('topicId')
     score = data.get('score')
 
@@ -1464,7 +1464,7 @@ def get_flagged_items():
                 fr.ResolvedOn AS "ResolvedOn",
                 ru.username AS "ResolvedByUsername"
             FROM tbl_flagreport fr
-            JOIN tbl_user u ON fr.userid = u.id
+            LEFT JOIN tbl_user u ON fr.userid = u.id
             LEFT JOIN tbl_question q ON fr.itemtype = 'Question' AND fr.flaggeditemid = q.id
             LEFT JOIN tbl_topic t ON fr.itemtype = 'Story' AND fr.flaggeditemid = t.id
             LEFT JOIN tbl_user ru ON fr.ResolvedBy = ru.id
@@ -1670,7 +1670,7 @@ def flag_page_error():
     if request.method == 'OPTIONS':
         return jsonify(success=True)
     data = request.get_json()
-    user_id = data.get('userId')
+    user_id = data.get("userId") or 0
     page_path = data.get('pagePath')
     description = data.get('description')
 
