@@ -8,9 +8,10 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from app import app as flask_app
 
 class DummyCursor:
-    def __init__(self, active=True, expired=False):
+    def __init__(self, active=True, expired=False, has_subscription=True):
         self.active = active
         self.expired = expired
+        self.has_subscription = has_subscription
         self.calls = 0
     def execute(self, query, params=None):
         self.last_query = query
@@ -23,6 +24,8 @@ class DummyCursor:
         # Second call fetches subscription
         elif self.calls == 1:
             self.calls += 1
+            if not self.has_subscription:
+                return None
             from datetime import datetime
             expires = datetime(2020, 1, 1) if self.expired else datetime(2999, 1, 1)
             return (self.active, expires)
@@ -31,8 +34,8 @@ class DummyCursor:
         pass
 
 class DummyConnection:
-    def __init__(self, active=True, expired=False):
-        self.cursor_obj = DummyCursor(active, expired)
+    def __init__(self, active=True, expired=False, has_subscription=True):
+        self.cursor_obj = DummyCursor(active, expired, has_subscription)
     def cursor(self, dictionary=False, cursor_factory=None):
         return self.cursor_obj
     def commit(self):
@@ -63,3 +66,14 @@ def test_signin_subscription_expired(client):
          patch('extensions.bcrypt.check_password_hash', return_value=True):
         resp = client.post('/api/signin', json={'username': 'user', 'password': 'pw'})
     assert resp.status_code == 403
+
+
+def test_signin_subscription_absent_record(client):
+    conn = DummyConnection(has_subscription=False)
+    with patch('app.get_db_connection', return_value=conn), \
+         patch('extensions.bcrypt.check_password_hash', return_value=True):
+        resp = client.post('/api/signin', json={'username': 'user', 'password': 'pw'})
+    assert resp.status_code == 200
+    data = resp.get_json()
+    assert data['status'] == 'success'
+    assert data['subscriptionDaysLeft'] is None
