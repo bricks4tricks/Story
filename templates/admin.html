@@ -1781,10 +1781,14 @@ const createCascadingSelectors = (prefix) => {
                     const response = await fetch('/api/admin/curriculums');
                     if (!response.ok) throw new Error('Failed to fetch curriculums');
                     const curriculums = await response.json();
+                    if (!Array.isArray(curriculums)) {
+                        existingCurriculumsList.innerHTML = `<p class="text-red-400">${curriculums.message || 'Error loading curriculums'}</p>`;
+                        return;
+                    }
                     const newHash = JSON.stringify(curriculums);
                     if (newHash === curriculumsHash) return;
                     curriculumsHash = newHash;
-                    allCurriculums = Array.isArray(curriculums) ? curriculums : [];
+                    allCurriculums = curriculums;
                     renderCurriculums(allCurriculums);
                 } catch (error) {
                     console.error('Fetch curriculums error:', error);
