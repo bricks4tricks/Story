@@ -935,6 +935,35 @@ def get_dashboard(user_id):
         if conn:
             release_db_connection(conn)
 
+@app.route('/api/leaderboard', methods=['GET'])
+def get_leaderboard():
+    """Return top users by average quiz score."""
+    conn = None
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        cursor.execute(
+            """
+            SELECT u.id, u.username,
+                   ROUND(AVG(q.score)::numeric, 2) AS average_score,
+                   COUNT(*) AS attempts
+            FROM tbl_quizscore q
+            JOIN tbl_user u ON q.userid = u.id
+            GROUP BY u.id, u.username
+            ORDER BY average_score DESC
+            LIMIT 10;
+            """
+        )
+        rows = cursor.fetchall()
+        return jsonify(rows), 200
+    except Exception as e:
+        print(f"Get Leaderboard API Error: {e}")
+        traceback.print_exc()
+        return jsonify({"status": "error", "message": "Internal error"}), 500
+    finally:
+        if conn:
+            release_db_connection(conn)
+
 @app.route('/api/create-student', methods=['POST', 'OPTIONS'])
 def create_student():
     if request.method == 'OPTIONS': return jsonify(success=True)
