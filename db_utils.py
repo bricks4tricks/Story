@@ -82,9 +82,10 @@ def _get_pool():
                     1, 10, **db_config, **pool_kwargs
                 )
         except Exception as e:
-            print(f"Database connection pool creation error: {e}")
+            error_msg = f"Failed to create database connection pool: {e}"
+            print(error_msg)
             traceback.print_exc()
-            raise
+            raise RuntimeError(error_msg) from e
     return connection_pool
 
 
