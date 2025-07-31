@@ -281,10 +281,10 @@ def get_all_questions():
         questions = []
         for row in rows:
             questions.append({
-                'id': row['id'],
-                'questionname': row['questionname'],
-                'questiontype': row['questiontype'],
-                'difficultyrating': row['difficultyrating'],
+                'ID': row['id'],
+                'QuestionName': row['questionname'],
+                'QuestionType': row['questiontype'],
+                'DifficultyRating': row['difficultyrating'],
                 'TopicName': row['topicname'],
                 'UnitName': row['unitname']
             })
@@ -335,19 +335,19 @@ def get_question_details(question_id):
         topic_info = cursor.fetchone()
 
         question_details = {
-            "id": question.get('id') or question.get('id'),
-            "topicid": question.get('topicid') or question.get('topicid'),
+            "ID": question.get('id'),
+            "TopicID": question.get('topicid'),
             "TopicName": topic_info.get('TopicName') if topic_info else None,
             "UnitName": topic_info.get('UnitName') if topic_info else None,
             "CurriculumType": topic_info.get('CurriculumType') if topic_info else None,
-            "questionname": question.get('questionname') or question.get('questionname'),
-            "questiontype": question_type_display,
-            "difficultyrating": question.get('difficultyrating') or question.get('difficultyrating'),
+            "QuestionName": question.get('questionname'),
+            "QuestionType": question_type_display,
+            "DifficultyRating": question.get('difficultyrating'),
             "Answers": [{
-                'answername': a.get('answername') or a.get('answername'),
-                'iscorrect': a.get('iscorrect') or a.get('iscorrect')
+                'AnswerName': a.get('answername'),
+                'IsCorrect': a.get('iscorrect')
             } for a in answers],
-            "Steps": [s.get('stepname') or s.get('stepname') for s in steps]
+            "Steps": [s.get('stepname') for s in steps]
         }
 
         return jsonify(question_details), 200
