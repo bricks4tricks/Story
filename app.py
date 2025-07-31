@@ -1535,10 +1535,11 @@ def flag_page_error():
         conn = get_db_connection()
         cursor = conn.cursor()
         insert_query = """
-            INSERT INTO tbl_pageerrorreport (userid, pagepath, description)
-            VALUES (%s, %s, %s);
+            INSERT INTO tbl_flagreport (userid, flaggeditemid, itemtype, reason)
+            VALUES (%s, %s, %s, %s);
         """
-        cursor.execute(insert_query, (user_id, page_path, description))
+        reason_combined = f"{page_path}: {description}"
+        cursor.execute(insert_query, (user_id, 0, 'Story', reason_combined))
         conn.commit()
         return jsonify({"status": "success", "message": "Error reported. Thank you!"}), 201
     except Exception as e:
