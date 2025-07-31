@@ -1388,98 +1388,11 @@ def update_user_topic_difficulty():
             release_db_connection(conn)
 
 
-@app.route('/api/quiz/question/<int:user_id>/<int:topic_id>/<int:difficulty_level>', methods=['GET'])
-def get_quiz_question(user_id, topic_id, difficulty_level):
-    conn = None
-    try:
-        conn = get_db_connection()
-        cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-
-        difficulty_level = max(1, min(5, difficulty_level))
-
-        query = """
-            SELECT Q.id, Q.questionname, Q.questiontype, Q.difficultyrating
-            FROM tbl_question Q
-            WHERE Q.topicid = %s AND Q.difficultyrating = %s
-            ORDER BY RANDOM() LIMIT 1;
-        """
-        cursor.execute(query, (topic_id, difficulty_level))
-        question = cursor.fetchone()
-
-        if not question:
-            for offset in range(1, 5):
-                lower_diff = difficulty_level - offset
-                upper_diff = difficulty_level + offset
-
-                if lower_diff >= 1:
-                    cursor.execute(query, (topic_id, lower_diff))
-                    question = cursor.fetchone()
-                    if question: break
-                if upper_diff <= 5 and not question:
-                    cursor.execute(query, (topic_id, upper_diff))
-                    question = cursor.fetchone()
-                    if question: break
-
-            if not question:
-                query_any = """
-                    SELECT Q.id, Q.questionname, Q.questiontype, Q.difficultyrating
-                    FROM tbl_question Q
-                    WHERE Q.topicid = %s
-                    ORDER BY RANDOM() LIMIT 1;
-                """
-                cursor.execute(query_any, (topic_id,))
-                question = cursor.fetchone()
-
-        if not question:
-            return jsonify({"status": "error", "message": "No questions found for this topic."}), 404
-
-        question_id = question.get('id') or question.get('id')
-        question_type = question.get('questiontype') or question.get('questiontype')
-
-        answers = []
-        steps = []
-
-        if question_type == 'MultipleChoice':
-            cursor.execute("SELECT answername, iscorrect FROM tbl_answer WHERE questionid = %s", (question_id,))
-            answers = cursor.fetchall()
-        elif question_type == 'OpenEnded':
-            cursor.execute("SELECT answername, iscorrect FROM tbl_answer WHERE questionid = %s AND iscorrect = TRUE", (question_id,))
-            correct_answer_row = cursor.fetchone()
-            if correct_answer_row:
-                answers = [
-                    {
-                        "answername": correct_answer_row.get('answername')
-                        or correct_answer_row.get('answername'),
-                        "iscorrect": True,
-                    }
-                ]
-
-        cursor.execute("SELECT stepname FROM tbl_step WHERE questionid = %s ORDER BY sequenceno", (question_id,))
-        steps = [
-            s.get('stepname') or s.get('stepname')
-            for s in cursor.fetchall()
-        ]
-
-        response_data = {
-            "status": "success",
-            "question": {
-                "id": question.get('id') or question.get('id'),
-                "text": question.get('questionname') or question.get('questionname'),
-                "type": question.get('questiontype') or question.get('questiontype'),
-                "difficulty": question.get('difficultyrating') or question.get('difficultyrating'),
-                "answers": answers,
-                "steps": steps
-            }
-        }
-        return jsonify(response_data), 200
-
-    except Exception as e:
-        print(f"Get Quiz Question API Error: {e}")
-        traceback.print_exc()
-        return jsonify({"status": "error", "message": "Internal error fetching quiz question."}), 500
-    finally:
-        if conn:
-            release_db_connection(conn)
+# The quiz question endpoint is now provided via ``quiz_bp`` in ``quiz.py``.
+# The original implementation in this file was duplicated and is removed to
+# avoid conflicting route handlers. ``quiz_bp`` continues to be registered
+# so ``/api/quiz/question/<user_id>/<topic_id>/<difficulty_level>`` remains
+# accessible.
 
 # --- FLAGGING ENDPOINTS ---
 
