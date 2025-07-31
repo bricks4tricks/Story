@@ -976,8 +976,8 @@ def get_curriculums():
         traceback.print_exc()
         curriculums = mock_curriculums
     finally:
-        # Intentionally keep the connection open for reuse
-        pass
+        if conn:
+            release_db_connection(conn)
     return jsonify(curriculums)
 
 
