@@ -69,8 +69,18 @@ def signup_user():
             return jsonify({"status": "error", "message": "Username or email already exists"}), 409
         hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
         cursor.execute(
-            "INSERT INTO tbl_user (username, email, passwordhash, usertype, plan) VALUES (%s, %s, %s, 'Parent', %s)",
+            "INSERT INTO tbl_user (username, email, passwordhash, usertype, plan) VALUES (%s, %s, %s, 'Parent', %s) RETURNING id",
             (username, email, hashed_password, plan)
+        )
+        new_user_id = cursor.fetchone()[0]
+        # Create an associated subscription row
+        if plan == 'Monthly':
+            expires_on = datetime.utcnow() + timedelta(days=30)
+        else:
+            expires_on = datetime.utcnow() + timedelta(days=365)
+        cursor.execute(
+            "INSERT INTO tbl_subscription (user_id, active, expires_on) VALUES (%s, TRUE, %s) ON CONFLICT (user_id) DO NOTHING",
+            (new_user_id, expires_on)
         )
         conn.commit()
         update_users_version()
@@ -103,10 +113,34 @@ def signin_user():
         )
         user = cursor.fetchone()
         if user and bcrypt.check_password_hash(user[2], password):
+            days_left = None
+            # Check subscription status for non-admin users
+            if user[3] != 'Admin':
+                cursor.execute(
+                    "SELECT active, expires_on FROM tbl_subscription WHERE user_id = %s",
+                    (user[0],),
+                )
+                sub = cursor.fetchone()
+                if sub:
+                    active, expires_on = sub
+                    if expires_on and expires_on <= datetime.utcnow():
+                        cursor.execute(
+                            "UPDATE tbl_subscription SET active = FALSE WHERE user_id = %s",
+                            (user[0],),
+                        )
+                        conn.commit()
+                        active = False
+                    if not active:
+                        return jsonify({
+                            "status": "error",
+                            "message": "Subscription inactive. Please renew to access your account.",
+                        }), 403
+                    days_left = (expires_on - datetime.utcnow()).days if expires_on else None
             return jsonify({
                 "status": "success",
                 "message": "Login successful!",
                 "user": {"id": user[0], "username": user[1], "userType": user[3]},
+                "subscriptionDaysLeft": days_left if user[3] != 'Admin' else None,
             }), 200
         return jsonify({"status": "error", "message": "Invalid username or password"}), 401
     except Exception as e:

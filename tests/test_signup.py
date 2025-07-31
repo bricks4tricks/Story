@@ -12,9 +12,13 @@ from app import app as flask_app
 class DummyCursor:
     def __init__(self):
         self.executed = []
+        self.returning_id = 1
     def execute(self, query, params=None):
         self.executed.append((query, params))
     def fetchone(self):
+        # Return an id when INSERT ... RETURNING is executed
+        if 'RETURNING id' in self.executed[-1][0]:
+            return (self.returning_id,)
         # Simulate no existing user for SELECT queries
         return None
     def close(self):
