@@ -1812,6 +1812,14 @@ def serve_story_player():
 def serve_progress_dashboard():
     return render_template('progress-dashboard.html')
 
+@app.route('/terms-of-service.html')
+def serve_terms_of_service():
+    return render_template('terms-of-service.html')
+
+@app.route('/privacy-policy.html')
+def serve_privacy_policy():
+    return render_template('privacy-policy.html')
+
 @app.route('/favicon.ico')
 def favicon():
     return send_from_directory(os.path.join(app.root_path, 'static'), 'favicon.ico', mimetype='image/vnd.microsoft.icon')
