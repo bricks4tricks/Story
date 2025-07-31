@@ -1,7 +1,7 @@
 import psycopg2
 import psycopg2.extras
 from psycopg2 import sql
-from flask import Flask, jsonify, request, render_template, send_from_directory
+from flask import Flask, jsonify, request, render_template, send_from_directory, redirect, url_for
 from flask_cors import CORS
 from extensions import bcrypt
 import secrets
@@ -1708,7 +1708,7 @@ def serve_index():
 
 @app.route('/admin-login.html')
 def serve_admin_login():
-    return render_template('admin-login.html')
+    return redirect(url_for('serve_signin'))
 
 @app.route('/admin.html')
 def serve_admin():
@@ -1724,11 +1724,15 @@ def serve_forgot_password():
 
 @app.route('/parent-login.html')
 def serve_parent_login():
-    return render_template('parent-login.html')
+    return redirect(url_for('serve_signin'))
 
 @app.route('/student-login.html')
 def serve_student_login():
-    return render_template('student-login.html')
+    return redirect(url_for('serve_signin'))
+
+@app.route('/signin.html')
+def serve_signin():
+    return render_template('signin.html')
 
 @app.route('/parent-portal.html')
 def serve_parent_portal():
