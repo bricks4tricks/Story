@@ -1248,6 +1248,57 @@ def get_topics(curriculum, unit):
     return jsonify(topics)
 
 
+@app.route('/api/admin/curriculums', methods=['GET'])
+def admin_get_curriculums():
+    conn = None
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        cursor.execute("SELECT id, subjectname FROM tbl_subject ORDER BY subjectname;")
+        rows = cursor.fetchall()
+        return jsonify(rows)
+    except Exception as e:
+        print(f"Admin get curriculums error: {e}")
+        traceback.print_exc()
+        return jsonify({"status": "error", "message": "Internal error"}), 500
+    finally:
+        if conn:
+            release_db_connection(conn)
+
+
+@app.route('/api/admin/update-curriculum/<int:subject_id>', methods=['PUT', 'OPTIONS'])
+def update_curriculum(subject_id):
+    if request.method == 'OPTIONS':
+        return jsonify(success=True)
+
+    data = request.get_json()
+    name = data.get('name')
+
+    if not name:
+        return jsonify({"status": "error", "message": "Missing curriculum name"}), 400
+
+    conn = None
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("UPDATE tbl_subject SET subjectname = %s WHERE id = %s", (name, subject_id))
+        conn.commit()
+
+        if cursor.rowcount == 0:
+            return jsonify({"status": "error", "message": "Curriculum not found or unchanged."}), 404
+
+        return jsonify({"status": "success", "message": "Curriculum updated."}), 200
+    except Exception as e:
+        if conn:
+            conn.rollback()
+        print(f"Update Curriculum API Error: {e}")
+        traceback.print_exc()
+        return jsonify({"status": "error", "message": "Internal server error"}), 500
+    finally:
+        if conn:
+            release_db_connection(conn)
+
+
 @app.route('/api/curriculum', methods=['GET'])
 def get_curriculum():
     conn = None
