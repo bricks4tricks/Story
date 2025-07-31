@@ -1462,7 +1462,7 @@ const createCascadingSelectors = (prefix) => {
                         flagDiv.innerHTML = `
                             <div class="flex-grow pr-4 mb-2 sm:mb-0">
                                 <p class="font-bold text-white">${flag.ItemType} Flag: <span class="text-amber-300">${flag.ItemName || 'ID: ' + flag.FlaggedItemID}</span></p>
-                                <p class="text-sm text-gray-300">Reported by: ${flag.ReporterUsername} on ${new Date(flag.ReportedOn).toLocaleString()}</p>
+                                <p class="text-sm text-gray-300">Reported by: ${flag.ReporterUsername || 'Anonymous'} on ${new Date(flag.ReportedOn).toLocaleString()}</p>
                                 <p class="text-sm text-gray-400">Reason: ${flag.Reason || 'No reason provided.'}</p>
                                 <p class="text-sm text-gray-400">Status: <span class="px-2 py-0.5 rounded-full text-xs font-semibold status-${flag.Status}">${flag.Status}</span></p>
                                 ${flag.ResolvedOn ? `<p class="text-xs text-gray-500 mt-1">Resolved by: ${flag.ResolvedByUsername || 'N/A'} on ${new Date(flag.ResolvedOn).toLocaleString()}</p>` : ''}
