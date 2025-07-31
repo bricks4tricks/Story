@@ -65,6 +65,7 @@
 
   // Expose refresh function to global scope for other scripts.
   window.refreshUsers = refreshIfChanged;
+  window.forceRefreshUsers = fetchAndRenderUsers;
 
   // Initial fetch when script loads.
   refreshIfChanged();
