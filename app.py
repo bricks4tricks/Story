@@ -1072,7 +1072,26 @@ def get_curriculum():
         curriculum_data = {}
         # This mapping is for frontend display, so it's kept here.
         # In a very large app, this might come from a config or DB.
-        grade_color_map = { "4th Grade": { "icon": "4th", "color": "fde047" }, "5th Grade": { "icon": "5th", "color": "fb923c" }, "6th Grade": { "icon": "6th", "color": "a78bfa" }, "7th Grade": { "icon": "7th", "color": "60a5fa" }, "8th Grade": { "icon": "8th", "color": "f472b6" }, "9th Grade": { "icon": "9th", "color": "818cf8" }, "10th Grade": { "icon": "10th", "color": "34d399" }, "11th Grade": { "icon": "11th", "color": "22d3ee" }, "Pre-Calculus": { "icon": "Pre-C", "color": "a3e635" }, "Calculus": { "icon": "Calc", "color": "f87171" }, "Statistics": { "icon": "Stats", "color": "c084fc" }, "Contest Math (AMC)": { "icon": "AMC", "color": "e11d48" }, "IB Math AA SL": { "icon": "AA SL", "color": "f9a8d4" }, "IB Math AA HL": { "icon": "AA HL", "color": "f0abfc" }, "IB Math AI SL": { "icon": "AI SL", "color": "a5f3fc" }, "IB Math AI HL": { "icon": "AI HL", "color": "bbf7d0" } }
+        grade_color_map = {
+            "4th Grade": {"icon": "4th", "color": "fde047"},
+            "5th Grade": {"icon": "5th", "color": "fb923c"},
+            "6th Grade": {"icon": "6th", "color": "a78bfa"},
+            "7th Grade": {"icon": "7th", "color": "60a5fa"},
+            "8th Grade": {"icon": "8th", "color": "f472b6"},
+            "9th Grade": {"icon": "9th", "color": "818cf8"},
+            "10th Grade": {"icon": "10th", "color": "34d399"},
+            "11th Grade": {"icon": "11th", "color": "22d3ee"},
+            "Algebra 1": {"icon": "Alg1", "color": "fcd34d"},
+            "Geometry": {"icon": "Geom", "color": "2dd4bf"},
+            "Pre-Calculus": {"icon": "Pre-C", "color": "a3e635"},
+            "Calculus": {"icon": "Calc", "color": "f87171"},
+            "Statistics": {"icon": "Stats", "color": "c084fc"},
+            "Contest Math (AMC)": {"icon": "AMC", "color": "e11d48"},
+            "IB Math AA SL": {"icon": "AA SL", "color": "f9a8d4"},
+            "IB Math AA HL": {"icon": "AA HL", "color": "f0abfc"},
+            "IB Math AI SL": {"icon": "AI SL", "color": "a5f3fc"},
+            "IB Math AI HL": {"icon": "AI HL", "color": "bbf7d0"},
+        }
         for row in rows:
             grade_name = row.get('gradename') or row.get('GradeName')
             curriculum_type = row.get('curriculumtype') or row.get('CurriculumType')
