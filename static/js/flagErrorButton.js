@@ -5,9 +5,13 @@
     btn.textContent = 'Flag Error';
     btn.className = 'fixed bottom-4 right-4 bg-red-600 text-white px-4 py-2 rounded-full shadow-lg hover:bg-red-500 z-50';
     btn.addEventListener('click', async function() {
-      if (typeof openFlagModal !== 'function') return;
-      const description = await openFlagModal();
-      if (description === null) return;
+      let description = '';
+      if (typeof openFlagModal === 'function') {
+        description = await openFlagModal();
+        if (description === null) return;
+      } else {
+        description = prompt('Describe the issue (optional):') || '';
+      }
       fetch('/api/flag-page-error', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
