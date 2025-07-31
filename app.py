@@ -52,7 +52,7 @@ def health_check():
     return jsonify({"status": "ok"}), 200
 
 
-# Define a mapping for QuestionType (if using integer in DB)
+# Define a mapping for questiontype (if using integer in DB)
 QUESTION_TYPE_MAP = {
     'MultipleChoice': 1,
     'OpenEnded': 2
@@ -85,14 +85,14 @@ def edit_user(user_id):
         cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
         cursor.execute(
-            "SELECT ID FROM tbl_User WHERE (Username = %s OR Email = %s) AND ID != %s",
+            "SELECT id FROM tbl_user WHERE (username = %s OR email = %s) AND id != %s",
             (username, email, user_id)
         )
         if cursor.fetchone():
-            return jsonify({"status": "error", "message": "Username or email is already in use by another account."}), 409
+            return jsonify({"status": "error", "message": "username or email is already in use by another account."}), 409
 
         cursor.execute(
-            "UPDATE tbl_User SET Username = %s, Email = %s, UserType = %s WHERE ID = %s",
+            "UPDATE tbl_user SET username = %s, email = %s, usertype = %s WHERE id = %s",
             (username, email, user_type, user_id)
         )
         conn.commit()
@@ -118,7 +118,7 @@ def delete_user(user_id):
         conn = get_db_connection()
         cursor = conn.cursor()
 
-        cursor.execute("SELECT UserType FROM tbl_User WHERE ID = %s", (user_id,))
+        cursor.execute("SELECT usertype FROM tbl_user WHERE id = %s", (user_id,))
         user = cursor.fetchone()
         if not user:
             return jsonify({"status": "error", "message": "User not found."}), 404
@@ -129,11 +129,11 @@ def delete_user(user_id):
             return jsonify({"status": "error", "message": "Admin accounts cannot be deleted."}), 403
 
         if user_type == 'Parent':
-            cursor.execute("SELECT ID FROM tbl_User WHERE ParentUserID = %s", (user_id,))
+            cursor.execute("SELECT id FROM tbl_user WHERE parentuserid = %s", (user_id,))
             if cursor.fetchone():
                 return jsonify({"status": "error", "message": "Cannot delete a parent with student accounts. Please delete the student profiles first."}), 409
 
-        cursor.execute("DELETE FROM tbl_User WHERE ID = %s", (user_id,))
+        cursor.execute("DELETE FROM tbl_user WHERE id = %s", (user_id,))
         conn.commit()
         update_users_version()
 
@@ -163,14 +163,14 @@ def get_topics_list():
         cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
         query = """
             SELECT
-                t.ID,
+                t.id,
                 t.TopicName,
                 unit.TopicName AS UnitName,
                 s.SubjectName AS CurriculumType,
-                (SELECT th.ThemeName FROM tbl_TopicTheme tth JOIN tbl_Theme th ON tth.ThemeID = th.ID WHERE tth.TopicID = t.ID AND tth.IsDefault = TRUE LIMIT 1) AS DefaultTheme
-            FROM tbl_Topic t
-            JOIN tbl_Topic unit ON t.ParentTopicID = unit.ID
-            JOIN tbl_Subject s ON unit.SubjectID = s.ID
+                (SELECT th.themename FROM tbl_topictheme tth JOIN tbl_theme th ON tth.themeid = th.id WHERE tth.topicid = t.id AND tth.isdefault = TRUE LIMIT 1) AS DefaultTheme
+            FROM tbl_topic t
+            JOIN tbl_topic unit ON t.parenttopicid = unit.id
+            JOIN tbl_subject s ON unit.subjectid = s.id
             ORDER BY s.SubjectName, unit.TopicName, t.TopicName;
         """
         cursor.execute(query)
@@ -217,8 +217,8 @@ def add_question():
         conn.autocommit = False
 
         question_query = (
-            "INSERT INTO tbl_Question (TopicID, QuestionName, QuestionType, DifficultyRating, CreatedBy) "
-            "VALUES (%s, %s, %s, %s, %s) RETURNING ID"
+            "INSERT INTO tbl_question (topicid, questionname, questiontype, difficultyrating, createdby) "
+            "VALUES (%s, %s, %s, %s, %s) RETURNING id"
         )
         cursor.execute(
             question_query,
@@ -226,7 +226,7 @@ def add_question():
         )
         question_id = cursor.fetchone()[0]
 
-        answer_query = "INSERT INTO tbl_Answer (QuestionID, AnswerName, IsCorrect, CreatedBy) VALUES (%s, %s, %s, %s)"
+        answer_query = "INSERT INTO tbl_answer (questionid, answername, iscorrect, createdby) VALUES (%s, %s, %s, %s)"
         answer_values = []
         for ans in answers:
             if 'text' not in ans or 'isCorrect' not in ans:
@@ -234,7 +234,7 @@ def add_question():
             answer_values.append((question_id, ans['text'], ans['isCorrect'], 'Admin'))
         cursor.executemany(answer_query, answer_values)
 
-        step_query = "INSERT INTO tbl_Step (QuestionID, SequenceNo, StepName, CreatedBy) VALUES (%s, %s, %s, %s)"
+        step_query = "INSERT INTO tbl_step (questionid, sequenceno, stepname, createdby) VALUES (%s, %s, %s, %s)"
         step_values = []
         for idx, step in enumerate(steps):
             if 'text' not in step:
@@ -243,7 +243,7 @@ def add_question():
         cursor.executemany(step_query, step_values)
 
         conn.commit()
-        return jsonify({"status": "success", "message": f"Successfully added question (ID {question_id})."}), 201
+        return jsonify({"status": "success", "message": f"Successfully added question (id {question_id})."}), 201
     except Exception as e:
         if conn: conn.rollback()
         print(f"Add Question API Error: {e}")
@@ -261,26 +261,26 @@ def get_all_questions():
         cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
         query = """
             SELECT
-                q.ID AS id,
-                q.QuestionName AS questionname,
-                q.QuestionType AS questiontype,
-                q.DifficultyRating AS difficultyrating,
+                q.id AS id,
+                q.questionname AS questionname,
+                q.questiontype AS questiontype,
+                q.difficultyrating AS difficultyrating,
                 t.TopicName AS topicname,
                 unit.TopicName AS unitname
-            FROM tbl_Question q
-            JOIN tbl_Topic t ON q.TopicID = t.ID
-            JOIN tbl_Topic unit ON t.ParentTopicID = unit.ID
-            ORDER BY q.ID DESC;
+            FROM tbl_question q
+            JOIN tbl_topic t ON q.topicid = t.id
+            JOIN tbl_topic unit ON t.parenttopicid = unit.id
+            ORDER BY q.id DESC;
         """
         cursor.execute(query)
         rows = cursor.fetchall()
         questions = []
         for row in rows:
             questions.append({
-                'ID': row['id'],
-                'QuestionName': row['questionname'],
-                'QuestionType': row['questiontype'],
-                'DifficultyRating': row['difficultyrating'],
+                'id': row['id'],
+                'questionname': row['questionname'],
+                'questiontype': row['questiontype'],
+                'difficultyrating': row['difficultyrating'],
                 'TopicName': row['topicname'],
                 'UnitName': row['unitname']
             })
@@ -300,50 +300,50 @@ def get_question_details(question_id):
         conn = get_db_connection()
         cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
-        cursor.execute("SELECT ID, TopicID, QuestionName, QuestionType, DifficultyRating FROM tbl_Question WHERE ID = %s", (question_id,))
+        cursor.execute("SELECT id, topicid, questionname, questiontype, difficultyrating FROM tbl_question WHERE id = %s", (question_id,))
         question = cursor.fetchone()
         if not question:
             return jsonify({"status": "error", "message": "Question not found."}), 404
 
-        question_type_display = question.get('QuestionType') or question.get('questiontype')
+        question_type_display = question.get('questiontype') or question.get('questiontype')
 
-        cursor.execute("SELECT AnswerName, IsCorrect FROM tbl_Answer WHERE QuestionID = %s", (question_id,))
+        cursor.execute("SELECT answername, iscorrect FROM tbl_answer WHERE questionid = %s", (question_id,))
         answers = cursor.fetchall()
 
-        cursor.execute("SELECT StepName FROM tbl_Step WHERE QuestionID = %s ORDER BY SequenceNo", (question_id,))
+        cursor.execute("SELECT stepname FROM tbl_step WHERE questionid = %s ORDER BY sequenceno", (question_id,))
         steps = cursor.fetchall()
 
-        topic_id = question.get('TopicID') or question.get('topicid')
+        topic_id = question.get('topicid') or question.get('topicid')
         cursor.execute(
             """
             SELECT
-                t.ID AS TopicID,
+                t.id AS topicid,
                 t.TopicName,
                 unit.TopicName AS UnitName,
                 s.SubjectName AS CurriculumType
-            FROM tbl_Topic t
-            JOIN tbl_Topic unit ON t.ParentTopicID = unit.ID
-            JOIN tbl_Subject s ON unit.SubjectID = s.ID
-            WHERE t.ID = %s
+            FROM tbl_topic t
+            JOIN tbl_topic unit ON t.parenttopicid = unit.id
+            JOIN tbl_subject s ON unit.subjectid = s.id
+            WHERE t.id = %s
             """,
             (topic_id,),
         )
         topic_info = cursor.fetchone()
 
         question_details = {
-            "ID": question.get('ID') or question.get('id'),
-            "TopicID": question.get('TopicID') or question.get('topicid'),
+            "id": question.get('id') or question.get('id'),
+            "topicid": question.get('topicid') or question.get('topicid'),
             "TopicName": topic_info.get('TopicName') if topic_info else None,
             "UnitName": topic_info.get('UnitName') if topic_info else None,
             "CurriculumType": topic_info.get('CurriculumType') if topic_info else None,
-            "QuestionName": question.get('QuestionName') or question.get('questionname'),
-            "QuestionType": question_type_display,
-            "DifficultyRating": question.get('DifficultyRating') or question.get('difficultyrating'),
+            "questionname": question.get('questionname') or question.get('questionname'),
+            "questiontype": question_type_display,
+            "difficultyrating": question.get('difficultyrating') or question.get('difficultyrating'),
             "Answers": [{
-                'AnswerName': a.get('AnswerName') or a.get('answername'),
-                'IsCorrect': a.get('IsCorrect') or a.get('iscorrect')
+                'answername': a.get('answername') or a.get('answername'),
+                'iscorrect': a.get('iscorrect') or a.get('iscorrect')
             } for a in answers],
-            "Steps": [s.get('StepName') or s.get('stepname') for s in steps]
+            "Steps": [s.get('stepname') or s.get('stepname') for s in steps]
         }
 
         return jsonify(question_details), 200
@@ -363,7 +363,7 @@ def edit_question(question_id):
     data = request.get_json()
     payload_question_id = data.get('questionId')
     if payload_question_id and payload_question_id != question_id:
-        return jsonify({"status": "error", "message": "Mismatched question ID in URL and payload."}), 400
+        return jsonify({"status": "error", "message": "Mismatched question id in URL and payload."}), 400
 
     topic_id = data.get('topicId')
     question_text = data.get('questionText')
@@ -392,17 +392,17 @@ def edit_question(question_id):
 
         conn.autocommit = False
 
-        question_update_query = "UPDATE tbl_Question SET TopicID = %s, QuestionName = %s, QuestionType = %s, DifficultyRating = %s, LastUpdatedOn = NOW(), LastUpdatedBy = %s WHERE ID = %s"
+        question_update_query = "UPDATE tbl_question SET topicid = %s, questionname = %s, questiontype = %s, difficultyrating = %s, lastupdatedon = NOW(), lastupdatedby = %s WHERE id = %s"
         cursor.execute(question_update_query, (topic_id, question_text, question_type_to_update, difficulty_rating, 'Admin', question_id))
 
         if cursor.rowcount == 0:
             conn.rollback()
             return jsonify({"status": "error", "message": "Question not found or no changes made."}), 404
 
-        cursor.execute("DELETE FROM tbl_Answer WHERE QuestionID = %s", (question_id,))
-        cursor.execute("DELETE FROM tbl_Step WHERE QuestionID = %s", (question_id,))
+        cursor.execute("DELETE FROM tbl_answer WHERE questionid = %s", (question_id,))
+        cursor.execute("DELETE FROM tbl_step WHERE questionid = %s", (question_id,))
 
-        answer_query = "INSERT INTO tbl_Answer (QuestionID, AnswerName, IsCorrect, CreatedBy) VALUES (%s, %s, %s, %s)"
+        answer_query = "INSERT INTO tbl_answer (questionid, answername, iscorrect, createdby) VALUES (%s, %s, %s, %s)"
         answer_values = []
         for ans in answers:
             if 'text' not in ans or 'isCorrect' not in ans:
@@ -411,7 +411,7 @@ def edit_question(question_id):
         if answer_values:
             cursor.executemany(answer_query, answer_values)
 
-        step_query = "INSERT INTO tbl_Step (QuestionID, SequenceNo, StepName, CreatedBy) VALUES (%s, %s, %s, %s)"
+        step_query = "INSERT INTO tbl_step (questionid, sequenceno, stepname, createdby) VALUES (%s, %s, %s, %s)"
         step_values = []
         for idx, step in enumerate(steps):
             if 'text' not in step:
@@ -421,7 +421,7 @@ def edit_question(question_id):
 
         conn.commit()
 
-        return jsonify({"status": "success", "message": f"Question ID {question_id} updated successfully!"}), 200
+        return jsonify({"status": "success", "message": f"Question id {question_id} updated successfully!"}), 200
 
     except Exception as e:
         if conn: conn.rollback()
@@ -444,9 +444,9 @@ def delete_question(question_id):
 
         conn.autocommit = False
 
-        cursor.execute("DELETE FROM tbl_Step WHERE QuestionID = %s", (question_id,))
-        cursor.execute("DELETE FROM tbl_Answer WHERE QuestionID = %s", (question_id,))
-        cursor.execute("DELETE FROM tbl_Question WHERE ID = %s", (question_id,))
+        cursor.execute("DELETE FROM tbl_step WHERE questionid = %s", (question_id,))
+        cursor.execute("DELETE FROM tbl_answer WHERE questionid = %s", (question_id,))
+        cursor.execute("DELETE FROM tbl_question WHERE id = %s", (question_id,))
 
         conn.commit()
 
@@ -478,17 +478,17 @@ def get_all_stories():
         cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
         query = """
             SELECT DISTINCT
-                t.ID AS topicid,
+                t.id AS topicid,
                 t.TopicName AS topicname,
                 (
-                    SELECT th.ThemeName
-                    FROM tbl_TopicTheme tth
-                    JOIN tbl_Theme th ON tth.ThemeID = th.ID
-                    WHERE tth.TopicID = t.ID AND tth.IsDefault = TRUE
+                    SELECT th.themename
+                    FROM tbl_topictheme tth
+                    JOIN tbl_theme th ON tth.themeid = th.id
+                    WHERE tth.topicid = t.id AND tth.isdefault = TRUE
                     LIMIT 1
                 ) AS defaulttheme
-            FROM tbl_Description td
-            JOIN tbl_Topic t ON td.TopicID = t.ID
+            FROM tbl_description td
+            JOIN tbl_topic t ON td.topicid = t.id
             ORDER BY t.TopicName;
         """
         cursor.execute(query)
@@ -497,7 +497,7 @@ def get_all_stories():
         stories = []
         for row in stories_raw:
             stories.append({
-                'TopicID': row['topicid'],
+                'topicid': row['topicid'],
                 'TopicName': row['topicname'],
                 'DefaultTheme': row['defaulttheme']
             })
@@ -522,25 +522,25 @@ def delete_story(topic_id):
 
         conn.autocommit = False
 
-        # Delete from tbl_TopicTheme first
-        cursor.execute("DELETE FROM tbl_TopicTheme WHERE TopicID = %s", (topic_id,))
+        # Delete from tbl_topictheme first
+        cursor.execute("DELETE FROM tbl_topictheme WHERE topicid = %s", (topic_id,))
 
-        cursor.execute("SELECT InteractiveElementID FROM tbl_Description WHERE TopicID = %s AND InteractiveElementID IS NOT NULL", (topic_id,))
+        cursor.execute("SELECT interactiveelementid FROM tbl_description WHERE topicid = %s AND interactiveelementid IS NOT NULL", (topic_id,))
         interactive_element_ids_to_delete = [row[0] for row in cursor.fetchall()]
 
         if interactive_element_ids_to_delete:
             placeholders = sql.SQL(',').join(sql.Placeholder() * len(interactive_element_ids_to_delete))
-            delete_query = sql.SQL("DELETE FROM tbl_InteractiveElement WHERE ID IN ({})").format(placeholders)
+            delete_query = sql.SQL("DELETE FROM tbl_interactiveelement WHERE id IN ({})").format(placeholders)
             cursor.execute(delete_query, tuple(interactive_element_ids_to_delete))
 
-        cursor.execute("DELETE FROM tbl_Description WHERE TopicID = %s", (topic_id,))
+        cursor.execute("DELETE FROM tbl_description WHERE topicid = %s", (topic_id,))
 
         conn.commit()
 
         if cursor.rowcount == 0:
             return jsonify({"status": "error", "message": "Story not found for this topic or already deleted."}), 404
 
-        return jsonify({"status": "success", "message": f"Story for topic ID {topic_id} and its associated interactive elements deleted successfully."}), 200
+        return jsonify({"status": "success", "message": f"Story for topic id {topic_id} and its associated interactive elements deleted successfully."}), 200
 
     except psycopg2.Error as err:
         if conn: conn.rollback()
@@ -567,7 +567,7 @@ def save_story():
     default_theme_name = data.get('defaultTheme')
 
     if not topic_id or story_sections is None:
-        return jsonify({"status": "error", "message": "Missing topic ID or story sections."}), 400
+        return jsonify({"status": "error", "message": "Missing topic id or story sections."}), 400
 
     conn = None
     try:
@@ -577,28 +577,28 @@ def save_story():
         conn.autocommit = False
 
         # Delete existing interactive elements and descriptions for this topic
-        cursor.execute("SELECT InteractiveElementID FROM tbl_Description WHERE TopicID = %s AND InteractiveElementID IS NOT NULL", (topic_id,))
+        cursor.execute("SELECT interactiveelementid FROM tbl_description WHERE topicid = %s AND interactiveelementid IS NOT NULL", (topic_id,))
         interactive_element_ids_to_delete = [row[0] for row in cursor.fetchall()]
 
         if interactive_element_ids_to_delete:
             placeholders = sql.SQL(',').join(sql.Placeholder() * len(interactive_element_ids_to_delete))
-            delete_query = sql.SQL("DELETE FROM tbl_InteractiveElement WHERE ID IN ({})").format(placeholders)
+            delete_query = sql.SQL("DELETE FROM tbl_interactiveelement WHERE id IN ({})").format(placeholders)
             cursor.execute(delete_query, tuple(interactive_element_ids_to_delete))
 
-        cursor.execute("DELETE FROM tbl_Description WHERE TopicID = %s", (topic_id,))
+        cursor.execute("DELETE FROM tbl_description WHERE topicid = %s", (topic_id,))
 
-        # Handle tbl_TopicTheme updates
+        # Handle tbl_topictheme updates
         # First, clear existing themes for this topic
-        cursor.execute("DELETE FROM tbl_TopicTheme WHERE TopicID = %s", (topic_id,))
+        cursor.execute("DELETE FROM tbl_topictheme WHERE topicid = %s", (topic_id,))
 
         # Then, insert all themes as available for this topic, and mark the selected one as default
-        cursor.execute("SELECT ID, ThemeName FROM tbl_Theme")
+        cursor.execute("SELECT id, themename FROM tbl_theme")
         all_themes = cursor.fetchall()
 
         for theme_id, theme_name in all_themes:
             is_default = (theme_name == default_theme_name)
             cursor.execute(
-                "INSERT INTO tbl_TopicTheme (TopicID, ThemeID, IsDefault, CreatedBy) VALUES (%s, %s, %s, %s)",
+                "INSERT INTO tbl_topictheme (topicid, themeid, isdefault, createdby) VALUES (%s, %s, %s, %s)",
                 (topic_id, theme_id, is_default, 'Admin')
             )
 
@@ -631,8 +631,8 @@ def save_story():
                     return jsonify({"status": "error", "message": f"Interactive element in Section '{section_name}' is incomplete (missing element type or invalid configuration)."}, 400)
 
                 interactive_query = (
-                    "INSERT INTO tbl_InteractiveElement (ElementType, Configuration, CreatedBy) "
-                    "VALUES (%s, %s, %s) RETURNING ID"
+                    "INSERT INTO tbl_interactiveelement (elementtype, configuration, createdby) "
+                    "VALUES (%s, %s, %s) RETURNING id"
                 )
                 cursor.execute(
                     interactive_query,
@@ -643,7 +643,7 @@ def save_story():
                 conn.rollback()
                 return jsonify({"status": "error", "message": f"Section {order} has an invalid content type: {content_type}"}), 400
 
-            desc_query = "INSERT INTO tbl_Description (TopicID, SectionName, DescriptionText, InteractiveElementID, DescriptionOrder, ContentType, CreatedBy) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+            desc_query = "INSERT INTO tbl_description (topicid, sectionname, descriptiontext, interactiveelementid, descriptionorder, contenttype, createdby) VALUES (%s, %s, %s, %s, %s, %s, %s)"
             cursor.execute(desc_query, (topic_id, section_name, description_text_for_db, interactive_element_id_for_db, order, content_type, 'Admin'))
 
         conn.commit()
@@ -673,35 +673,35 @@ def get_story_for_topic(topic_id):
 
         # Fetch the default theme for this topic
         cursor.execute("""
-            SELECT th.ThemeName
-            FROM tbl_TopicTheme tth
-            JOIN tbl_Theme th ON tth.ThemeID = th.ID
-            WHERE tth.TopicID = %s AND tth.IsDefault = TRUE
+            SELECT th.themename
+            FROM tbl_topictheme tth
+            JOIN tbl_theme th ON tth.themeid = th.id
+            WHERE tth.topicid = %s AND tth.isdefault = TRUE
             LIMIT 1
         """, (topic_id,))
         default_theme_row = cursor.fetchone()
         if default_theme_row:
             story_payload["defaultTheme"] = (
                 default_theme_row.get('themename')
-                or default_theme_row.get('ThemeName')
+                or default_theme_row.get('themename')
             )
 
         # Fetch all available themes for this topic
         cursor.execute("""
-            SELECT th.ThemeName
-            FROM tbl_TopicTheme tth
-            JOIN tbl_Theme th ON tth.ThemeID = th.ID
-            WHERE tth.TopicID = %s
-            ORDER BY th.ThemeName
+            SELECT th.themename
+            FROM tbl_topictheme tth
+            JOIN tbl_theme th ON tth.themeid = th.id
+            WHERE tth.topicid = %s
+            ORDER BY th.themename
         """, (topic_id,))
         available_themes_rows = cursor.fetchall()
         story_payload["availableThemes"] = [
-            row.get('themename') or row.get('ThemeName')
+            row.get('themename') or row.get('themename')
             for row in available_themes_rows
         ]
 
 
-        cursor.execute("SELECT ID, SectionName, DescriptionText, InteractiveElementID, DescriptionOrder, ContentType FROM tbl_Description WHERE TopicID = %s ORDER BY DescriptionOrder", (topic_id,))
+        cursor.execute("SELECT id, sectionname, descriptiontext, interactiveelementid, descriptionorder, contenttype FROM tbl_description WHERE topicid = %s ORDER BY descriptionorder", (topic_id,))
         sections = cursor.fetchall()
 
         if not sections:
@@ -714,15 +714,15 @@ def get_story_for_topic(topic_id):
 
         for section in sections:
             section_data = {
-                "sectionName": section.get('sectionname') or section.get('SectionName'),
-                "order": section.get('descriptionorder') or section.get('DescriptionOrder'),
-                "contentType": section.get('contenttype') or section.get('ContentType'),
+                "sectionName": section.get('sectionname') or section.get('sectionname'),
+                "order": section.get('descriptionorder') or section.get('descriptionorder'),
+                "contentType": section.get('contenttype') or section.get('contenttype'),
             }
 
-            if section.get('interactiveelementid') or section.get('InteractiveElementID'):
-                interactive_id = section.get('interactiveelementid') or section.get('InteractiveElementID')
+            if section.get('interactiveelementid') or section.get('interactiveelementid'):
+                interactive_id = section.get('interactiveelementid') or section.get('interactiveelementid')
                 cursor.execute(
-                    "SELECT ElementType, Configuration FROM tbl_InteractiveElement WHERE ID = %s",
+                    "SELECT elementtype, configuration FROM tbl_interactiveelement WHERE id = %s",
                     (interactive_id,)
                 )
                 interactive_row = cursor.fetchone()
@@ -730,11 +730,11 @@ def get_story_for_topic(topic_id):
                 if interactive_row:
                     section_data['contentType'] = 'Interactive'
                     config_data = {}
-                    if interactive_row.get('configuration') or interactive_row.get('Configuration'):
+                    if interactive_row.get('configuration') or interactive_row.get('configuration'):
                         try:
                             config_data = json.loads(
                                 interactive_row.get('configuration')
-                                or interactive_row.get('Configuration')
+                                or interactive_row.get('configuration')
                             )
                         except Exception as json_err:
                             print(
@@ -742,15 +742,15 @@ def get_story_for_topic(topic_id):
                             )
                     section_data['content'] = {
                         "elementType": interactive_row.get('elementtype')
-                        or interactive_row.get('ElementType'),
+                        or interactive_row.get('elementtype'),
                         "configuration": config_data,
                     }
                 else:
                     section_data['contentType'] = 'Paragraph'
-                    section_data['content'] = section.get('descriptiontext') or section.get('DescriptionText')
+                    section_data['content'] = section.get('descriptiontext') or section.get('descriptiontext')
             else:
                 section_data['contentType'] = 'Paragraph'
-                section_data['content'] = section.get('descriptiontext') or section.get('DescriptionText')
+                section_data['content'] = section.get('descriptiontext') or section.get('descriptiontext')
 
             story_payload["sections"].append(section_data)
 
@@ -771,7 +771,7 @@ def story_exists(topic_id):
         conn = get_db_connection()
         cursor = conn.cursor()
 
-        cursor.execute("SELECT COUNT(*) FROM tbl_Description WHERE TopicID = %s", (topic_id,))
+        cursor.execute("SELECT COUNT(*) FROM tbl_description WHERE topicid = %s", (topic_id,))
         count = cursor.fetchone()[0]
 
         if count > 0:
@@ -795,12 +795,12 @@ def get_user_progress(user_id):
         conn = get_db_connection()
         cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
         query = """
-            SELECT up.TopicID, up.Status, t.TopicName, unit.TopicName AS UnitName, s.SubjectName AS CurriculumType
-            FROM tbl_UserProgress up
-            JOIN tbl_Topic t ON up.TopicID = t.ID
-            JOIN tbl_Topic unit ON t.ParentTopicID = unit.ID
-            JOIN tbl_Subject s ON unit.SubjectID = s.ID
-            WHERE up.UserID = %s
+            SELECT up.topicid, up.status, t.TopicName, unit.TopicName AS UnitName, s.SubjectName AS CurriculumType
+            FROM tbl_userprogress up
+            JOIN tbl_topic t ON up.topicid = t.id
+            JOIN tbl_topic unit ON t.parenttopicid = unit.id
+            JOIN tbl_subject s ON unit.subjectid = s.id
+            WHERE up.userid = %s
         """
         cursor.execute(query, (user_id,))
         progress = cursor.fetchall()
@@ -829,10 +829,10 @@ def update_user_progress():
         cursor = conn.cursor()
 
         query = """
-            INSERT INTO tbl_UserProgress (UserID, TopicID, Status)
+            INSERT INTO tbl_userprogress (userid, topicid, status)
             VALUES (%s, %s, %s)
-            ON CONFLICT (UserID, TopicID)
-            DO UPDATE SET Status = EXCLUDED.Status;
+            ON CONFLICT (userid, topicid)
+            DO UPDATE SET status = EXCLUDED.status;
         """
         cursor.execute(query, (user_id, topic_id, status))
         conn.commit()
@@ -863,7 +863,7 @@ def create_student():
     try:
         conn = get_db_connection()
         cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-        cursor.execute("SELECT ID FROM tbl_User WHERE Username = %s", (username,))
+        cursor.execute("SELECT id FROM tbl_user WHERE username = %s", (username,))
         if cursor.fetchone():
             return jsonify({"status": "error", "message": "This username is already taken"}), 409
 
@@ -871,7 +871,7 @@ def create_student():
         hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
 
         cursor.execute(
-            "INSERT INTO tbl_User (Username, Email, PasswordHash, UserType, ParentUserID) VALUES (%s, %s, %s, 'Student', %s)",
+            "INSERT INTO tbl_user (username, email, passwordhash, usertype, parentuserid) VALUES (%s, %s, %s, 'Student', %s)",
             (username, placeholder_email, hashed_password, parent_id)
         )
         conn.commit()
@@ -890,7 +890,7 @@ def get_my_students(parent_id):
     try:
         conn = get_db_connection()
         cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-        cursor.execute("SELECT ID, Username, CreatedOn FROM tbl_User WHERE ParentUserID = %s", (parent_id,))
+        cursor.execute("SELECT id, username, createdon FROM tbl_user WHERE parentuserid = %s", (parent_id,))
         students = cursor.fetchall()
         return jsonify(students), 200
     except Exception as e:
@@ -907,7 +907,7 @@ def modify_student():
     data = request.get_json()
     student_id, new_password = data.get('studentId'), data.get('newPassword')
     if not all([student_id, new_password]):
-        return jsonify({"status": "error", "message": "Student ID and new password are required"}), 400
+        return jsonify({"status": "error", "message": "Student id and new password are required"}), 400
 
     # Server-side password validation
     is_valid, message = validate_password(new_password)
@@ -920,11 +920,11 @@ def modify_student():
         cursor = conn.cursor()
         hashed_password = bcrypt.generate_password_hash(new_password).decode('utf-8')
         cursor.execute(
-            "UPDATE tbl_User SET PasswordHash = %s WHERE ID = %s AND UserType = 'Student'",
+            "UPDATE tbl_user SET passwordhash = %s WHERE id = %s AND usertype = 'Student'",
             (hashed_password, student_id)
         )
         if cursor.rowcount == 0:
-            return jsonify({"status": "error", "message": "Student not found or invalid ID"}), 404
+            return jsonify({"status": "error", "message": "Student not found or invalid id"}), 404
 
         conn.commit()
         return jsonify({"status": "success", "message": "Student password updated successfully!"}), 200
@@ -943,7 +943,7 @@ def delete_student_from_parent_portal(student_id):
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
-        cursor.execute("DELETE FROM tbl_User WHERE ID = %s AND UserType = 'Student'", (student_id,))
+        cursor.execute("DELETE FROM tbl_user WHERE id = %s AND usertype = 'Student'", (student_id,))
         if cursor.rowcount == 0:
             return jsonify({"status": "error", "message": "Student not found or already deleted"}), 404
 
@@ -966,7 +966,7 @@ def get_curriculums():
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
-        cursor.execute("SELECT SubjectName FROM tbl_Subject ORDER BY SubjectName;")
+        cursor.execute("SELECT SubjectName FROM tbl_subject ORDER BY SubjectName;")
         rows = cursor.fetchall()
         curriculums = [row[0] for row in rows]
         # Deduplicate while preserving order
@@ -991,9 +991,9 @@ def get_units(curriculum):
         query = sql.SQL(
             """
             SELECT DISTINCT unit.TopicName
-            FROM tbl_Topic unit
-            JOIN tbl_Subject s ON unit.SubjectID = s.ID
-            WHERE unit.ParentTopicID IS NULL
+            FROM tbl_topic unit
+            JOIN tbl_subject s ON unit.subjectid = s.id
+            WHERE unit.parenttopicid IS NULL
               AND s.SubjectName = %s
             ORDER BY unit.TopicName;
             """
@@ -1020,10 +1020,10 @@ def get_topics(curriculum, unit):
         cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
         query = sql.SQL(
             """
-            SELECT t.ID, t.TopicName
-            FROM tbl_Topic t
-            JOIN tbl_Topic unit ON t.ParentTopicID = unit.ID
-            JOIN tbl_Subject s ON unit.SubjectID = s.ID
+            SELECT t.id, t.TopicName
+            FROM tbl_topic t
+            JOIN tbl_topic unit ON t.parenttopicid = unit.id
+            JOIN tbl_subject s ON unit.subjectid = s.id
               WHERE s.SubjectName = %s
               AND unit.TopicName = %s
             ORDER BY t.TopicName;
@@ -1053,18 +1053,18 @@ def get_curriculum():
                 s.SubjectName AS CurriculumType,
                 unit.TopicName AS UnitName,
                 topic.TopicName,
-                topic.ID AS TopicID,
-                string_agg(DISTINCT th.ThemeName, ',' ORDER BY th.ThemeName) AS AvailableThemes,
-                (SELECT dth.ThemeName FROM tbl_TopicTheme tth JOIN tbl_Theme dth ON tth.ThemeID = dth.ID WHERE tth.TopicID = topic.ID AND tth.IsDefault = TRUE LIMIT 1) AS DefaultTheme
-            FROM tbl_Topic topic
-            JOIN tbl_Topic unit ON topic.ParentTopicID = unit.ID
-            JOIN tbl_Subject s ON unit.SubjectID = s.ID
-            JOIN tbl_TopicGrade tg ON topic.ID = tg.TopicID
-            JOIN tbl_Grade g ON tg.GradeID = g.ID
-            LEFT JOIN tbl_TopicTheme tt ON topic.ID = tt.TopicID
-            LEFT JOIN tbl_Theme th ON tt.ThemeID = th.ID
-            GROUP BY g.ID, s.ID, unit.ID, topic.ID, g.GradeName, s.SubjectName, unit.TopicName, topic.TopicName
-            ORDER BY g.ID, s.ID, unit.ID, topic.ID;
+                topic.id AS topicid,
+                string_agg(DISTINCT th.themename, ',' ORDER BY th.themename) AS AvailableThemes,
+                (SELECT dth.themename FROM tbl_topictheme tth JOIN tbl_theme dth ON tth.themeid = dth.id WHERE tth.topicid = topic.id AND tth.isdefault = TRUE LIMIT 1) AS DefaultTheme
+            FROM tbl_topic topic
+            JOIN tbl_topic unit ON topic.parenttopicid = unit.id
+            JOIN tbl_subject s ON unit.subjectid = s.id
+            JOIN tbl_topicgrade tg ON topic.id = tg.topicid
+            JOIN tbl_grade g ON tg.gradeid = g.id
+            LEFT JOIN tbl_topictheme tt ON topic.id = tt.topicid
+            LEFT JOIN tbl_theme th ON tt.themeid = th.id
+            GROUP BY g.id, s.id, unit.id, topic.id, g.GradeName, s.SubjectName, unit.TopicName, topic.TopicName
+            ORDER BY g.id, s.id, unit.id, topic.id;
         """
         cursor.execute(query)
         rows = cursor.fetchall()
@@ -1097,7 +1097,7 @@ def get_curriculum():
             curriculum_type = row.get('curriculumtype') or row.get('CurriculumType')
             unit_name = row.get('unitname') or row.get('UnitName')
             topic_name = row.get('topicname') or row.get('TopicName')
-            topic_id = row.get('topicid') or row.get('TopicID')
+            topic_id = row.get('topicid') or row.get('topicid')
             available_themes_str = row.get('availablethemes') or row.get('AvailableThemes')
             default_theme = row.get('defaulttheme') or row.get('DefaultTheme')
             
@@ -1136,10 +1136,10 @@ def get_user_topic_difficulty(user_id, topic_id):
     try:
         conn = get_db_connection()
         cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-        query = "SELECT CurrentDifficulty FROM tbl_UserTopicDifficulty WHERE UserID = %s AND TopicID = %s"
+        query = "SELECT currentdifficulty FROM tbl_usertopicdifficulty WHERE userid = %s AND topicid = %s"
         cursor.execute(query, (user_id, topic_id))
         result = cursor.fetchone()
-        difficulty = result['CurrentDifficulty'] if result else 1
+        difficulty = result['currentdifficulty'] if result else 1
         return jsonify({"status": "success", "difficulty": difficulty}), 200
     except Exception as e:
         print(f"Get User Topic Difficulty API Error: {e}")
@@ -1172,10 +1172,10 @@ def update_user_topic_difficulty():
         conn = get_db_connection()
         cursor = conn.cursor()
         query = """
-            INSERT INTO tbl_UserTopicDifficulty (UserID, TopicID, CurrentDifficulty)
+            INSERT INTO tbl_usertopicdifficulty (userid, topicid, currentdifficulty)
             VALUES (%s, %s, %s)
-            ON CONFLICT (UserID, TopicID)
-            DO UPDATE SET CurrentDifficulty = EXCLUDED.CurrentDifficulty;
+            ON CONFLICT (userid, topicid)
+            DO UPDATE SET currentdifficulty = EXCLUDED.currentdifficulty;
         """
         cursor.execute(query, (user_id, topic_id, new_difficulty))
         conn.commit()
@@ -1199,9 +1199,9 @@ def get_quiz_question(user_id, topic_id, difficulty_level):
         difficulty_level = max(1, min(5, difficulty_level))
 
         query = """
-            SELECT Q.ID, Q.QuestionName, Q.QuestionType, Q.DifficultyRating
-            FROM tbl_Question Q
-            WHERE Q.TopicID = %s AND Q.DifficultyRating = %s
+            SELECT Q.id, Q.questionname, Q.questiontype, Q.difficultyrating
+            FROM tbl_question Q
+            WHERE Q.topicid = %s AND Q.difficultyrating = %s
             ORDER BY RANDOM() LIMIT 1;
         """
         cursor.execute(query, (topic_id, difficulty_level))
@@ -1223,9 +1223,9 @@ def get_quiz_question(user_id, topic_id, difficulty_level):
 
             if not question:
                 query_any = """
-                    SELECT Q.ID, Q.QuestionName, Q.QuestionType, Q.DifficultyRating
-                    FROM tbl_Question Q
-                    WHERE Q.TopicID = %s
+                    SELECT Q.id, Q.questionname, Q.questiontype, Q.difficultyrating
+                    FROM tbl_question Q
+                    WHERE Q.topicid = %s
                     ORDER BY RANDOM() LIMIT 1;
                 """
                 cursor.execute(query_any, (topic_id,))
@@ -1234,40 +1234,40 @@ def get_quiz_question(user_id, topic_id, difficulty_level):
         if not question:
             return jsonify({"status": "error", "message": "No questions found for this topic."}), 404
 
-        question_id = question.get('id') or question.get('ID')
-        question_type = question.get('questiontype') or question.get('QuestionType')
+        question_id = question.get('id') or question.get('id')
+        question_type = question.get('questiontype') or question.get('questiontype')
 
         answers = []
         steps = []
 
         if question_type == 'MultipleChoice':
-            cursor.execute("SELECT AnswerName, IsCorrect FROM tbl_Answer WHERE QuestionID = %s", (question_id,))
+            cursor.execute("SELECT answername, iscorrect FROM tbl_answer WHERE questionid = %s", (question_id,))
             answers = cursor.fetchall()
         elif question_type == 'OpenEnded':
-            cursor.execute("SELECT AnswerName, IsCorrect FROM tbl_Answer WHERE QuestionID = %s AND IsCorrect = TRUE", (question_id,))
+            cursor.execute("SELECT answername, iscorrect FROM tbl_answer WHERE questionid = %s AND iscorrect = TRUE", (question_id,))
             correct_answer_row = cursor.fetchone()
             if correct_answer_row:
                 answers = [
                     {
-                        "AnswerName": correct_answer_row.get('answername')
-                        or correct_answer_row.get('AnswerName'),
-                        "IsCorrect": True,
+                        "answername": correct_answer_row.get('answername')
+                        or correct_answer_row.get('answername'),
+                        "iscorrect": True,
                     }
                 ]
 
-        cursor.execute("SELECT StepName FROM tbl_Step WHERE QuestionID = %s ORDER BY SequenceNo", (question_id,))
+        cursor.execute("SELECT stepname FROM tbl_step WHERE questionid = %s ORDER BY sequenceno", (question_id,))
         steps = [
-            s.get('stepname') or s.get('StepName')
+            s.get('stepname') or s.get('stepname')
             for s in cursor.fetchall()
         ]
 
         response_data = {
             "status": "success",
             "question": {
-                "id": question.get('id') or question.get('ID'),
-                "text": question.get('questionname') or question.get('QuestionName'),
-                "type": question.get('questiontype') or question.get('QuestionType'),
-                "difficulty": question.get('difficultyrating') or question.get('DifficultyRating'),
+                "id": question.get('id') or question.get('id'),
+                "text": question.get('questionname') or question.get('questionname'),
+                "type": question.get('questiontype') or question.get('questiontype'),
+                "difficulty": question.get('difficultyrating') or question.get('difficultyrating'),
                 "answers": answers,
                 "steps": steps
             }
@@ -1305,7 +1305,7 @@ def flag_item():
         cursor = conn.cursor()
 
         insert_query = """
-            INSERT INTO tbl_FlagReport (UserID, FlaggedItemID, ItemType, Reason, Status)
+            INSERT INTO tbl_flagreport (userid, flaggeditemid, itemtype, reason, status)
             VALUES (%s, %s, %s, %s, 'Pending');
         """
         cursor.execute(insert_query, (user_id, flagged_item_id, item_type, reason))
@@ -1330,26 +1330,26 @@ def get_flagged_items():
 
         query = """
             SELECT
-                fr.ID AS FlagID,
-                fr.UserID,
-                u.Username AS ReporterUsername,
-                fr.FlaggedItemID,
-                fr.ItemType,
+                fr.id AS FlagID,
+                fr.userid,
+                u.username AS ReporterUsername,
+                fr.flaggeditemid,
+                fr.itemtype,
                 CASE
-                    WHEN fr.ItemType = 'Question' THEN q.QuestionName
-                    WHEN fr.ItemType = 'Story' THEN t.TopicName
+                    WHEN fr.itemtype = 'Question' THEN q.questionname
+                    WHEN fr.itemtype = 'Story' THEN t.TopicName
                     ELSE 'N/A'
                 END AS ItemName,
-                fr.Reason,
-                fr.Status,
+                fr.reason,
+                fr.status,
                 fr.ReportedOn,
                 fr.ResolvedOn,
-                ru.Username AS ResolvedByUsername
-            FROM tbl_FlagReport fr
-            JOIN tbl_User u ON fr.UserID = u.ID
-            LEFT JOIN tbl_Question q ON fr.ItemType = 'Question' AND fr.FlaggedItemID = q.ID
-            LEFT JOIN tbl_Topic t ON fr.ItemType = 'Story' AND fr.FlaggedItemID = t.ID
-            LEFT JOIN tbl_User ru ON fr.ResolvedBy = ru.ID
+                ru.username AS ResolvedByUsername
+            FROM tbl_flagreport fr
+            JOIN tbl_user u ON fr.userid = u.id
+            LEFT JOIN tbl_question q ON fr.itemtype = 'Question' AND fr.flaggeditemid = q.id
+            LEFT JOIN tbl_topic t ON fr.itemtype = 'Story' AND fr.flaggeditemid = t.id
+            LEFT JOIN tbl_user ru ON fr.ResolvedBy = ru.id
             ORDER BY fr.ReportedOn DESC;
         """
         cursor.execute(query)
@@ -1373,7 +1373,7 @@ def update_flag_status(flag_id):
     admin_id = data.get('adminId')
 
     if not all([new_status, admin_id]):
-        return jsonify({"status": "error", "message": "Missing status or admin ID."}), 400
+        return jsonify({"status": "error", "message": "Missing status or admin id."}), 400
 
     if new_status not in ['Pending', 'Reviewed', 'Dismissed']:
         return jsonify({"status": "error", "message": "Invalid status. Must be 'Pending', 'Reviewed', or 'Dismissed'."}), 400
@@ -1384,9 +1384,9 @@ def update_flag_status(flag_id):
         cursor = conn.cursor()
 
         update_query = """
-            UPDATE tbl_FlagReport
-            SET Status = %s, ResolvedOn = NOW(), ResolvedBy = %s
-            WHERE ID = %s;
+            UPDATE tbl_flagreport
+            SET status = %s, ResolvedOn = NOW(), ResolvedBy = %s
+            WHERE id = %s;
         """
         cursor.execute(update_query, (new_status, admin_id, flag_id))
         conn.commit()
@@ -1396,7 +1396,7 @@ def update_flag_status(flag_id):
 
         return jsonify({"status": "success", "message": f"Flag {flag_id} status updated to {new_status}."}), 200
     except Exception as e:
-        print(f"Update Flag Status API Error: {e}")
+        print(f"Update Flag status API Error: {e}")
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error updating flag status."}), 500
     finally:
@@ -1422,7 +1422,7 @@ def record_question_attempt():
         conn = get_db_connection()
         cursor = conn.cursor()
         insert_query = """
-            INSERT INTO tbl_QuestionAttempt (UserID, QuestionID, UserAnswer, IsCorrect, DifficultyAtAttempt)
+            INSERT INTO tbl_questionattempt (userid, questionid, useranswer, iscorrect, difficultyatattempt)
             VALUES (%s, %s, %s, %s, %s);
         """
         cursor.execute(insert_query, (user_id, question_id, user_answer, is_correct, difficulty_at_attempt))
@@ -1446,26 +1446,26 @@ def get_all_question_attempts():
 
         query = """
             SELECT
-                qa.ID AS "AttemptID",
-                qa.AttemptTime AS "AttemptTime",
-                qa.UserAnswer AS "UserAnswer",
-                qa.IsCorrect AS "IsCorrect",
-                qa.DifficultyAtAttempt AS "DifficultyAtAttempt",
-                u.Username AS "AttemptingUsername",
-                q.QuestionName AS "QuestionText",
+                qa.id AS "AttemptID",
+                qa.attempttime AS "attempttime",
+                qa.useranswer AS "useranswer",
+                qa.iscorrect AS "iscorrect",
+                qa.difficultyatattempt AS "difficultyatattempt",
+                u.username AS "AttemptingUsername",
+                q.questionname AS "QuestionText",
                 t.TopicName AS "TopicName",
                 unit.TopicName AS "UnitName",
                 s.SubjectName AS "CurriculumType",
-                string_agg(TRIM(a.AnswerName), ',' ) FILTER (WHERE a.IsCorrect = TRUE) AS "CorrectAnswer"
-            FROM tbl_QuestionAttempt qa
-            JOIN tbl_User u ON qa.UserID = u.ID
-            JOIN tbl_Question q ON qa.QuestionID = q.ID
-            JOIN tbl_Topic t ON q.TopicID = t.ID
-            JOIN tbl_Topic unit ON t.ParentTopicID = unit.ID
-            JOIN tbl_Subject s ON unit.SubjectID = s.ID
-            LEFT JOIN tbl_Answer a ON q.ID = a.QuestionID AND a.IsCorrect = TRUE
-            GROUP BY qa.ID, qa.AttemptTime, qa.UserAnswer, qa.IsCorrect, qa.DifficultyAtAttempt, u.Username, q.QuestionName, t.TopicName, unit.TopicName, s.SubjectName
-            ORDER BY qa.AttemptTime DESC;
+                string_agg(TRIM(a.answername), ',' ) FILTER (WHERE a.iscorrect = TRUE) AS "CorrectAnswer"
+            FROM tbl_questionattempt qa
+            JOIN tbl_user u ON qa.userid = u.id
+            JOIN tbl_question q ON qa.questionid = q.id
+            JOIN tbl_topic t ON q.topicid = t.id
+            JOIN tbl_topic unit ON t.parenttopicid = unit.id
+            JOIN tbl_subject s ON unit.subjectid = s.id
+            LEFT JOIN tbl_answer a ON q.id = a.questionid AND a.iscorrect = TRUE
+            GROUP BY qa.id, qa.attempttime, qa.useranswer, qa.iscorrect, qa.difficultyatattempt, u.username, q.questionname, t.TopicName, unit.TopicName, s.SubjectName
+            ORDER BY qa.attempttime DESC;
         """
         cursor.execute(query)
         attempts = cursor.fetchall()
@@ -1490,21 +1490,21 @@ def get_open_flags():
 
         query = """
             SELECT
-                fr.ID AS FlagID,
-                fr.UserID,
-                fr.FlaggedItemID,
-                fr.ItemType,
+                fr.id AS FlagID,
+                fr.userid,
+                fr.flaggeditemid,
+                fr.itemtype,
                 CASE
-                    WHEN fr.ItemType = 'Question' THEN q.QuestionName
-                    WHEN fr.ItemType = 'Story' THEN t.TopicName
+                    WHEN fr.itemtype = 'Question' THEN q.questionname
+                    WHEN fr.itemtype = 'Story' THEN t.TopicName
                     ELSE 'N/A'
                 END AS ItemName,
-                fr.Reason,
+                fr.reason,
                 fr.ReportedOn
-            FROM tbl_FlagReport fr
-            LEFT JOIN tbl_Question q ON fr.ItemType = 'Question' AND fr.FlaggedItemID = q.ID
-            LEFT JOIN tbl_Topic t ON fr.ItemType = 'Story' AND fr.FlaggedItemID = t.ID
-            WHERE fr.Status = 'Pending'
+            FROM tbl_flagreport fr
+            LEFT JOIN tbl_question q ON fr.itemtype = 'Question' AND fr.flaggeditemid = q.id
+            LEFT JOIN tbl_topic t ON fr.itemtype = 'Story' AND fr.flaggeditemid = t.id
+            WHERE fr.status = 'Pending'
             ORDER BY fr.ReportedOn DESC;
         """
         cursor.execute(query)
@@ -1535,7 +1535,7 @@ def flag_page_error():
         conn = get_db_connection()
         cursor = conn.cursor()
         insert_query = """
-            INSERT INTO tbl_PageErrorReport (UserID, PagePath, Description)
+            INSERT INTO tbl_pageerrorreport (userid, pagepath, description)
             VALUES (%s, %s, %s);
         """
         cursor.execute(insert_query, (user_id, page_path, description))

@@ -55,12 +55,12 @@ def signup_user():
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
-        cursor.execute("SELECT ID FROM tbl_User WHERE Username = %s OR Email = %s", (username, email))
+        cursor.execute("SELECT id FROM tbl_user WHERE username = %s OR email = %s", (username, email))
         if cursor.fetchone():
             return jsonify({"status": "error", "message": "Username or email already exists"}), 409
         hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
         cursor.execute(
-            "INSERT INTO tbl_User (Username, Email, PasswordHash, UserType) VALUES (%s, %s, %s, 'Parent')",
+            "INSERT INTO tbl_user (username, email, passwordhash, usertype) VALUES (%s, %s, %s, 'Parent')",
             (username, email, hashed_password)
         )
         conn.commit()
@@ -89,7 +89,7 @@ def signin_user():
         conn = get_db_connection()
         cursor = conn.cursor()
         cursor.execute(
-            "SELECT ID, Username, PasswordHash, UserType FROM tbl_User WHERE Username = %s",
+            "SELECT id, username, passwordhash, usertype FROM tbl_user WHERE username = %s",
             (username,)
         )
         user = cursor.fetchone()
@@ -124,7 +124,7 @@ def admin_signin():
         conn = get_db_connection()
         cursor = conn.cursor()
         cursor.execute(
-            "SELECT ID, Username, PasswordHash, UserType FROM tbl_User WHERE Username = %s",
+            "SELECT id, username, passwordhash, usertype FROM tbl_user WHERE username = %s",
             (username,)
         )
         user = cursor.fetchone()
@@ -157,11 +157,11 @@ def forgot_password():
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
-        cursor.execute("SELECT ID FROM tbl_User WHERE Email = %s", (email,))
+        cursor.execute("SELECT id FROM tbl_user WHERE email = %s", (email,))
         user = cursor.fetchone()
         if user:
             token, expiry = secrets.token_hex(32), datetime.now() + timedelta(hours=1)
-            cursor.execute("UPDATE tbl_User SET ResetToken = %s, ResetTokenExpiry = %s WHERE ID = %s", (token, expiry, user[0]))
+            cursor.execute("UPDATE tbl_user SET resettoken = %s, resettokenexpiry = %s WHERE id = %s", (token, expiry, user[0]))
             conn.commit()
             reset_link = f"{FRONTEND_BASE_URL}/reset-password.html?token={token}"
             email_content = RESET_PASSWORD_EMAIL_TEMPLATE_HTML.replace('{{RESET_LINK}}', reset_link)
@@ -192,13 +192,13 @@ def reset_password():
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
-        cursor.execute("SELECT ID FROM tbl_User WHERE ResetToken = %s AND ResetTokenExpiry > NOW()", (token,))
+        cursor.execute("SELECT id FROM tbl_user WHERE resettoken = %s AND resettokenexpiry > NOW()", (token,))
         user = cursor.fetchone()
         if not user:
             return jsonify({"status": "error", "message": "Invalid or expired reset token."}), 400
         hashed_password = bcrypt.generate_password_hash(new_password).decode('utf-8')
         cursor.execute(
-            "UPDATE tbl_User SET PasswordHash = %s, ResetToken = NULL, ResetTokenExpiry = NULL WHERE ID = %s",
+            "UPDATE tbl_user SET passwordhash = %s, resettoken = NULL, resettokenexpiry = NULL WHERE id = %s",
             (hashed_password, user[0])
         )
         conn.commit()

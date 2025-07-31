@@ -25,7 +25,7 @@ try:
         logger.info("Connected to database.")
 
         # Check if admin already exists
-        cursor.execute("SELECT ID FROM tbl_User WHERE Username = %s OR Email = %s", (admin_username, admin_email))
+        cursor.execute("SELECT id FROM tbl_user WHERE username = %s OR email = %s", (admin_username, admin_email))
         if cursor.fetchone():
             logger.error("An admin with username '%s' or email '%s' already exists.", admin_username, admin_email)
             sys.exit(1)
@@ -36,7 +36,7 @@ try:
 
         # Insert the new admin user
         cursor.execute(
-            "INSERT INTO tbl_User (Username, Email, PasswordHash, UserType) VALUES (%s, %s, %s, 'Admin')",
+            "INSERT INTO tbl_user (username, email, passwordhash, usertype) VALUES (%s, %s, %s, 'Admin')",
             (admin_username, admin_email, hashed_password)
         )
         logger.info("SUCCESS! Admin user '%s' created.", admin_username)
