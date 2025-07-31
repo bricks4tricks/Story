@@ -1829,6 +1829,10 @@ def serve_reset_password():
 def serve_signup():
     return render_template('signup.html')
 
+@app.route('/choose-plan.html')
+def serve_choose_plan():
+    return render_template('choose-plan.html')
+
 @app.route('/story-player.html')
 def serve_story_player():
     return render_template('story-player.html')
