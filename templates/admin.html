@@ -600,16 +600,9 @@ const createCascadingSelectors = (prefix) => {
 
             const initializeTopicData = async () => {
                 try {
-                    const response = await fetch(`${window.location.origin}/api/admin/topics-list`);
+                    const response = await fetch(`${window.location.origin}/api/admin/curriculum-hierarchy`);
                     if (!response.ok) throw new Error('Failed to fetch topics');
-                    const topics = await response.json();
-                    hierarchicalTopics = {};
-                    topics.forEach(topic => {
-                        const { CurriculumType, UnitName, TopicName, ID } = topic;
-                        if (!hierarchicalTopics[CurriculumType]) hierarchicalTopics[CurriculumType] = {};
-                        if (!hierarchicalTopics[CurriculumType][UnitName]) hierarchicalTopics[CurriculumType][UnitName] = [];
-                        hierarchicalTopics[CurriculumType][UnitName].push({ id: ID, name: TopicName });
-                    });
+                    hierarchicalTopics = await response.json();
                 } catch (error) {
                     console.error("Fetch topics error:", error);
                 }
