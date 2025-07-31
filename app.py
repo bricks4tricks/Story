@@ -1266,6 +1266,48 @@ def admin_get_curriculums():
             release_db_connection(conn)
 
 
+@app.route('/api/admin/curriculum-hierarchy', methods=['GET'])
+def admin_curriculum_hierarchy():
+    """Return units and topics grouped under each curriculum."""
+    conn = None
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        query = """
+            SELECT s.subjectname AS curriculum,
+                   unit.topicname AS unitname,
+                   t.topicname AS topicname,
+                   t.id AS topicid
+            FROM tbl_topic t
+            JOIN tbl_topic unit ON t.parenttopicid = unit.id
+            JOIN tbl_subject s ON unit.subjectid = s.id
+            ORDER BY s.subjectname, unit.topicname, t.topicname;
+        """
+        cursor.execute(query)
+        rows = cursor.fetchall()
+
+        hierarchy = {}
+        for row in rows:
+            cur = row['curriculum']
+            unit = row['unitname']
+            topic = row['topicname']
+            tid = row['topicid']
+            if cur not in hierarchy:
+                hierarchy[cur] = {}
+            if unit not in hierarchy[cur]:
+                hierarchy[cur][unit] = []
+            hierarchy[cur][unit].append({'id': tid, 'name': topic})
+
+        return jsonify(hierarchy)
+    except Exception as e:
+        print(f"Admin curriculum hierarchy error: {e}")
+        traceback.print_exc()
+        return jsonify({"status": "error", "message": "Internal error"}), 500
+    finally:
+        if conn:
+            release_db_connection(conn)
+
+
 @app.route('/api/admin/update-curriculum/<int:subject_id>', methods=['PUT', 'OPTIONS'])
 def update_curriculum(subject_id):
     if request.method == 'OPTIONS':
