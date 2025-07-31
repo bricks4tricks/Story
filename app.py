@@ -1178,6 +1178,11 @@ def get_curriculums():
 @app.route('/get_units/<curriculum>', methods=['GET'])
 def get_units(curriculum):
     """Return distinct unit names for the given curriculum."""
+    # Validate curriculum using the list returned by get_curriculums
+    valid_curriculums = get_curriculums().get_json()
+    if curriculum not in valid_curriculums:
+        return jsonify({"status": "error", "message": "Invalid curriculum."}), 400
+
     conn = None
     try:
         conn = get_db_connection()
