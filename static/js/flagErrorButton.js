@@ -4,8 +4,9 @@
     btn.id = 'flag-error-btn';
     btn.textContent = 'Flag Error';
     btn.className = 'fixed bottom-4 right-4 bg-red-600 text-white px-4 py-2 rounded-full shadow-lg hover:bg-red-500 z-50';
-    btn.addEventListener('click', function() {
-      const description = prompt('Describe the error you found on this page:');
+    btn.addEventListener('click', async function() {
+      if (typeof openFlagModal !== 'function') return;
+      const description = await openFlagModal();
       if (description === null) return;
       fetch('/api/flag-page-error', {
         method: 'POST',
