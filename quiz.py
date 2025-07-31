@@ -17,8 +17,14 @@ def get_quiz_question(user_id, topic_id, difficulty_level):
             WHERE Q.topicid = %s AND Q.difficultyrating = %s
             ORDER BY RANDOM() LIMIT 1;
         """
-        cursor.execute(query, (topic_id, difficulty_level))
-        question = cursor.fetchone()
+        question = None
+        # Try progressively easier difficulties until a question is found
+        for diff in range(difficulty_level, 0, -1):
+            cursor.execute(query, (topic_id, diff))
+            question = cursor.fetchone()
+            if question:
+                difficulty_level = diff
+                break
         if not question:
             return jsonify({"status": "error", "message": "No questions found for this topic."}), 404
         question_id = question[0]
