@@ -44,7 +44,8 @@ def test_signup_success(client):
     payload = {
         "username": "testuser",
         "email": "test@example.com",
-        "password": "ValidPass123!"
+        "password": "ValidPass123!",
+        "plan": "Monthly"
     }
     with patch('app.get_db_connection', return_value=DummyConnection()):
         response = client.post('/api/signup', json=payload)
@@ -58,7 +59,8 @@ def test_signup_invalid_email(client):
     payload = {
         "username": "bademailuser",
         "email": "invalidemail@domain",
-        "password": "ValidPass123!"
+        "password": "ValidPass123!",
+        "plan": "Monthly"
     }
     with patch('app.get_db_connection', return_value=DummyConnection()):
         response = client.post('/api/signup', json=payload)

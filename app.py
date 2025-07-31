@@ -981,6 +981,19 @@ def create_student():
     try:
         conn = get_db_connection()
         cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        # Determine plan limit for the parent
+        cursor.execute("SELECT plan FROM tbl_user WHERE id = %s", (parent_id,))
+        plan_row = cursor.fetchone()
+        if not plan_row:
+            return jsonify({"status": "error", "message": "Parent not found"}), 404
+        plan = plan_row.get('plan', 'Monthly')
+        plan_limits = {'Monthly': 1, 'Annual': 3, 'Family': 5}
+        limit = plan_limits.get(plan, 1)
+        cursor.execute("SELECT COUNT(*) AS student_count FROM tbl_user WHERE parentuserid = %s", (parent_id,))
+        current_count = cursor.fetchone()['student_count']
+        if current_count >= limit:
+            return jsonify({"status": "error", "message": "Student limit reached for your plan"}), 403
+
         cursor.execute("SELECT id FROM tbl_user WHERE username = %s", (username,))
         if cursor.fetchone():
             return jsonify({"status": "error", "message": "This username is already taken"}), 409
