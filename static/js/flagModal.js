@@ -6,6 +6,12 @@
   const submitBtn = modal.querySelector('#submit-flag-btn');
   const closeBtn = modal.querySelector('#close-flag-modal');
 
+  // Container for open flags list
+  const openFlagsDiv = document.createElement('div');
+  openFlagsDiv.id = 'open-flags-list';
+  openFlagsDiv.className = 'max-h-56 overflow-y-auto text-sm text-gray-200 mb-4';
+  reasonInput.parentElement.insertBefore(openFlagsDiv, reasonInput);
+
   let resolver = null;
 
   function showModal() {
@@ -22,6 +28,27 @@
     setTimeout(() => modal.classList.add('modal-hidden'), 300);
   }
 
+  async function loadOpenFlags() {
+    openFlagsDiv.innerHTML = '<p class="text-gray-400">Loading open reports...</p>';
+    try {
+      const res = await fetch('/api/open-flags');
+      if (!res.ok) throw new Error('Failed to fetch');
+      const flags = await res.json();
+      if (flags.length === 0) {
+        openFlagsDiv.innerHTML = '<p class="text-gray-400">No open reports.</p>';
+        return;
+      }
+      openFlagsDiv.innerHTML = flags.map(f =>
+        `<div class="border-b border-slate-700 py-2">
+           <p class="font-semibold">${f.ItemType}: ${f.ItemName || ('ID: ' + f.FlaggedItemID)}</p>
+           <p class="text-xs text-gray-400">${f.Reason}</p>
+         </div>`
+      ).join('');
+    } catch (err) {
+      openFlagsDiv.innerHTML = '<p class="text-red-400">Error loading open reports.</p>';
+    }
+  }
+
   function finish(value) {
     hideModal();
     if (resolver) {
@@ -32,6 +59,7 @@
   }
 
   window.openFlagModal = function() {
+    loadOpenFlags();
     showModal();
     return new Promise(resolve => {
       resolver = resolve;
