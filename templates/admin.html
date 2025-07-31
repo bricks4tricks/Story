@@ -65,7 +65,7 @@
             </nav>
         </div>
 
-        <div id="admin-message" class="mb-4 h-6"></div>
+        <div id="admin-message" class="text-center text-lg font-bold mb-4 h-6"></div>
 
         <div id="users-section">
             <h2 class="text-3xl font-bold text-white mb-6">All Users</h2>
@@ -461,16 +461,16 @@ const createCascadingSelectors = (prefix) => {
                     adminMessageDiv.textContent = result.message;
 
                     if (response.ok) {
-                        adminMessageDiv.className = 'text-center text-green-400 mb-4 h-6';
+                        adminMessageDiv.className = 'text-center text-green-400 font-bold text-lg mb-4 h-6';
                         if (window.forceRefreshUsers) window.forceRefreshUsers();
                     } else {
-                        adminMessageDiv.className = 'text-center text-red-400 mb-4 h-6';
+                        adminMessageDiv.className = 'text-center text-red-400 font-bold text-lg mb-4 h-6';
                     }
 
                 } catch (error) {
                     console.error("Delete user fetch error:", error);
                     adminMessageDiv.textContent = 'A connection error occurred.';
-                    adminMessageDiv.className = 'text-center text-red-400 mb-4 h-6';
+                    adminMessageDiv.className = 'text-center text-red-400 font-bold text-lg mb-4 h-6';
                 }
 
                 setTimeout(() => { adminMessageDiv.textContent = ''; }, 5000);
@@ -753,7 +753,7 @@ const createCascadingSelectors = (prefix) => {
                             });
                             const result = await response.json();
                             adminMessageDiv.textContent = result.message;
-                            adminMessageDiv.className = response.ok ? 'text-center text-green-400 mb-4 h-6' : 'text-center text-red-400 mb-4 h-6';
+                            adminMessageDiv.className = response.ok ? 'text-center text-green-400 font-bold text-lg mb-4 h-6' : 'text-center text-red-400 font-bold text-lg mb-4 h-6';
                             if (response.ok) {
                                 fetchAndDisplayQuestions();
                             }
@@ -761,7 +761,7 @@ const createCascadingSelectors = (prefix) => {
                         } catch (error) {
                             console.error("Delete question fetch error:", error);
                             adminMessageDiv.textContent = 'A connection error occurred during deletion.';
-                            adminMessageDiv.className = 'text-center text-red-400 mb-4 h-6';
+                            adminMessageDiv.className = 'text-center text-red-400 font-bold text-lg mb-4 h-6';
                             setTimeout(() => { adminMessageDiv.textContent = ''; }, 5000);
                         }
                     }
@@ -1035,7 +1035,7 @@ const createCascadingSelectors = (prefix) => {
                             });
                             const result = await response.json();
                             adminMessageDiv.textContent = result.message;
-                            adminMessageDiv.className = response.ok ? 'text-center text-green-400 mb-4 h-6' : 'text-center text-red-400 mb-4 h-6';
+                            adminMessageDiv.className = response.ok ? 'text-center text-green-400 font-bold text-lg mb-4 h-6' : 'text-center text-red-400 font-bold text-lg mb-4 h-6';
                             if (response.ok) {
                                 fetchAndDisplayStories();
                             }
@@ -1043,7 +1043,7 @@ const createCascadingSelectors = (prefix) => {
                         } catch (error) {
                             console.error("Delete story fetch error:", error);
                             adminMessageDiv.textContent = 'A connection error occurred during story deletion.';
-                            adminMessageDiv.className = 'text-center text-red-400 mb-4 h-6';
+                            adminMessageDiv.className = 'text-center text-red-400 font-bold text-lg mb-4 h-6';
                             setTimeout(() => { adminMessageDiv.textContent = ''; }, 5000);
                         }
                     }
@@ -1463,7 +1463,7 @@ const createCascadingSelectors = (prefix) => {
                             <div class="flex-grow pr-4 mb-2 sm:mb-0">
                                 <p class="font-bold text-white">${flag.ItemType} Flag: <span class="text-amber-300">${flag.ItemName || 'ID: ' + flag.FlaggedItemID}</span></p>
                                 <p class="text-sm text-gray-300">Reported by: ${flag.ReporterUsername || 'Anonymous'} on ${new Date(flag.ReportedOn).toLocaleString()}</p>
-                                <p class="text-sm text-gray-400">Reason: ${flag.Reason || 'No reason provided.'}</p>
+                                <p class="text-red-300 font-bold text-lg text-center my-2">${flag.Reason || 'No reason provided.'}</p>
                                 <p class="text-sm text-gray-400">Status: <span class="px-2 py-0.5 rounded-full text-xs font-semibold status-${flag.Status}">${flag.Status}</span></p>
                                 ${flag.ResolvedOn ? `<p class="text-xs text-gray-500 mt-1">Resolved by: ${flag.ResolvedByUsername || 'N/A'} on ${new Date(flag.ResolvedOn).toLocaleString()}</p>` : ''}
                             </div>
@@ -1495,7 +1495,7 @@ const createCascadingSelectors = (prefix) => {
                             });
                             const result = await response.json();
                             adminMessageDiv.textContent = result.message;
-                            adminMessageDiv.className = response.ok ? 'text-center text-green-400 mb-4 h-6' : 'text-center text-red-400 mb-4 h-6';
+                            adminMessageDiv.className = response.ok ? 'text-center text-green-400 font-bold text-lg mb-4 h-6' : 'text-center text-red-400 font-bold text-lg mb-4 h-6';
                             if (response.ok) {
                                 fetchAndDisplayFlaggedItems();
                             }
@@ -1503,7 +1503,7 @@ const createCascadingSelectors = (prefix) => {
                         } catch (error) {
                             console.error("Update flag status error:", error);
                             adminMessageDiv.textContent = 'A connection error occurred during status update.';
-                            adminMessageDiv.className = 'text-center text-red-400 mb-4 h-6';
+                            adminMessageDiv.className = 'text-center text-red-400 font-bold text-lg mb-4 h-6';
                             setTimeout(() => { adminMessageDiv.textContent = ''; }, 5000);
                         }
                     }
@@ -1514,7 +1514,7 @@ const createCascadingSelectors = (prefix) => {
                             const response = await fetch(`/api/admin/delete-flag/${flagId}`, { method: 'DELETE' });
                             const result = await response.json();
                             adminMessageDiv.textContent = result.message;
-                            adminMessageDiv.className = response.ok ? 'text-center text-green-400 mb-4 h-6' : 'text-center text-red-400 mb-4 h-6';
+                            adminMessageDiv.className = response.ok ? 'text-center text-green-400 font-bold text-lg mb-4 h-6' : 'text-center text-red-400 font-bold text-lg mb-4 h-6';
                             if (response.ok) {
                                 fetchAndDisplayFlaggedItems();
                             }
@@ -1522,7 +1522,7 @@ const createCascadingSelectors = (prefix) => {
                         } catch (error) {
                             console.error('Delete flag error:', error);
                             adminMessageDiv.textContent = 'A connection error occurred during deletion.';
-                            adminMessageDiv.className = 'text-center text-red-400 mb-4 h-6';
+                            adminMessageDiv.className = 'text-center text-red-400 font-bold text-lg mb-4 h-6';
                             setTimeout(() => { adminMessageDiv.textContent = ''; }, 5000);
                         }
                     }
