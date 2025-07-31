@@ -846,6 +846,95 @@ def update_user_progress():
         if conn:
             release_db_connection(conn)
 
+
+@app.route('/api/quiz/result', methods=['POST', 'OPTIONS'])
+def record_quiz_result():
+    """Record a user's quiz score."""
+    if request.method == 'OPTIONS':
+        return jsonify(success=True)
+
+    data = request.get_json()
+    user_id = data.get('userId')
+    topic_id = data.get('topicId')
+    score = data.get('score')
+
+    if not all([user_id, topic_id, score]):
+        return jsonify({"status": "error", "message": "Missing required fields."}), 400
+
+    conn = None
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute(
+            "INSERT INTO tbl_quizscore (userid, topicid, score, takenon) VALUES (%s, %s, %s, NOW())",
+            (user_id, topic_id, score),
+        )
+        conn.commit()
+        return jsonify({"status": "success", "message": "Score recorded."}), 201
+    except Exception as e:
+        print(f"Record Quiz Result API Error: {e}")
+        traceback.print_exc()
+        return jsonify({"status": "error", "message": "Internal error"}), 500
+    finally:
+        if conn:
+            release_db_connection(conn)
+
+
+@app.route('/api/dashboard/<int:user_id>', methods=['GET'])
+def get_dashboard(user_id):
+    """Return progress metrics for the user."""
+    conn = None
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+
+        cursor.execute(
+            """
+            SELECT up.topicid AS topic_id, t.TopicName
+            FROM tbl_userprogress up
+            JOIN tbl_topic t ON up.topicid = t.id
+            WHERE up.userid = %s AND up.status = 'completed'
+            """,
+            (user_id,),
+        )
+        completed = cursor.fetchall()
+
+        cursor.execute(
+            """
+            SELECT qs.topicid AS topic_id, t.TopicName, qs.score, qs.takenon
+            FROM tbl_quizscore qs
+            JOIN tbl_topic t ON qs.topicid = t.id
+            WHERE qs.userid = %s
+            ORDER BY qs.takenon DESC
+            """,
+            (user_id,),
+        )
+        quiz_scores = cursor.fetchall()
+
+        cursor.execute(
+            """
+            SELECT id, title, due_date
+            FROM tbl_assignment
+            WHERE userid = %s AND due_date >= NOW()
+            ORDER BY due_date
+            """,
+            (user_id,),
+        )
+        assignments = cursor.fetchall()
+
+        return jsonify({
+            "completedModules": completed,
+            "quizScores": quiz_scores,
+            "upcomingAssignments": assignments,
+        })
+    except Exception as e:
+        print(f"Get Dashboard API Error: {e}")
+        traceback.print_exc()
+        return jsonify({"status": "error", "message": "Internal error"}), 500
+    finally:
+        if conn:
+            release_db_connection(conn)
+
 @app.route('/api/create-student', methods=['POST', 'OPTIONS'])
 def create_student():
     if request.method == 'OPTIONS': return jsonify(success=True)
@@ -1631,6 +1720,10 @@ def serve_signup():
 @app.route('/story-player.html')
 def serve_story_player():
     return render_template('story-player.html')
+
+@app.route('/progress-dashboard.html')
+def serve_progress_dashboard():
+    return render_template('progress-dashboard.html')
 
 @app.route('/favicon.ico')
 def favicon():

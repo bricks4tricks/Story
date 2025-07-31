@@ -47,3 +47,9 @@ All Python scripts interact with the database through parameterized queries
 using the helpers in `db_utils.py`. This ensures compatibility with PostgreSQL
 and guards against SQL injection. The HTML files issue requests to the API
 endpoints rather than executing SQL directly.
+
+## Progress Dashboard
+
+Authenticated users can visit `/progress-dashboard.html` to review quiz scores,
+completed story modules, and upcoming assignments. Data for the dashboard is
+provided by the `/api/dashboard/<user_id>` endpoint.
