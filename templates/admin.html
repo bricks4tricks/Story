@@ -1470,6 +1470,7 @@ const createCascadingSelectors = (prefix) => {
                             <div class="flex space-x-2 flex-shrink-0">
                                 <button data-flag-id="${flag.FlagID}" data-status="Reviewed" class="resolve-flag-btn bg-green-600 text-white font-semibold py-1 px-3 text-sm rounded-full hover:bg-green-500 ${flag.Status !== 'Pending' ? 'opacity-50 cursor-not-allowed' : ''}" ${flag.Status !== 'Pending' ? 'disabled' : ''}>Mark Reviewed</button>
                                 <button data-flag-id="${flag.FlagID}" data-status="Dismissed" class="resolve-flag-btn bg-gray-600 text-white font-semibold py-1 px-3 text-sm rounded-full hover:bg-gray-500 ${flag.Status !== 'Pending' ? 'opacity-50 cursor-not-allowed' : ''}" ${flag.Status !== 'Pending' ? 'disabled' : ''}>Dismiss</button>
+                                <button data-flag-id="${flag.FlagID}" data-status="Pending" class="resolve-flag-btn reopen-flag-btn bg-blue-600 text-white font-semibold py-1 px-3 text-sm rounded-full hover:bg-blue-500 ${flag.Status === 'Pending' ? 'hidden' : ''}">Reopen</button>
                                 <button data-flag-id="${flag.FlagID}" class="delete-flag-btn bg-red-600 text-white font-semibold py-1 px-3 text-sm rounded-full hover:bg-red-500">Delete</button>
                             </div>
                         `;
