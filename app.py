@@ -1115,9 +1115,14 @@ def cancel_subscription(user_id):
             CREATE TABLE IF NOT EXISTS tbl_subscription (
                 user_id INTEGER PRIMARY KEY REFERENCES tbl_user(id),
                 active BOOLEAN NOT NULL DEFAULT TRUE,
+                expires_on TIMESTAMP,
                 cancelled_on TIMESTAMP
             );
             """
+        )
+
+        cursor.execute(
+            "ALTER TABLE tbl_subscription ADD COLUMN IF NOT EXISTS expires_on TIMESTAMP"
         )
 
         # Ensure a row exists for the user
