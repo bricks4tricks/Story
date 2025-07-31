@@ -8,22 +8,31 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from app import app as flask_app
 
 class DummyCursor:
-    def __init__(self, question_row=None, answer_rows=None):
+    def __init__(self, question_row=None, answer_rows=None, questions_by_diff=None):
         self.question_row = question_row
         self.answer_rows = answer_rows or []
+        self.questions_by_diff = questions_by_diff
         self.last_query = None
+        self.last_params = None
+
     def execute(self, query, params=None):
         self.last_query = query
+        self.last_params = params
+
     def fetchone(self):
+        if self.questions_by_diff is not None and self.last_params:
+            diff = self.last_params[1]
+            return self.questions_by_diff.get(diff)
         return self.question_row
+
     def fetchall(self):
         return self.answer_rows
     def close(self):
         pass
 
 class DummyConnection:
-    def __init__(self, question_row=None, answer_rows=None):
-        self.cursor_obj = DummyCursor(question_row, answer_rows)
+    def __init__(self, question_row=None, answer_rows=None, questions_by_diff=None):
+        self.cursor_obj = DummyCursor(question_row, answer_rows, questions_by_diff)
     def cursor(self, dictionary=False, cursor_factory=None):
         return self.cursor_obj
     def commit(self):
@@ -83,3 +92,19 @@ def test_quiz_question_clamped_difficulty(client, input_diff, clamped):
     assert data['status'] == 'success'
     q = data['question']
     assert q['difficulty'] == clamped
+
+
+def test_quiz_question_fallback_to_easier(client):
+    questions = {
+        5: None,
+        4: None,
+        3: (7, "Easier question", "OpenEnded", 3)
+    }
+    conn = DummyConnection(questions_by_diff=questions)
+    with patch('quiz.get_db_connection', return_value=conn):
+        resp = client.get('/api/quiz/question/1/1/5')
+    assert resp.status_code == 200
+    data = resp.get_json()
+    q = data['question']
+    assert q['id'] == 7
+    assert q['difficulty'] == 3
