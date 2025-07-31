@@ -1076,6 +1076,60 @@ def delete_student_from_parent_portal(student_id):
             release_db_connection(conn)
 
 
+@app.route('/api/cancel-subscription/<int:user_id>', methods=['POST', 'OPTIONS'])
+def cancel_subscription(user_id):
+    """Mark a user's subscription as cancelled."""
+    if request.method == 'OPTIONS':
+        return jsonify(success=True)
+
+    conn = None
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        # Ensure the user exists before attempting cancellation
+        cursor.execute("SELECT id FROM tbl_user WHERE id = %s", (user_id,))
+        if not cursor.fetchone():
+            return jsonify({"status": "error", "message": "User not found"}), 404
+
+        # Create subscription table if it doesn't exist
+        cursor.execute(
+            """
+            CREATE TABLE IF NOT EXISTS tbl_subscription (
+                user_id INTEGER PRIMARY KEY REFERENCES tbl_user(id),
+                active BOOLEAN NOT NULL DEFAULT TRUE,
+                cancelled_on TIMESTAMP
+            );
+            """
+        )
+
+        # Ensure a row exists for the user
+        cursor.execute(
+            """
+            INSERT INTO tbl_subscription (user_id, active)
+            VALUES (%s, TRUE)
+            ON CONFLICT (user_id) DO NOTHING;
+            """,
+            (user_id,)
+        )
+
+        # Mark the subscription as cancelled
+        cursor.execute(
+            "UPDATE tbl_subscription SET active = FALSE, cancelled_on = NOW() WHERE user_id = %s",
+            (user_id,),
+        )
+        conn.commit()
+
+        return jsonify({"status": "success", "message": "Subscription cancelled."}), 200
+    except Exception as e:
+        print(f"Cancel Subscription API Error: {e}")
+        traceback.print_exc()
+        return jsonify({"status": "error", "message": "Internal error"}), 500
+    finally:
+        if conn:
+            release_db_connection(conn)
+
+
 @app.route('/get_curriculums', methods=['GET'])
 def get_curriculums():
     """Return a list of curriculum names from the database or a mock list."""
