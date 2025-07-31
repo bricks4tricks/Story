@@ -9,6 +9,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from extensions import bcrypt
 from utils import validate_password, validate_email
+from db_utils import ensure_plan_column
 
 auth_bp = Blueprint('auth', __name__, url_prefix='/api')
 
@@ -63,6 +64,7 @@ def signup_user():
     conn = None
     try:
         conn = get_db_connection()
+        ensure_plan_column(conn)
         cursor = conn.cursor()
         cursor.execute("SELECT id FROM tbl_user WHERE username = %s OR email = %s", (username, email))
         if cursor.fetchone():

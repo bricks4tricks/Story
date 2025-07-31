@@ -48,14 +48,14 @@ using the helpers in `db_utils.py`. This ensures compatibility with PostgreSQL
 and guards against SQL injection. The HTML files issue requests to the API
 endpoints rather than executing SQL directly.
 
-After pulling the latest code, run:
+After pulling the latest code, you can run:
 
 ```bash
 python add_plan_column.py
 ```
 
-This one-time script adds the new `plan` column to `tbl_user` if it doesn't
-already exist.
+The signup endpoint now automatically ensures the `plan` column exists, but the
+script is provided for manual use when needed.
 
 ## Progress Dashboard
 

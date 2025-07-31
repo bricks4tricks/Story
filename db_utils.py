@@ -137,3 +137,18 @@ def db_cursor(dictionary=False):
         finally:
             cur.close()
 
+
+def ensure_plan_column(conn):
+    """Ensure the ``plan`` column exists in ``tbl_user``."""
+    cur = conn.cursor()
+    try:
+        cur.execute(
+            "ALTER TABLE tbl_user ADD COLUMN IF NOT EXISTS plan VARCHAR(20) DEFAULT 'Monthly'"
+        )
+        conn.commit()
+    except Exception:
+        conn.rollback()
+        raise
+    finally:
+        cur.close()
+
