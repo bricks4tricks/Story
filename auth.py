@@ -8,7 +8,7 @@ from version_cache import update_users_version
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from extensions import bcrypt
-from utils import validate_password
+from utils import validate_password, validate_email
 
 auth_bp = Blueprint('auth', __name__, url_prefix='/api')
 
@@ -48,6 +48,9 @@ def signup_user():
     username, email, password = data.get('username'), data.get('email'), data.get('password')
     if not all([username, email, password]):
         return jsonify({"status": "error", "message": "Missing fields"}), 400
+    is_valid_email, email_msg = validate_email(email)
+    if not is_valid_email:
+        return jsonify({"status": "error", "message": email_msg}), 400
     is_valid, message = validate_password(password)
     if not is_valid:
         return jsonify({"status": "error", "message": message}), 400
