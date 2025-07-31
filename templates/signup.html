@@ -173,7 +173,7 @@
                     if (response.ok) {
                         messageDiv.textContent = 'Account created successfully! Redirecting...';
                         messageDiv.className = 'text-center text-green-400 mb-4';
-                        const redirectUrl = `https://logicandstories.com/choose-plan.html?userId=${result.userId}`;
+                        const redirectUrl = `/choose-plan.html?userId=${result.userId}`;
                         setTimeout(() => { window.location.href = redirectUrl; }, 2000);
                     } else {
                         messageDiv.textContent = result.message || 'An error occurred.';
