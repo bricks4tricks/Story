@@ -26,6 +26,9 @@
             </button>
             <div class="hidden md:flex items-center space-x-4">
                 <span id="welcome-username" class="font-semibold text-white"></span>
+                <button id="cancelSubscriptionButton" class="bg-red-600 text-white font-bold py-2 px-5 rounded-full hover:bg-red-500 transition-colors">
+                    Cancel Subscription
+                </button>
                 <button id="signOutButton" class="bg-yellow-400 text-slate-900 font-bold py-2 px-5 rounded-full hover:bg-yellow-300 glow-button">
                     Sign Out
                 </button>
@@ -33,6 +36,7 @@
         </nav>
         <div id="mobile-menu" class="md:hidden hidden px-6 pb-4">
             <span id="welcome-username-mobile" class="block py-2 font-semibold text-white"></span>
+            <button id="cancelSubscriptionButtonMobile" class="bg-red-600 text-white font-bold py-2 px-5 rounded-full hover:bg-red-500 transition-colors mt-2">Cancel Subscription</button>
             <button id="signOutButtonMobile" class="bg-yellow-400 text-slate-900 font-bold py-2 px-5 rounded-full hover:bg-yellow-300 glow-button mt-2">Sign Out</button>
         </div>
     </header>
@@ -159,6 +163,8 @@
             const modifyModal = document.getElementById('modifyStudentModal');
             const deleteModal = document.getElementById('deleteStudentModal');
             const showCreateStudentModalBtn = document.getElementById('showCreateStudentModalBtn');
+            const cancelButton = document.getElementById('cancelSubscriptionButton');
+            const cancelButtonMobile = document.getElementById('cancelSubscriptionButtonMobile');
 
             let studentIdToDelete = null;
 
@@ -369,6 +375,25 @@
                 localStorage.clear();
                 window.location.href = 'https://logicandstories.com';
             });
+
+            async function cancelSubscription() {
+                if (!confirm('Are you sure you want to cancel your subscription?')) return;
+                try {
+                    const response = await fetch(`${window.location.origin}/api/cancel-subscription/${parentId}`, { method: 'POST' });
+                    const result = await response.json();
+                    if (response.ok) {
+                        alert('Subscription cancelled. You will retain access until the end of your current billing period.');
+                    } else {
+                        alert(result.message || 'Error cancelling subscription.');
+                    }
+                } catch (err) {
+                    console.error('Cancel subscription error:', err);
+                    alert('Could not process cancellation request.');
+                }
+            }
+
+            if (cancelButton) cancelButton.addEventListener('click', cancelSubscription);
+            if (cancelButtonMobile) cancelButtonMobile.addEventListener('click', cancelSubscription);
 
             if (signOutButtonMobile) {
                 signOutButtonMobile.addEventListener('click', () => {
