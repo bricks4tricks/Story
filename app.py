@@ -1555,12 +1555,20 @@ def update_flag_status(flag_id):
         conn = get_db_connection()
         cursor = conn.cursor()
 
-        update_query = """
-            UPDATE tbl_flagreport
-            SET status = %s, ResolvedOn = NOW(), ResolvedBy = %s
-            WHERE id = %s;
-        """
-        cursor.execute(update_query, (new_status, admin_id, flag_id))
+        if new_status == 'Pending':
+            update_query = """
+                UPDATE tbl_flagreport
+                SET status = %s, ResolvedOn = NULL, ResolvedBy = NULL
+                WHERE id = %s;
+            """
+            cursor.execute(update_query, (new_status, flag_id))
+        else:
+            update_query = """
+                UPDATE tbl_flagreport
+                SET status = %s, ResolvedOn = NOW(), ResolvedBy = %s
+                WHERE id = %s;
+            """
+            cursor.execute(update_query, (new_status, admin_id, flag_id))
         conn.commit()
 
         if cursor.rowcount == 0:
