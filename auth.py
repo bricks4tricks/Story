@@ -49,8 +49,8 @@ def signup_user():
     username = data.get('username')
     email = data.get('email')
     password = data.get('password')
-    plan = data.get('plan')
-    if not all([username, email, password, plan]):
+    plan = data.get('plan')  # optional during initial signup
+    if not all([username, email, password]):
         return jsonify({"status": "error", "message": "Missing fields"}), 400
     is_valid_email, email_msg = validate_email(email)
     if not is_valid_email:
@@ -59,7 +59,7 @@ def signup_user():
     if not is_valid:
         return jsonify({"status": "error", "message": message}), 400
     allowed_plans = {'Monthly', 'Annual', 'Family'}
-    if plan not in allowed_plans:
+    if plan and plan not in allowed_plans:
         return jsonify({"status": "error", "message": "Invalid plan selected"}), 400
     conn = None
     try:
@@ -75,20 +75,64 @@ def signup_user():
             (username, email, hashed_password, plan)
         )
         new_user_id = cursor.fetchone()[0]
-        # Create an associated subscription row
+        # Create an associated subscription row if a plan was chosen
+        if plan:
+            if plan == 'Monthly':
+                expires_on = datetime.utcnow() + timedelta(days=30)
+            else:
+                expires_on = datetime.utcnow() + timedelta(days=365)
+            cursor.execute(
+                "INSERT INTO tbl_subscription (user_id, active, expires_on) VALUES (%s, TRUE, %s) ON CONFLICT (user_id) DO NOTHING",
+                (new_user_id, expires_on)
+            )
+        conn.commit()
+        update_users_version()
+        return jsonify({"status": "success", "message": "Parent account created successfully!", "userId": new_user_id}), 201
+    except Exception as e:
+        print(f"Signup API Error: {e}")
+        traceback.print_exc()
+        return jsonify({"status": "error", "message": "Internal error"}), 500
+    finally:
+        if conn:
+            release_db_connection(conn)
+
+
+@auth_bp.route('/select-plan', methods=['POST', 'OPTIONS'])
+def select_plan():
+    """Update a user's subscription plan after signup."""
+    if request.method == 'OPTIONS':
+        return jsonify(success=True)
+    from app import get_db_connection, release_db_connection
+    data = request.get_json()
+    user_id = data.get('userId')
+    plan = data.get('plan')
+    if not all([user_id, plan]):
+        return jsonify({"status": "error", "message": "Missing fields"}), 400
+    allowed_plans = {'Monthly', 'Annual', 'Family'}
+    if plan not in allowed_plans:
+        return jsonify({"status": "error", "message": "Invalid plan selected"}), 400
+    conn = None
+    try:
+        conn = get_db_connection()
+        ensure_plan_column(conn)
+        cursor = conn.cursor()
+        cursor.execute("UPDATE tbl_user SET plan = %s WHERE id = %s", (plan, user_id))
+        if cursor.rowcount == 0:
+            return jsonify({"status": "error", "message": "User not found"}), 404
         if plan == 'Monthly':
             expires_on = datetime.utcnow() + timedelta(days=30)
         else:
             expires_on = datetime.utcnow() + timedelta(days=365)
         cursor.execute(
-            "INSERT INTO tbl_subscription (user_id, active, expires_on) VALUES (%s, TRUE, %s) ON CONFLICT (user_id) DO NOTHING",
-            (new_user_id, expires_on)
+            "INSERT INTO tbl_subscription (user_id, active, expires_on) VALUES (%s, TRUE, %s) "
+            "ON CONFLICT (user_id) DO UPDATE SET active = TRUE, expires_on = EXCLUDED.expires_on",
+            (user_id, expires_on)
         )
         conn.commit()
         update_users_version()
-        return jsonify({"status": "success", "message": "Parent account created successfully!"}), 201
+        return jsonify({"status": "success", "message": "Plan updated"}), 200
     except Exception as e:
-        print(f"Signup API Error: {e}")
+        print(f"Select Plan API Error: {e}")
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error"}), 500
     finally:
