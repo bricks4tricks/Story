@@ -2,8 +2,10 @@ import os
 import psycopg2
 import psycopg2.extras
 from psycopg2.pool import SimpleConnectionPool
+from psycopg2.extensions import connection as PGConnection
 import traceback
 from contextlib import contextmanager
+from typing import Generator, Dict
 from dotenv import load_dotenv, find_dotenv
 
 # Load variables from a .env file if present. This allows developers to
@@ -13,13 +15,12 @@ from dotenv import load_dotenv, find_dotenv
 load_dotenv(find_dotenv())
 
 
-def _load_db_config():
-    """Return DB connection settings loaded from environment variables.
+def _load_db_config() -> Dict[str, str]:
+    """Load database connection settings from environment variables.
 
-    The function supports either a full ``DATABASE_URL`` connection string or
-    the individual ``DB_*`` variables. ``DATABASE_URL`` is commonly provided by
-    hosting platforms like Render. If none of the required variables are
-    present, a ``RuntimeError`` is raised to make the misconfiguration obvious.
+    This helper understands both a ``DATABASE_URL`` connection string and the
+    individual ``DB_*`` variables. A ``RuntimeError`` is raised if required
+    values are missing so misconfiguration fails fast.
     """
 
     dsn = os.environ.get("DATABASE_URL")
@@ -87,8 +88,8 @@ def _get_pool():
     return connection_pool
 
 
-def get_db_connection():
-    """Obtain a database connection from the global pool."""
+def get_db_connection() -> PGConnection:
+    """Return a database connection from the global pool."""
     try:
         pool = _get_pool()
         return pool.getconn()
@@ -98,8 +99,8 @@ def get_db_connection():
         raise
 
 
-def release_db_connection(conn):
-    """Return a connection to the pool or close it if no pool is available."""
+def release_db_connection(conn: PGConnection) -> None:
+    """Return ``conn`` to the pool or close it if no pool exists."""
     try:
         if connection_pool:
             connection_pool.putconn(conn)
@@ -111,8 +112,8 @@ def release_db_connection(conn):
 
 
 @contextmanager
-def db_connection():
-    """Provide a context manager for a database connection."""
+def db_connection() -> Generator[PGConnection, None, None]:
+    """Yield a database connection with automatic commit or rollback."""
     conn = get_db_connection()
     try:
         yield conn
