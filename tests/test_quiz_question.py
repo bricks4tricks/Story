@@ -71,3 +71,15 @@ def test_quiz_question_not_found(client):
     with patch('quiz.get_db_connection', return_value=conn):
         resp = client.get('/api/quiz/question/1/2/2')
     assert resp.status_code == 404
+@pytest.mark.parametrize("input_diff,clamped", [(0, 1), (99, 5)])
+def test_quiz_question_clamped_difficulty(client, input_diff, clamped):
+    question = (42, "Clamped question", "MultipleChoice", clamped)
+    answers = [("answer", True)]
+    conn = DummyConnection(question, answers)
+    with patch('quiz.get_db_connection', return_value=conn):
+        resp = client.get(f'/api/quiz/question/1/1/{input_diff}')
+    assert resp.status_code == 200
+    data = resp.get_json()
+    assert data['status'] == 'success'
+    q = data['question']
+    assert q['difficulty'] == clamped
