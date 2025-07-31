@@ -65,14 +65,6 @@
                     <label for="password" class="block text-gray-300 mb-2 font-bold">Password</label>
                     <input type="password" id="password" name="password" class="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400" required minlength="8">
                 </div>
-                <div class="mb-4">
-                    <label for="userType" class="block text-gray-300 mb-2 font-bold">I am a</label>
-                    <select id="userType" class="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400">
-                        <option value="Student">Student</option>
-                        <option value="Parent">Parent</option>
-                        <option value="Admin">Admin</option>
-                    </select>
-                </div>
                 <div id="message" class="text-center mb-4" style="height:1.25rem;color:#f87171;"></div>
                 <button type="submit" class="w-full bg-yellow-400 text-slate-900 font-bold py-3 px-6 rounded-full hover:bg-yellow-300 transition-all transform hover:scale-105 glow-button">Sign In</button>
                 <p class="text-center text-gray-400 text-sm mt-6"><a href="/forgot-password.html" class="text-yellow-400 hover:underline">Forgot Password?</a></p>
@@ -97,7 +89,6 @@
                 e.preventDefault();
                 const username = document.getElementById('username').value;
                 const password = document.getElementById('password').value;
-                const userType = document.getElementById('userType').value;
                 messageDiv.textContent = '';
                 messageDiv.style.color = '#f87171';
 
@@ -107,7 +98,7 @@
                 }
 
                 try {
-                    const url = userType === 'Admin' ? '/api/admin-signin' : '/api/signin';
+                    const url = '/api/signin';
                     const response = await fetch(url, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
