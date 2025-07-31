@@ -441,7 +441,7 @@ const createCascadingSelectors = (prefix) => {
 
                     if (response.ok) {
                         adminMessageDiv.className = 'text-center text-green-400 mb-4 h-6';
-                        if (window.refreshUsers) window.refreshUsers();
+                        if (window.forceRefreshUsers) window.forceRefreshUsers();
                     } else {
                         adminMessageDiv.className = 'text-center text-red-400 mb-4 h-6';
                     }
@@ -474,7 +474,10 @@ const createCascadingSelectors = (prefix) => {
                     const result = await response.json();
                     editMessageDiv.textContent = result.message;
                     editMessageDiv.className = response.ok ? 'text-green-400' : 'text-red-400';
-                    if (response.ok) { if (window.refreshUsers) window.refreshUsers(); setTimeout(() => hideModal(editUserModal), 1500); }
+                    if (response.ok) {
+                        if (window.forceRefreshUsers) window.forceRefreshUsers();
+                        setTimeout(() => hideModal(editUserModal), 1500);
+                    }
                 } catch (error) { editMessageDiv.textContent = 'Server connection error.'; editMessageDiv.className = 'text-red-400'; }
             });
 
