@@ -59,6 +59,9 @@
     <header class="bg-slate-900/80 backdrop-blur-sm sticky top-0 z-50">
         <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
             <a href="https://logicandstories.com" class="text-3xl font-pacifico gradient-text pb-1">Logic and Stories</a>
+            <button id="mobile-menu-toggle" class="md:hidden text-gray-200 focus:outline-none">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+            </button>
             <div class="hidden md:flex items-center space-x-8">
                 <a href="#stories" class="hover:text-yellow-400 transition-colors">Stories</a>
                 <a href="#pricing" class="hover:text-yellow-400 transition-colors">Pricing</a>
@@ -77,6 +80,12 @@
                 <a href="#" id="signOutButton" class="bg-gray-700 text-white font-bold py-2 px-5 rounded-full hover:bg-gray-600 transition-colors">Sign Out</a>
             </div>
         </nav>
+        <div id="mobile-menu" class="md:hidden hidden px-6 pb-4">
+            <a href="#stories" class="block py-2 hover:text-yellow-400">Stories</a>
+            <a href="#pricing" class="block py-2 hover:text-yellow-400">Pricing</a>
+            <a href="https://logicandstories.com/parent-login.html" class="block py-2 hover:text-yellow-400">Parent Portal</a>
+            <a href="#faq" class="block py-2 hover:text-yellow-400">FAQ</a>
+        </div>
     </header>
 
     <main>
@@ -410,7 +419,9 @@
                 themeButtons: document.querySelectorAll('#storyModal .theme-button'),
                 startStoryButton: document.getElementById('startStoryButton'),
                 planButtons: document.querySelectorAll('.plan-button'),
-                faqItems: document.querySelectorAll('.faq-item')
+                faqItems: document.querySelectorAll('.faq-item'),
+                mobileMenuToggle: document.getElementById('mobile-menu-toggle'),
+                mobileMenu: document.getElementById('mobile-menu')
             };
 
             const showModal = (modalElement) => {
@@ -574,6 +585,9 @@
             elements.closeMessageModalButton.addEventListener('click', () => hideModal(elements.messageModal));
             elements.messageModalOkButton.addEventListener('click', () => hideModal(elements.messageModal));
             elements.messageModal.addEventListener('click', (e) => { if (e.target === elements.messageModal) hideModal(elements.messageModal); });
+            elements.mobileMenuToggle.addEventListener('click', () => {
+                elements.mobileMenu.classList.toggle('hidden');
+            });
 
             updateAuthState();
         });
