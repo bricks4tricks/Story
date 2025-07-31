@@ -53,7 +53,10 @@
     <header class="bg-slate-800 border-b border-slate-700">
         <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
             <a href="https://logicandstories.com" class="text-3xl font-pacifico gradient-text pb-1">Logic and Stories</a>
-            <div class="flex items-center space-x-4">
+            <button id="mobile-menu-toggle" class="md:hidden text-gray-200 focus:outline-none">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
+            </button>
+            <div class="hidden md:flex items-center space-x-4">
                 <button id="flag-story-btn" class="text-gray-400 hover:text-red-400 text-sm flex items-center space-x-1 py-2 px-3 rounded-full hover:bg-slate-700 transition-colors" title="Flag this story for review">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9m0 3.5V12"></path></svg>
                     <span>Flag Story</span>
@@ -61,6 +64,13 @@
                 <a href="https://logicandstories.com/dashboard.html" class="bg-gray-600 text-white font-bold py-2 px-5 rounded-full hover:bg-gray-500">Exit to Dashboard</a>
             </div>
         </nav>
+        <div id="mobile-menu" class="md:hidden hidden px-6 pb-4">
+            <button id="mobile-flag-story-btn" class="text-gray-400 hover:text-red-400 text-sm flex items-center space-x-1 py-2 px-3 rounded-full hover:bg-slate-700 transition-colors w-full text-left" title="Flag this story for review">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9m0 3.5V12"></path></svg>
+                <span>Flag Story</span>
+            </button>
+            <a href="https://logicandstories.com/dashboard.html" class="block py-2 hover:text-yellow-400">Exit to Dashboard</a>
+        </div>
     </header>
 
     <main id="story-container" class="container mx-auto px-6 py-12 flex-grow flex flex-col justify-center items-center">
@@ -95,6 +105,19 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
+            const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const mobileFlagButton = document.getElementById('mobile-flag-story-btn');
+            const flagButton = document.getElementById('flag-story-btn');
+            if (mobileMenuToggle && mobileMenu) {
+                mobileMenuToggle.addEventListener('click', () => {
+                    mobileMenu.classList.toggle('hidden');
+                });
+            }
+            if (mobileFlagButton && flagButton) {
+                mobileFlagButton.addEventListener('click', () => flagButton.click());
+            }
+
             const userId = localStorage.getItem('userId');
             const urlParams = new URLSearchParams(window.location.search);
             const topicId = urlParams.get('topicId'); // This is the ID for the story itself
