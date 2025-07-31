@@ -1330,21 +1330,21 @@ def get_flagged_items():
 
         query = """
             SELECT
-                fr.id AS FlagID,
-                fr.userid,
-                u.username AS ReporterUsername,
-                fr.flaggeditemid,
-                fr.itemtype,
+                fr.id AS "FlagID",
+                fr.userid AS "UserID",
+                u.username AS "ReporterUsername",
+                fr.flaggeditemid AS "FlaggedItemID",
+                fr.itemtype AS "ItemType",
                 CASE
                     WHEN fr.itemtype = 'Question' THEN q.questionname
                     WHEN fr.itemtype = 'Story' THEN t.TopicName
                     ELSE 'N/A'
-                END AS ItemName,
-                fr.reason,
-                fr.status,
-                fr.ReportedOn,
-                fr.ResolvedOn,
-                ru.username AS ResolvedByUsername
+                END AS "ItemName",
+                fr.reason AS "Reason",
+                fr.status AS "Status",
+                fr.ReportedOn AS "ReportedOn",
+                fr.ResolvedOn AS "ResolvedOn",
+                ru.username AS "ResolvedByUsername"
             FROM tbl_flagreport fr
             JOIN tbl_user u ON fr.userid = u.id
             LEFT JOIN tbl_question q ON fr.itemtype = 'Question' AND fr.flaggeditemid = q.id
@@ -1490,17 +1490,17 @@ def get_open_flags():
 
         query = """
             SELECT
-                fr.id AS FlagID,
-                fr.userid,
-                fr.flaggeditemid,
-                fr.itemtype,
+                fr.id AS "FlagID",
+                fr.userid AS "UserID",
+                fr.flaggeditemid AS "FlaggedItemID",
+                fr.itemtype AS "ItemType",
                 CASE
                     WHEN fr.itemtype = 'Question' THEN q.questionname
                     WHEN fr.itemtype = 'Story' THEN t.TopicName
                     ELSE 'N/A'
-                END AS ItemName,
-                fr.reason,
-                fr.ReportedOn
+                END AS "ItemName",
+                fr.reason AS "Reason",
+                fr.ReportedOn AS "ReportedOn"
             FROM tbl_flagreport fr
             LEFT JOIN tbl_question q ON fr.itemtype = 'Question' AND fr.flaggeditemid = q.id
             LEFT JOIN tbl_topic t ON fr.itemtype = 'Story' AND fr.flaggeditemid = t.id
