@@ -52,3 +52,17 @@ def test_signup_success(client):
     data = response.get_json()
     assert data["status"] == "success"
     assert "Parent account created" in data["message"]
+
+
+def test_signup_invalid_email(client):
+    payload = {
+        "username": "bademailuser",
+        "email": "invalidemail@domain",
+        "password": "ValidPass123!"
+    }
+    with patch('app.get_db_connection', return_value=DummyConnection()):
+        response = client.post('/api/signup', json=payload)
+    assert response.status_code == 400
+    data = response.get_json()
+    assert data["status"] == "error"
+    assert "Invalid email address" in data["message"]
