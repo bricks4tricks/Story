@@ -64,10 +64,13 @@
             flagsList.innerHTML = '<p class="text-center text-gray-400">No open flagged items.</p>';
           } else {
             const ul = document.createElement('ul');
-            ul.className = 'list-disc pl-5 text-left';
+            ul.className = 'list-disc pl-5 text-left space-y-4';
             flags.forEach(f => {
               const li = document.createElement('li');
-              li.textContent = `${f.ItemType}: ${f.ItemName || 'ID: ' + f.FlaggedItemID}`;
+              li.innerHTML = `
+                <div class="font-semibold">${f.ItemType}: ${f.ItemName || 'ID: ' + f.FlaggedItemID}</div>
+                <div class="text-center text-xl text-yellow-300">${f.Reason}</div>
+              `;
               ul.appendChild(li);
             });
             flagsList.innerHTML = '';
