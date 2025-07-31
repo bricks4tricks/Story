@@ -18,11 +18,11 @@ def get_all_users():
         conn = get_db_connection()
         cursor = conn.cursor()
         query = """
-            SELECT u.ID, u.Username, u.Email, u.UserType, u.CreatedOn,
-                   p.Username AS parentusername
-            FROM tbl_User u
-            LEFT JOIN tbl_User p ON u.ParentUserID = p.ID
-            ORDER BY u.ID;
+            SELECT u.id, u.username, u.email, u.usertype, u.createdon,
+                   p.username AS parentusername
+            FROM tbl_user u
+            LEFT JOIN tbl_user p ON u.parentuserid = p.id
+            ORDER BY u.id;
         """
         cursor.execute(query)
         rows = cursor.fetchall()

@@ -12,9 +12,9 @@ def get_quiz_question(user_id, topic_id, difficulty_level):
         cursor = conn.cursor()
         difficulty_level = max(1, min(5, difficulty_level))
         query = """
-            SELECT Q.ID, Q.QuestionName, Q.QuestionType, Q.DifficultyRating
-            FROM tbl_Question Q
-            WHERE Q.TopicID = %s AND Q.DifficultyRating = %s
+            SELECT Q.id, Q.questionname, Q.questiontype, Q.difficultyrating
+            FROM tbl_question Q
+            WHERE Q.topicid = %s AND Q.difficultyrating = %s
             ORDER BY RANDOM() LIMIT 1;
         """
         cursor.execute(query, (topic_id, difficulty_level))
@@ -25,7 +25,7 @@ def get_quiz_question(user_id, topic_id, difficulty_level):
         question_type = question[2]
         answers = []
         if question_type == 'MultipleChoice':
-            cursor.execute("SELECT AnswerName, IsCorrect FROM tbl_Answer WHERE QuestionID = %s", (question_id,))
+            cursor.execute("SELECT answername, iscorrect FROM tbl_answer WHERE questionid = %s", (question_id,))
             answers = cursor.fetchall()
         response_data = {
             "status": "success",

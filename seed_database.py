@@ -59,7 +59,7 @@ def seed_data():
                 # 1. Get or Create Grade ID
                 if grade_name not in grades_map:
                     cursor.execute(
-                        "INSERT INTO tbl_Grade (GradeName, CreatedBy) VALUES (%s, %s) RETURNING ID",
+                        "INSERT INTO tbl_grade (gradename, createdby) VALUES (%s, %s) RETURNING id",
                         (grade_name, 'SEEDER'),
                     )
                     grades_map[grade_name] = cursor.fetchone()[0]
@@ -68,7 +68,7 @@ def seed_data():
                 # 2. Get or Create Subject (Curriculum) ID
                 if curriculum_type not in subjects_map:
                     cursor.execute(
-                        "INSERT INTO tbl_Subject (SubjectName, SubjectType, CreatedBy) VALUES (%s, %s, %s) RETURNING ID",
+                        "INSERT INTO tbl_subject (subjectname, subjecttype, createdby) VALUES (%s, %s, %s) RETURNING id",
                         (curriculum_type, 'Curriculum', 'SEEDER'),
                     )
                     subjects_map[curriculum_type] = cursor.fetchone()[0]
@@ -78,7 +78,7 @@ def seed_data():
                 unit_key = f"{unit_name}_{subject_id}"
                 if unit_key not in units_map:
                     cursor.execute(
-                        "INSERT INTO tbl_Topic (TopicName, SubjectID, ParentTopicID, CreatedBy) VALUES (%s, %s, NULL, %s) RETURNING ID",
+                        "INSERT INTO tbl_topic (topicname, subjectid, parenttopicid, createdby) VALUES (%s, %s, NULL, %s) RETURNING id",
                         (unit_name, subject_id, 'SEEDER'),
                     )
                     units_map[unit_key] = cursor.fetchone()[0]
@@ -86,13 +86,16 @@ def seed_data():
 
                 # 4. Create the actual Topic (as a child of the Unit)
                 cursor.execute(
-                    "INSERT INTO tbl_Topic (TopicName, SubjectID, ParentTopicID, CreatedBy) VALUES (%s, %s, %s, %s) RETURNING ID",
+                    "INSERT INTO tbl_topic (topicname, subjectid, parenttopicid, createdby) VALUES (%s, %s, %s, %s) RETURNING id",
                     (topic_name, subject_id, unit_topic_id, 'SEEDER'),
                 )
                 child_topic_id = cursor.fetchone()[0]
                 
                 # 5. Link the child Topic to the Grade
-                cursor.execute("INSERT INTO tbl_TopicGrade (TopicID, GradeID, CreatedBy) VALUES (%s, %s, %s)", (child_topic_id, grade_id, 'SEEDER'))
+                cursor.execute(
+                    "INSERT INTO tbl_topicgrade (topicid, gradeid, createdby) VALUES (%s, %s, %s)",
+                    (child_topic_id, grade_id, 'SEEDER'),
+                )
 
                 # Successfully processed this row
                 rows_processed += 1
