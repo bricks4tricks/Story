@@ -61,7 +61,7 @@
     <main class="container mx-auto px-6 py-12 flex justify-center items-center min-h-[calc(100vh-80px)]">
         <div class="bg-slate-800 rounded-2xl p-8 max-w-md w-full border border-slate-700">
             <h2 class="text-3xl font-bold text-white text-center mb-6">Create Your Account</h2>
-            <form id="signUpForm">
+            <form id="signupForm">
                 <div class="mb-4">
                     <label for="new-username" class="block text-gray-300 mb-2 font-bold">Username</label>
                     <input type="text" id="new-username" name="username" class="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400" required>
@@ -102,7 +102,7 @@
                 });
             }
 
-            const signUpForm = document.getElementById('signUpForm');
+            const signupForm = document.getElementById('signupForm');
             const messageDiv = document.getElementById('message');
             const newPasswordInput = document.getElementById('new-password');
             const confirmPasswordInput = document.getElementById('confirm-password');
@@ -128,7 +128,7 @@
                 return errors;
             };
 
-            signUpForm.addEventListener('submit', async (e) => {
+            signupForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
 
                 console.log("Form submission detected. Preparing to send data...");
