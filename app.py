@@ -1351,6 +1351,65 @@ def get_curriculum_table():
             release_db_connection(conn)
 
 
+@app.route('/api/admin/create-curriculum', methods=['POST', 'OPTIONS'])
+def create_curriculum():
+    if request.method == 'OPTIONS':
+        return jsonify(success=True)
+
+    data = request.get_json()
+    name = data.get('name') if data else None
+
+    if not name:
+        return jsonify({"status": "error", "message": "Missing curriculum name"}), 400
+
+    conn = None
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute(
+            "INSERT INTO tbl_subject (subjectname, subjecttype, createdby) VALUES (%s, 'Curriculum', %s)",
+            (name, 'API'),
+        )
+        conn.commit()
+        return jsonify({"status": "success", "message": "Curriculum created."}), 201
+    except Exception as e:
+        if conn:
+            conn.rollback()
+        print(f"Create Curriculum API Error: {e}")
+        traceback.print_exc()
+        return jsonify({"status": "error", "message": "Internal server error"}), 500
+    finally:
+        if conn:
+            release_db_connection(conn)
+
+
+@app.route('/api/admin/delete-curriculum/<int:subject_id>', methods=['DELETE', 'OPTIONS'])
+def delete_curriculum(subject_id):
+    if request.method == 'OPTIONS':
+        return jsonify(success=True)
+
+    conn = None
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("DELETE FROM tbl_subject WHERE id = %s", (subject_id,))
+        conn.commit()
+
+        if cursor.rowcount == 0:
+            return jsonify({"status": "error", "message": "Curriculum not found."}), 404
+
+        return jsonify({"status": "success", "message": "Curriculum deleted."}), 200
+    except Exception as e:
+        if conn:
+            conn.rollback()
+        print(f"Delete Curriculum API Error: {e}")
+        traceback.print_exc()
+        return jsonify({"status": "error", "message": "Internal server error"}), 500
+    finally:
+        if conn:
+            release_db_connection(conn)
+
+
 @app.route('/api/admin/update-curriculum/<int:subject_id>', methods=['PUT', 'OPTIONS'])
 def update_curriculum(subject_id):
     if request.method == 'OPTIONS':
