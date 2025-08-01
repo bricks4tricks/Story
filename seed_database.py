@@ -55,46 +55,83 @@ def seed_data(csv_file_name: str = CSV_FILE_NAME):
                 grade_name = ' '.join(grade_name.split()) # Remove extra spaces
 
 
-                # 1. Get or Create Grade ID
+                # 1. Get or create Grade ID
                 if grade_name not in grades_map:
                     cursor.execute(
-                        "INSERT INTO tbl_grade (gradename, createdby) VALUES (%s, %s) RETURNING id",
-                        (grade_name, 'SEEDER'),
+                        "SELECT id FROM tbl_grade WHERE gradename = %s",
+                        (grade_name,),
                     )
-                    grades_map[grade_name] = cursor.fetchone()[0]
+                    result = cursor.fetchone()
+                    if result:
+                        grades_map[grade_name] = result[0]
+                    else:
+                        cursor.execute(
+                            "INSERT INTO tbl_grade (gradename, createdby) VALUES (%s, %s) RETURNING id",
+                            (grade_name, 'SEEDER'),
+                        )
+                        grades_map[grade_name] = cursor.fetchone()[0]
                 grade_id = grades_map[grade_name]
 
-                # 2. Get or Create Subject (Curriculum) ID
+                # 2. Get or create Subject (Curriculum) ID
                 if curriculum_type not in subjects_map:
                     cursor.execute(
-                        "INSERT INTO tbl_subject (subjectname, subjecttype, createdby) VALUES (%s, %s, %s) RETURNING id",
-                        (curriculum_type, 'Curriculum', 'SEEDER'),
+                        "SELECT id FROM tbl_subject WHERE subjectname = %s AND subjecttype = %s",
+                        (curriculum_type, 'Curriculum'),
                     )
-                    subjects_map[curriculum_type] = cursor.fetchone()[0]
+                    result = cursor.fetchone()
+                    if result:
+                        subjects_map[curriculum_type] = result[0]
+                    else:
+                        cursor.execute(
+                            "INSERT INTO tbl_subject (subjectname, subjecttype, createdby) VALUES (%s, %s, %s) RETURNING id",
+                            (curriculum_type, 'Curriculum', 'SEEDER'),
+                        )
+                        subjects_map[curriculum_type] = cursor.fetchone()[0]
                 subject_id = subjects_map[curriculum_type]
 
-                # 3. Get or Create Unit (as a Parent Topic) ID
+                # 3. Get or create Unit (as a Parent Topic) ID
                 unit_key = f"{unit_name}_{subject_id}"
                 if unit_key not in units_map:
                     cursor.execute(
-                        "INSERT INTO tbl_topic (topicname, subjectid, parenttopicid, createdby) VALUES (%s, %s, NULL, %s) RETURNING id",
-                        (unit_name, subject_id, 'SEEDER'),
+                        "SELECT id FROM tbl_topic WHERE topicname = %s AND subjectid = %s AND parenttopicid IS NULL",
+                        (unit_name, subject_id),
                     )
-                    units_map[unit_key] = cursor.fetchone()[0]
+                    result = cursor.fetchone()
+                    if result:
+                        units_map[unit_key] = result[0]
+                    else:
+                        cursor.execute(
+                            "INSERT INTO tbl_topic (topicname, subjectid, parenttopicid, createdby) VALUES (%s, %s, NULL, %s) RETURNING id",
+                            (unit_name, subject_id, 'SEEDER'),
+                        )
+                        units_map[unit_key] = cursor.fetchone()[0]
                 unit_topic_id = units_map[unit_key]
 
-                # 4. Create the actual Topic (as a child of the Unit)
+                # 4. Create or fetch the actual Topic (as a child of the Unit)
                 cursor.execute(
-                    "INSERT INTO tbl_topic (topicname, subjectid, parenttopicid, createdby) VALUES (%s, %s, %s, %s) RETURNING id",
-                    (topic_name, subject_id, unit_topic_id, 'SEEDER'),
+                    "SELECT id FROM tbl_topic WHERE topicname = %s AND subjectid = %s AND parenttopicid = %s",
+                    (topic_name, subject_id, unit_topic_id),
                 )
-                child_topic_id = cursor.fetchone()[0]
-                
-                # 5. Link the child Topic to the Grade
+                result = cursor.fetchone()
+                if result:
+                    child_topic_id = result[0]
+                else:
+                    cursor.execute(
+                        "INSERT INTO tbl_topic (topicname, subjectid, parenttopicid, createdby) VALUES (%s, %s, %s, %s) RETURNING id",
+                        (topic_name, subject_id, unit_topic_id, 'SEEDER'),
+                    )
+                    child_topic_id = cursor.fetchone()[0]
+
+                # 5. Link the child Topic to the Grade if not already linked
                 cursor.execute(
-                    "INSERT INTO tbl_topicgrade (topicid, gradeid, createdby) VALUES (%s, %s, %s)",
-                    (child_topic_id, grade_id, 'SEEDER'),
+                    "SELECT 1 FROM tbl_topicgrade WHERE topicid = %s AND gradeid = %s",
+                    (child_topic_id, grade_id),
                 )
+                if cursor.fetchone() is None:
+                    cursor.execute(
+                        "INSERT INTO tbl_topicgrade (topicid, gradeid, createdby) VALUES (%s, %s, %s)",
+                        (child_topic_id, grade_id, 'SEEDER'),
+                    )
 
                 # Successfully processed this row
                 rows_processed += 1
