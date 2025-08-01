@@ -270,6 +270,21 @@
 
         <div id="curriculums-section" class="hidden">
             <h2 class="text-3xl font-bold text-white mb-6">Curriculums</h2>
+            <div class="bg-slate-800 rounded-2xl border border-slate-700 p-6 overflow-x-auto mb-6">
+                <table class="min-w-full text-left text-sm">
+                    <thead class="border-b border-slate-700 font-medium">
+                        <tr>
+                            <th class="px-4 py-2">Grade</th>
+                            <th class="px-4 py-2">Curriculum</th>
+                            <th class="px-4 py-2">Unit</th>
+                            <th class="px-4 py-2">Topic</th>
+                        </tr>
+                    </thead>
+                    <tbody id="curriculum-table-body">
+                        <tr><td colspan="4" class="text-center py-4 text-gray-400">Loading...</td></tr>
+                    </tbody>
+                </table>
+            </div>
             <div class="bg-slate-800 rounded-2xl border border-slate-700 p-6">
                 <div id="existing-curriculums-list" class="space-y-4">
                     <p class="text-center text-gray-400">Loading curriculums...</p>
@@ -462,6 +477,7 @@
             const editCurriculumIdInput = document.getElementById('edit-curriculum-id');
             const editCurriculumNameInput = document.getElementById('edit-curriculum-name');
             const editCurriculumMessage = document.getElementById('edit-curriculum-message');
+            const curriculumTableBody = document.getElementById('curriculum-table-body');
 
             // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
             // createCascadingSelectors FUNCTION DEFINITION - MOVED HERE
@@ -1824,8 +1840,32 @@ const createCascadingSelectors = (prefix) => {
                     if (unitsList.children.length > 0) {
                         div.appendChild(unitsList);
                     }
-                    existingCurriculumsList.appendChild(div);
-                });
+                existingCurriculumsList.appendChild(div);
+            });
+        };
+
+            const fetchCurriculumTable = async () => {
+                curriculumTableBody.innerHTML = '<tr><td colspan="4" class="text-center py-4 text-gray-400">Loading...</td></tr>';
+                try {
+                    const resp = await fetch('/api/curriculum-table');
+                    if (!resp.ok) throw new Error('Failed to fetch curriculum table');
+                    const rows = await resp.json();
+                    if (!Array.isArray(rows) || rows.length === 0) {
+                        curriculumTableBody.innerHTML = '<tr><td colspan="4" class="text-center py-4 text-gray-400">No data found.</td></tr>';
+                        return;
+                    }
+                    curriculumTableBody.innerHTML = '';
+                    rows.forEach(r => {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `<td class="px-4 py-2">${r.gradename}</td>` +
+                            `<td class="px-4 py-2">${r.curriculumtype}</td>` +
+                            `<td class="px-4 py-2">${r.unitname}</td>` +
+                            `<td class="px-4 py-2">${r.topicname}</td>`;
+                        curriculumTableBody.appendChild(tr);
+                    });
+                } catch (err) {
+                    curriculumTableBody.innerHTML = `<tr><td colspan="4" class="text-center py-4 text-red-400">Error: ${err.message}</td></tr>`;
+                }
             };
 
             existingCurriculumsList.addEventListener('click', (e) => {
@@ -1955,6 +1995,7 @@ const createCascadingSelectors = (prefix) => {
                 attemptsTabBtn.classList.remove('active');
                 curriculumsTabBtn.classList.add('active');
                 fetchAndDisplayCurriculums();
+                fetchCurriculumTable();
             });
 
 
@@ -2022,6 +2063,7 @@ const createCascadingSelectors = (prefix) => {
                 }
                 if (curriculumsTabBtn.classList.contains('active')) {
                     fetchAndDisplayCurriculums();
+                    fetchCurriculumTable();
                 }
             }, POLL_INTERVAL_MS);
 
@@ -2030,6 +2072,7 @@ const createCascadingSelectors = (prefix) => {
                 await loadCurriculums();
                 await initializeTopicData();
                 fetchAndDisplayCurriculums();
+                fetchCurriculumTable();
                 addAnswerInput(answersContainer, true, '', true); // Pass container
                 addAnswerInput(answersContainer, false, '', false); // Pass container
                 addStepInput(stepsContainer, '', true); // Pass container
