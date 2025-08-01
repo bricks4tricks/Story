@@ -709,11 +709,16 @@ def get_story_for_topic(topic_id):
         sections = cursor.fetchall()
 
         if not sections:
-            # If no sections, but topic exists, still return default and available themes if found
-            if story_payload["defaultTheme"] is not None or len(story_payload["availableThemes"]) > 0:
-                return jsonify(story_payload)
-            else:
-                return jsonify({"status": "error", "message": "No story found for this topic."}), 404
+            # Return a placeholder story when no sections are found
+            story_payload["sections"].append(
+                {
+                    "sectionName": "Coming Soon",
+                    "order": 1,
+                    "contentType": "Paragraph",
+                    "content": "Story coming soon.",
+                }
+            )
+            return jsonify(story_payload)
 
 
         for section in sections:
@@ -779,9 +784,10 @@ def story_exists(topic_id):
         count = cursor.fetchone()[0]
 
         if count > 0:
-            return jsonify({"status": "success", "storyExists": True}), 200
+            return jsonify({"status": "success", "storyExists": True, "isPlaceholder": False}), 200
         else:
-            return jsonify({"status": "success", "storyExists": False}), 200
+            # When no story sections exist, indicate a placeholder will be used
+            return jsonify({"status": "success", "storyExists": True, "isPlaceholder": True}), 200
 
     except Exception as e:
         print(f"Story Exists API Error: {e}")
