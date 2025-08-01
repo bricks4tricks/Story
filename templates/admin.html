@@ -1963,6 +1963,12 @@ const createCascadingSelectors = (prefix) => {
                     const result = await resp.json();
                     seedDatabaseMessage.textContent = result.message;
                     seedDatabaseMessage.className = resp.ok ? 'text-center text-green-400 mt-4 h-5' : 'text-center text-red-400 mt-4 h-5';
+                    if (resp.ok) {
+                        await loadCurriculums();
+                        await initializeTopicData();
+                        fetchAndDisplayCurriculums();
+                        fetchCurriculumTable();
+                    }
                 } catch (error) {
                     seedDatabaseMessage.textContent = 'Server connection error.';
                     seedDatabaseMessage.className = 'text-center text-red-400 mt-4 h-5';
