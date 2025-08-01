@@ -57,7 +57,7 @@ python add_plan_column.py
 The signup endpoint now automatically ensures the `plan` column exists, but the
 script is provided for manual use when needed.
 
-After a successful signup, users are redirected to `/choose-plan.html` where
+After a successful signup, users are redirected to `/choose-plan.h` where
 they can compare subscription options before selecting a plan.
 
 ## Progress Dashboard
