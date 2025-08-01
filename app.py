@@ -1280,6 +1280,27 @@ def admin_get_curriculums():
             release_db_connection(conn)
 
 
+@app.route('/api/admin/curriculums/<int:subject_id>', methods=['GET'])
+def admin_get_curriculum(subject_id):
+    """Return a single curriculum by ID."""
+    conn = None
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        cursor.execute("SELECT id, subjectname FROM tbl_subject WHERE id = %s", (subject_id,))
+        row = cursor.fetchone()
+        if not row:
+            return jsonify({"status": "error", "message": "Curriculum not found"}), 404
+        return jsonify(row)
+    except Exception as e:
+        print(f"Admin get curriculum error: {e}")
+        traceback.print_exc()
+        return jsonify({"status": "error", "message": "Internal error"}), 500
+    finally:
+        if conn:
+            release_db_connection(conn)
+
+
 @app.route('/api/admin/curriculum-hierarchy', methods=['GET'])
 def admin_curriculum_hierarchy():
     """Return units and topics grouped under each curriculum."""
