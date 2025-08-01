@@ -2072,6 +2072,11 @@ def flag_page_error():
 # =================================================================
 
 @app.route('/')
+def serve_home():
+    return render_template('index.h')
+
+@app.route('/index.html')
+@app.route('/index.h')
 def serve_index():
     return render_template('index.h')
 

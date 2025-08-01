@@ -413,7 +413,7 @@
             const adminId = localStorage.getItem('userId'); // Get admin's ID for resolving flags
             if (localStorage.getItem('userType') !== 'Admin' || !adminId) {
                 alert("Access Denied.");
-                window.location.href = 'https://logicandstories.com';
+                window.location.href = '/';
                 return;
             }
 
@@ -804,7 +804,7 @@ const createCascadingSelectors = (prefix) => {
                 const questionData = { topicId: parseInt(topicId), questionText, questionType, answers, steps, difficultyRating: parseInt(difficultyRating) };
 
                 try {
-                    const response = await fetch('https://logicandstories.com/api/admin/add-question', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(questionData) });
+                    const response = await fetch('/api/admin/add-question', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(questionData) });
                     const result = await response.json();
                     questionFormMessage.textContent = result.message;
                     questionFormMessage.className = response.ok ? 'text-green-400' : 'text-red-400';
@@ -901,7 +901,7 @@ const createCascadingSelectors = (prefix) => {
                     const questionId = event.target.dataset.id;
                     if (confirm(`Are you sure you want to delete this question (ID: ${questionId})? This action cannot be undone.`)) {
                         try {
-                            const response = await fetch(`https://logicandstories.com/api/admin/delete-question/${questionId}`, {
+                            const response = await fetch(`/api/admin/delete-question/${questionId}`, {
                                 method: 'DELETE'
                             });
                             const result = await response.json();
@@ -989,7 +989,7 @@ const createCascadingSelectors = (prefix) => {
                 showModal(editQuestionModal);
 
                 try {
-                    const response = await fetch(`https://logicandstories.com/api/admin/question/${questionId}`);
+                    const response = await fetch(`/api/admin/question/${questionId}`);
                     if (!response.ok) {
                         const errorResult = await response.json();
                         throw new Error(errorResult.message || 'Failed to fetch question details with unknown error.');
@@ -1117,7 +1117,7 @@ const createCascadingSelectors = (prefix) => {
                 const questionData = { questionId: parseInt(questionId), topicId: parseInt(topicId), questionText, questionType, answers, steps, difficultyRating: parseInt(editedDifficultyRating) }; /* Used renamed variable */
 
                 try {
-                    const response = await fetch(`https://logicandstories.com/api/admin/edit-question/${questionId}`, {
+                    const response = await fetch(`/api/admin/edit-question/${questionId}`, {
                         method: 'PUT',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(questionData)
@@ -2134,11 +2134,11 @@ const createCascadingSelectors = (prefix) => {
                 hideModal(editCurriculumModal);
             }));
 
-            document.getElementById('signOutButton').addEventListener('click', () => { localStorage.clear(); window.location.href = 'https://logicandstories.com'; });
+            document.getElementById('signOutButton').addEventListener('click', () => { localStorage.clear(); window.location.href = '/'; });
             if (signOutButtonMobile) {
                 signOutButtonMobile.addEventListener('click', () => {
                     localStorage.clear();
-                    window.location.href = 'https://logicandstories.com';
+                    window.location.href = '/';
                 });
             }
 

@@ -47,21 +47,21 @@
 
     <script>
         // Basic authentication check
-        if (!localStorage.getItem('userId')) { window.location.href = 'https://logicandstories.com'; }
+        if (!localStorage.getItem('userId')) { window.location.href = '/'; }
     </script>
 
     <header class="bg-slate-800 border-b border-slate-700">
         <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <a href="https://logicandstories.com" class="text-3xl font-pacifico gradient-text pb-1 leading-normal">Logic and Stories</a>
+            <a href="/" class="text-3xl font-pacifico gradient-text pb-1 leading-normal">Logic and Stories</a>
             <button id="mobile-menu-toggle" class="md:hidden text-gray-200 focus:outline-none">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
             </button>
             <div class="hidden md:flex items-center space-x-4">
-                <a href="https://logicandstories.com/dashboard.html" class="bg-gray-600 text-white font-bold py-2 px-5 rounded-full hover:bg-gray-500">Exit to Dashboard</a>
+                <a href="/dashboard.html" class="bg-gray-600 text-white font-bold py-2 px-5 rounded-full hover:bg-gray-500">Exit to Dashboard</a>
             </div>
         </nav>
         <div id="mobile-menu" class="md:hidden hidden px-6 pb-4">
-            <a href="https://logicandstories.com/dashboard.html" class="block py-2 hover:text-yellow-400">Exit to Dashboard</a>
+            <a href="/dashboard.html" class="block py-2 hover:text-yellow-400">Exit to Dashboard</a>
         </div>
     </header>
 
@@ -137,7 +137,7 @@
             const topicId = urlParams.get('topicId');
 
             if (!topicId) {
-                document.getElementById('loader').innerHTML = `<h2 class="text-2xl font-bold text-red-500">Error: No Topic ID provided.</h2><a href="https://logicandstories.com/dashboard.html" class="text-yellow-400 hover:underline">Return to Dashboard</a>`;
+                document.getElementById('loader').innerHTML = `<h2 class="text-2xl font-bold text-red-500">Error: No Topic ID provided.</h2><a href="/dashboard.html" class="text-yellow-400 hover:underline">Return to Dashboard</a>`;
                 return;
             }
 
@@ -175,7 +175,7 @@
 
             async function fetchUserDifficulty() {
                 try {
-                    const response = await fetch(`https://logicandstories.com/api/user/topic-difficulty/${userId}/${topicId}`);
+                    const response = await fetch(`/api/user/topic-difficulty/${userId}/${topicId}`);
                     if (response.ok) {
                         const result = await response.json();
                         currentDifficulty = result.difficulty;
@@ -204,7 +204,7 @@
                 await fetchUserDifficulty(); // Get the latest difficulty before fetching question
 
                 try {
-                    const response = await fetch(`https://logicandstories.com/api/quiz/question/${userId}/${topicId}/${currentDifficulty}`);
+                    const response = await fetch(`/api/quiz/question/${userId}/${topicId}/${currentDifficulty}`);
                     if (!response.ok) {
                         const err = await response.json();
                         throw new Error(err.message || 'Could not fetch quiz question.');
@@ -219,7 +219,7 @@
                 } catch (error) {
                     loader.classList.add('hidden');
                     errorDisplay.classList.remove('hidden');
-                    errorDisplay.innerHTML = `<h2>Error: ${error.message}</h2><a href="https://logicandstories.com/dashboard.html" class="text-yellow-400 hover:underline">Return to Dashboard</a>`;
+                    errorDisplay.innerHTML = `<h2>Error: ${error.message}</h2><a href="/dashboard.html" class="text-yellow-400 hover:underline">Return to Dashboard</a>`;
                 }
             }
 
@@ -325,7 +325,7 @@
                     currentDifficulty = newDifficulty;
                     renderDifficultyStars(currentDifficulty); // Update UI immediately
                     try {
-                        const response = await fetch('https://logicandstories.com/api/user/update-topic-difficulty', {
+                        const response = await fetch('/api/user/update-topic-difficulty', {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({ userId, topicId, newDifficulty: currentDifficulty })
@@ -342,7 +342,7 @@
             // NEW: Function to record question attempt
             async function recordQuestionAttempt(userId, questionId, userAnswer, isCorrect, difficultyAtAttempt) {
                 try {
-                    const response = await fetch('https://logicandstories.com/api/record-question-attempt', {
+                    const response = await fetch('/api/record-question-attempt', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
@@ -370,7 +370,7 @@
                 }
 
                 try {
-                    const response = await fetch('https://logicandstories.com/api/flag-item', {
+                    const response = await fetch('/api/flag-item', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({
@@ -400,7 +400,7 @@
             submitAnswerBtn.addEventListener('click', handleSubmitAnswer);
             nextQuestionBtn.addEventListener('click', fetchQuestion);
             backToDashboardBtn.addEventListener('click', () => {
-                window.location.href = 'https://logicandstories.com/dashboard.html';
+                window.location.href = '/dashboard.html';
             });
             flagQuestionBtn.addEventListener('click', () => {
                 if (currentQuestionData && currentQuestionData.id) {

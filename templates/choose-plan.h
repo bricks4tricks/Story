@@ -18,7 +18,7 @@
 <body class="bg-slate-900 text-gray-200">
     <header class="bg-slate-900/80 backdrop-blur-sm sticky top-0 z-50 border-b border-slate-800">
         <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <a href="https://logicandstories.com" class="text-3xl font-pacifico gradient-text pb-1 leading-normal">Logic and Stories</a>
+            <a href="/" class="text-3xl font-pacifico gradient-text pb-1 leading-normal">Logic and Stories</a>
         </nav>
     </header>
     <main class="py-12">
