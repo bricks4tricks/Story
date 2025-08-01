@@ -27,7 +27,8 @@
                 <h2 class="text-3xl md:text-4xl font-bold text-white">Choose Your Adventure Plan</h2>
                 <p class="text-gray-400 mt-2">Simple, transparent pricing. Cancel anytime.</p>
             </div>
-            <div id="message" class="text-center mt-6"></div>
+            <!-- Status messages for plan selection will appear here -->
+            <div id="message" class="text-center mt-6" aria-live="polite"></div>
             <div class="flex flex-col lg:flex-row justify-center items-center gap-8">
                 <div class="w-full lg:w-1/3 bg-slate-800 p-8 rounded-2xl border border-slate-700">
                     <h3 class="text-2xl font-bold text-white text-center">Monthly</h3>
