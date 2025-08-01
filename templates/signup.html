@@ -55,13 +55,16 @@
         <div class="bg-slate-800 rounded-2xl p-8 max-w-md w-full border border-slate-700">
             <h2 class="text-3xl font-bold text-white text-center mb-6">Create Your Account</h2>
             <form id="signupForm" class="space-y-4">
+                <input type="hidden" name="csrf_token" value="{{SERVER_GENERATED_TOKEN}}">
                 <div>
                     <label for="new-username" class="block text-gray-300 mb-2 font-bold">Username</label>
                     <input type="text" id="new-username" name="username" class="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400" required>
+                    <span id="username-error" class="text-red-400 text-sm block mt-1" aria-live="polite"></span>
                 </div>
                 <div>
                     <label for="email" class="block text-gray-300 mb-2 font-bold">Email Address</label>
                     <input type="email" id="email" name="email" class="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400" required>
+                    <span id="email-error" class="text-red-400 text-sm block mt-1" aria-live="polite"></span>
                 </div>
                 <div>
                     <label for="new-password" class="block text-gray-300 mb-2 font-bold">Password</label>
@@ -70,14 +73,16 @@
                            required
                            minlength="8"
                            title="Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one number, and one special character (!@#$%^&*()_+)">
+                    <span id="password-error" class="text-red-400 text-sm block mt-1" aria-live="polite"></span>
                 </div>
                 <div>
                     <label for="confirm-password" class="block text-gray-300 mb-2 font-bold">Confirm Password</label>
-                    <input type="password" id="confirm-password" name="confirm-password"
+                    <input type="password" id="confirm-password" name="confirm_password"
                            class="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400"
                            required>
+                    <span id="confirm-password-error" class="text-red-400 text-sm block mt-1" aria-live="polite"></span>
                 </div>
-                <div id="message" class="text-center text-red-400"></div>
+                <div id="message" class="text-center text-red-400" aria-live="polite"></div>
                 <button type="submit" class="w-full bg-yellow-400 text-slate-900 font-bold py-3 px-6 rounded-full hover:bg-yellow-300 transition-all transform hover:scale-105 glow-button">Create Account</button>
             </form>
         </div>
@@ -90,6 +95,10 @@
             const messageDiv = document.getElementById('message');
             const newPasswordInput = document.getElementById('new-password');
             const confirmPasswordInput = document.getElementById('confirm-password');
+            const usernameError = document.getElementById('username-error');
+            const emailError = document.getElementById('email-error');
+            const passwordError = document.getElementById('password-error');
+            const confirmPasswordError = document.getElementById('confirm-password-error');
 
             // Password validation function for client-side
             const validatePasswordClient = (password) => {
@@ -117,26 +126,49 @@
 
                 console.log("Form submission detected. Preparing to send data...");
 
-                const username = document.getElementById('new-username').value;
-                const email = document.getElementById('email').value;
+                const username = document.getElementById('new-username').value.trim();
+                const email = document.getElementById('email').value.trim();
                 const password = newPasswordInput.value;
                 const confirmPassword = confirmPasswordInput.value;
 
                 messageDiv.textContent = ''; // Clear previous messages
                 messageDiv.className = 'text-center text-red-400 mb-4'; // Reset class for errors
+                usernameError.textContent = '';
+                emailError.textContent = '';
+                passwordError.textContent = '';
+                confirmPasswordError.textContent = '';
 
-                if (password !== confirmPassword) {
-                    messageDiv.textContent = 'Passwords do not match.';
-                    return;
+                let valid = true;
+                if (!username) {
+                    usernameError.textContent = 'Username is required.';
+                    valid = false;
+                }
+
+                if (!email) {
+                    emailError.textContent = 'Email is required.';
+                    valid = false;
+                } else if (!/^\S+@\S+\.\S+$/.test(email)) {
+                    emailError.textContent = 'Enter a valid email address.';
+                    valid = false;
                 }
 
                 const passwordErrors = validatePasswordClient(password);
                 if (passwordErrors.length > 0) {
-                    messageDiv.innerHTML = passwordErrors.join('<br>'); // Display all specific errors
+                    passwordError.innerHTML = passwordErrors.join('<br>');
+                    valid = false;
+                }
+
+                if (password !== confirmPassword) {
+                    confirmPasswordError.textContent = 'Passwords must match.';
+                    valid = false;
+                }
+
+                if (!valid) {
                     return;
                 }
 
-                const userData = { username, email, password };
+                const csrfToken = document.querySelector('input[name="csrf_token"]').value;
+                const userData = { username, email, password, csrf_token: csrfToken };
                 const apiUrl = 'https://logicandstories.com/api/signup';
 
                 console.log(`Sending data to API at: ${apiUrl}`);
