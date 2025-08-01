@@ -34,6 +34,14 @@
     return btn;
   }
   document.addEventListener('DOMContentLoaded', function() {
-    document.body.appendChild(createButton());
+    const loginPages = [
+      '/signin.html',
+      '/student-login.html',
+      '/parent-login.html',
+      '/admin-login.html'
+    ];
+    if (!loginPages.includes(window.location.pathname)) {
+      document.body.appendChild(createButton());
+    }
   });
 })();
