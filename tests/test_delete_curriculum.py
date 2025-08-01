@@ -105,6 +105,59 @@ def test_delete_curriculum_cascades_topics(client):
     assert topic_index < subject_index
 
 
+def test_delete_curriculum_removes_steps_before_questions(client):
+    class TrackCursor:
+        def __init__(self):
+            self.rowcount = 1
+            self.executed = []
+            self._fetchall = []
+
+        def execute(self, query, params=None):
+            q_str = str(query)
+            self.executed.append(q_str)
+            if "SELECT id FROM tbl_topic" in q_str:
+                self._fetchall = [(1,)]
+            elif "SELECT interactiveelementid FROM tbl_description" in q_str:
+                self._fetchall = []
+            elif "SELECT id FROM tbl_question" in q_str:
+                self._fetchall = [(10,), (11,)]
+            else:
+                self._fetchall = []
+
+        def fetchall(self):
+            return self._fetchall
+
+        def close(self):
+            pass
+
+    class TrackConnection:
+        def __init__(self):
+            self.cursor_obj = TrackCursor()
+            self.autocommit = True
+
+        def cursor(self, cursor_factory=None):
+            return self.cursor_obj
+
+        def commit(self):
+            pass
+
+        def rollback(self):
+            pass
+
+        def close(self):
+            pass
+
+    conn = TrackConnection()
+    with patch('app.get_db_connection', return_value=conn):
+        resp = client.delete('/api/admin/delete-curriculum/1')
+
+    assert resp.status_code == 200
+    queries = conn.cursor_obj.executed
+    step_index = next(i for i, q in enumerate(queries) if "DELETE FROM tbl_step" in q)
+    question_index = next(i for i, q in enumerate(queries) if "DELETE FROM tbl_question" in q)
+    assert step_index < question_index
+
+
 def test_delete_curriculum_missing_quizscore_table(client):
     class ErrorCursor(DummyCursor):
         def execute(self, query, params=None):

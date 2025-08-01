@@ -1467,6 +1467,20 @@ def delete_curriculum(subject_id):
                 sql.SQL("DELETE FROM tbl_topicgrade WHERE topicid IN ({})").format(placeholders),
                 tuple(topic_ids),
             )
+
+            # Remove steps linked to questions before deleting the questions themselves
+            cursor.execute(
+                sql.SQL("SELECT id FROM tbl_question WHERE topicid IN ({})").format(placeholders),
+                tuple(topic_ids),
+            )
+            question_ids = [row[0] for row in cursor.fetchall()]
+            if question_ids:
+                q_placeholders = sql.SQL(',').join(sql.Placeholder() * len(question_ids))
+                cursor.execute(
+                    sql.SQL("DELETE FROM tbl_step WHERE questionid IN ({})").format(q_placeholders),
+                    tuple(question_ids),
+                )
+
             cursor.execute(
                 sql.SQL("DELETE FROM tbl_question WHERE topicid IN ({})").format(placeholders),
                 tuple(topic_ids),
