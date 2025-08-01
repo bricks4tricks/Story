@@ -28,7 +28,7 @@
                 <p class="text-gray-400 mt-2">Simple, transparent pricing. Cancel anytime.</p>
             </div>
             <!-- Status messages for plan selection will appear here -->
-            <div id="message" class="text-center mt-6" aria-live="polite"></div>
+            <div id="message" class="text-center mt-6"></div>
             <div class="flex flex-col lg:flex-row justify-center items-center gap-8">
                 <div class="w-full lg:w-1/3 bg-slate-800 p-8 rounded-2xl border border-slate-700">
                     <h3 class="text-2xl font-bold text-white text-center">Monthly</h3>
@@ -70,6 +70,16 @@
             </div>
         </div>
     </main>
+    <div id="flag-modal" class="modal modal-hidden fixed inset-0 bg-black bg-opacity-70 z-50 flex justify-center items-center opacity-0">
+        <div class="modal-content bg-slate-800 rounded-2xl p-8 max-w-md w-full mx-4 relative scale-95">
+            <button id="close-flag-modal" class="absolute top-4 right-4 text-gray-400 hover:text-white">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+            <h2 class="text-2xl font-bold text-white mb-4">Report Issue</h2>
+            <textarea id="flag-reason" class="w-full h-32 bg-slate-700 text-gray-200 p-2 rounded-md mb-4" placeholder="Describe the issue (optional)"></textarea>
+            <button id="submit-flag-btn" class="bg-yellow-400 text-slate-900 font-bold py-2 px-6 rounded-full hover:bg-yellow-300 w-full">Submit</button>
+        </div>
+    </div>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const urlParams = new URLSearchParams(window.location.search);
@@ -121,16 +131,6 @@
             });
         });
     </script>
-    <div id="flag-modal" class="modal modal-hidden fixed inset-0 bg-black bg-opacity-70 z-50 flex justify-center items-center opacity-0">
-        <div class="modal-content bg-slate-800 rounded-2xl p-8 max-w-md w-full mx-4 relative scale-95">
-            <button id="close-flag-modal" class="absolute top-4 right-4 text-gray-400 hover:text-white">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-            </button>
-            <h2 class="text-2xl font-bold text-white mb-4">Report Issue</h2>
-            <textarea id="flag-reason" class="w-full h-32 bg-slate-700 text-gray-200 p-2 rounded-md mb-4" placeholder="Describe the issue (optional)"></textarea>
-            <button id="submit-flag-btn" class="bg-yellow-400 text-slate-900 font-bold py-2 px-6 rounded-full hover:bg-yellow-300 w-full">Submit</button>
-        </div>
-    </div>
     <script src="/static/js/flagModal.js"></script>
     <script src="/static/js/flagErrorButton.js"></script>
 </body>
