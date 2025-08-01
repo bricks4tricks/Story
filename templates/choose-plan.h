@@ -38,7 +38,7 @@
                         <li class="flex items-center"><svg class="w-5 h-5 text-green-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>1 student profile</li>
                         <li class="flex items-center"><svg class="w-5 h-5 text-green-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>New stories monthly</li>
                     </ul>
-                    <button data-plan="Monthly" class="plan-select glow-button w-full mt-8 bg-gray-700 text-white font-bold py-3 px-6 rounded-full hover:bg-gray-600 transition-colors">Choose Plan</button>
+                    <button class="plan-select glow-button w-full mt-8 bg-gray-700 text-white font-bold py-3 px-6 rounded-full hover:bg-gray-600 transition-colors" data-plan="Monthly">Choose Plan</button>
                 </div>
                 <div class="w-full lg:w-1/3 bg-slate-800 p-8 rounded-2xl border-2 border-yellow-400 relative transform lg:scale-110">
                     <div class="absolute top-0 -translate-y-1/2 left-1/2 -translate-x-1/2">
@@ -53,7 +53,7 @@
                         <li class="flex items-center"><svg class="w-5 h-5 text-green-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>New stories monthly</li>
                         <li class="flex items-center"><svg class="w-5 h-5 text-green-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Early access to new content</li>
                     </ul>
-                    <button data-plan="Annual" class="plan-select glow-button w-full mt-8 bg-yellow-400 text-slate-900 font-bold py-3 px-6 rounded-full hover:bg-yellow-300 transition-all transform hover:scale-105">Start Free Trial</button>
+                    <button class="plan-select glow-button w-full mt-8 bg-yellow-400 text-slate-900 font-bold py-3 px-6 rounded-full hover:bg-yellow-300 transition-all transform hover:scale-105" data-plan="Annual">Choose Plan</button>
                 </div>
                 <div class="w-full lg:w-1/3 bg-slate-800 p-8 rounded-2xl border border-slate-700">
                     <h3 class="text-2xl font-bold text-white text-center">Family</h3>
@@ -64,7 +64,7 @@
                         <li class="flex items-center"><svg class="w-5 h-5 text-green-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Up to 5 student profiles</li>
                         <li class="flex items-center"><svg class="w-5 h-5 text-green-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Priority support</li>
                     </ul>
-                    <button data-plan="Family" class="plan-select glow-button w-full mt-8 bg-gray-700 text-white font-bold py-3 px-6 rounded-full hover:bg-gray-600 transition-colors">Choose Plan</button>
+                    <button class="plan-select glow-button w-full mt-8 bg-gray-700 text-white font-bold py-3 px-6 rounded-full hover:bg-gray-600 transition-colors" data-plan="Family">Choose Plan</button>
                 </div>
             </div>
         </div>
@@ -104,7 +104,7 @@
                         if (response.ok && result.status === 'success') {
                             messageDiv.className = 'text-center text-green-400 mt-6';
                             messageDiv.textContent = 'Plan selected! Redirecting...';
-                            setTimeout(() => { window.location.href = 'https://logicandstories.com'; }, 2000);
+                            setTimeout(() => { window.location.href = '/'; }, 2000);
                         } else {
                             messageDiv.className = 'text-center text-red-400 mt-6';
                             messageDiv.textContent = result.message || 'An error occurred.';
