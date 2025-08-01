@@ -130,7 +130,16 @@
             const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
             const mobileMenu = document.getElementById('mobile-menu');
             const welcomeMobile = document.getElementById('welcome-username-mobile');
+            const signOutButton = document.getElementById('signOutButton');
             const signOutButtonMobile = document.getElementById('signOutButtonMobile');
+
+            const handleSignOut = () => {
+                localStorage.clear();
+                window.location.href = 'https://logicandstories.com';
+            };
+
+            if (signOutButton) signOutButton.addEventListener('click', handleSignOut);
+            if (signOutButtonMobile) signOutButtonMobile.addEventListener('click', handleSignOut);
 
             if (welcomeMobile) {
                 welcomeMobile.textContent = document.getElementById('welcome-username').textContent;
@@ -397,11 +406,6 @@
                 });
             });
 
-            document.getElementById('signOutButton').addEventListener('click', () => {
-                localStorage.clear();
-                window.location.href = 'https://logicandstories.com';
-            });
-
             async function cancelSubscription() {
                 if (!confirm('Are you sure you want to cancel your subscription?')) return;
                 try {
@@ -423,13 +427,6 @@
             }
 
             checkSubscription();
-
-            if (signOutButtonMobile) {
-                signOutButtonMobile.addEventListener('click', () => {
-                    localStorage.clear();
-                    window.location.href = 'https://logicandstories.com';
-                });
-            }
 
             fetchStudents();
         });
