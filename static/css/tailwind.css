@@ -2,10 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
-a:focus,
 a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 3px solid #005fcc !important;
+  outline-offset: 2px !important;
+}
+
+/* fallback for browsers without support */
+a:focus,
 button:focus,
-button:focus-visible {
+input:focus,
+select:focus,
+textarea:focus {
   outline: 3px solid #005fcc;
   outline-offset: 2px;
 }
