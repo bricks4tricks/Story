@@ -116,3 +116,7 @@ def seed_data(csv_file_name: str = CSV_FILE_NAME):
             cursor.close()
             release_db_connection(conn)
             print("Database connection returned to pool.")
+
+
+if __name__ == "__main__":  # pragma: no cover - manual invocation helper
+    seed_data()
