@@ -2,6 +2,7 @@ import os
 import sys
 from unittest.mock import patch
 import pytest
+import psycopg2
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
@@ -102,3 +103,24 @@ def test_delete_curriculum_cascades_topics(client):
     subject_index = next(i for i, q in enumerate(queries) if "DELETE FROM tbl_subject" in q)
     topic_index = next(i for i, q in enumerate(queries) if "DELETE FROM tbl_topic" in q)
     assert topic_index < subject_index
+
+
+def test_delete_curriculum_missing_quizscore_table(client):
+    class ErrorCursor(DummyCursor):
+        def execute(self, query, params=None):
+            if "tbl_quizscore" in str(query):
+                raise psycopg2.errors.UndefinedTable
+            super().execute(query, params)
+
+    class ErrorConnection(DummyConnection):
+        def __init__(self):
+            self.cursor_obj = ErrorCursor()
+            self.autocommit = True
+
+    conn = ErrorConnection()
+    with patch('app.get_db_connection', return_value=conn):
+        resp = client.delete('/api/admin/delete-curriculum/1')
+
+    assert resp.status_code == 200
+    data = resp.get_json()
+    assert data['status'] == 'success'
