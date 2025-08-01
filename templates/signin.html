@@ -64,6 +64,9 @@
                 <p class="text-center text-gray-400 text-sm mt-6"><a href="/forgot-password.html" class="text-yellow-400 hover:underline">Forgot Password?</a></p>
                 <p class="text-center text-gray-400 text-sm mt-2">Don't have an account? <a href="/signup.html" class="text-yellow-400 hover:underline">Sign Up</a></p>
             </form>
+            <p class="text-center text-gray-400 text-sm mt-4">
+                <a href="#" id="report-issue-link" class="text-yellow-400 hover:underline">Report Issue</a>
+            </p>
         </div>
     </main>
 
@@ -72,6 +75,7 @@
 
             const loginForm = document.getElementById('loginForm');
             const messageDiv = document.getElementById('message');
+            const reportIssueLink = document.getElementById('report-issue-link');
 
             loginForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
@@ -120,6 +124,37 @@
                     messageDiv.textContent = 'Could not connect to the server.';
                 }
             });
+
+            if (reportIssueLink) {
+                reportIssueLink.addEventListener('click', async (e) => {
+                    e.preventDefault();
+                    let description = '';
+                    if (typeof openFlagModal === 'function') {
+                        description = await openFlagModal();
+                        if (description === null) return;
+                    } else {
+                        description = prompt('Describe the issue (optional):') || '';
+                    }
+                    fetch('/api/flag-page-error', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            userId: parseInt(localStorage.getItem('userId')) || null,
+                            pagePath: window.location.pathname,
+                            description: description.trim()
+                        })
+                    })
+                        .then(res => res.json())
+                        .then(data => {
+                            alert(data.message || (data.status === 'success'
+                                ? 'Thank you! Your report has been submitted.'
+                                : 'Error submitting report.'));
+                        })
+                        .catch(() => {
+                            alert('Could not submit flag. Please try again later.');
+                        });
+                });
+            }
         });
     </script>
     <div id="flag-modal" class="modal modal-hidden fixed inset-0 bg-black bg-opacity-70 z-50 flex justify-center items-center opacity-0">
