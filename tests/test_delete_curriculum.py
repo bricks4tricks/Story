@@ -12,10 +12,18 @@ class DummyCursor:
     def __init__(self, rowcount=1):
         self.rowcount = rowcount
         self._fetchall = []
+        self._fetchone = (None,)
+
     def execute(self, query, params=None):
         self._fetchall = []
+        self._fetchone = (None,)
+
     def fetchall(self):
         return self._fetchall
+
+    def fetchone(self):
+        return self._fetchone
+
     def close(self):
         pass
 
@@ -60,6 +68,7 @@ def test_delete_curriculum_cascades_topics(client):
             self.rowcount = 1
             self.executed = []
             self._fetchall = []
+            self._fetchone = (None,)
 
         def execute(self, query, params=None):
             q_str = str(query)
@@ -70,9 +79,13 @@ def test_delete_curriculum_cascades_topics(client):
                 self._fetchall = []
             else:
                 self._fetchall = []
+            self._fetchone = (None,)
 
         def fetchall(self):
             return self._fetchall
+
+        def fetchone(self):
+            return self._fetchone
 
         def close(self):
             pass
@@ -111,6 +124,7 @@ def test_delete_curriculum_removes_steps_before_questions(client):
             self.rowcount = 1
             self.executed = []
             self._fetchall = []
+            self._fetchone = (None,)
 
         def execute(self, query, params=None):
             q_str = str(query)
@@ -123,9 +137,13 @@ def test_delete_curriculum_removes_steps_before_questions(client):
                 self._fetchall = [(10,), (11,)]
             else:
                 self._fetchall = []
+            self._fetchone = (None,)
 
         def fetchall(self):
             return self._fetchall
+
+        def fetchone(self):
+            return self._fetchone
 
         def close(self):
             pass
@@ -159,21 +177,28 @@ def test_delete_curriculum_removes_steps_before_questions(client):
 
 
 def test_delete_curriculum_missing_quizscore_table(client):
-    class ErrorCursor(DummyCursor):
+    class MissingQuizCursor(DummyCursor):
+        def __init__(self):
+            super().__init__()
+            self.executed = []
+
         def execute(self, query, params=None):
-            if "tbl_quizscore" in str(query):
-                raise psycopg2.errors.UndefinedTable
+            q_str = str(query)
+            self.executed.append(q_str)
+            if "to_regclass('tbl_quizscore')" in q_str:
+                self._fetchone = (None,)
             super().execute(query, params)
 
-    class ErrorConnection(DummyConnection):
+    class MissingQuizConnection(DummyConnection):
         def __init__(self):
-            self.cursor_obj = ErrorCursor()
+            self.cursor_obj = MissingQuizCursor()
             self.autocommit = True
 
-    conn = ErrorConnection()
+    conn = MissingQuizConnection()
     with patch('app.get_db_connection', return_value=conn):
         resp = client.delete('/api/admin/delete-curriculum/1')
 
     assert resp.status_code == 200
     data = resp.get_json()
     assert data['status'] == 'success'
+    assert not any("DELETE FROM tbl_quizscore" in q for q in conn.cursor_obj.executed)

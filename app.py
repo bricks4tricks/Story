@@ -1489,14 +1489,12 @@ def delete_curriculum(subject_id):
                 sql.SQL("DELETE FROM tbl_userprogress WHERE topicid IN ({})").format(placeholders),
                 tuple(topic_ids),
             )
-            try:
+            cursor.execute("SELECT to_regclass('tbl_quizscore')")
+            if cursor.fetchone()[0]:
                 cursor.execute(
                     sql.SQL("DELETE FROM tbl_quizscore WHERE topicid IN ({})").format(placeholders),
                     tuple(topic_ids),
                 )
-            except psycopg2.errors.UndefinedTable:
-                # Older databases might not have quiz scores; ignore if the table is absent
-                pass
             cursor.execute(
                 sql.SQL("DELETE FROM tbl_usertopicdifficulty WHERE topicid IN ({})").format(placeholders),
                 tuple(topic_ids),
