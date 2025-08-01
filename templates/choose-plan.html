@@ -74,33 +74,47 @@
             const urlParams = new URLSearchParams(window.location.search);
             const userId = urlParams.get('userId');
             const messageDiv = document.getElementById('message');
+            const planButtons = document.querySelectorAll('.plan-select');
 
+            // If the userId is missing, display an error and prevent interaction.
             if (!userId) {
                 messageDiv.className = 'text-center text-red-400 mt-6';
                 messageDiv.textContent = 'Error: missing user information. Please sign up again.';
-                document.querySelectorAll('.plan-select').forEach(btn => btn.disabled = true);
+                planButtons.forEach(btn => btn.disabled = true);
+                // Redirect back to signup after a short delay so the user can recover.
+                setTimeout(() => { window.location.href = '/signup.html'; }, 3000);
                 return;
             }
 
-            document.querySelectorAll('.plan-select').forEach(button => {
+            planButtons.forEach(button => {
                 button.addEventListener('click', async () => {
                     const plan = button.dataset.plan;
+                    // Disable buttons while the request is in flight to avoid duplicate submissions
+                    planButtons.forEach(btn => btn.disabled = true);
+                    messageDiv.className = 'text-center text-gray-400 mt-6';
+                    messageDiv.textContent = 'Updating plan...';
                     try {
                         const response = await fetch('/api/select-plan', {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
                             body: JSON.stringify({ userId, plan })
                         });
-                        const result = await response.json();
-                        if (response.ok) {
+                        // ``response.json`` may throw if the server does not return JSON
+                        const result = await response.json().catch(() => ({}));
+                        if (response.ok && result.status === 'success') {
                             messageDiv.className = 'text-center text-green-400 mt-6';
                             messageDiv.textContent = 'Plan selected! Redirecting...';
                             setTimeout(() => { window.location.href = 'https://logicandstories.com'; }, 2000);
                         } else {
+                            messageDiv.className = 'text-center text-red-400 mt-6';
                             messageDiv.textContent = result.message || 'An error occurred.';
+                            planButtons.forEach(btn => btn.disabled = false);
                         }
                     } catch (err) {
+                        console.error('Could not update plan', err);
+                        messageDiv.className = 'text-center text-red-400 mt-6';
                         messageDiv.textContent = 'Could not update plan.';
+                        planButtons.forEach(btn => btn.disabled = false);
                     }
                 });
             });

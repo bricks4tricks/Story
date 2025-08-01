@@ -106,7 +106,10 @@ def select_plan():
     if request.method == 'OPTIONS':
         return jsonify(success=True)
     from app import get_db_connection, release_db_connection
-    data = request.get_json()
+    # ``get_json`` returns ``None`` when the request body is empty or invalid JSON.
+    data = request.get_json(silent=True)
+    if not data:
+        return jsonify({"status": "error", "message": "Invalid JSON"}), 400
     user_id = data.get('userId')
     plan = data.get('plan')
     if not all([user_id, plan]):
