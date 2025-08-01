@@ -1468,7 +1468,7 @@ def delete_curriculum(subject_id):
                 tuple(topic_ids),
             )
 
-            # Remove steps linked to questions before deleting the questions themselves
+            # Remove steps and answers linked to questions before deleting the questions themselves
             cursor.execute(
                 sql.SQL("SELECT id FROM tbl_question WHERE topicid IN ({})").format(placeholders),
                 tuple(topic_ids),
@@ -1480,6 +1480,16 @@ def delete_curriculum(subject_id):
                     sql.SQL("DELETE FROM tbl_step WHERE questionid IN ({})").format(q_placeholders),
                     tuple(question_ids),
                 )
+                cursor.execute(
+                    sql.SQL("DELETE FROM tbl_answer WHERE questionid IN ({})").format(q_placeholders),
+                    tuple(question_ids),
+                )
+                cursor.execute("SELECT to_regclass('tbl_questionattempt')")
+                if cursor.fetchone()[0]:
+                    cursor.execute(
+                        sql.SQL("DELETE FROM tbl_questionattempt WHERE questionid IN ({})").format(q_placeholders),
+                        tuple(question_ids),
+                    )
 
             cursor.execute(
                 sql.SQL("DELETE FROM tbl_question WHERE topicid IN ({})").format(placeholders),
