@@ -31,6 +31,7 @@ def seed_data(csv_file_name: str = CSV_FILE_NAME):
                     (table_name, id_column),
                 )
             except psycopg2.Error:
+                conn.rollback()
                 pass
 
         for tbl in ("tbl_grade", "tbl_subject", "tbl_topic"):
@@ -160,6 +161,8 @@ def seed_data(csv_file_name: str = CSV_FILE_NAME):
         print(f"\nDatabase seeding completed successfully! Processed {rows_processed} valid rows.")
 
     except psycopg2.Error as err:
+        if 'conn' in locals():
+            conn.rollback()
         print(f"Database Error: {err}")
         traceback.print_exc()
     except FileNotFoundError:
