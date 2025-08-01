@@ -1174,12 +1174,22 @@ def get_curriculums():
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
-        cursor.execute("SELECT SubjectName FROM tbl_subject ORDER BY SubjectName;")
+        cursor.execute(
+            """
+            DELETE FROM tbl_subject a
+            USING tbl_subject b
+            WHERE a.id < b.id AND LOWER(TRIM(a.subjectname)) = LOWER(TRIM(b.subjectname));
+            """
+        )
+        conn.commit()
+        cursor.execute(
+            "SELECT DISTINCT TRIM(SubjectName) FROM tbl_subject ORDER BY TRIM(SubjectName);"
+        )
         rows = cursor.fetchall()
         curriculums = [row[0] for row in rows]
-        # Deduplicate while preserving order
-        curriculums = list(dict.fromkeys(curriculums))
     except Exception as e:
+        if conn:
+            conn.rollback()
         print(f"get_curriculums error: {e}")
         traceback.print_exc()
         curriculums = mock_curriculums
