@@ -68,6 +68,7 @@ def test_select_plan_user_not_found(client):
     assert resp.status_code == 404
     data = resp.get_json()
     assert data['status'] == 'error'
+    assert data['message'] == 'User not found'
 
 
 def test_select_plan_missing_user_id(client):
@@ -76,6 +77,7 @@ def test_select_plan_missing_user_id(client):
     assert resp.status_code == 400
     data = resp.get_json()
     assert data['status'] == 'error'
+    assert data['message'] == 'Missing fields'
 
 
 def test_select_plan_invalid_plan(client):
@@ -84,3 +86,13 @@ def test_select_plan_invalid_plan(client):
     assert resp.status_code == 400
     data = resp.get_json()
     assert data['status'] == 'error'
+    assert data['message'] == 'Invalid plan selected'
+
+
+def test_select_plan_invalid_json(client):
+    """Completely invalid JSON should return a clear error message."""
+    resp = client.post('/api/select-plan', data='not-json', content_type='application/json')
+    assert resp.status_code == 400
+    data = resp.get_json()
+    assert data['status'] == 'error'
+    assert data['message'] == 'Invalid JSON'
