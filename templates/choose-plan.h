@@ -83,7 +83,7 @@
                 messageDiv.textContent = 'Error: missing user information. Please sign up again.';
                 planButtons.forEach(btn => btn.disabled = true);
                 // Redirect back to signup after a short delay so the user can recover.
-                setTimeout(() => { window.location.href = '/signup.html'; }, 3000);
+                setTimeout(() => { window.location.href = '/signup.h'; }, 3000);
                 return;
             }
 

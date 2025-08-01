@@ -47,7 +47,7 @@
     <header class="bg-slate-900/80 backdrop-blur-sm sticky top-0 z-50 border-b border-slate-800">
         <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
             <a href="https://logicandstories.com" class="text-3xl font-pacifico gradient-text pb-1 leading-normal">Logic and Stories</a>
-            <a href="/signin.html" id="signInLink" class="hover:text-yellow-400 transition-colors cursor-pointer">Already have an account? Sign In</a>
+            <a href="/signin.h" id="signInLink" class="hover:text-yellow-400 transition-colors cursor-pointer">Already have an account? Sign In</a>
         </nav>
     </header>
 

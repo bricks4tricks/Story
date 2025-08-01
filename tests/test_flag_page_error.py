@@ -36,7 +36,7 @@ def client():
 
 def test_flag_page_error(client):
     payload = {
-        "pagePath": "/index.html",
+        "pagePath": "/index.h",
         "description": "typo"
     }
     with patch('app.get_db_connection', return_value=DummyConnection()):
