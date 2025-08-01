@@ -2073,7 +2073,7 @@ def flag_page_error():
 
 @app.route('/')
 def serve_index():
-    return render_template('index.html')
+    return render_template('index.h')
 
 @app.route('/admin-login.html')
 def serve_admin_login():
@@ -2099,9 +2099,9 @@ def serve_parent_login():
 def serve_student_login():
     return redirect(url_for('serve_signin'))
 
-@app.route('/signin.html')
+@app.route('/signin.h')
 def serve_signin():
-    return render_template('signin.html')
+    return render_template('signin.h')
 
 @app.route('/parent-portal.html')
 def serve_parent_portal():
@@ -2115,9 +2115,9 @@ def serve_quiz_player():
 def serve_reset_password():
     return render_template('reset-password.html')
 
-@app.route('/signup.html')
+@app.route('/signup.h')
 def serve_signup():
-    return render_template('signup.html')
+    return render_template('signup.h')
 
 @app.route('/choose-plan.h')
 def serve_choose_plan():

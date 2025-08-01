@@ -68,8 +68,8 @@
                 <a href="#faq" class="hover:text-yellow-400 transition-colors">FAQ</a>
             </div>
             <div id="auth-links" class="flex items-center space-x-4">
-                <a href="/signin.html" class="bg-yellow-400 text-slate-900 font-bold py-2 px-4 rounded-full hover:bg-yellow-300 transition-all transform hover:scale-105 glow-button">Sign In</a>
-                <a href="https://logicandstories.com/signup.html" class="bg-yellow-400 text-slate-900 font-bold py-2 px-5 rounded-full hover:bg-yellow-300 transition-all transform hover:scale-105 glow-button">
+                <a href="/signin.h" class="bg-yellow-400 text-slate-900 font-bold py-2 px-4 rounded-full hover:bg-yellow-300 transition-all transform hover:scale-105 glow-button">Sign In</a>
+                <a href="https://logicandstories.com/signup.h" class="bg-yellow-400 text-slate-900 font-bold py-2 px-5 rounded-full hover:bg-yellow-300 transition-all transform hover:scale-105 glow-button">
                     Start Free Trial
                 </a>
             </div>
@@ -576,7 +576,7 @@
             document.querySelectorAll('.plan-button').forEach(button => {
                 button.addEventListener('click', (e) => {
                     e.preventDefault();
-                    window.location.href = 'https://logicandstories.com/signup.html';
+                    window.location.href = 'https://logicandstories.com/signup.h';
                 });
             });
 

@@ -35,7 +35,7 @@
   }
   document.addEventListener('DOMContentLoaded', function() {
     const loginPages = [
-      '/signin.html',
+      '/signin.h',
       '/student-login.html',
       '/parent-login.html',
       '/admin-login.html'

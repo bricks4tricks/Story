@@ -43,7 +43,7 @@
         <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
             <a href="https://logicandstories.com" class="text-3xl font-pacifico gradient-text pb-1 leading-normal">Logic and Stories</a>
             <div class="hidden md:flex items-center space-x-4">
-                <a href="/signup.html" class="hover:text-yellow-400 transition-colors cursor-pointer">Don't have an account? Sign Up</a>
+                <a href="/signup.h" class="hover:text-yellow-400 transition-colors cursor-pointer">Don't have an account? Sign Up</a>
             </div>
         </nav>
     </header>
@@ -66,7 +66,7 @@
                 <div id="message" class="text-center mb-4" style="height:1.25rem;color:#f87171;" aria-live="polite"></div>
                 <button type="submit" class="w-full bg-yellow-400 text-slate-900 font-bold py-3 px-6 rounded-full hover:bg-yellow-300 transition-all transform hover:scale-105 glow-button">Sign In</button>
                 <p class="text-center text-gray-400 text-sm mt-6"><a href="/forgot-password.html" class="text-yellow-400 hover:underline">Forgot Password?</a></p>
-                <p class="text-center text-gray-400 text-sm mt-2">Don't have an account? <a href="/signup.html" class="text-yellow-400 hover:underline">Sign Up</a></p>
+                <p class="text-center text-gray-400 text-sm mt-2">Don't have an account? <a href="/signup.h" class="text-yellow-400 hover:underline">Sign Up</a></p>
             </form>
             <p class="text-center text-gray-400 text-sm mt-4">
                 <a href="#" id="report-issue-link" class="text-yellow-400 hover:underline">Report Issue</a>
