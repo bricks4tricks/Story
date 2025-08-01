@@ -1250,11 +1250,19 @@ def get_topics(curriculum, unit):
 
 @app.route('/api/admin/curriculums', methods=['GET'])
 def admin_get_curriculums():
+    """Return curriculums, optionally filtered by a search term."""
+    search = request.args.get('search', '').strip()
     conn = None
     try:
         conn = get_db_connection()
         cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
-        cursor.execute("SELECT id, subjectname FROM tbl_subject ORDER BY subjectname;")
+        if search:
+            cursor.execute(
+                "SELECT id, subjectname FROM tbl_subject WHERE subjectname ILIKE %s ORDER BY subjectname;",
+                (f"%{search}%",),
+            )
+        else:
+            cursor.execute("SELECT id, subjectname FROM tbl_subject ORDER BY subjectname;")
         rows = cursor.fetchall()
         return jsonify(rows)
     except Exception as e:
