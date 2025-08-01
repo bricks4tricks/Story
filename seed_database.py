@@ -8,10 +8,9 @@ from db_utils import get_db_connection, release_db_connection
 
 CSV_FILE_NAME = 'Untitled spreadsheet - Mapped Math Syllabus.csv'
 
-def seed_data():
-    """
-    Reads the curriculum CSV, cleans the data, and populates the database tables.
-    """
+
+def seed_data(csv_file_name: str = CSV_FILE_NAME):
+    """Reads the curriculum CSV, cleans the data, and populates the database tables."""
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -19,10 +18,10 @@ def seed_data():
 
         # Cache to avoid re-inserting the same items
         grades_map, subjects_map, units_map = {}, {}, {}
-        
+
         print("Starting to process CSV file...")
         rows_processed = 0  # Counter for successfully processed rows
-        with open(CSV_FILE_NAME, mode='r', encoding='utf-8') as csvfile:
+        with open(csv_file_name, mode='r', encoding='utf-8') as csvfile:
             reader = csv.reader(csvfile)
             next(reader, None)  # Skip header row
 
@@ -107,7 +106,7 @@ def seed_data():
         print(f"Database Error: {err}")
         traceback.print_exc()
     except FileNotFoundError:
-        print(f"Error: The file '{CSV_FILE_NAME}' was not found.")
+        print(f"Error: The file '{csv_file_name}' was not found.")
         traceback.print_exc()
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
