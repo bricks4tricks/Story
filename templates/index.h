@@ -58,7 +58,7 @@
     <!-- Header -->
     <header class="bg-slate-900/80 backdrop-blur-sm sticky top-0 z-50">
         <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <a href="https://logicandstories.com" class="text-3xl font-pacifico gradient-text pb-1 leading-normal">Logic and Stories</a>
+            <a href="/" class="text-3xl font-pacifico gradient-text pb-1 leading-normal">Logic and Stories</a>
             <button id="mobile-menu-toggle" class="md:hidden text-gray-200 focus:outline-none">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
             </button>
@@ -69,13 +69,13 @@
             </div>
             <div id="auth-links" class="flex items-center space-x-4">
                 <a href="/signin.h" class="bg-yellow-400 text-slate-900 font-bold py-2 px-4 rounded-full hover:bg-yellow-300 transition-all transform hover:scale-105 glow-button">Sign In</a>
-                <a href="https://logicandstories.com/signup.h" class="bg-yellow-400 text-slate-900 font-bold py-2 px-5 rounded-full hover:bg-yellow-300 transition-all transform hover:scale-105 glow-button">
+                <a href="/signup.h" class="bg-yellow-400 text-slate-900 font-bold py-2 px-5 rounded-full hover:bg-yellow-300 transition-all transform hover:scale-105 glow-button">
                     Start Free Trial
                 </a>
             </div>
              <div id="welcome-message" class="hidden items-center space-x-4">
                 <span id="welcome-username-display" class="font-semibold text-white"></span>
-                <a href="https://logicandstories.com/dashboard.html" class="text-yellow-400 hover:underline">Go to Dashboard</a>
+                <a href="/dashboard.html" class="text-yellow-400 hover:underline">Go to Dashboard</a>
                 <a href="#" id="signOutButton" class="bg-gray-700 text-white font-bold py-2 px-5 rounded-full hover:bg-gray-600 transition-colors">Sign Out</a>
             </div>
         </nav>
@@ -350,7 +350,7 @@
         <div class="container mx-auto px-6 py-12">
             <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
                 <div>
-                    <a href="https://logicandstories.com" class="text-2xl font-pacifico gradient-text pb-1 leading-normal">Logic and Stories</a>
+                    <a href="/" class="text-2xl font-pacifico gradient-text pb-1 leading-normal">Logic and Stories</a>
                     <p class="text-gray-400 mt-2">Making math magical for the next generation of thinkers and innovators.</p>
                 </div>
                 <div>
@@ -467,7 +467,7 @@
                 }
 
                 try {
-                    const response = await fetch('https://logicandstories.com/api/signin', {
+                    const response = await fetch('/api/signin', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ username, password })
@@ -484,11 +484,11 @@
                         elements.messageDiv.className = 'text-center text-green-400 mb-4';
 
                         if (result.user.userType === 'Admin') {
-                            setTimeout(() => { window.location.href = 'https://logicandstories.com/admin.html'; }, 1500);
+                            setTimeout(() => { window.location.href = '/admin.html'; }, 1500);
                         } else if (result.user.userType === 'Parent') {
-                            setTimeout(() => { window.location.href = 'https://logicandstories.com/parent-portal.html'; }, 1500);
+                            setTimeout(() => { window.location.href = '/parent-portal.html'; }, 1500);
                         } else {
-                            setTimeout(() => { window.location.href = 'https://logicandstories.com/dashboard.html'; }, 1500);
+                            setTimeout(() => { window.location.href = '/dashboard.html'; }, 1500);
                         }
                     } else {
                         elements.messageDiv.textContent = result.message || 'An error occurred.';
@@ -502,7 +502,7 @@
             const handleSignOut = (e) => {
                 e.preventDefault();
                 localStorage.clear();
-                window.location.href = 'https://logicandstories.com';
+                window.location.href = '/';
             };
 
             const openStoryModal = (card) => {
@@ -531,7 +531,7 @@
                     return;
                 }
 
-                window.location.href = `https://logicandstories.com/story-player.html?topicId=${activeStoryTopicId}&theme=${selectedTheme}`;
+                window.location.href = `/story-player.html?topicId=${activeStoryTopicId}&theme=${selectedTheme}`;
             };
 
             const toggleFaq = (item) => {
@@ -576,7 +576,7 @@
             document.querySelectorAll('.plan-button').forEach(button => {
                 button.addEventListener('click', (e) => {
                     e.preventDefault();
-                    window.location.href = 'https://logicandstories.com/signup.h';
+                    window.location.href = '/signup.h';
                 });
             });
 
