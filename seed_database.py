@@ -1,5 +1,6 @@
 import csv
 import psycopg2
+from psycopg2 import sql
 import os  # Import os for environment variables
 import traceback
 from db_utils import get_db_connection, release_db_connection
@@ -15,6 +16,25 @@ def seed_data(csv_file_name: str = CSV_FILE_NAME):
         conn = get_db_connection()
         cursor = conn.cursor()
         print("Successfully connected to the database for seeding.")
+
+        # Ensure sequences are aligned with existing data to avoid duplicate key errors
+        def reset_sequence(table_name: str, id_column: str = "id") -> None:
+            """Reset the sequence for ``table_name`` based on its current max id."""
+            try:
+                cursor.execute(
+                    sql.SQL(
+                        "SELECT setval(pg_get_serial_sequence(%s, %s), COALESCE(MAX({id_col}), 0), true) FROM {table}"
+                    ).format(
+                        id_col=sql.Identifier(id_column),
+                        table=sql.Identifier(table_name),
+                    ),
+                    (table_name, id_column),
+                )
+            except psycopg2.Error:
+                pass
+
+        for tbl in ("tbl_grade", "tbl_subject", "tbl_topic"):
+            reset_sequence(tbl)
 
         # Cache to avoid re-inserting the same items
         grades_map, subjects_map, units_map = {}, {}, {}
