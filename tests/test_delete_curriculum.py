@@ -10,8 +10,11 @@ from app import app as flask_app
 class DummyCursor:
     def __init__(self, rowcount=1):
         self.rowcount = rowcount
+        self._fetchall = []
     def execute(self, query, params=None):
-        pass
+        self._fetchall = []
+    def fetchall(self):
+        return self._fetchall
     def close(self):
         pass
 
@@ -48,3 +51,54 @@ def test_delete_curriculum_not_found(client):
     assert resp.status_code == 404
     data = resp.get_json()
     assert data['status'] == 'error'
+
+
+def test_delete_curriculum_cascades_topics(client):
+    class TrackCursor:
+        def __init__(self):
+            self.rowcount = 1
+            self.executed = []
+            self._fetchall = []
+
+        def execute(self, query, params=None):
+            q_str = str(query)
+            self.executed.append(q_str)
+            if "SELECT id FROM tbl_topic" in q_str:
+                self._fetchall = [(1,), (2,)]
+            elif "SELECT interactiveelementid FROM tbl_description" in q_str:
+                self._fetchall = []
+            else:
+                self._fetchall = []
+
+        def fetchall(self):
+            return self._fetchall
+
+        def close(self):
+            pass
+
+    class TrackConnection:
+        def __init__(self):
+            self.cursor_obj = TrackCursor()
+            self.autocommit = True
+
+        def cursor(self, cursor_factory=None):
+            return self.cursor_obj
+
+        def commit(self):
+            pass
+
+        def rollback(self):
+            pass
+
+        def close(self):
+            pass
+
+    conn = TrackConnection()
+    with patch('app.get_db_connection', return_value=conn):
+        resp = client.delete('/api/admin/delete-curriculum/1')
+
+    assert resp.status_code == 200
+    queries = conn.cursor_obj.executed
+    subject_index = next(i for i, q in enumerate(queries) if "DELETE FROM tbl_subject" in q)
+    topic_index = next(i for i, q in enumerate(queries) if "DELETE FROM tbl_topic" in q)
+    assert topic_index < subject_index

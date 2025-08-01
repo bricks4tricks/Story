@@ -1423,6 +1423,78 @@ def delete_curriculum(subject_id):
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
+
+        # Begin transaction as multiple tables are affected
+        conn.autocommit = False
+
+        # Collect all topic IDs linked to this curriculum
+        cursor.execute("SELECT id FROM tbl_topic WHERE subjectid = %s", (subject_id,))
+        topic_ids = [row[0] for row in cursor.fetchall()]
+
+        if topic_ids:
+            placeholders = sql.SQL(',').join(sql.Placeholder() * len(topic_ids))
+
+            # Remove theme links for these topics
+            cursor.execute(
+                sql.SQL("DELETE FROM tbl_topictheme WHERE topicid IN ({})").format(placeholders),
+                tuple(topic_ids),
+            )
+
+            # Remove descriptions and any linked interactive elements
+            cursor.execute(
+                sql.SQL(
+                    "SELECT interactiveelementid FROM tbl_description "
+                    "WHERE topicid IN ({}) AND interactiveelementid IS NOT NULL"
+                ).format(placeholders),
+                tuple(topic_ids),
+            )
+            interactive_ids = [row[0] for row in cursor.fetchall()]
+
+            if interactive_ids:
+                ie_placeholders = sql.SQL(',').join(sql.Placeholder() * len(interactive_ids))
+                cursor.execute(
+                    sql.SQL("DELETE FROM tbl_interactiveelement WHERE id IN ({})").format(ie_placeholders),
+                    tuple(interactive_ids),
+                )
+
+            cursor.execute(
+                sql.SQL("DELETE FROM tbl_description WHERE topicid IN ({})").format(placeholders),
+                tuple(topic_ids),
+            )
+
+            # Remove other topic dependencies
+            cursor.execute(
+                sql.SQL("DELETE FROM tbl_topicgrade WHERE topicid IN ({})").format(placeholders),
+                tuple(topic_ids),
+            )
+            cursor.execute(
+                sql.SQL("DELETE FROM tbl_question WHERE topicid IN ({})").format(placeholders),
+                tuple(topic_ids),
+            )
+            cursor.execute(
+                sql.SQL("DELETE FROM tbl_userprogress WHERE topicid IN ({})").format(placeholders),
+                tuple(topic_ids),
+            )
+            cursor.execute(
+                sql.SQL("DELETE FROM tbl_quizscore WHERE topicid IN ({})").format(placeholders),
+                tuple(topic_ids),
+            )
+            cursor.execute(
+                sql.SQL("DELETE FROM tbl_usertopicdifficulty WHERE topicid IN ({})").format(placeholders),
+                tuple(topic_ids),
+            )
+            cursor.execute(
+                sql.SQL("DELETE FROM tbl_flaggedreport WHERE itemtype = 'Story' AND flaggeditemid IN ({})").format(placeholders),
+                tuple(topic_ids),
+            )
+
+            # Finally remove the topics themselves
+            cursor.execute(
+                sql.SQL("DELETE FROM tbl_topic WHERE id IN ({})").format(placeholders),
+                tuple(topic_ids),
+            )
+
+        # Remove the curriculum
         cursor.execute("DELETE FROM tbl_subject WHERE id = %s", (subject_id,))
         conn.commit()
 
