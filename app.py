@@ -1322,6 +1322,35 @@ def admin_curriculum_hierarchy():
             release_db_connection(conn)
 
 
+@app.route('/api/curriculum-table', methods=['GET'])
+def get_curriculum_table():
+    """Return curriculum data in a flat table format."""
+    conn = None
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        query = """
+            SELECT g.GradeName, s.SubjectName AS CurriculumType,
+                   unit.TopicName AS UnitName, topic.TopicName
+            FROM tbl_topic topic
+            JOIN tbl_topic unit ON topic.parenttopicid = unit.id
+            JOIN tbl_subject s ON unit.subjectid = s.id
+            JOIN tbl_topicgrade tg ON topic.id = tg.topicid
+            JOIN tbl_grade g ON tg.gradeid = g.id
+            ORDER BY g.id, s.id, unit.id, topic.id;
+        """
+        cursor.execute(query)
+        rows = cursor.fetchall()
+        return jsonify(rows)
+    except Exception as e:
+        print(f"Curriculum table error: {e}")
+        traceback.print_exc()
+        return jsonify({"status": "error", "message": "Internal error"}), 500
+    finally:
+        if conn:
+            release_db_connection(conn)
+
+
 @app.route('/api/admin/update-curriculum/<int:subject_id>', methods=['PUT', 'OPTIONS'])
 def update_curriculum(subject_id):
     if request.method == 'OPTIONS':
