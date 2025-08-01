@@ -26,9 +26,10 @@
             </button>
             <div class="hidden md:flex items-center space-x-4">
                 <span id="welcome-username" class="font-semibold text-white"></span>
-                <button id="cancelSubscriptionButton" class="bg-red-600 text-white font-bold py-2 px-5 rounded-full hover:bg-red-500 transition-colors">
+                <button id="cancelSubscriptionButton" class="hidden bg-red-600 text-white font-bold py-2 px-5 rounded-full hover:bg-red-500 transition-colors">
                     Cancel Subscription
                 </button>
+                <span id="noSubscriptionMessage" class="text-gray-400 text-sm hidden">No active subscription.</span>
                 <button id="signOutButton" class="bg-yellow-400 text-slate-900 font-bold py-2 px-5 rounded-full hover:bg-yellow-300 glow-button">
                     Sign Out
                 </button>
@@ -36,7 +37,8 @@
         </nav>
         <div id="mobile-menu" class="md:hidden hidden px-6 pb-4">
             <span id="welcome-username-mobile" class="block py-2 font-semibold text-white"></span>
-            <button id="cancelSubscriptionButtonMobile" class="bg-red-600 text-white font-bold py-2 px-5 rounded-full hover:bg-red-500 transition-colors mt-2">Cancel Subscription</button>
+            <button id="cancelSubscriptionButtonMobile" class="hidden bg-red-600 text-white font-bold py-2 px-5 rounded-full hover:bg-red-500 transition-colors mt-2">Cancel Subscription</button>
+            <p id="noSubscriptionMessageMobile" class="text-gray-400 text-sm hidden mt-2">No active subscription.</p>
             <button id="signOutButtonMobile" class="bg-yellow-400 text-slate-900 font-bold py-2 px-5 rounded-full hover:bg-yellow-300 glow-button mt-2">Sign Out</button>
         </div>
     </header>
@@ -165,6 +167,8 @@
             const showCreateStudentModalBtn = document.getElementById('showCreateStudentModalBtn');
             const cancelButton = document.getElementById('cancelSubscriptionButton');
             const cancelButtonMobile = document.getElementById('cancelSubscriptionButtonMobile');
+            const noSubMsg = document.getElementById('noSubscriptionMessage');
+            const noSubMsgMobile = document.getElementById('noSubscriptionMessageMobile');
 
             let studentIdToDelete = null;
 
@@ -200,6 +204,28 @@
                 modalElement.classList.add('opacity-0');
                 modalElement.querySelector('.modal-content').classList.add('scale-95');
                 setTimeout(() => modalElement.classList.add('modal-hidden'), 300);
+            };
+
+            const checkSubscription = async () => {
+                try {
+                    const response = await fetch(`${window.location.origin}/api/subscription-status/${parentId}`);
+                    const data = await response.json();
+                    if (data.active) {
+                        if (cancelButton) {
+                            cancelButton.classList.remove('hidden');
+                            cancelButton.addEventListener('click', cancelSubscription);
+                        }
+                        if (cancelButtonMobile) {
+                            cancelButtonMobile.classList.remove('hidden');
+                            cancelButtonMobile.addEventListener('click', cancelSubscription);
+                        }
+                    } else {
+                        if (noSubMsg) noSubMsg.classList.remove('hidden');
+                        if (noSubMsgMobile) noSubMsgMobile.classList.remove('hidden');
+                    }
+                } catch (err) {
+                    console.error('Subscription status error:', err);
+                }
             };
 
             const fetchStudents = async () => {
@@ -382,7 +408,11 @@
                     const response = await fetch(`${window.location.origin}/api/cancel-subscription/${parentId}`, { method: 'POST' });
                     const result = await response.json();
                     if (response.ok) {
-                        alert('Subscription cancelled. You will retain access until the end of your current billing period.');
+                        alert(result.message || 'Subscription cancelled. You will retain access until the end of your current billing period.');
+                        if (cancelButton) cancelButton.classList.add('hidden');
+                        if (cancelButtonMobile) cancelButtonMobile.classList.add('hidden');
+                        if (noSubMsg) noSubMsg.classList.remove('hidden');
+                        if (noSubMsgMobile) noSubMsgMobile.classList.remove('hidden');
                     } else {
                         alert(result.message || 'Error cancelling subscription.');
                     }
@@ -392,8 +422,7 @@
                 }
             }
 
-            if (cancelButton) cancelButton.addEventListener('click', cancelSubscription);
-            if (cancelButtonMobile) cancelButtonMobile.addEventListener('click', cancelSubscription);
+            checkSubscription();
 
             if (signOutButtonMobile) {
                 signOutButtonMobile.addEventListener('click', () => {

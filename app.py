@@ -1107,6 +1107,52 @@ def delete_student_from_parent_portal(student_id):
             release_db_connection(conn)
 
 
+@app.route('/api/subscription-status/<int:user_id>', methods=['GET', 'OPTIONS'])
+def subscription_status(user_id):
+    """Return whether a user has an active subscription."""
+    if request.method == 'OPTIONS':
+        return jsonify(success=True)
+
+    conn = None
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute(
+            "SELECT active, expires_on FROM tbl_subscription WHERE user_id = %s",
+            (user_id,),
+        )
+        row = cursor.fetchone()
+        if row:
+            active, expires_on = row
+            if expires_on and expires_on <= datetime.utcnow():
+                cursor.execute(
+                    "UPDATE tbl_subscription SET active = FALSE WHERE user_id = %s",
+                    (user_id,),
+                )
+                conn.commit()
+                active = False
+            if active:
+                return (
+                    jsonify(
+                        {
+                            "active": True,
+                            "expires_on": expires_on.date().isoformat()
+                            if expires_on
+                            else None,
+                        }
+                    ),
+                    200,
+                )
+        return jsonify({"active": False}), 200
+    except Exception as e:
+        print(f"Subscription Status API Error: {e}")
+        traceback.print_exc()
+        return jsonify({"status": "error", "message": "Internal error"}), 500
+    finally:
+        if conn:
+            release_db_connection(conn)
+
+
 @app.route('/api/cancel-subscription/<int:user_id>', methods=['POST', 'OPTIONS'])
 def cancel_subscription(user_id):
     """Mark a user's subscription as cancelled."""
@@ -1118,38 +1164,23 @@ def cancel_subscription(user_id):
         conn = get_db_connection()
         cursor = conn.cursor()
 
-        # Ensure the user exists before attempting cancellation
         cursor.execute("SELECT id FROM tbl_user WHERE id = %s", (user_id,))
         if not cursor.fetchone():
             return jsonify({"status": "error", "message": "User not found"}), 404
 
-        # Create subscription table if it doesn't exist
         cursor.execute(
-            """
-            CREATE TABLE IF NOT EXISTS tbl_subscription (
-                user_id INTEGER PRIMARY KEY REFERENCES tbl_user(id),
-                active BOOLEAN NOT NULL DEFAULT TRUE,
-                expires_on TIMESTAMP,
-                cancelled_on TIMESTAMP
-            );
-            """
+            "SELECT active FROM tbl_subscription WHERE user_id = %s",
+            (user_id,),
         )
+        sub = cursor.fetchone()
+        if not sub or not sub[0]:
+            return (
+                jsonify(
+                    {"status": "error", "message": "No active subscription to cancel."}
+                ),
+                400,
+            )
 
-        cursor.execute(
-            "ALTER TABLE tbl_subscription ADD COLUMN IF NOT EXISTS expires_on TIMESTAMP"
-        )
-
-        # Ensure a row exists for the user
-        cursor.execute(
-            """
-            INSERT INTO tbl_subscription (user_id, active)
-            VALUES (%s, TRUE)
-            ON CONFLICT (user_id) DO NOTHING;
-            """,
-            (user_id,)
-        )
-
-        # Mark the subscription as cancelled
         cursor.execute(
             "UPDATE tbl_subscription SET active = FALSE, cancelled_on = NOW() WHERE user_id = %s",
             (user_id,),
