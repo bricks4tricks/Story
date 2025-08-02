@@ -38,8 +38,7 @@
                         <li class="flex items-center"><svg class="w-5 h-5 text-green-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>1 student profile</li>
                         <li class="flex items-center"><svg class="w-5 h-5 text-green-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>New stories monthly</li>
                     </ul>
-                    <button class="plan-select glow-button w-full mt-8 bg-gray-700 text-white font-bold py-3 px-6 rounded-full hover:bg-gray-600 transition-colors"
-                            data-plan="Monthly">
+                    <button class="plan-select glow-button w-full mt-8 bg-gray-700 text-white font-bold py-3 px-6 rounded-full hover:bg-gray-600 transition-colors" data-plan="Monthly">
                         Choose Plan
                     </button>
                 </div>
@@ -56,8 +55,7 @@
                         <li class="flex items-center"><svg class="w-5 h-5 text-green-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>New stories monthly</li>
                         <li class="flex items-center"><svg class="w-5 h-5 text-green-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Early access to new content</li>
                     </ul>
-                    <button class="plan-select glow-button w-full mt-8 bg-yellow-400 text-slate-900 font-bold py-3 px-6 rounded-full hover:bg-yellow-300 transition-all transform hover:scale-105"
-                            data-plan="Annual">
+                    <button class="plan-select glow-button w-full mt-8 bg-yellow-400 text-slate-900 font-bold py-3 px-6 rounded-full hover:bg-yellow-300 transition-all transform hover:scale-105" data-plan="Annual">
                         Choose Plan
                     </button>
                 </div>
@@ -70,8 +68,7 @@
                         <li class="flex items-center"><svg class="w-5 h-5 text-green-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Up to 5 student profiles</li>
                         <li class="flex items-center"><svg class="w-5 h-5 text-green-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Priority support</li>
                     </ul>
-                    <button class="plan-select glow-button w-full mt-8 bg-gray-700 text-white font-bold py-3 px-6 rounded-full hover:bg-gray-600 transition-colors"
-                            data-plan="Family">
+                    <button class="plan-select glow-button w-full mt-8 bg-gray-700 text-white font-bold py-3 px-6 rounded-full hover:bg-gray-600 transition-colors" data-plan="Family">
                         Choose Plan
                     </button>
                 </div>
