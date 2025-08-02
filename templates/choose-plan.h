@@ -94,6 +94,9 @@
             const userId = urlParams.get('userId');
             const messageDiv = document.getElementById('message');
             const planButtons = document.querySelectorAll('.plan-select');
+            // Start with a neutral message state.
+            messageDiv.textContent = '';
+            messageDiv.className = 'text-center text-gray-400 mt-6';
 
             // If the userId is missing, display an error and prevent interaction.
             if (!userId) {
@@ -104,6 +107,9 @@
                 setTimeout(() => { window.location.href = '/signup.h'; }, 3000);
                 return;
             }
+
+            // Enable buttons when a valid user is present.
+            planButtons.forEach(btn => btn.disabled = false);
 
             planButtons.forEach(button => {
                 button.addEventListener('click', async () => {
