@@ -92,9 +92,11 @@
         document.addEventListener('DOMContentLoaded', () => {
             const messageDiv = document.getElementById('message');
             const planButtons = document.querySelectorAll('.plan-select');
-            // Start with a neutral message state.
+            // Start with a neutral message state and disable plan buttons
+            // until we verify a user ID.
             messageDiv.textContent = '';
             messageDiv.className = 'text-center text-gray-400 mt-6';
+            planButtons.forEach(btn => btn.disabled = true);
 
             // Retrieve the ID in a case-insensitive way.
             const urlParams = new URLSearchParams(window.location.search);
@@ -108,7 +110,6 @@
                 messageDiv.className = 'text-center text-red-400 mt-6';
                 messageDiv.innerHTML = 'Error: missing user information. Please sign up again.<br>' +
                     '<a href="/signup.h" class="inline-block mt-4 bg-yellow-400 text-slate-900 font-bold py-2 px-4 rounded-full">Sign up</a>';
-                planButtons.forEach(btn => btn.disabled = true);
                 return;
             }
 
