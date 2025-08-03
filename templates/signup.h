@@ -56,6 +56,7 @@
             <h2 class="text-3xl font-bold text-white text-center mb-6">Create Your Account</h2>
             <form id="signupForm" class="space-y-4">
                 <input type="hidden" name="csrf_token" value="{{SERVER_GENERATED_TOKEN}}">
+                <input type="hidden" id="plan" name="plan" value="">
                 <div>
                     <label for="new-username" class="block text-gray-300 mb-2 font-bold">Username</label>
                     <input type="text" id="new-username" name="username" class="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400" required>
@@ -99,6 +100,17 @@
             const emailError = document.getElementById('email-error');
             const passwordError = document.getElementById('password-error');
             const confirmPasswordError = document.getElementById('confirm-password-error');
+            const planInput = document.getElementById('plan');
+
+            const params = new URLSearchParams(window.location.search);
+            const planParam = params.get('plan');
+            if (planParam) {
+                const planMap = { monthly: 'Monthly', annual: 'Annual', family: 'Family' };
+                const mapped = planMap[planParam.toLowerCase()];
+                if (mapped) {
+                    planInput.value = mapped;
+                }
+            }
 
             // Password validation function for client-side
             const validatePasswordClient = (password) => {
@@ -169,6 +181,10 @@
 
                 const csrfToken = document.querySelector('input[name="csrf_token"]').value;
                 const userData = { username, email, password, csrf_token: csrfToken };
+                const selectedPlan = planInput.value;
+                if (selectedPlan) {
+                    userData.plan = selectedPlan;
+                }
                 const apiUrl = '/api/signup';
 
                 console.log(`Sending data to API at: ${apiUrl}`);
