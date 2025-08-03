@@ -189,8 +189,7 @@
                     if (response.ok) {
                         messageDiv.textContent = 'Account created successfully! Redirecting...';
                         messageDiv.className = 'text-center text-green-400 mb-4';
-                        const redirectUrl = `/choose-plan.h?userId=${result.userId}`;
-                        setTimeout(() => { window.location.href = redirectUrl; }, 2000);
+                        setTimeout(() => { window.location.href = '/'; }, 2000);
                     } else {
                         messageDiv.textContent = result.message || 'An error occurred.';
                         // Class already set for errors.

@@ -2124,10 +2124,6 @@ def serve_reset_password():
 def serve_signup():
     return render_template('signup.h')
 
-@app.route('/choose-plan.h')
-def serve_choose_plan():
-    return render_template('choose-plan.h')
-
 @app.route('/story-player.html')
 def serve_story_player():
     return render_template('story-player.html')
