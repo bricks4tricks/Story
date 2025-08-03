@@ -59,7 +59,11 @@
   }
 
   window.openFlagModal = function() {
-    loadOpenFlags();
+    // Only load existing flags when the feature is enabled.
+    // `window.showFlagReporter` is populated in flagErrorButton.js.
+    if (window.showFlagReporter) {
+      loadOpenFlags();
+    }
     showModal();
     return new Promise(resolve => {
       resolver = resolve;

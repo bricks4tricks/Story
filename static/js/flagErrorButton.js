@@ -1,4 +1,28 @@
 (function() {
+  /**
+   * Determine if the "Flag Error" reporter should be shown.
+   *
+   * Admins can toggle this feature globally by setting
+   * `window.showFlagReporter` or via the `/api/config` endpoint.
+   */
+  async function reporterEnabled() {
+    if (typeof window.showFlagReporter !== 'undefined') {
+      return !!window.showFlagReporter;
+    }
+    try {
+      const res = await fetch('/api/config');
+      if (!res.ok) return false;
+      const cfg = await res.json();
+      const enabled = !!cfg.showFlagReporter;
+      // Persist so other scripts (e.g., flagModal.js) can use the value.
+      window.showFlagReporter = enabled;
+      return enabled;
+    } catch (err) {
+      // Treat failures as disabled to avoid showing the button unexpectedly.
+      return false;
+    }
+  }
+
   function createButton() {
     const btn = document.createElement('button');
     btn.id = 'flag-error-btn';
@@ -33,14 +57,18 @@
     });
     return btn;
   }
-  document.addEventListener('DOMContentLoaded', function() {
+
+  document.addEventListener('DOMContentLoaded', async function() {
     const loginPages = [
       '/signin.h',
       '/student-login.html',
       '/parent-login.html',
       '/admin-login.html'
     ];
-    if (!loginPages.includes(window.location.pathname)) {
+    if (loginPages.includes(window.location.pathname)) return;
+
+    // Only append the button when configuration explicitly enables it.
+    if (await reporterEnabled()) {
       document.body.appendChild(createButton());
     }
   });
