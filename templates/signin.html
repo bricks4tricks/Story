@@ -189,5 +189,21 @@
     <script src="/static/js/flagModal.js"></script>
     <script src="/static/js/flagErrorButton.js"></script>
     <script src="/static/js/backToTop.js"></script>
+    <!-- Add Forgot Password link via script -->
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        // Find the password input and its parent container
+        const passwordInput = document.getElementById('password');
+        if (passwordInput && passwordInput.parentElement) {
+          const link = document.createElement('a');
+          link.href = '/forgot-password.html';
+          link.textContent = 'Forgot Password?';
+          // Style the link to match the site’s palette
+          link.className = 'block text-yellow-400 hover:underline text-sm mb-4';
+          // Insert the link immediately after the password field
+          passwordInput.parentElement.insertBefore(link, passwordInput.nextSibling);
+        }
+      });
+    </script>
 </body>
 </html>
