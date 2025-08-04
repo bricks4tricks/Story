@@ -59,17 +59,17 @@
                 <input type="hidden" id="plan" name="plan" value="">
                 <div>
                     <label for="new-username" class="block text-gray-300 mb-2 font-bold">Username</label>
-                    <input type="text" id="new-username" name="username" class="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400" required>
+                    <input type="text" id="new-username" autocomplete="username" name="username" class="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400" required>
                     <span id="username-error" class="text-red-400 text-sm block mt-1" aria-live="polite"></span>
                 </div>
                 <div>
                     <label for="email" class="block text-gray-300 mb-2 font-bold">Email Address</label>
-                    <input type="email" id="email" name="email" class="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400" required>
+                    <input type="email" id="email" autocomplete="email" name="email" class="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400" required>
                     <span id="email-error" class="text-red-400 text-sm block mt-1" aria-live="polite"></span>
                 </div>
                 <div>
                     <label for="new-password" class="block text-gray-300 mb-2 font-bold">Password</label>
-                    <input type="password" id="new-password" name="password"
+                    <input type="password" id="new-password" autocomplete="new-password" name="password"
                            class="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400"
                            required
                            minlength="8"
@@ -78,7 +78,7 @@
                 </div>
                 <div>
                     <label for="confirm-password" class="block text-gray-300 mb-2 font-bold">Confirm Password</label>
-                    <input type="password" id="confirm-password" name="confirm_password"
+                    <input type="password" id="confirm-password" autocomplete="new-password" name="confirm_password"
                            class="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400"
                            required>
                     <span id="confirm-password-error" class="text-red-400 text-sm block mt-1" aria-live="polite"></span>

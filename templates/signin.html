@@ -55,12 +55,12 @@
                 <input type="hidden" name="csrf_token" value="{{SERVER_GENERATED_TOKEN}}">
                 <div class="mb-4">
                     <label for="username" class="block text-gray-300 mb-2 font-bold">Username</label>
-                    <input type="text" id="username" name="username" class="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400" required>
+                    <input type="text" id="username" autocomplete="username" name="username" class="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400" required>
                     <span id="username-error" class="text-red-400 text-sm block mt-1" aria-live="polite"></span>
                 </div>
                 <div class="mb-4">
                     <label for="password" class="block text-gray-300 mb-2 font-bold">Password</label>
-                    <input type="password" id="password" name="password" class="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400" required minlength="8">
+                    <input type="password" id="password" autocomplete="current-password" name="password" class="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400" required minlength="8">
                     <span id="password-error" class="text-red-400 text-sm block mt-1" aria-live="polite"></span>
                 </div>
                 <div id="message" class="text-center mb-4" style="height:1.25rem;color:#f87171;" aria-live="polite"></div>
