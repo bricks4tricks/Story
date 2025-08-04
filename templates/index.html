@@ -524,6 +524,11 @@
             };
 
             const handleStartStory = () => {
+                // Redirect to sign-in if user is not logged in
+                if (!isLoggedIn) {
+                    window.location.href = '/signin.html';
+                    return;
+                }
                 if (!activeStoryTopicId || !selectedTheme) {
                     elements.messageModalText.textContent = "Please select both a story and a theme.";
                     showModal(elements.messageModal);
