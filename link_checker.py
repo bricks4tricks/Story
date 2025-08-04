@@ -35,7 +35,7 @@ def html_files(root):
     templates_dir = os.path.join(root, "templates")
     for dirpath, _, filenames in os.walk(templates_dir):
         for name in filenames:
-            if name.endswith((".html", ".h")):
+            if name.endswith(".html"):
                 yield os.path.join(dirpath, name)
 
 def resolve_local(path, current_file):

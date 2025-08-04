@@ -2073,12 +2073,11 @@ def flag_page_error():
 
 @app.route('/')
 def serve_home():
-    return render_template('index.h')
+    return render_template('index.html')
 
 @app.route('/index.html')
-@app.route('/index.h')
 def serve_index():
-    return render_template('index.h')
+    return render_template('index.html')
 
 @app.route('/admin-login.html')
 def serve_admin_login():
@@ -2104,9 +2103,9 @@ def serve_parent_login():
 def serve_student_login():
     return redirect(url_for('serve_signin'))
 
-@app.route('/signin.h')
+@app.route('/signin.html')
 def serve_signin():
-    return render_template('signin.h')
+    return render_template('signin.html')
 
 @app.route('/parent-portal.html')
 def serve_parent_portal():
@@ -2120,9 +2119,9 @@ def serve_quiz_player():
 def serve_reset_password():
     return render_template('reset-password.html')
 
-@app.route('/signup.h')
+@app.route('/signup.html')
 def serve_signup():
-    return render_template('signup.h')
+    return render_template('signup.html')
 
 @app.route('/story-player.html')
 def serve_story_player():
