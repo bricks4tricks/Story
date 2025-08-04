@@ -2131,6 +2131,11 @@ def serve_story_player():
 def serve_progress_dashboard():
     return render_template('progress-dashboard.html')
 
+@app.route('/blog.html')
+@app.route('/blog')
+def serve_blog():
+    return render_template('blog.html')
+
 @app.route('/terms-of-service.html')
 def serve_terms_of_service():
     return render_template('terms-of-service.html')
