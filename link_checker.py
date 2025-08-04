@@ -12,6 +12,9 @@ SKIP_DOMAINS = {
     "fonts.gstatic.com",
     "cdn.tailwindcss.com",
     "placehold.co",
+    "facebook.com",
+    "twitter.com",
+    "instagram.com",
 }
 
 CHECK_TAGS = [
