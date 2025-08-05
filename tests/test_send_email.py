@@ -16,3 +16,15 @@ def test_send_email_missing_env_vars():
         result = auth.send_email("user@example.com", "Subject", "<p>Hi</p>")
         smtp_mock.assert_not_called()
         assert result is False
+
+
+def test_send_email_missing_sender_email():
+    with patch.object(auth, "SENDER_EMAIL", None), \
+         patch.object(auth, "SMTP_SERVER", "smtp.example.com"), \
+         patch.object(auth, "SMTP_PORT", 587), \
+         patch.object(auth, "SMTP_USERNAME", "user"), \
+         patch.object(auth, "SMTP_PASSWORD", "pass"), \
+         patch("smtplib.SMTP") as smtp_mock:
+        result = auth.send_email("user@example.com", "Subject", "<p>Hi</p>")
+        smtp_mock.assert_not_called()
+        assert result is False
