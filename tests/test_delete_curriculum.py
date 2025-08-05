@@ -262,8 +262,8 @@ def test_delete_curriculum_missing_quizscore_table(client):
     assert not any("DELETE FROM tbl_quizscore" in q for q in conn.cursor_obj.executed)
 
 
-def test_delete_curriculum_missing_flaggedreport_table(client):
-    class MissingFlaggedCursor(DummyCursor):
+def test_delete_curriculum_missing_flagreport_table(client):
+    class MissingFlagCursor(DummyCursor):
         def __init__(self):
             super().__init__()
             self.executed = []
@@ -271,20 +271,20 @@ def test_delete_curriculum_missing_flaggedreport_table(client):
         def execute(self, query, params=None):
             q_str = str(query)
             self.executed.append(q_str)
-            if "to_regclass('tbl_flaggedreport')" in q_str:
+            if "to_regclass('tbl_flagreport')" in q_str:
                 self._fetchone = (None,)
             super().execute(query, params)
 
-    class MissingFlaggedConnection(DummyConnection):
+    class MissingFlagConnection(DummyConnection):
         def __init__(self):
-            self.cursor_obj = MissingFlaggedCursor()
+            self.cursor_obj = MissingFlagCursor()
             self.autocommit = True
 
-    conn = MissingFlaggedConnection()
+    conn = MissingFlagConnection()
     with patch('app.get_db_connection', return_value=conn):
         resp = client.delete('/api/admin/delete-curriculum/1')
 
     assert resp.status_code == 200
     data = resp.get_json()
     assert data['status'] == 'success'
-    assert not any("DELETE FROM tbl_flaggedreport" in q for q in conn.cursor_obj.executed)
+    assert not any("DELETE FROM tbl_flagreport" in q for q in conn.cursor_obj.executed)

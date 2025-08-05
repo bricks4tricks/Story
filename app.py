@@ -1532,11 +1532,11 @@ def delete_curriculum(subject_id):
                 sql.SQL("DELETE FROM tbl_usertopicdifficulty WHERE topicid IN ({})").format(placeholders),
                 tuple(topic_ids),
             )
-            cursor.execute("SELECT to_regclass('tbl_flaggedreport')")
+            cursor.execute("SELECT to_regclass('tbl_flagreport')")
             if cursor.fetchone()[0]:
                 cursor.execute(
                     sql.SQL(
-                        "DELETE FROM tbl_flaggedreport WHERE itemtype = 'Story' AND flaggeditemid IN ({})"
+                        "DELETE FROM tbl_flagreport WHERE itemtype = 'Story' AND flaggeditemid IN ({})"
                     ).format(placeholders),
                     tuple(topic_ids),
                 )
