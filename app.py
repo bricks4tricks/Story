@@ -884,6 +884,7 @@ def record_quiz_result():
         return jsonify({"status": "error", "message": "Score must be an integer between 0 and 100."}), 400
 
     conn = None
+    cursor = None
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -898,6 +899,8 @@ def record_quiz_result():
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error"}), 500
     finally:
+        if cursor:
+            cursor.close()
         if conn:
             release_db_connection(conn)
 
