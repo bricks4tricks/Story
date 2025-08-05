@@ -1,4 +1,4 @@
-import os
+import os  # For path operations
 import sys
 from unittest.mock import patch
 
