@@ -117,7 +117,8 @@ def select_plan():
         return jsonify({"status": "error", "message": "Invalid JSON"}), 400
     user_id = data.get('userId')
     plan = data.get('plan')
-    if not all([user_id, plan]):
+    # ``user_id`` may legitimately be ``0`` which is falsy, so check explicitly for ``None``
+    if user_id is None or plan is None:
         return jsonify({"status": "error", "message": "Missing fields"}), 400
     allowed_plans = {'Monthly', 'Annual', 'Family'}
     if plan not in allowed_plans:

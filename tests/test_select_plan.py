@@ -61,6 +61,16 @@ def test_select_plan_success(client, plan):
     assert data['message'] == 'Plan updated'
 
 
+def test_select_plan_zero_user_id(client):
+    """A ``userId`` of 0 should be treated as a valid identifier."""
+    with patch('app.get_db_connection', return_value=DummyConnection()):
+        resp = client.post('/api/select-plan', json={'userId': 0, 'plan': 'Monthly'})
+    assert resp.status_code == 200
+    data = resp.get_json()
+    assert data['status'] == 'success'
+    assert data['message'] == 'Plan updated'
+
+
 def test_select_plan_user_not_found(client):
     """If the user row is missing the API should respond with 404."""
     with patch('app.get_db_connection', return_value=DummyConnection(user_exists=False)):
