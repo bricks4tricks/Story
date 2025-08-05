@@ -779,7 +779,7 @@ def get_story_for_topic(topic_id):
         if conn:
             release_db_connection(conn)
 
-@app.route('/api/story_exists/<int:topic_id>', methods=['GET'])
+@app.route('/api/story-exists/<int:topic_id>', methods=['GET'])
 def story_exists(topic_id):
     conn = None
     try:

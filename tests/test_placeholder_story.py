@@ -66,7 +66,7 @@ def test_get_story_returns_placeholder(client):
 def test_story_exists_reports_placeholder(client):
     conn = DummyExistsConnection()
     with patch('app.get_db_connection', return_value=conn):
-        resp = client.get('/api/story_exists/1')
+        resp = client.get('/api/story-exists/1')
     assert resp.status_code == 200
     data = resp.get_json()
     assert data['storyExists'] is False

@@ -422,7 +422,7 @@
                     } else if (userType === 'Student') {
                         // First, check if a story exists for this topic
                         try {
-                            const response = await fetch(`${window.location.origin}/api/story_exists/${topicId}`);
+                            const response = await fetch(`${window.location.origin}/api/story-exists/${topicId}`);
                             const result = await response.json();
 
                             if (response.ok && result.storyExists) {
