@@ -1208,6 +1208,7 @@ def get_curriculums():
     """Return a list of curriculum names from the database or a mock list."""
     mock_curriculums = ["Common Core", "IB", "AP"]
     conn = None
+    cursor = None
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -1223,6 +1224,8 @@ def get_curriculums():
         traceback.print_exc()
         curriculums = mock_curriculums
     finally:
+        if cursor:
+            cursor.close()
         if conn:
             release_db_connection(conn)
     return jsonify(curriculums)
