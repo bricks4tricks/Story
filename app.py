@@ -95,11 +95,11 @@ def edit_user(user_id):
             "UPDATE tbl_user SET username = %s, email = %s, usertype = %s WHERE id = %s",
             (username, email, user_type, user_id)
         )
-        conn.commit()
-        update_users_version()
-
         if cursor.rowcount == 0:
             return jsonify({"status": "error", "message": "User not found or no changes made."}), 404
+
+        conn.commit()
+        update_users_version()
 
         return jsonify({"status": "success", "message": "User updated successfully!"}), 200
     except Exception as e:
