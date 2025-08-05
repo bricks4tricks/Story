@@ -71,3 +71,18 @@ def test_signup_invalid_email(client):
     data = response.get_json()
     assert data["status"] == "error"
     assert "Invalid email address" in data["message"]
+
+
+def test_signup_defaults_plan_to_monthly(client):
+    payload = {
+        "username": "planuser",
+        "email": "planuser@example.com",
+        "password": "ValidPass123!",
+    }
+    conn = DummyConnection()
+    with patch('app.get_db_connection', return_value=conn):
+        response = client.post('/api/signup', json=payload)
+    assert response.status_code == 201
+    insert_query = conn.cursor_obj.executed[-1]
+    assert 'INSERT INTO tbl_user' in insert_query[0]
+    assert insert_query[1][-1] == 'Monthly'
