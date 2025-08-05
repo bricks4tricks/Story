@@ -27,6 +27,11 @@ def test_validate_email_with_spaces_fails():
     )
 
 
+def test_validate_email_none_input():
+    """`None` should be treated as an invalid email rather than raising."""
+    assert validate_email(None) == (False, EMAIL_REQUIREMENTS_MESSAGE)
+
+
 def test_validate_password_success():
     assert validate_password("StrongPass1!") == (True, None)
 
@@ -35,3 +40,8 @@ def test_validate_password_failure():
     valid, msg = validate_password("weakpass")
     assert not valid
     assert msg == PASSWORD_REQUIREMENTS_MESSAGE
+
+
+def test_validate_password_none_input():
+    """`None` passwords should be rejected without raising."""
+    assert validate_password(None) == (False, PASSWORD_REQUIREMENTS_MESSAGE)
