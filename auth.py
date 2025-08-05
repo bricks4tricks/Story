@@ -224,8 +224,12 @@ def admin_signin():
         return jsonify(success=True)
     from app import get_db_connection, release_db_connection
     data = request.get_json() or {}
-    username = data.get('username', '').strip()
-    password = data.get('password', '').strip()
+    username = data.get('username')
+    password = data.get('password')
+    if not isinstance(username, str) or not isinstance(password, str):
+        return jsonify({"status": "error", "message": "Invalid username or password"}), 400
+    username = username.strip()
+    password = password.strip()
     if not username or not password:
         return jsonify({"status": "error", "message": "Missing username or password"}), 400
     conn = None
