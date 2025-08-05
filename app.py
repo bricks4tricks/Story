@@ -2036,7 +2036,9 @@ def get_open_flags():
 def flag_page_error():
     if request.method == 'OPTIONS':
         return jsonify(success=True)
-    data = request.get_json()
+    data = request.get_json(silent=True)
+    if data is None:
+        return jsonify({"status": "error", "message": "Invalid JSON"}), 400
     user_id = data.get("userId") or 0
     page_path = data.get('pagePath')
     description = data.get('description')
