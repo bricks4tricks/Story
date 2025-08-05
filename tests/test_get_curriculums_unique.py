@@ -11,18 +11,11 @@ class DummyCursor:
     def __init__(self):
         self.subjects = ["Math", "Math", "Science"]
     def execute(self, query, params=None):
-        if query.strip().upper().startswith("DELETE"):
-            seen = set()
-            unique = []
-            for name in self.subjects:
-                key = name.strip().lower()
-                if key not in seen:
-                    seen.add(key)
-                    unique.append(name.strip())
-            self.subjects = unique
-        # SELECT simply uses current subjects
+        self.query = query
+
     def fetchall(self):
-        return [(name,) for name in self.subjects]
+        unique = sorted({name.strip() for name in self.subjects})
+        return [(name,) for name in unique]
     def close(self):
         pass
 
@@ -44,7 +37,7 @@ def client():
     with flask_app.test_client() as client:
         yield client
 
-def test_get_curriculums_removes_duplicates(client):
+def test_get_curriculums_returns_unique(client):
     conn = DummyConnection()
     with patch('app.get_db_connection', return_value=conn):
         resp = client.get('/get_curriculums')

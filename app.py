@@ -1206,14 +1206,6 @@ def get_curriculums():
         conn = get_db_connection()
         cursor = conn.cursor()
         cursor.execute(
-            """
-            DELETE FROM tbl_subject a
-            USING tbl_subject b
-            WHERE a.id < b.id AND LOWER(TRIM(a.subjectname)) = LOWER(TRIM(b.subjectname));
-            """
-        )
-        conn.commit()
-        cursor.execute(
             "SELECT DISTINCT TRIM(SubjectName) FROM tbl_subject ORDER BY TRIM(SubjectName);"
         )
         rows = cursor.fetchall()
