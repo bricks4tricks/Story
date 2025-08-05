@@ -5,7 +5,7 @@ from flask import Flask, jsonify, request, render_template, send_from_directory,
 from flask_cors import CORS
 from extensions import bcrypt
 import secrets
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from version_cache import update_users_version
 import traceback
 import json
@@ -1194,7 +1194,9 @@ def subscription_status(user_id):
         row = cursor.fetchone()
         if row:
             active, expires_on = row
-            if expires_on and expires_on <= datetime.utcnow():
+            if expires_on and expires_on.tzinfo is None:
+                expires_on = expires_on.replace(tzinfo=timezone.utc)
+            if expires_on and expires_on <= datetime.now(timezone.utc):
                 cursor.execute(
                     "UPDATE tbl_subscription SET active = FALSE WHERE user_id = %s",
                     (user_id,),
