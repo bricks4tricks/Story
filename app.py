@@ -864,11 +864,11 @@ def record_quiz_result():
         return jsonify(success=True)
 
     data = request.get_json()
-    user_id = data.get('userId') or 0
+    user_id = data.get('userId')
     topic_id = data.get('topicId')
     score = data.get('score')
 
-    if user_id is None or topic_id is None or score is None:
+    if None in (user_id, topic_id, score):
         return jsonify({"status": "error", "message": "Missing required fields."}), 400
 
     try:
