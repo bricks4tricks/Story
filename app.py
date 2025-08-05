@@ -2048,7 +2048,13 @@ def record_question_attempt():
     is_correct = data.get('isCorrect')
     difficulty_at_attempt = data.get('difficultyAtAttempt')
 
-    if not all([user_id, question_id, user_answer is not None, is_correct is not None, difficulty_at_attempt is not None]):
+    if (
+        user_id is None
+        or question_id is None
+        or user_answer is None
+        or is_correct is None
+        or difficulty_at_attempt is None
+    ):
         return jsonify({"status": "error", "message": "Missing required fields for question attempt."}), 400
 
     conn = None
