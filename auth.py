@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 import secrets
 import traceback
 import os
@@ -257,7 +257,7 @@ def forgot_password():
         cursor.execute("SELECT id FROM tbl_user WHERE email = %s", (email,))
         user = cursor.fetchone()
         if user:
-            token, expiry = secrets.token_hex(32), datetime.now() + timedelta(hours=1)
+            token, expiry = secrets.token_hex(32), datetime.now(timezone.utc) + timedelta(hours=1)
             cursor.execute(
                 "UPDATE tbl_user SET resettoken = %s, resettokenexpiry = %s WHERE id = %s",
                 (token, expiry, user[0]),
