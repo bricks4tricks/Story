@@ -64,3 +64,14 @@ def test_record_quiz_result_invalid_type(client):
     assert data['status'] == 'error'
     assert 'integer between 0 and 100' in data['message']
 
+
+def test_record_quiz_result_missing_user_id(client):
+    conn = DummyConnection()
+    with patch('app.get_db_connection', return_value=conn):
+        resp = client.post('/api/quiz/result', json={'topicId': 2, 'score': 85})
+    assert resp.status_code == 400
+    data = resp.get_json()
+    assert data['status'] == 'error'
+    assert data['message'] == 'Missing required fields.'
+    assert conn.cursor_obj.executed == []
+
