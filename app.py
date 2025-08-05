@@ -80,6 +80,7 @@ def edit_user(user_id):
         return jsonify({"status": "error", "message": "Missing fields"}), 400
 
     conn = None
+    cursor = None
     try:
         conn = get_db_connection()
         cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
@@ -107,6 +108,8 @@ def edit_user(user_id):
         traceback.print_exc()
         return jsonify({"status": "error", "message": "An internal error occurred."}), 500
     finally:
+        if cursor:
+            cursor.close()
         if conn:
             release_db_connection(conn)
 
@@ -114,6 +117,7 @@ def edit_user(user_id):
 def delete_user(user_id):
     if request.method == 'OPTIONS': return jsonify(success=True)
     conn = None
+    cursor = None
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -155,6 +159,8 @@ def delete_user(user_id):
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal server error."}), 500
     finally:
+        if cursor:
+            cursor.close()
         if conn:
             release_db_connection(conn)
 
@@ -162,6 +168,7 @@ def delete_user(user_id):
 @app.route('/api/admin/topics-list', methods=['GET'])
 def get_topics_list():
     conn = None
+    cursor = None
     try:
         conn = get_db_connection()
         cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
@@ -185,6 +192,8 @@ def get_topics_list():
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error"}), 500
     finally:
+        if cursor:
+            cursor.close()
         if conn:
             release_db_connection(conn)
 
@@ -214,6 +223,7 @@ def add_question():
     question_type_to_insert = question_type_str
 
     conn = None
+    cursor = None
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -254,12 +264,15 @@ def add_question():
         traceback.print_exc()
         return jsonify({"status": "error", "message": "An unexpected error occurred."}), 500
     finally:
+        if cursor:
+            cursor.close()
         if conn:
             release_db_connection(conn)
 
 @app.route('/api/admin/questions', methods=['GET'])
 def get_all_questions():
     conn = None
+    cursor = None
     try:
         conn = get_db_connection()
         cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
@@ -294,12 +307,15 @@ def get_all_questions():
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error"}), 500
     finally:
+        if cursor:
+            cursor.close()
         if conn:
             release_db_connection(conn)
 
 @app.route('/api/admin/question/<int:question_id>', methods=['GET'])
 def get_question_details(question_id):
     conn = None
+    cursor = None
     try:
         conn = get_db_connection()
         cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
@@ -357,6 +373,8 @@ def get_question_details(question_id):
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error fetching question details."}), 500
     finally:
+        if cursor:
+            cursor.close()
         if conn:
             release_db_connection(conn)
 
@@ -390,6 +408,7 @@ def edit_question(question_id):
     question_type_to_update = question_type_str
 
     conn = None
+    cursor = None
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -433,6 +452,8 @@ def edit_question(question_id):
         traceback.print_exc()
         return jsonify({"status": "error", "message": "An unexpected error occurred during question update."}), 500
     finally:
+        if cursor:
+            cursor.close()
         if conn:
             release_db_connection(conn)
 
@@ -442,6 +463,7 @@ def delete_question(question_id):
     if request.method == 'OPTIONS': return jsonify(success=True)
 
     conn = None
+    cursor = None
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -470,6 +492,8 @@ def delete_question(question_id):
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal server error during deletion."}), 500
     finally:
+        if cursor:
+            cursor.close()
         if conn:
             release_db_connection(conn)
 
@@ -477,6 +501,7 @@ def delete_question(question_id):
 @app.route('/api/admin/stories', methods=['GET'])
 def get_all_stories():
     conn = None
+    cursor = None
     try:
         conn = get_db_connection()
         cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
@@ -512,6 +537,8 @@ def get_all_stories():
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error"}), 500
     finally:
+        if cursor:
+            cursor.close()
         if conn:
             release_db_connection(conn)
 
@@ -520,6 +547,7 @@ def delete_story(topic_id):
     if request.method == 'OPTIONS': return jsonify(success=True)
 
     conn = None
+    cursor = None
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -557,6 +585,8 @@ def delete_story(topic_id):
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal server error during deletion."}), 500
     finally:
+        if cursor:
+            cursor.close()
         if conn:
             release_db_connection(conn)
 
@@ -574,6 +604,7 @@ def save_story():
         return jsonify({"status": "error", "message": "Missing topic id or story sections."}), 400
 
     conn = None
+    cursor = None
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -664,6 +695,8 @@ def save_story():
         traceback.print_exc()
         return jsonify({"status": "error", "message": "An unexpected server error occurred."}), 500
     finally:
+        if cursor:
+            cursor.close()
         if conn:
             release_db_connection(conn)
 
@@ -774,12 +807,15 @@ def get_story_for_topic(topic_id):
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error"}), 500
     finally:
+        if cursor:
+            cursor.close()
         if conn:
             release_db_connection(conn)
 
 @app.route('/api/story-exists/<int:topic_id>', methods=['GET'])
 def story_exists(topic_id):
     conn = None
+    cursor = None
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -798,6 +834,8 @@ def story_exists(topic_id):
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error checking story availability."}), 500
     finally:
+        if cursor:
+            cursor.close()
         if conn:
             release_db_connection(conn)
 
@@ -805,6 +843,7 @@ def story_exists(topic_id):
 @app.route('/api/progress/<int:user_id>', methods=['GET'])
 def get_user_progress(user_id):
     conn = None
+    cursor = None
     try:
         conn = get_db_connection()
         cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
@@ -824,6 +863,8 @@ def get_user_progress(user_id):
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error"}), 500
     finally:
+        if cursor:
+            cursor.close()
         if conn:
             release_db_connection(conn)
 
@@ -838,6 +879,7 @@ def update_user_progress():
         return jsonify({"status": "error", "message": "Missing required fields."}), 400
 
     conn = None
+    cursor = None
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -857,6 +899,8 @@ def update_user_progress():
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error"}), 500
     finally:
+        if cursor:
+            cursor.close()
         if conn:
             release_db_connection(conn)
 
@@ -909,6 +953,7 @@ def record_quiz_result():
 def get_dashboard(user_id):
     """Return progress metrics for the user."""
     conn = None
+    cursor = None
     try:
         conn = get_db_connection()
         cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
@@ -957,6 +1002,8 @@ def get_dashboard(user_id):
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error"}), 500
     finally:
+        if cursor:
+            cursor.close()
         if conn:
             release_db_connection(conn)
 
@@ -964,6 +1011,7 @@ def get_dashboard(user_id):
 def get_leaderboard():
     """Return top users by average quiz score."""
     conn = None
+    cursor = None
     try:
         conn = get_db_connection()
         cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
@@ -986,6 +1034,8 @@ def get_leaderboard():
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error"}), 500
     finally:
+        if cursor:
+            cursor.close()
         if conn:
             release_db_connection(conn)
 
@@ -1003,6 +1053,7 @@ def create_student():
         return jsonify({"status": "error", "message": message}), 400
 
     conn = None
+    cursor = None
     try:
         conn = get_db_connection()
         cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
@@ -1037,12 +1088,15 @@ def create_student():
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error"}), 500
     finally:
+        if cursor:
+            cursor.close()
         if conn:
             release_db_connection(conn)
 
 @app.route('/api/my-students/<int:parent_id>', methods=['GET'])
 def get_my_students(parent_id):
     conn = None
+    cursor = None
     try:
         conn = get_db_connection()
         cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
@@ -1054,6 +1108,8 @@ def get_my_students(parent_id):
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error"}), 500
     finally:
+        if cursor:
+            cursor.close()
         if conn:
             release_db_connection(conn)
 
@@ -1071,6 +1127,7 @@ def modify_student():
         return jsonify({"status": "error", "message": message}), 400
 
     conn = None
+    cursor = None
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -1089,6 +1146,8 @@ def modify_student():
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error"}), 500
     finally:
+        if cursor:
+            cursor.close()
         if conn:
             release_db_connection(conn)
 
@@ -1096,6 +1155,7 @@ def modify_student():
 def delete_student_from_parent_portal(student_id):
     if request.method == 'OPTIONS': return jsonify(success=True)
     conn = None
+    cursor = None
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -1110,6 +1170,8 @@ def delete_student_from_parent_portal(student_id):
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error"}), 500
     finally:
+        if cursor:
+            cursor.close()
         if conn:
             release_db_connection(conn)
 
@@ -1121,6 +1183,7 @@ def subscription_status(user_id):
         return jsonify(success=True)
 
     conn = None
+    cursor = None
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -1156,6 +1219,8 @@ def subscription_status(user_id):
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error"}), 500
     finally:
+        if cursor:
+            cursor.close()
         if conn:
             release_db_connection(conn)
 
@@ -1167,6 +1232,7 @@ def cancel_subscription(user_id):
         return jsonify(success=True)
 
     conn = None
+    cursor = None
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -1200,6 +1266,8 @@ def cancel_subscription(user_id):
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error"}), 500
     finally:
+        if cursor:
+            cursor.close()
         if conn:
             release_db_connection(conn)
 
@@ -1241,6 +1309,7 @@ def get_units(curriculum):
         return jsonify({"status": "error", "message": "Invalid curriculum."}), 400
 
     conn = None
+    cursor = None
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -1262,6 +1331,8 @@ def get_units(curriculum):
         traceback.print_exc()
         units = []
     finally:
+        if cursor:
+            cursor.close()
         if conn:
             release_db_connection(conn)
     return jsonify(units)
@@ -1271,6 +1342,7 @@ def get_units(curriculum):
 def get_topics(curriculum, unit):
     """Return topics for the given curriculum and unit."""
     conn = None
+    cursor = None
     try:
         conn = get_db_connection()
         cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
@@ -1292,6 +1364,8 @@ def get_topics(curriculum, unit):
         traceback.print_exc()
         topics = []
     finally:
+        if cursor:
+            cursor.close()
         if conn:
             release_db_connection(conn)
     return jsonify(topics)
@@ -1302,6 +1376,7 @@ def admin_get_curriculums():
     """Return curriculums, optionally filtered by a search term."""
     search = request.args.get('search', '').strip()
     conn = None
+    cursor = None
     try:
         conn = get_db_connection()
         cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
@@ -1319,6 +1394,8 @@ def admin_get_curriculums():
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error"}), 500
     finally:
+        if cursor:
+            cursor.close()
         if conn:
             release_db_connection(conn)
 
@@ -1327,6 +1404,7 @@ def admin_get_curriculums():
 def admin_get_curriculum(subject_id):
     """Return a single curriculum by ID."""
     conn = None
+    cursor = None
     try:
         conn = get_db_connection()
         cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
@@ -1340,6 +1418,8 @@ def admin_get_curriculum(subject_id):
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error"}), 500
     finally:
+        if cursor:
+            cursor.close()
         if conn:
             release_db_connection(conn)
 
@@ -1348,6 +1428,7 @@ def admin_get_curriculum(subject_id):
 def admin_curriculum_hierarchy():
     """Return units and topics grouped under each curriculum."""
     conn = None
+    cursor = None
     try:
         conn = get_db_connection()
         cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
@@ -1382,6 +1463,8 @@ def admin_curriculum_hierarchy():
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error"}), 500
     finally:
+        if cursor:
+            cursor.close()
         if conn:
             release_db_connection(conn)
 
@@ -1390,6 +1473,7 @@ def admin_curriculum_hierarchy():
 def get_curriculum_table():
     """Return curriculum data in a flat table format."""
     conn = None
+    cursor = None
     try:
         conn = get_db_connection()
         cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
@@ -1411,6 +1495,8 @@ def get_curriculum_table():
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error"}), 500
     finally:
+        if cursor:
+            cursor.close()
         if conn:
             release_db_connection(conn)
 
@@ -1427,6 +1513,7 @@ def create_curriculum():
         return jsonify({"status": "error", "message": "Missing curriculum name"}), 400
 
     conn = None
+    cursor = None
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -1443,6 +1530,8 @@ def create_curriculum():
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal server error"}), 500
     finally:
+        if cursor:
+            cursor.close()
         if conn:
             release_db_connection(conn)
 
@@ -1453,6 +1542,7 @@ def delete_curriculum(subject_id):
         return jsonify(success=True)
 
     conn = None
+    cursor = None
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -1572,6 +1662,8 @@ def delete_curriculum(subject_id):
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal server error"}), 500
     finally:
+        if cursor:
+            cursor.close()
         if conn:
             release_db_connection(conn)
 
@@ -1588,6 +1680,7 @@ def update_curriculum(subject_id):
         return jsonify({"status": "error", "message": "Missing curriculum name"}), 400
 
     conn = None
+    cursor = None
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -1605,6 +1698,8 @@ def update_curriculum(subject_id):
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal server error"}), 500
     finally:
+        if cursor:
+            cursor.close()
         if conn:
             release_db_connection(conn)
 
@@ -1612,6 +1707,7 @@ def update_curriculum(subject_id):
 @app.route('/api/curriculum', methods=['GET'])
 def get_curriculum():
     conn = None
+    cursor = None
     try:
         conn = get_db_connection()
         cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
@@ -1693,6 +1789,8 @@ def get_curriculum():
         traceback.print_exc()
         return jsonify({ "status": "error", "message": str(e) }), 500
     finally:
+        if cursor:
+            cursor.close()
         if conn:
             release_db_connection(conn)
 
@@ -1701,6 +1799,7 @@ def get_curriculum():
 @app.route('/api/user/topic-difficulty/<int:user_id>/<int:topic_id>', methods=['GET'])
 def get_user_topic_difficulty(user_id, topic_id):
     conn = None
+    cursor = None
     try:
         conn = get_db_connection()
         cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
@@ -1714,6 +1813,8 @@ def get_user_topic_difficulty(user_id, topic_id):
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error fetching user difficulty."}), 500
     finally:
+        if cursor:
+            cursor.close()
         if conn:
             release_db_connection(conn)
 
@@ -1736,6 +1837,7 @@ def update_user_topic_difficulty():
         return jsonify({"status": "error", "message": "Invalid difficulty rating."}), 400
 
     conn = None
+    cursor = None
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -1753,6 +1855,8 @@ def update_user_topic_difficulty():
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error updating user difficulty."}), 500
     finally:
+        if cursor:
+            cursor.close()
         if conn:
             release_db_connection(conn)
 
@@ -1781,6 +1885,7 @@ def flag_item():
         return jsonify({"status": "error", "message": "Invalid item type for flagging. Must be 'Question' or 'Story'."}), 400
 
     conn = None
+    cursor = None
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -1798,6 +1903,8 @@ def flag_item():
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error while flagging item."}), 500
     finally:
+        if cursor:
+            cursor.close()
         if conn:
             release_db_connection(conn)
 
@@ -1805,6 +1912,7 @@ def flag_item():
 @app.route('/api/admin/flagged-items', methods=['GET'])
 def get_flagged_items():
     conn = None
+    cursor = None
     try:
         conn = get_db_connection()
         cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
@@ -1842,6 +1950,8 @@ def get_flagged_items():
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error fetching flagged items."}), 500
     finally:
+        if cursor:
+            cursor.close()
         if conn:
             release_db_connection(conn)
 
@@ -1860,6 +1970,7 @@ def update_flag_status(flag_id):
         return jsonify({"status": "error", "message": "Invalid status. Must be 'Pending', 'Reviewed', or 'Dismissed'."}), 400
 
     conn = None
+    cursor = None
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -1889,6 +2000,8 @@ def update_flag_status(flag_id):
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error updating flag status."}), 500
     finally:
+        if cursor:
+            cursor.close()
         if conn:
             release_db_connection(conn)
 
@@ -1899,6 +2012,7 @@ def delete_flag(flag_id):
         return jsonify(success=True)
 
     conn = None
+    cursor = None
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -1918,6 +2032,8 @@ def delete_flag(flag_id):
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error deleting flag."}), 500
     finally:
+        if cursor:
+            cursor.close()
         if conn:
             release_db_connection(conn)
 
@@ -1936,6 +2052,7 @@ def record_question_attempt():
         return jsonify({"status": "error", "message": "Missing required fields for question attempt."}), 400
 
     conn = None
+    cursor = None
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -1951,6 +2068,8 @@ def record_question_attempt():
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error recording question attempt."}), 500
     finally:
+        if cursor:
+            cursor.close()
         if conn:
             release_db_connection(conn)
 
@@ -1958,6 +2077,7 @@ def record_question_attempt():
 @app.route('/api/admin/question-attempts', methods=['GET'])
 def get_all_question_attempts():
     conn = None
+    cursor = None
     try:
         conn = get_db_connection()
         cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
@@ -1994,6 +2114,8 @@ def get_all_question_attempts():
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error fetching question attempts."}), 500
     finally:
+        if cursor:
+            cursor.close()
         if conn:
             release_db_connection(conn)
 
@@ -2002,6 +2124,7 @@ def get_all_question_attempts():
 def get_open_flags():
     """Return all flags that are still pending review."""
     conn = None
+    cursor = None
     try:
         conn = get_db_connection()
         cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
@@ -2033,6 +2156,8 @@ def get_open_flags():
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error fetching open flags."}), 500
     finally:
+        if cursor:
+            cursor.close()
         if conn:
             release_db_connection(conn)
 
@@ -2051,6 +2176,7 @@ def flag_page_error():
         return jsonify({"status": "error", "message": "Missing required fields."}), 400
 
     conn = None
+    cursor = None
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -2067,6 +2193,8 @@ def flag_page_error():
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error while reporting."}), 500
     finally:
+        if cursor:
+            cursor.close()
         if conn:
             release_db_connection(conn)
 
