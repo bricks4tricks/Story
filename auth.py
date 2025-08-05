@@ -73,9 +73,10 @@ def signup_user():
         if cursor.fetchone():
             return jsonify({"status": "error", "message": "Username or email already exists"}), 409
         hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
+        plan_to_insert = plan if plan else 'Monthly'
         cursor.execute(
             "INSERT INTO tbl_user (username, email, passwordhash, usertype, plan) VALUES (%s, %s, %s, 'Parent', %s) RETURNING id",
-            (username, email, hashed_password, plan)
+            (username, email, hashed_password, plan_to_insert)
         )
         new_user_id = cursor.fetchone()[0]
         # Create an associated subscription row if a plan was chosen
