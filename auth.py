@@ -124,6 +124,7 @@ def select_plan():
         cursor = conn.cursor()
         cursor.execute("UPDATE tbl_user SET plan = %s WHERE id = %s", (plan, user_id))
         if cursor.rowcount == 0:
+            conn.rollback()
             return jsonify({"status": "error", "message": "User not found"}), 404
         if plan == 'Monthly':
             expires_on = datetime.utcnow() + timedelta(days=30)
