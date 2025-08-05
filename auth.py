@@ -251,7 +251,7 @@ def forgot_password():
     if request.method == 'OPTIONS':
         return jsonify(success=True)
     from app import get_db_connection, release_db_connection
-    data = request.get_json()
+    data = request.get_json(silent=True) or {}
     email = data.get('email')
     if not email:
         return jsonify({"status": "error", "message": "Email is required"}), 400

@@ -69,3 +69,19 @@ def test_forgot_password_email_failure(client):
     assert data["status"] == "error"
     assert dummy_conn.rolled_back is True
     assert dummy_conn.user["resettoken"] is None
+
+
+def test_forgot_password_requires_email(client):
+    response = client.post("/api/forgot-password", json={})
+    assert response.status_code == 400
+    data = response.get_json()
+    assert data["status"] == "error"
+    assert data["message"] == "Email is required"
+
+
+def test_forgot_password_malformed_json(client):
+    response = client.post("/api/forgot-password", data="{" , content_type="application/json")
+    assert response.status_code == 400
+    data = response.get_json()
+    assert data["status"] == "error"
+    assert data["message"] == "Email is required"
