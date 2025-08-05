@@ -77,3 +77,8 @@ def test_signin_subscription_absent_record(client):
     data = resp.get_json()
     assert data['status'] == 'success'
     assert data['subscriptionDaysLeft'] is None
+
+
+def test_signin_missing_json_body(client):
+    resp = client.post('/api/signin')
+    assert resp.status_code == 400

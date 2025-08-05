@@ -162,7 +162,9 @@ def signin_user():
     if request.method == 'OPTIONS':
         return jsonify(success=True)
     from app import get_db_connection, release_db_connection
-    data = request.get_json()
+    data = request.get_json(silent=True)
+    if data is None:
+        return jsonify({"status": "error", "message": "Missing JSON body"}), 400
     username, password = data.get('username'), data.get('password')
     if not all([username, password]):
         return jsonify({"status": "error", "message": "Missing fields"}), 400
