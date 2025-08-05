@@ -2,7 +2,7 @@ from flask import Blueprint, request, jsonify
 import os
 import traceback
 from werkzeug.utils import secure_filename
-from version_cache import users_version
+import version_cache
 from db_utils import get_db_connection, release_db_connection
 from seed_database import seed_data
 
@@ -11,7 +11,7 @@ admin_bp = Blueprint('admin', __name__, url_prefix='/api/admin')
 
 @admin_bp.route("/users-version", methods=["GET"])
 def get_users_version():
-    return jsonify({"version": users_version.isoformat()})
+    return jsonify({"version": version_cache.users_version.isoformat()})
 
 @admin_bp.route('/all-users', methods=['GET'])
 def get_all_users():
