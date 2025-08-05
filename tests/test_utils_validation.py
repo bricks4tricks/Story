@@ -19,6 +19,14 @@ def test_validate_email_failure():
     assert validate_email("userexample.com") == (False, EMAIL_REQUIREMENTS_MESSAGE)
 
 
+def test_validate_email_with_spaces_fails():
+    """Emails containing whitespace should be rejected."""
+    assert validate_email("user name@example.com") == (
+        False,
+        EMAIL_REQUIREMENTS_MESSAGE,
+    )
+
+
 def test_validate_password_success():
     assert validate_password("StrongPass1!") == (True, None)
 
