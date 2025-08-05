@@ -675,6 +675,13 @@ def get_story_for_topic(topic_id):
         conn = get_db_connection()
         cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
 
+        def _get_case_insensitive(row, key):
+            """Return value for key in row ignoring case differences."""
+            for k, v in row.items():
+                if k.lower() == key.lower():
+                    return v
+            return None
+
         # Fetch the default theme for this topic
         cursor.execute("""
             SELECT th.themename
@@ -685,9 +692,8 @@ def get_story_for_topic(topic_id):
         """, (topic_id,))
         default_theme_row = cursor.fetchone()
         if default_theme_row:
-            story_payload["defaultTheme"] = (
-                default_theme_row.get('themename')
-                or default_theme_row.get('themename')
+            story_payload["defaultTheme"] = _get_case_insensitive(
+                default_theme_row, "themename"
             )
 
         # Fetch all available themes for this topic
@@ -700,7 +706,7 @@ def get_story_for_topic(topic_id):
         """, (topic_id,))
         available_themes_rows = cursor.fetchall()
         story_payload["availableThemes"] = [
-            row.get('themename') or row.get('themename')
+            _get_case_insensitive(row, "themename")
             for row in available_themes_rows
         ]
 
