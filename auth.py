@@ -186,7 +186,10 @@ def signin_user():
                 sub = cursor.fetchone()
                 if sub:
                     active, expires_on = sub
-                    if expires_on and expires_on <= datetime.utcnow():
+                    if expires_on and expires_on.tzinfo is None:
+                        expires_on = expires_on.replace(tzinfo=timezone.utc)
+                    now_utc = datetime.now(timezone.utc)
+                    if expires_on and expires_on <= now_utc:
                         cursor.execute(
                             "UPDATE tbl_subscription SET active = FALSE WHERE user_id = %s",
                             (user[0],),
@@ -198,7 +201,7 @@ def signin_user():
                             "status": "error",
                             "message": "Subscription inactive. Please renew to access your account.",
                         }), 403
-                    days_left = (expires_on - datetime.utcnow()).days if expires_on else None
+                    days_left = (expires_on - now_utc).days if expires_on else None
             return jsonify({
                 "status": "success",
                 "message": "Login successful!",
