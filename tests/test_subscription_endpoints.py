@@ -1,7 +1,7 @@
 import os
 import sys
 from unittest.mock import patch
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 import pytest
 
@@ -84,8 +84,22 @@ def test_subscription_status_inactive(client):
     assert resp.get_json() == {"active": False}
 
 
-def test_subscription_status_active(client):
+def test_subscription_status_active_naive(client):
     sub = {"active": True, "expires_on": datetime.utcnow() + timedelta(days=5)}
+    db = DummyDB(subscription=sub)
+    with patch("app.get_db_connection", return_value=DummyConnection(db)):
+        resp = client.get("/api/subscription-status/1")
+    data = resp.get_json()
+    assert resp.status_code == 200
+    assert data["active"] is True
+    assert "expires_on" in data
+
+
+def test_subscription_status_active_timezone_aware(client):
+    sub = {
+        "active": True,
+        "expires_on": datetime.now(timezone.utc) + timedelta(days=5),
+    }
     db = DummyDB(subscription=sub)
     with patch("app.get_db_connection", return_value=DummyConnection(db)):
         resp = client.get("/api/subscription-status/1")
