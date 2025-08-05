@@ -285,7 +285,9 @@ def reset_password():
     if request.method == 'OPTIONS':
         return jsonify(success=True)
     from app import get_db_connection, release_db_connection
-    data = request.get_json()
+    data = request.get_json(silent=True)
+    if data is None:
+        return jsonify({"status": "error", "message": "Invalid JSON"}), 400
     token, new_password = data.get('token'), data.get('newPassword')
     if not all([token, new_password]):
         return jsonify({"status": "error", "message": "Token and new password are required."}), 400
