@@ -32,6 +32,11 @@ def test_validate_email_none_input():
     assert validate_email(None) == (False, EMAIL_REQUIREMENTS_MESSAGE)
 
 
+def test_validate_email_trims_whitespace():
+    """Leading and trailing spaces should be ignored when validating."""
+    assert validate_email("  user@example.com  ") == (True, None)
+
+
 def test_validate_password_success():
     assert validate_password("StrongPass1!") == (True, None)
 
@@ -45,3 +50,8 @@ def test_validate_password_failure():
 def test_validate_password_none_input():
     """`None` passwords should be rejected without raising."""
     assert validate_password(None) == (False, PASSWORD_REQUIREMENTS_MESSAGE)
+
+
+def test_validate_password_trims_whitespace():
+    """Whitespace around passwords should not invalidate otherwise valid passwords."""
+    assert validate_password("  StrongPass1!  ") == (True, None)

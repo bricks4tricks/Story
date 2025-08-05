@@ -25,9 +25,17 @@ def validate_password(password):
     a non-string value.  This function is often used with form data where
     values may be missing, so guard against those cases explicitly instead of
     bubbling up an exception.
+
+    Trailing or leading whitespace is common when users copy/paste values.
+    ``str.strip`` is applied before matching so these benign spaces do not
+    cause an otherwise valid password to be rejected.
     """
 
-    if not isinstance(password, str) or not PASSWORD_REGEX.fullmatch(password):
+    if not isinstance(password, str):
+        return False, PASSWORD_REQUIREMENTS_MESSAGE
+
+    password = password.strip()
+    if not PASSWORD_REGEX.fullmatch(password):
         return False, PASSWORD_REQUIREMENTS_MESSAGE
     return True, None
 
@@ -39,8 +47,15 @@ def validate_email(email):
     string.  Supplying ``None`` (for example, when the client omits the email
     field) would previously raise ``TypeError``.  Instead, treat any
     non-string input as invalid and return the standard requirements message.
+
+    Leading or trailing spaces are silently stripped to accommodate common
+    user input mistakes while still rejecting any internal whitespace.
     """
 
-    if not isinstance(email, str) or not EMAIL_REGEX.fullmatch(email):
+    if not isinstance(email, str):
+        return False, EMAIL_REQUIREMENTS_MESSAGE
+
+    email = email.strip()
+    if not EMAIL_REGEX.fullmatch(email):
         return False, EMAIL_REQUIREMENTS_MESSAGE
     return True, None
