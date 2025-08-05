@@ -787,7 +787,7 @@ def story_exists(topic_id):
             return jsonify({"status": "success", "storyExists": True, "isPlaceholder": False}), 200
         else:
             # When no story sections exist, indicate a placeholder will be used
-            return jsonify({"status": "success", "storyExists": True, "isPlaceholder": True}), 200
+            return jsonify({"storyExists": False, "isPlaceholder": True}), 200
 
     except Exception as e:
         print(f"Story Exists API Error: {e}")

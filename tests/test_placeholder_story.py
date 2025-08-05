@@ -69,5 +69,5 @@ def test_story_exists_reports_placeholder(client):
         resp = client.get('/api/story_exists/1')
     assert resp.status_code == 200
     data = resp.get_json()
-    assert data['storyExists'] is True
+    assert data['storyExists'] is False
     assert data['isPlaceholder'] is True
