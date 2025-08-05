@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 import os
 import traceback
+from werkzeug.utils import secure_filename
 from version_cache import users_version
 from db_utils import get_db_connection, release_db_connection
 from seed_database import seed_data
@@ -49,16 +50,19 @@ def get_all_users():
 
 @admin_bp.route('/seed-database', methods=['POST'])
 def seed_database_upload():
+    tmp_path = None
     try:
         file = request.files.get('file')
         if not file:
             return jsonify({"message": "No file uploaded"}), 400
-        tmp_path = os.path.join('/tmp', file.filename)
+        tmp_path = os.path.join('/tmp', secure_filename(file.filename))
         file.save(tmp_path)
         seed_data(csv_file_name=tmp_path)
-        os.remove(tmp_path)
         return jsonify({"message": "Database seeded successfully"})
     except Exception as e:
         print(f"Seed Database API Error: {e}")
         traceback.print_exc()
         return jsonify({"message": "Internal error"}), 500
+    finally:
+        if tmp_path and os.path.exists(tmp_path):
+            os.remove(tmp_path)
