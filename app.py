@@ -729,13 +729,13 @@ def get_story_for_topic(topic_id):
 
         for section in sections:
             section_data = {
-                "sectionName": section.get('sectionname') or section.get('sectionname'),
-                "order": section.get('descriptionorder') or section.get('descriptionorder'),
-                "contentType": section.get('contenttype') or section.get('contenttype'),
+                "sectionName": section.get('sectionname', ''),
+                "order": section.get('descriptionorder'),
+                "contentType": section.get('contenttype'),
             }
 
-            if section.get('interactiveelementid') or section.get('interactiveelementid'):
-                interactive_id = section.get('interactiveelementid') or section.get('interactiveelementid')
+            if section.get('interactiveelementid'):
+                interactive_id = section.get('interactiveelementid')
                 cursor.execute(
                     "SELECT elementtype, configuration FROM tbl_interactiveelement WHERE id = %s",
                     (interactive_id,)
@@ -745,27 +745,25 @@ def get_story_for_topic(topic_id):
                 if interactive_row:
                     section_data['contentType'] = 'Interactive'
                     config_data = {}
-                    if interactive_row.get('configuration') or interactive_row.get('configuration'):
+                    if interactive_row.get('configuration'):
                         try:
                             config_data = json.loads(
                                 interactive_row.get('configuration')
-                                or interactive_row.get('configuration')
                             )
                         except Exception as json_err:
                             print(
                                 f"JSON decode error for interactive element {interactive_id}: {json_err}"
                             )
                     section_data['content'] = {
-                        "elementType": interactive_row.get('elementtype')
-                        or interactive_row.get('elementtype'),
+                        "elementType": interactive_row.get('elementtype'),
                         "configuration": config_data,
                     }
                 else:
                     section_data['contentType'] = 'Paragraph'
-                    section_data['content'] = section.get('descriptiontext') or section.get('descriptiontext')
+                    section_data['content'] = section.get('descriptiontext') or ""
             else:
                 section_data['contentType'] = 'Paragraph'
-                section_data['content'] = section.get('descriptiontext') or section.get('descriptiontext')
+                section_data['content'] = section.get('descriptiontext') or ""
 
             story_payload["sections"].append(section_data)
 
