@@ -14,7 +14,11 @@ from db_utils import ensure_plan_column
 auth_bp = Blueprint('auth', __name__, url_prefix='/api')
 
 SMTP_SERVER = os.environ.get('SMTP_SERVER')
-SMTP_PORT = int(os.environ.get('SMTP_PORT') or 0) or None
+port_value = os.environ.get("SMTP_PORT")
+try:
+    SMTP_PORT = int(port_value) if port_value else None
+except (TypeError, ValueError):
+    SMTP_PORT = None
 SMTP_USERNAME = os.environ.get('SMTP_USERNAME')
 SMTP_PASSWORD = os.environ.get('SMTP_PASSWORD')
 SENDER_EMAIL = os.environ.get('SENDER_EMAIL')
