@@ -24,8 +24,8 @@ RESET_PASSWORD_EMAIL_TEMPLATE_HTML = """<html><body><a href='{{RESET_LINK}}'>Res
 
 def send_email(receiver_email, subject, html_content):
     sender_email = SENDER_EMAIL or SMTP_USERNAME
-    if not SENDER_EMAIL:
-        print("SENDER_EMAIL is missing or empty. Email not sent.")
+    if not sender_email:
+        print("Sender email is missing or empty. Email not sent.")
         return False
     if not all([SMTP_SERVER, SMTP_PORT, SMTP_USERNAME, SMTP_PASSWORD, sender_email]):
         print("SMTP configuration incomplete. Email not sent.")
