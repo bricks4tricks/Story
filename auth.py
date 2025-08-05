@@ -256,12 +256,18 @@ def forgot_password():
         user = cursor.fetchone()
         if user:
             token, expiry = secrets.token_hex(32), datetime.now() + timedelta(hours=1)
-            cursor.execute("UPDATE tbl_user SET resettoken = %s, resettokenexpiry = %s WHERE id = %s", (token, expiry, user[0]))
-            conn.commit()
+            cursor.execute(
+                "UPDATE tbl_user SET resettoken = %s, resettokenexpiry = %s WHERE id = %s",
+                (token, expiry, user[0]),
+            )
             reset_link = f"{FRONTEND_BASE_URL}/reset-password.html?token={token}"
             email_content = RESET_PASSWORD_EMAIL_TEMPLATE_HTML.replace('{{RESET_LINK}}', reset_link)
-            if not send_email(email, "Logic and Stories - Password Reset", email_content):
+            if not send_email(
+                email, "Logic and Stories - Password Reset", email_content
+            ):
+                conn.rollback()
                 return jsonify({"status": "error", "message": "Failed to send password reset email."}), 500
+            conn.commit()
         return jsonify({"status": "success", "message": "If an account exists, a password reset link has been sent to your email."}), 200
     except Exception as e:
         print(f"Forgot Password API Error: {e}")
