@@ -1859,6 +1859,7 @@ const createCascadingSelectors = (prefix) => {
                         existingCurriculumsList.innerHTML = `<p class="text-red-400">${curriculums.message || 'Error loading curriculums'}</p>`;
                         return;
                     }
+                    curriculums.sort((a, b) => (a.id ?? 0) - (b.id ?? 0));
                     const newHash = JSON.stringify(curriculums);
                     if (newHash === curriculumsHash) return;
                     curriculumsHash = newHash;
