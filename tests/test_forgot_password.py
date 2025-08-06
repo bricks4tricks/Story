@@ -61,7 +61,7 @@ def client():
 
 def test_forgot_password_email_failure(client):
     dummy_conn = DummyConnection()
-    with patch("app.get_db_connection", return_value=dummy_conn), \
+    with patch("auth.get_db_connection", return_value=dummy_conn), \
          patch("auth.send_email", return_value=False):
         response = client.post("/api/forgot-password", json={"email": "user@example.com"})
     assert response.status_code == 500

@@ -54,7 +54,7 @@ def client():
 
 def test_signin_subscription_inactive(client):
     conn = DummyConnection(active=False)
-    with patch('app.get_db_connection', return_value=conn), \
+    with patch('auth.get_db_connection', return_value=conn), \
          patch('extensions.bcrypt.check_password_hash', return_value=True):
         resp = client.post('/api/signin', json={'username': 'user', 'password': 'pw'})
     assert resp.status_code == 403
@@ -62,7 +62,7 @@ def test_signin_subscription_inactive(client):
 
 def test_signin_subscription_expired(client):
     conn = DummyConnection(active=True, expired=True)
-    with patch('app.get_db_connection', return_value=conn), \
+    with patch('auth.get_db_connection', return_value=conn), \
          patch('extensions.bcrypt.check_password_hash', return_value=True):
         resp = client.post('/api/signin', json={'username': 'user', 'password': 'pw'})
     assert resp.status_code == 403
@@ -70,7 +70,7 @@ def test_signin_subscription_expired(client):
 
 def test_signin_subscription_absent_record(client):
     conn = DummyConnection(has_subscription=False)
-    with patch('app.get_db_connection', return_value=conn), \
+    with patch('auth.get_db_connection', return_value=conn), \
          patch('extensions.bcrypt.check_password_hash', return_value=True):
         resp = client.post('/api/signin', json={'username': 'user', 'password': 'pw'})
     assert resp.status_code == 200
