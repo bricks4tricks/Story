@@ -44,3 +44,13 @@ def test_reopen_flag(client):
     assert 'ResolvedOn = NULL' in query
     assert params == ('Pending', 1)
 
+
+def test_update_flag_status_admin_id_zero(client):
+    conn = DummyConnection()
+    with patch('app.get_db_connection', return_value=conn):
+        resp = client.put('/api/admin/update-flag-status/1', json={'status': 'Reviewed', 'adminId': 0})
+    assert resp.status_code == 200
+    query, params = conn.cursor_obj.executed[0]
+    assert 'ResolvedOn = NOW()' in query
+    assert params == ('Reviewed', 0, 1)
+
