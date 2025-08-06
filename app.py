@@ -1979,7 +1979,7 @@ def update_flag_status(flag_id):
     new_status = data.get('status')
     admin_id = data.get('adminId')
 
-    if not all([new_status, admin_id]):
+    if new_status is None or admin_id is None:
         return jsonify({"status": "error", "message": "Missing status or admin id."}), 400
 
     if new_status not in ['Pending', 'Reviewed', 'Dismissed']:
