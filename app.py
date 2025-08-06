@@ -1568,9 +1568,9 @@ def create_lesson():
     lesson = data.get('lesson')
     grade = data.get('grade')
 
-    if not all([curriculum, unit, lesson]):
+    if not all([curriculum, unit, lesson, grade]):
         return (
-            jsonify({"status": "error", "message": "Missing curriculum, unit, or lesson"}),
+            jsonify({"status": "error", "message": "Missing curriculum, unit, lesson, or grade"}),
             400,
         )
 
@@ -1615,24 +1615,23 @@ def create_lesson():
         )
         lesson_id = cursor.fetchone()[0]
 
-        # If a grade was provided, link the lesson to that grade
-        if grade:
-            cursor.execute(
-                "SELECT id FROM tbl_grade WHERE gradename = %s",
-                (grade,),
+        # Link the lesson to the specified grade
+        cursor.execute(
+            "SELECT id FROM tbl_grade WHERE gradename = %s",
+            (grade,),
+        )
+        row = cursor.fetchone()
+        if not row:
+            conn.rollback()
+            return (
+                jsonify({"status": "error", "message": "Grade not found"}),
+                404,
             )
-            row = cursor.fetchone()
-            if not row:
-                conn.rollback()
-                return (
-                    jsonify({"status": "error", "message": "Grade not found"}),
-                    404,
-                )
-            grade_id = row[0]
-            cursor.execute(
-                "INSERT INTO tbl_topicgrade (topicid, gradeid, createdby) VALUES (%s, %s, %s)",
-                (lesson_id, grade_id, 'API'),
-            )
+        grade_id = row[0]
+        cursor.execute(
+            "INSERT INTO tbl_topicgrade (topicid, gradeid, createdby) VALUES (%s, %s, %s)",
+            (lesson_id, grade_id, 'API'),
+        )
 
         conn.commit()
         return jsonify({"status": "success", "message": "Lesson created."}), 201
