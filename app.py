@@ -334,7 +334,9 @@ def get_question_details(question_id):
         cursor.execute("SELECT stepname FROM tbl_step WHERE questionid = %s ORDER BY sequenceno", (question_id,))
         steps = cursor.fetchall()
 
-        topic_id = question.get('topicid') or question.get('TopicID')
+        topic_id = question.get('topicid')
+        if topic_id is None:
+            topic_id = question.get('TopicID')
         cursor.execute(
             """
             SELECT
@@ -353,7 +355,7 @@ def get_question_details(question_id):
 
         question_details = {
             "ID": question.get('id'),
-            "TopicID": question.get('topicid') or question.get('TopicID'),
+            "TopicID": topic_id,
             "TopicName": topic_info.get('TopicName') if topic_info else None,
             "UnitName": topic_info.get('UnitName') if topic_info else None,
             "CurriculumType": topic_info.get('CurriculumType') if topic_info else None,
