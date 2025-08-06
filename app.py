@@ -648,7 +648,12 @@ def save_story():
 
             if not section_name or not content_type:
                 conn.rollback()
-                return jsonify({"status": "error", "message": f"Section {order} is incomplete (missing name or type)."}, 400)
+                return jsonify(
+                    {
+                        "status": "error",
+                        "message": f"Section {order} is incomplete (missing name or type).",
+                    }
+                ), 400
 
             interactive_element_id_for_db = None
             description_text_for_db = None
@@ -665,7 +670,12 @@ def save_story():
 
                 if not element_type or not isinstance(configuration, dict):
                     conn.rollback()
-                    return jsonify({"status": "error", "message": f"Interactive element in Section '{section_name}' is incomplete (missing element type or invalid configuration)."}, 400)
+                    return jsonify(
+                        {
+                            "status": "error",
+                            "message": f"Interactive element in Section '{section_name}' is incomplete (missing element type or invalid configuration).",
+                        }
+                    ), 400
 
                 interactive_query = (
                     "INSERT INTO tbl_interactiveelement (elementtype, configuration, createdby) "
