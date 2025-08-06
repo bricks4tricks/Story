@@ -243,6 +243,7 @@ def admin_signin():
     if not username or not password:
         return jsonify({"status": "error", "message": "Missing username or password"}), 400
     conn = None
+    cursor = None
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -263,6 +264,8 @@ def admin_signin():
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal server error"}), 500
     finally:
+        if cursor:
+            cursor.close()
         if conn:
             release_db_connection(conn)
 
