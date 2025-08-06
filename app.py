@@ -703,6 +703,7 @@ def save_story():
 @app.route('/api/story/<int:topic_id>', methods=['GET'])
 def get_story_for_topic(topic_id):
     conn = None
+    cursor = None
     story_payload = {"sections": [], "defaultTheme": None, "availableThemes": []}
     try:
         conn = get_db_connection()
