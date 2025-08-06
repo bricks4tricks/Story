@@ -91,9 +91,9 @@ def signup_user():
         # Create an associated subscription row if a plan was chosen
         if plan:
             if plan == 'Monthly':
-                expires_on = datetime.utcnow() + timedelta(days=30)
+                expires_on = datetime.now(timezone.utc) + timedelta(days=30)
             else:
-                expires_on = datetime.utcnow() + timedelta(days=365)
+                expires_on = datetime.now(timezone.utc) + timedelta(days=365)
             cursor.execute(
                 "INSERT INTO tbl_subscription (user_id, active, expires_on) VALUES (%s, TRUE, %s) ON CONFLICT (user_id) DO NOTHING",
                 (new_user_id, expires_on)
@@ -141,9 +141,9 @@ def select_plan():
             conn.rollback()
             return jsonify({"status": "error", "message": "User not found"}), 404
         if plan == 'Monthly':
-            expires_on = datetime.utcnow() + timedelta(days=30)
+            expires_on = datetime.now(timezone.utc) + timedelta(days=30)
         else:
-            expires_on = datetime.utcnow() + timedelta(days=365)
+            expires_on = datetime.now(timezone.utc) + timedelta(days=365)
         cursor.execute(
             "INSERT INTO tbl_subscription (user_id, active, expires_on) VALUES (%s, TRUE, %s) "
             "ON CONFLICT (user_id) DO UPDATE SET active = TRUE, expires_on = EXCLUDED.expires_on",
