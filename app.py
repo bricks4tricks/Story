@@ -2044,7 +2044,9 @@ def delete_flag(flag_id):
 @app.route('/api/record-question-attempt', methods=['POST', 'OPTIONS'])
 def record_question_attempt():
     if request.method == 'OPTIONS': return jsonify(success=True)
-    data = request.get_json()
+    data = request.get_json(silent=True)
+    if data is None:
+        return jsonify({"status": "error", "message": "Invalid JSON"}), 400
     user_id = data.get('userId')
     question_id = data.get('questionId')
     user_answer = data.get('userAnswer')
