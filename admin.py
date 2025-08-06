@@ -16,6 +16,7 @@ def get_users_version():
 @admin_bp.route('/all-users', methods=['GET'])
 def get_all_users():
     conn = None
+    cursor = None
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -44,6 +45,8 @@ def get_all_users():
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error"}), 500
     finally:
+        if cursor:
+            cursor.close()
         if conn:
             release_db_connection(conn)
 
