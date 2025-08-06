@@ -171,7 +171,9 @@ def signin_user():
     if data is None:
         return jsonify({"status": "error", "message": "Missing JSON body"}), 400
     username, password = data.get('username'), data.get('password')
-    if not all([username, password]):
+    username = username.strip() if isinstance(username, str) else ''
+    password = password.strip() if isinstance(password, str) else ''
+    if not username or not password:
         return jsonify({"status": "error", "message": "Missing fields"}), 400
     conn = None
     cursor = None
