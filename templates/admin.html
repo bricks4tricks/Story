@@ -309,6 +309,9 @@
                     </select>
                     <input type="text" id="new-unit-name" class="flex-1 bg-slate-700 rounded-lg p-2" placeholder="Unit name" required>
                     <input type="text" id="new-lesson-name" class="flex-1 bg-slate-700 rounded-lg p-2" placeholder="Lesson name" required>
+                    <select id="lesson-grade-select" class="flex-1 bg-slate-700 rounded-lg p-2">
+                        <option value="">-- Select Grade (optional) --</option>
+                    </select>
                     <button type="submit" class="bg-green-600 text-white font-semibold py-2 px-4 rounded-full">Create</button>
                 </form>
                 <div id="create-lesson-message" class="text-center mt-4 h-5"></div>
@@ -513,6 +516,7 @@
             const lessonCurriculumSelect = document.getElementById('lesson-curriculum-select');
             const newUnitNameInput = document.getElementById('new-unit-name');
             const newLessonNameInput = document.getElementById('new-lesson-name');
+            const lessonGradeSelect = document.getElementById('lesson-grade-select');
             const createLessonMessage = document.getElementById('create-lesson-message');
             const seedDatabaseForm = document.getElementById('seedDatabaseForm');
             const seedFileInput = document.getElementById('seed-file');
@@ -684,6 +688,23 @@ const createCascadingSelectors = (prefix) => {
                         msg.textContent = 'Error loading curriculums.';
                         msg.className = 'text-red-400 mb-4';
                     }
+                }
+            };
+
+            const loadGrades = async () => {
+                try {
+                    const resp = await fetch(`${window.location.origin}/api/curriculum`);
+                    if (!resp.ok) throw new Error('Failed to fetch grades');
+                    const data = await resp.json();
+                    const grades = Object.keys(data);
+                    if (lessonGradeSelect) {
+                        lessonGradeSelect.innerHTML = '<option value="">-- Select Grade (optional) --</option>';
+                        grades.forEach(g => {
+                            lessonGradeSelect.innerHTML += `<option value="${g}">${g}</option>`;
+                        });
+                    }
+                } catch (error) {
+                    console.error('Fetch grades error:', error);
                 }
             };
 
@@ -1933,6 +1954,7 @@ const createCascadingSelectors = (prefix) => {
                         if (resp.ok) {
                             adminMessageDiv.className = 'text-center text-green-400 font-bold text-lg mb-4 h-6';
                             await loadCurriculums();
+                            await loadGrades();
                             await initializeTopicData();
                             fetchAndDisplayCurriculums();
                             fetchCurriculumTable();
@@ -1986,6 +2008,7 @@ const createCascadingSelectors = (prefix) => {
                     seedDatabaseMessage.className = resp.ok ? 'text-center text-green-400 mt-4 h-5' : 'text-center text-red-400 mt-4 h-5';
                     if (resp.ok) {
                         await loadCurriculums();
+                        await loadGrades();
                         await initializeTopicData();
                         fetchAndDisplayCurriculums();
                         fetchCurriculumTable();
@@ -2013,6 +2036,7 @@ const createCascadingSelectors = (prefix) => {
                     if (resp.ok) {
                         createCurriculumForm.reset();
                         await loadCurriculums();
+                        await loadGrades();
                         await initializeTopicData();
                         fetchAndDisplayCurriculums();
                         fetchCurriculumTable();
@@ -2029,12 +2053,15 @@ const createCascadingSelectors = (prefix) => {
                 const curriculum = lessonCurriculumSelect.value;
                 const unit = newUnitNameInput.value.trim();
                 const lesson = newLessonNameInput.value.trim();
+                const grade = lessonGradeSelect.value;
                 if (!curriculum || !unit || !lesson) return;
                 try {
+                    const payload = { curriculum, unit, lesson };
+                    if (grade) payload.grade = grade;
                     const resp = await fetch('/api/admin/create-lesson', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ curriculum, unit, lesson })
+                        body: JSON.stringify(payload)
                     });
                     const result = await resp.json();
                     createLessonMessage.textContent = result.message;
@@ -2042,6 +2069,7 @@ const createCascadingSelectors = (prefix) => {
                     if (resp.ok) {
                         createLessonForm.reset();
                         await loadCurriculums();
+                        await loadGrades();
                         await initializeTopicData();
                         fetchAndDisplayCurriculums();
                         fetchCurriculumTable();
@@ -2219,6 +2247,7 @@ const createCascadingSelectors = (prefix) => {
             const initializeApp = async () => {
                 if (window.refreshUsers) window.refreshUsers();
                 await loadCurriculums();
+                await loadGrades();
                 await initializeTopicData();
                 fetchAndDisplayCurriculums();
                 fetchCurriculumTable();
