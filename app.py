@@ -588,6 +588,7 @@ def delete_story(topic_id):
         if cursor:
             cursor.close()
         if conn:
+            conn.autocommit = True
             release_db_connection(conn)
 
 
@@ -698,6 +699,7 @@ def save_story():
         if cursor:
             cursor.close()
         if conn:
+            conn.autocommit = True
             release_db_connection(conn)
 
 @app.route('/api/story/<int:topic_id>', methods=['GET'])
