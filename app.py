@@ -1556,6 +1556,80 @@ def create_curriculum():
             release_db_connection(conn)
 
 
+@app.route('/api/admin/create-lesson', methods=['POST', 'OPTIONS'])
+def create_lesson():
+    """Create a new lesson (topic) under a curriculum and unit."""
+    if request.method == 'OPTIONS':
+        return jsonify(success=True)
+
+    data = request.get_json() or {}
+    curriculum = data.get('curriculum')
+    unit = data.get('unit')
+    lesson = data.get('lesson')
+
+    if not all([curriculum, unit, lesson]):
+        return (
+            jsonify({"status": "error", "message": "Missing curriculum, unit, or lesson"}),
+            400,
+        )
+
+    conn = None
+    cursor = None
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        # Look up the curriculum id; error if it doesn't exist
+        cursor.execute(
+            "SELECT id FROM tbl_subject WHERE subjectname = %s AND subjecttype = 'Curriculum'",
+            (curriculum,),
+        )
+        row = cursor.fetchone()
+        if not row:
+            return (
+                jsonify({"status": "error", "message": "Curriculum not found"}),
+                404,
+            )
+        subject_id = row[0]
+
+        # Look up or create the unit as a parent topic
+        cursor.execute(
+            "SELECT id FROM tbl_topic WHERE topicname = %s AND subjectid = %s AND parenttopicid IS NULL",
+            (unit, subject_id),
+        )
+        row = cursor.fetchone()
+        if row:
+            unit_id = row[0]
+        else:
+            cursor.execute(
+                "INSERT INTO tbl_topic (topicname, subjectid, parenttopicid, createdby) VALUES (%s, %s, NULL, %s) RETURNING id",
+                (unit, subject_id, 'API'),
+            )
+            unit_id = cursor.fetchone()[0]
+
+        # Insert the lesson as a child topic
+        cursor.execute(
+            "INSERT INTO tbl_topic (topicname, subjectid, parenttopicid, createdby) VALUES (%s, %s, %s, %s)",
+            (lesson, subject_id, unit_id, 'API'),
+        )
+        conn.commit()
+        return jsonify({"status": "success", "message": "Lesson created."}), 201
+    except Exception as e:
+        if conn:
+            conn.rollback()
+        print(f"Create Lesson API Error: {e}")
+        traceback.print_exc()
+        return (
+            jsonify({"status": "error", "message": "Internal server error"}),
+            500,
+        )
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            release_db_connection(conn)
+
+
 @app.route('/api/admin/delete-curriculum/<int:subject_id>', methods=['DELETE', 'OPTIONS'])
 def delete_curriculum(subject_id):
     if request.method == 'OPTIONS':
