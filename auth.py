@@ -73,6 +73,7 @@ def signup_user():
     if plan and plan not in allowed_plans:
         return jsonify({"status": "error", "message": "Invalid plan selected"}), 400
     conn = None
+    cursor = None
     try:
         conn = get_db_connection()
         ensure_plan_column(conn)
@@ -105,6 +106,8 @@ def signup_user():
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error"}), 500
     finally:
+        if cursor:
+            cursor.close()
         if conn:
             release_db_connection(conn)
 
@@ -128,6 +131,7 @@ def select_plan():
     if plan not in allowed_plans:
         return jsonify({"status": "error", "message": "Invalid plan selected"}), 400
     conn = None
+    cursor = None
     try:
         conn = get_db_connection()
         ensure_plan_column(conn)
@@ -153,6 +157,8 @@ def select_plan():
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error"}), 500
     finally:
+        if cursor:
+            cursor.close()
         if conn:
             release_db_connection(conn)
 
