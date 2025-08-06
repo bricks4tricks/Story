@@ -318,6 +318,7 @@ def reset_password():
     if not is_valid:
         return jsonify({"status": "error", "message": message}), 400
     conn = None
+    cursor = None
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -337,5 +338,7 @@ def reset_password():
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error"}), 500
     finally:
+        if cursor:
+            cursor.close()
         if conn:
             release_db_connection(conn)
