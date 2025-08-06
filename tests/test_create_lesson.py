@@ -100,13 +100,16 @@ def test_create_lesson_curriculum_not_found(client):
     assert data['status'] == 'error'
 
 
-def test_create_lesson_grade_not_found(client):
+def test_create_lesson_creates_grade_when_missing(client):
     conn = DummyConnection(grade_exists=False)
     with patch('app.get_db_connection', return_value=conn):
         resp = client.post(
             '/api/admin/create-lesson',
             json={'curriculum': 'Math', 'unit': 'Algebra', 'lesson': 'Addition', 'grade': 'Unknown'}
         )
-    assert resp.status_code == 404
+    assert resp.status_code == 201
     data = resp.get_json()
-    assert data['status'] == 'error'
+    assert data['status'] == 'success'
+    # Ensure a grade was inserted and linked to the new lesson
+    assert any('INSERT INTO tbl_grade' in q for q in conn.cursor_obj.queries)
+    assert any('INSERT INTO tbl_topicgrade' in q for q in conn.cursor_obj.queries)

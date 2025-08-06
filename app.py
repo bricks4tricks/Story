@@ -1615,19 +1615,22 @@ def create_lesson():
         )
         lesson_id = cursor.fetchone()[0]
 
-        # Link the lesson to the specified grade
+        # Link the lesson to the specified grade. If the grade doesn't exist yet,
+        # create it so that administrators can seed the system without having to
+        # manually pre-populate grades.
         cursor.execute(
             "SELECT id FROM tbl_grade WHERE gradename = %s",
             (grade,),
         )
         row = cursor.fetchone()
-        if not row:
-            conn.rollback()
-            return (
-                jsonify({"status": "error", "message": "Grade not found"}),
-                404,
+        if row:
+            grade_id = row[0]
+        else:
+            cursor.execute(
+                "INSERT INTO tbl_grade (gradename, createdby) VALUES (%s, %s) RETURNING id",
+                (grade, 'API'),
             )
-        grade_id = row[0]
+            grade_id = cursor.fetchone()[0]
         cursor.execute(
             "INSERT INTO tbl_topicgrade (topicid, gradeid, createdby) VALUES (%s, %s, %s)",
             (lesson_id, grade_id, 'API'),
