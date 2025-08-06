@@ -19,7 +19,11 @@
       if (!response.ok) throw new Error('Failed to fetch users');
       const users = await response.json();
       const newHash = JSON.stringify(users);
-      if (newHash === usersHash) return; // no change
+      if (newHash === usersHash) {
+        // Data is unchanged; re-render existing rows so the table doesn't stay on loading state.
+        renderUsers(allUsers);
+        return;
+      }
       usersHash = newHash;
       allUsers = Array.isArray(users) ? users : [];
       window.allUsersData = allUsers;
