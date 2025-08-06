@@ -277,6 +277,7 @@ def forgot_password():
     if not email:
         return jsonify({"status": "error", "message": "Email is required"}), 400
     conn = None
+    cursor = None
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -302,6 +303,8 @@ def forgot_password():
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error"}), 500
     finally:
+        if cursor:
+            cursor.close()
         if conn:
             release_db_connection(conn)
 
