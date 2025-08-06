@@ -1566,6 +1566,7 @@ def create_lesson():
     curriculum = data.get('curriculum')
     unit = data.get('unit')
     lesson = data.get('lesson')
+    grade = data.get('grade')
 
     if not all([curriculum, unit, lesson]):
         return (
@@ -1607,11 +1608,32 @@ def create_lesson():
             )
             unit_id = cursor.fetchone()[0]
 
-        # Insert the lesson as a child topic
+        # Insert the lesson as a child topic and retrieve its id
         cursor.execute(
-            "INSERT INTO tbl_topic (topicname, subjectid, parenttopicid, createdby) VALUES (%s, %s, %s, %s)",
+            "INSERT INTO tbl_topic (topicname, subjectid, parenttopicid, createdby) VALUES (%s, %s, %s, %s) RETURNING id",
             (lesson, subject_id, unit_id, 'API'),
         )
+        lesson_id = cursor.fetchone()[0]
+
+        # If a grade was provided, link the lesson to that grade
+        if grade:
+            cursor.execute(
+                "SELECT id FROM tbl_grade WHERE gradename = %s",
+                (grade,),
+            )
+            row = cursor.fetchone()
+            if not row:
+                conn.rollback()
+                return (
+                    jsonify({"status": "error", "message": "Grade not found"}),
+                    404,
+                )
+            grade_id = row[0]
+            cursor.execute(
+                "INSERT INTO tbl_topicgrade (topicid, gradeid, createdby) VALUES (%s, %s, %s)",
+                (lesson_id, grade_id, 'API'),
+            )
+
         conn.commit()
         return jsonify({"status": "success", "message": "Lesson created."}), 201
     except Exception as e:
