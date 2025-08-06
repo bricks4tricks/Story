@@ -1219,6 +1219,7 @@ def subscription_status(user_id):
                     (user_id,),
                 )
                 conn.commit()
+                update_users_version()
                 active = False
             if active:
                 return (

@@ -129,3 +129,14 @@ def test_cancel_subscription_success_marks_inactive(client):
         resp2 = client.get("/api/subscription-status/1")
     assert resp2.get_json()["active"] is False
 
+
+def test_subscription_status_expired_triggers_cache_update(client):
+    sub = {"active": True, "expires_on": datetime.utcnow() - timedelta(days=1)}
+    db = DummyDB(subscription=sub)
+    with patch("app.get_db_connection", return_value=DummyConnection(db)):
+        with patch("app.update_users_version") as mock_update:
+            resp = client.get("/api/subscription-status/1")
+            assert resp.status_code == 200
+            assert resp.get_json() == {"active": False}
+            mock_update.assert_called_once()
+
