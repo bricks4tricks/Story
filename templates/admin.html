@@ -1846,6 +1846,7 @@ const createCascadingSelectors = (prefix) => {
             };
 
             let curriculumsHash = null;
+            let curriculumTableHash = null;
             let allCurriculums = [];
             const fetchAndDisplayCurriculums = async () => {
                 if (curriculumsHash === null) {
@@ -1913,15 +1914,22 @@ const createCascadingSelectors = (prefix) => {
         };
 
             const fetchCurriculumTable = async () => {
-                curriculumTableBody.innerHTML = '<tr><td colspan="4" class="text-center py-4 text-gray-400">Loading...</td></tr>';
+                if (curriculumTableHash === null) {
+                    curriculumTableBody.innerHTML = '<tr><td colspan="4" class="text-center py-4 text-gray-400">Loading...</td></tr>';
+                }
                 try {
                     const resp = await fetch('/api/curriculum-table');
                     if (!resp.ok) throw new Error('Failed to fetch curriculum table');
                     const rows = await resp.json();
                     if (!Array.isArray(rows) || rows.length === 0) {
                         curriculumTableBody.innerHTML = '<tr><td colspan="4" class="text-center py-4 text-gray-400">No data found.</td></tr>';
+                        curriculumTableHash = JSON.stringify(rows);
                         return;
                     }
+                    const newHash = JSON.stringify(rows);
+                    if (newHash === curriculumTableHash) return;
+                    curriculumTableHash = newHash;
+
                     curriculumTableBody.innerHTML = '';
                     rows.forEach(r => {
                         const tr = document.createElement('tr');
