@@ -175,6 +175,7 @@ def signin_user():
     if not all([username, password]):
         return jsonify({"status": "error", "message": "Missing fields"}), 400
     conn = None
+    cursor = None
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -222,6 +223,8 @@ def signin_user():
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error"}), 500
     finally:
+        if cursor:
+            cursor.close()
         if conn:
             release_db_connection(conn)
 
