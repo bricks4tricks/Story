@@ -325,7 +325,8 @@ def get_question_details(question_id):
         if not question:
             return jsonify({"status": "error", "message": "Question not found."}), 404
 
-        question_type_display = question.get('questiontype') or question.get('questiontype')
+        qt = question.get('questiontype')
+        question_type_display = QUESTION_TYPE_REVERSE_MAP.get(qt, qt)
 
         cursor.execute("SELECT answername, iscorrect FROM tbl_answer WHERE questionid = %s", (question_id,))
         answers = cursor.fetchall()
