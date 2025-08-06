@@ -602,7 +602,7 @@ def save_story():
     story_sections = data.get('storySections')
     default_theme_name = data.get('defaultTheme')
 
-    if not topic_id or story_sections is None:
+    if topic_id is None or story_sections is None:
         return jsonify({"status": "error", "message": "Missing topic id or story sections."}), 400
 
     conn = None
