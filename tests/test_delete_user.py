@@ -31,12 +31,14 @@ class DummyCursor:
 class DummyConnection:
     def __init__(self, **cursor_kwargs):
         self.cursor_obj = DummyCursor(**cursor_kwargs)
+        self.commit_called = False
+        self.rollback_called = False
     def cursor(self, dictionary=False, cursor_factory=None):
         return self.cursor_obj
     def commit(self):
-        pass
+        self.commit_called = True
     def rollback(self):
-        pass
+        self.rollback_called = True
     def close(self):
         pass
 
@@ -58,7 +60,11 @@ def test_delete_user_success_removes_subscription(client):
 
 
 def test_delete_user_not_found(client):
-    conn = DummyConnection(user_exists=False)
+    conn = DummyConnection(user_exists=True, delete_rowcount=0)
     with patch('app.get_db_connection', return_value=conn):
-        resp = client.delete('/api/admin/delete-user/99')
+        with patch('app.update_users_version') as mock_update:
+            resp = client.delete('/api/admin/delete-user/99')
     assert resp.status_code == 404
+    assert conn.rollback_called is True
+    assert conn.commit_called is False
+    mock_update.assert_not_called()

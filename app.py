@@ -145,11 +145,10 @@ def delete_user(user_id):
         if cursor.rowcount == 0:
             conn.rollback()
             return jsonify({"status": "error", "message": "User not found or already deleted."}), 404
-
-        conn.commit()
-        update_users_version()
-
-        return jsonify({"status": "success", "message": "User deleted successfully."}), 200
+        else:
+            conn.commit()
+            update_users_version()
+            return jsonify({"status": "success", "message": "User deleted successfully."}), 200
 
     except psycopg2.Error as err:
         print(f"Delete User DB Error: {err}")
