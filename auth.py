@@ -9,7 +9,7 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from extensions import bcrypt
 from utils import validate_password, validate_email
-from db_utils import ensure_plan_column
+from db_utils import ensure_plan_column, get_db_connection, release_db_connection
 
 auth_bp = Blueprint('auth', __name__, url_prefix='/api')
 
@@ -55,7 +55,6 @@ def send_email(receiver_email, subject, html_content):
 def signup_user():
     if request.method == 'OPTIONS':
         return jsonify(success=True)
-    from app import get_db_connection, release_db_connection
     data = request.get_json(silent=True)
     if data is None:
         return jsonify({"status": "error", "message": "Invalid JSON"}), 400
@@ -119,7 +118,6 @@ def select_plan():
     """Update a user's subscription plan after signup."""
     if request.method == 'OPTIONS':
         return jsonify(success=True)
-    from app import get_db_connection, release_db_connection
     # ``get_json`` returns ``None`` when the request body is empty or invalid JSON.
     data = request.get_json(silent=True)
     if data is None:
@@ -169,7 +167,6 @@ def select_plan():
 def signin_user():
     if request.method == 'OPTIONS':
         return jsonify(success=True)
-    from app import get_db_connection, release_db_connection
     data = request.get_json(silent=True)
     if data is None:
         return jsonify({"status": "error", "message": "Missing JSON body"}), 400
@@ -235,7 +232,6 @@ def signin_user():
 def admin_signin():
     if request.method == 'OPTIONS':
         return jsonify(success=True)
-    from app import get_db_connection, release_db_connection
     data = request.get_json(silent=True) or {}
     username = data.get("username")
     password = data.get("password")
@@ -276,7 +272,6 @@ def admin_signin():
 def forgot_password():
     if request.method == 'OPTIONS':
         return jsonify(success=True)
-    from app import get_db_connection, release_db_connection
     data = request.get_json(silent=True) or {}
     email = data.get('email')
     if not email:
@@ -318,7 +313,6 @@ def forgot_password():
 def reset_password():
     if request.method == 'OPTIONS':
         return jsonify(success=True)
-    from app import get_db_connection, release_db_connection
     data = request.get_json(silent=True)
     if data is None:
         return jsonify({"status": "error", "message": "Invalid JSON"}), 400

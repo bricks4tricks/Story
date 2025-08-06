@@ -50,7 +50,7 @@ def test_signup_success(client):
         "email": "test@example.com",
         "password": "ValidPass123!"
     }
-    with patch('app.get_db_connection', return_value=DummyConnection()):
+    with patch('auth.get_db_connection', return_value=DummyConnection()):
         response = client.post('/api/signup', json=payload)
     assert response.status_code == 201
     data = response.get_json()
@@ -65,7 +65,7 @@ def test_signup_invalid_email(client):
         "email": "invalidemail@domain",
         "password": "ValidPass123!"
     }
-    with patch('app.get_db_connection', return_value=DummyConnection()):
+    with patch('auth.get_db_connection', return_value=DummyConnection()):
         response = client.post('/api/signup', json=payload)
     assert response.status_code == 400
     data = response.get_json()
@@ -80,7 +80,7 @@ def test_signup_defaults_plan_to_monthly(client):
         "password": "ValidPass123!",
     }
     conn = DummyConnection()
-    with patch('app.get_db_connection', return_value=conn):
+    with patch('auth.get_db_connection', return_value=conn):
         response = client.post('/api/signup', json=payload)
     assert response.status_code == 201
     insert_query = conn.cursor_obj.executed[-1]

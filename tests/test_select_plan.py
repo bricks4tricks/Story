@@ -53,7 +53,7 @@ def client():
 @pytest.mark.parametrize('plan', ['Monthly', 'Annual', 'Family'])
 def test_select_plan_success(client, plan):
     """Selecting any valid plan should return success."""
-    with patch('app.get_db_connection', return_value=DummyConnection()):
+    with patch('auth.get_db_connection', return_value=DummyConnection()):
         resp = client.post('/api/select-plan', json={'userId': 1, 'plan': plan})
     assert resp.status_code == 200
     data = resp.get_json()
@@ -63,7 +63,7 @@ def test_select_plan_success(client, plan):
 
 def test_select_plan_zero_user_id(client):
     """A ``userId`` of 0 should be treated as a valid identifier."""
-    with patch('app.get_db_connection', return_value=DummyConnection()):
+    with patch('auth.get_db_connection', return_value=DummyConnection()):
         resp = client.post('/api/select-plan', json={'userId': 0, 'plan': 'Monthly'})
     assert resp.status_code == 200
     data = resp.get_json()
@@ -73,7 +73,7 @@ def test_select_plan_zero_user_id(client):
 
 def test_select_plan_user_not_found(client):
     """If the user row is missing the API should respond with 404."""
-    with patch('app.get_db_connection', return_value=DummyConnection(user_exists=False)):
+    with patch('auth.get_db_connection', return_value=DummyConnection(user_exists=False)):
         resp = client.post('/api/select-plan', json={'userId': 99, 'plan': 'Monthly'})
     assert resp.status_code == 404
     data = resp.get_json()
