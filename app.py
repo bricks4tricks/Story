@@ -878,7 +878,7 @@ def update_user_progress():
     topic_id = data.get('topicId')
     status = data.get('status')
 
-    if not all([user_id, topic_id, status]):
+    if None in (user_id, topic_id, status):
         return jsonify({"status": "error", "message": "Missing required fields."}), 400
 
     conn = None
