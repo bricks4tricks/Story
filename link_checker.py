@@ -67,10 +67,13 @@ def resolve_local(path, current_file):
 
 def check_url(url, tag_name, attrs, file_rel):
     parsed = urlparse(url)
+    host = parsed.hostname
     category = categorize(tag_name, attrs)
     if parsed.scheme in ("http", "https"):
-        if parsed.netloc.endswith(BASE_DOMAIN) or parsed.netloc in SKIP_DOMAINS:
-            return  # treat as internal/assumed valid or skipped
+        if host and (host == BASE_DOMAIN or host.endswith("." + BASE_DOMAIN)):
+            return  # treat as internal/assumed valid
+        if host in SKIP_DOMAINS:
+            return  # skip checking known domains
         try:
             resp = requests.head(url, allow_redirects=True, timeout=10)
             if resp.status_code >= 400:
