@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from db_utils import db_cursor
 
 """Ensure the ``tbl_subscription`` table and rows for existing users exist.
@@ -32,9 +32,9 @@ with db_cursor() as cursor:
     users = cursor.fetchall()
     for uid, plan in users:
         if plan == 'Monthly':
-            expires = datetime.utcnow() + timedelta(days=30)
+            expires = datetime.now(timezone.utc) + timedelta(days=30)
         else:
-            expires = datetime.utcnow() + timedelta(days=365)
+            expires = datetime.now(timezone.utc) + timedelta(days=365)
         cursor.execute(
             """
             INSERT INTO tbl_subscription (user_id, active, expires_on)
