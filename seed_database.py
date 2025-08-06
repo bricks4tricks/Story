@@ -172,8 +172,9 @@ def seed_data(csv_file_name: str = CSV_FILE_NAME):
         print(f"An unexpected error occurred: {e}")
         traceback.print_exc()
     finally:
-        if 'conn' in locals() and conn:
+        if 'cursor' in locals() and cursor:
             cursor.close()
+        if 'conn' in locals() and conn:
             release_db_connection(conn)
             print("Database connection returned to pool.")
 
