@@ -68,17 +68,21 @@ def test_create_lesson_success(client):
     with patch('app.get_db_connection', return_value=conn):
         resp = client.post(
             '/api/admin/create-lesson',
-            json={'curriculum': 'Math', 'unit': 'Algebra', 'lesson': 'Addition'}
+            json={'curriculum': 'Math', 'unit': 'Algebra', 'lesson': 'Addition', 'grade': '4th Grade'}
         )
     assert resp.status_code == 201
     data = resp.get_json()
     assert data['status'] == 'success'
+    assert any('INSERT INTO tbl_topicgrade' in q for q in conn.cursor_obj.queries)
 
 
 def test_create_lesson_missing_fields(client):
     conn = DummyConnection()
     with patch('app.get_db_connection', return_value=conn):
-        resp = client.post('/api/admin/create-lesson', json={'curriculum': 'Math'})
+        resp = client.post(
+            '/api/admin/create-lesson',
+            json={'curriculum': 'Math', 'unit': 'Algebra', 'lesson': 'Addition'}
+        )
     assert resp.status_code == 400
     data = resp.get_json()
     assert data['status'] == 'error'
@@ -89,22 +93,11 @@ def test_create_lesson_curriculum_not_found(client):
     with patch('app.get_db_connection', return_value=conn):
         resp = client.post(
             '/api/admin/create-lesson',
-            json={'curriculum': 'Nope', 'unit': 'Algebra', 'lesson': 'Addition'}
+            json={'curriculum': 'Nope', 'unit': 'Algebra', 'lesson': 'Addition', 'grade': '4th Grade'}
         )
     assert resp.status_code == 404
     data = resp.get_json()
     assert data['status'] == 'error'
-
-
-def test_create_lesson_with_grade(client):
-    conn = DummyConnection()
-    with patch('app.get_db_connection', return_value=conn):
-        resp = client.post(
-            '/api/admin/create-lesson',
-            json={'curriculum': 'Math', 'unit': 'Algebra', 'lesson': 'Addition', 'grade': '4th Grade'}
-        )
-    assert resp.status_code == 201
-    assert any('INSERT INTO tbl_topicgrade' in q for q in conn.cursor_obj.queries)
 
 
 def test_create_lesson_grade_not_found(client):

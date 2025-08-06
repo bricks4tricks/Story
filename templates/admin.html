@@ -309,8 +309,8 @@
                     </select>
                     <input type="text" id="new-unit-name" class="flex-1 bg-slate-700 rounded-lg p-2" placeholder="Unit name" required>
                     <input type="text" id="new-lesson-name" class="flex-1 bg-slate-700 rounded-lg p-2" placeholder="Lesson name" required>
-                    <select id="lesson-grade-select" class="flex-1 bg-slate-700 rounded-lg p-2">
-                        <option value="">-- Select Grade (optional) --</option>
+                    <select id="lesson-grade-select" class="flex-1 bg-slate-700 rounded-lg p-2" required>
+                        <option value="" disabled selected>-- Select Grade --</option>
                     </select>
                     <button type="submit" class="bg-green-600 text-white font-semibold py-2 px-4 rounded-full">Create</button>
                 </form>
@@ -698,7 +698,7 @@ const createCascadingSelectors = (prefix) => {
                     const data = await resp.json();
                     const grades = Object.keys(data);
                     if (lessonGradeSelect) {
-                        lessonGradeSelect.innerHTML = '<option value="">-- Select Grade (optional) --</option>';
+                        lessonGradeSelect.innerHTML = '<option value="" disabled selected>-- Select Grade --</option>';
                         grades.forEach(g => {
                             lessonGradeSelect.innerHTML += `<option value="${g}">${g}</option>`;
                         });
@@ -2054,10 +2054,9 @@ const createCascadingSelectors = (prefix) => {
                 const unit = newUnitNameInput.value.trim();
                 const lesson = newLessonNameInput.value.trim();
                 const grade = lessonGradeSelect.value;
-                if (!curriculum || !unit || !lesson) return;
+                if (!curriculum || !unit || !lesson || !grade) return;
                 try {
-                    const payload = { curriculum, unit, lesson };
-                    if (grade) payload.grade = grade;
+                    const payload = { curriculum, unit, lesson, grade };
                     const resp = await fetch('/api/admin/create-lesson', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
