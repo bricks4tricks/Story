@@ -9,16 +9,21 @@ from app import app as flask_app
 
 
 class TrackCursor:
-    def __init__(self, curriculum_exists=True):
+    def __init__(self, curriculum_exists=True, grade_exists=True):
         self.curriculum_exists = curriculum_exists
+        self.grade_exists = grade_exists
         self._fetchone = None
+        self.queries = []
 
     def execute(self, query, params=None):
         q = str(query)
+        self.queries.append(q)
         if "SELECT id FROM tbl_subject" in q:
             self._fetchone = (1,) if self.curriculum_exists else None
         elif "SELECT id FROM tbl_topic" in q and "parenttopicid IS NULL" in q:
             self._fetchone = None  # unit does not exist yet
+        elif "SELECT id FROM tbl_grade" in q:
+            self._fetchone = (3,) if self.grade_exists else None
         elif "RETURNING id" in q:
             self._fetchone = (2,)
         else:
@@ -35,8 +40,8 @@ class TrackCursor:
 
 
 class DummyConnection:
-    def __init__(self, curriculum_exists=True):
-        self.cursor_obj = TrackCursor(curriculum_exists)
+    def __init__(self, curriculum_exists=True, grade_exists=True):
+        self.cursor_obj = TrackCursor(curriculum_exists, grade_exists)
 
     def cursor(self, cursor_factory=None):
         return self.cursor_obj
@@ -85,6 +90,29 @@ def test_create_lesson_curriculum_not_found(client):
         resp = client.post(
             '/api/admin/create-lesson',
             json={'curriculum': 'Nope', 'unit': 'Algebra', 'lesson': 'Addition'}
+        )
+    assert resp.status_code == 404
+    data = resp.get_json()
+    assert data['status'] == 'error'
+
+
+def test_create_lesson_with_grade(client):
+    conn = DummyConnection()
+    with patch('app.get_db_connection', return_value=conn):
+        resp = client.post(
+            '/api/admin/create-lesson',
+            json={'curriculum': 'Math', 'unit': 'Algebra', 'lesson': 'Addition', 'grade': '4th Grade'}
+        )
+    assert resp.status_code == 201
+    assert any('INSERT INTO tbl_topicgrade' in q for q in conn.cursor_obj.queries)
+
+
+def test_create_lesson_grade_not_found(client):
+    conn = DummyConnection(grade_exists=False)
+    with patch('app.get_db_connection', return_value=conn):
+        resp = client.post(
+            '/api/admin/create-lesson',
+            json={'curriculum': 'Math', 'unit': 'Algebra', 'lesson': 'Addition', 'grade': 'Unknown'}
         )
     assert resp.status_code == 404
     data = resp.get_json()
