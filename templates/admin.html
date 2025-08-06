@@ -309,9 +309,8 @@
                     </select>
                     <input type="text" id="new-unit-name" class="flex-1 bg-slate-700 rounded-lg p-2" placeholder="Unit name" required>
                     <input type="text" id="new-lesson-name" class="flex-1 bg-slate-700 rounded-lg p-2" placeholder="Lesson name" required>
-                    <select id="lesson-grade-select" class="flex-1 bg-slate-700 rounded-lg p-2" required>
-                        <option value="" disabled selected>-- Select Grade --</option>
-                    </select>
+                    <input id="lesson-grade-select" list="grade-options" class="flex-1 bg-slate-700 rounded-lg p-2" placeholder="Select or type grade" required>
+                    <datalist id="grade-options"></datalist>
                     <button type="submit" class="bg-green-600 text-white font-semibold py-2 px-4 rounded-full">Create</button>
                 </form>
                 <div id="create-lesson-message" class="text-center mt-4 h-5"></div>
@@ -517,6 +516,7 @@
             const newUnitNameInput = document.getElementById('new-unit-name');
             const newLessonNameInput = document.getElementById('new-lesson-name');
             const lessonGradeSelect = document.getElementById('lesson-grade-select');
+            const gradeOptions = document.getElementById('grade-options');
             const createLessonMessage = document.getElementById('create-lesson-message');
             const seedDatabaseForm = document.getElementById('seedDatabaseForm');
             const seedFileInput = document.getElementById('seed-file');
@@ -697,10 +697,10 @@ const createCascadingSelectors = (prefix) => {
                     if (!resp.ok) throw new Error('Failed to fetch grades');
                     const data = await resp.json();
                     const grades = Object.keys(data);
-                    if (lessonGradeSelect) {
-                        lessonGradeSelect.innerHTML = '<option value="" disabled selected>-- Select Grade --</option>';
+                    if (gradeOptions) {
+                        gradeOptions.innerHTML = '';
                         grades.forEach(g => {
-                            lessonGradeSelect.innerHTML += `<option value="${g}">${g}</option>`;
+                            gradeOptions.innerHTML += `<option value="${g}"></option>`;
                         });
                     }
                 } catch (error) {
