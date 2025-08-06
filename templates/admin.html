@@ -301,6 +301,18 @@
                 </form>
                 <div id="create-curriculum-message" class="text-center mt-4 h-5"></div>
             </div>
+            <div class="bg-slate-800 rounded-2xl border border-slate-700 p-6 mb-6">
+                <h3 class="text-xl font-bold text-white mb-4">Add Unit &amp; Lesson</h3>
+                <form id="createLessonForm" class="flex flex-col md:flex-row gap-4">
+                    <select id="lesson-curriculum-select" class="flex-1 bg-slate-700 rounded-lg p-2" required>
+                        <option value="">-- Select Curriculum --</option>
+                    </select>
+                    <input type="text" id="new-unit-name" class="flex-1 bg-slate-700 rounded-lg p-2" placeholder="Unit name" required>
+                    <input type="text" id="new-lesson-name" class="flex-1 bg-slate-700 rounded-lg p-2" placeholder="Lesson name" required>
+                    <button type="submit" class="bg-green-600 text-white font-semibold py-2 px-4 rounded-full">Create</button>
+                </form>
+                <div id="create-lesson-message" class="text-center mt-4 h-5"></div>
+            </div>
             <div class="bg-slate-800 rounded-2xl border border-slate-700 p-6">
                 <div id="existing-curriculums-list" class="space-y-4">
                     <p class="text-center text-gray-400">Loading curriculums...</p>
@@ -497,6 +509,11 @@
             const createCurriculumForm = document.getElementById('createCurriculumForm');
             const newCurriculumNameInput = document.getElementById('new-curriculum-name');
             const createCurriculumMessage = document.getElementById('create-curriculum-message');
+            const createLessonForm = document.getElementById('createLessonForm');
+            const lessonCurriculumSelect = document.getElementById('lesson-curriculum-select');
+            const newUnitNameInput = document.getElementById('new-unit-name');
+            const newLessonNameInput = document.getElementById('new-lesson-name');
+            const createLessonMessage = document.getElementById('create-lesson-message');
             const seedDatabaseForm = document.getElementById('seedDatabaseForm');
             const seedFileInput = document.getElementById('seed-file');
             const seedDatabaseMessage = document.getElementById('seed-database-message');
@@ -656,6 +673,10 @@ const createCascadingSelectors = (prefix) => {
                         set.curriculumSelect.innerHTML = '<option value="">-- Select Curriculum --</option>';
                         uniqueCurriculums.forEach(name => { set.curriculumSelect.innerHTML += `<option value="${name}">${name}</option>`; });
                     });
+                    if (lessonCurriculumSelect) {
+                        lessonCurriculumSelect.innerHTML = '<option value="">-- Select Curriculum --</option>';
+                        uniqueCurriculums.forEach(name => { lessonCurriculumSelect.innerHTML += `<option value="${name}">${name}</option>`; });
+                    }
                 } catch (error) {
                     console.error('Fetch curriculums error:', error);
                     const msg = document.getElementById('admin-message');
@@ -2001,6 +2022,35 @@ const createCascadingSelectors = (prefix) => {
                     createCurriculumMessage.className = 'text-center text-red-400 mt-4 h-5';
                 }
                 setTimeout(() => { createCurriculumMessage.textContent = ''; }, 5000);
+            });
+
+            createLessonForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const curriculum = lessonCurriculumSelect.value;
+                const unit = newUnitNameInput.value.trim();
+                const lesson = newLessonNameInput.value.trim();
+                if (!curriculum || !unit || !lesson) return;
+                try {
+                    const resp = await fetch('/api/admin/create-lesson', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ curriculum, unit, lesson })
+                    });
+                    const result = await resp.json();
+                    createLessonMessage.textContent = result.message;
+                    createLessonMessage.className = resp.ok ? 'text-center text-green-400 mt-4 h-5' : 'text-center text-red-400 mt-4 h-5';
+                    if (resp.ok) {
+                        createLessonForm.reset();
+                        await loadCurriculums();
+                        await initializeTopicData();
+                        fetchAndDisplayCurriculums();
+                        fetchCurriculumTable();
+                    }
+                } catch (error) {
+                    createLessonMessage.textContent = 'Server connection error.';
+                    createLessonMessage.className = 'text-center text-red-400 mt-4 h-5';
+                }
+                setTimeout(() => { createLessonMessage.textContent = ''; }, 5000);
             });
 
 
