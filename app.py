@@ -570,10 +570,11 @@ def delete_story(topic_id):
 
         cursor.execute("DELETE FROM tbl_description WHERE topicid = %s", (topic_id,))
 
-        conn.commit()
-
         if cursor.rowcount == 0:
+            conn.rollback()
             return jsonify({"status": "error", "message": "Story not found for this topic or already deleted."}), 404
+
+        conn.commit()
 
         return jsonify({"status": "success", "message": f"Story for topic id {topic_id} and its associated interactive elements deleted successfully."}), 200
 
