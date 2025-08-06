@@ -7,6 +7,7 @@ quiz_bp = Blueprint('quiz', __name__, url_prefix='/api')
 @quiz_bp.route('/quiz/question/<int:user_id>/<int:topic_id>/<int:difficulty_level>', methods=['GET'])
 def get_quiz_question(user_id, topic_id, difficulty_level):
     conn = None
+    cursor = None
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -31,7 +32,10 @@ def get_quiz_question(user_id, topic_id, difficulty_level):
         question_type = question[2]
         answers = []
         if question_type == 'MultipleChoice':
-            cursor.execute("SELECT answername, iscorrect FROM tbl_answer WHERE questionid = %s", (question_id,))
+            cursor.execute(
+                "SELECT answername, iscorrect FROM tbl_answer WHERE questionid = %s",
+                (question_id,),
+            )
             answers = cursor.fetchall()
         response_data = {
             "status": "success",
@@ -41,7 +45,7 @@ def get_quiz_question(user_id, topic_id, difficulty_level):
                 "type": question[2],
                 "difficulty": question[3],
                 "answers": answers,
-            }
+            },
         }
         return jsonify(response_data), 200
     except Exception as e:
@@ -49,5 +53,7 @@ def get_quiz_question(user_id, topic_id, difficulty_level):
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error fetching quiz question."}), 500
     finally:
+        if cursor:
+            cursor.close()
         if conn:
             release_db_connection(conn)
