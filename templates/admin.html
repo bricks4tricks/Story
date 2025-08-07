@@ -78,11 +78,12 @@
                     <option value="Email">Email</option>
                     <option value="UserType">Type</option>
                     <option value="ParentUsername">Parent</option>
+                    <option value="SubscriptionDaysLeft">Subscription</option>
                 </select>
                 <input id="user-filter" type="text" class="w-full md:w-1/3 bg-slate-700 rounded-lg p-2" placeholder="Search users...">
             </div>
             <div class="bg-slate-800 rounded-2xl border border-slate-700 overflow-x-auto">
-                <table class="min-w-full text-left text-sm"><thead class="border-b border-slate-700 font-medium"><tr><th class="px-6 py-4">ID</th><th class="px-6 py-4">Username</th><th class="px-6 py-4">Email</th><th class="px-6 py-4">Type</th><th class="px-6 py-4">Parent</th><th class="px-6 py-4">Created On</th><th class="px-6 py-4 text-center">Actions</th></tr></thead><tbody id="user-table-body"></tbody></table>
+                <table class="min-w-full text-left text-sm"><thead class="border-b border-slate-700 font-medium"><tr><th class="px-6 py-4">ID</th><th class="px-6 py-4">Username</th><th class="px-6 py-4">Email</th><th class="px-6 py-4">Type</th><th class="px-6 py-4">Parent</th><th class="px-6 py-4">Created On</th><th class="px-6 py-4">Subscription</th><th class="px-6 py-4 text-center">Actions</th></tr></thead><tbody id="user-table-body"></tbody></table>
             </div>
         </div>
 
@@ -645,6 +646,20 @@ const createCascadingSelectors = (prefix) => {
                     adminMessageDiv.className = 'text-center text-red-400 font-bold text-lg mb-4 h-6';
                 }
 
+                setTimeout(() => { adminMessageDiv.textContent = ''; }, 5000);
+            };
+            const handleRenewSubscription = async (userId) => {
+                try {
+                    const response = await fetch(`/api/renew-subscription/${userId}`, { method: 'POST' });
+                    const result = await response.json();
+                    adminMessageDiv.textContent = result.message;
+                    adminMessageDiv.className = response.ok ? 'text-center text-green-400 font-bold text-lg mb-4 h-6' : 'text-center text-red-400 font-bold text-lg mb-4 h-6';
+                    if (response.ok && window.forceRefreshUsers) window.forceRefreshUsers();
+                } catch (error) {
+                    console.error("Renew subscription fetch error:", error);
+                    adminMessageDiv.textContent = 'A connection error occurred.';
+                    adminMessageDiv.className = 'text-center text-red-400 font-bold text-lg mb-4 h-6';
+                }
                 setTimeout(() => { adminMessageDiv.textContent = ''; }, 5000);
             };
             const handleOpenEditModal = (userId) => {
@@ -2254,7 +2269,7 @@ const createCascadingSelectors = (prefix) => {
             });
 
 
-            userTableBody.addEventListener('click', (event) => { const target = event.target; if (target.classList.contains('delete-user-btn')) handleDeleteUser(target.dataset.userid, target.dataset.username); if (target.classList.contains('edit-user-btn')) handleOpenEditModal(target.dataset.userid); });
+            userTableBody.addEventListener('click', (event) => { const target = event.target; if (target.classList.contains('delete-user-btn')) handleDeleteUser(target.dataset.userid, target.dataset.username); if (target.classList.contains('edit-user-btn')) handleOpenEditModal(target.dataset.userid); if (target.classList.contains('renew-sub-btn')) handleRenewSubscription(target.dataset.userid); });
             addAnswerBtn.addEventListener('click', () => addAnswerInput(answersContainer)); // Pass container
             addStepBtn.addEventListener('click', () => addStepInput(stepsContainer)); // Pass container
             addSectionBtn.addEventListener('click', addSectionToBuilder);

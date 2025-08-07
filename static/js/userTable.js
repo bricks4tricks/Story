@@ -13,7 +13,7 @@
   let usersHash = null;
 
   async function fetchAndRenderUsers() {
-    userTableBody.innerHTML = '<tr><td colspan="7" class="text-center py-4 text-gray-400">Loading...</td></tr>';
+    userTableBody.innerHTML = '<tr><td colspan="8" class="text-center py-4 text-gray-400">Loading...</td></tr>';
     try {
       const response = await fetch('/api/admin/all-users');
       if (!response.ok) throw new Error('Failed to fetch users');
@@ -30,7 +30,7 @@
       applyFilter();
     } catch (err) {
       console.error('Fetch users error:', err);
-      userTableBody.innerHTML = '<tr><td colspan="7" class="text-center py-4 text-red-400">Error loading users.</td></tr>';
+      userTableBody.innerHTML = '<tr><td colspan="8" class="text-center py-4 text-red-400">Error loading users.</td></tr>';
     }
   }
   async function refreshIfChanged() {
@@ -50,13 +50,17 @@
   function renderUsers(users) {
     userTableBody.innerHTML = '';
     if (users.length === 0) {
-      userTableBody.innerHTML = '<tr><td colspan="7" class="text-center py-4 text-gray-400">No users found.</td></tr>';
+      userTableBody.innerHTML = '<tr><td colspan="8" class="text-center py-4 text-gray-400">No users found.</td></tr>';
       return;
     }
     users.forEach(user => {
       const isUserAdmin = user.UserType === 'Admin';
       const row = document.createElement('tr');
       row.className = 'border-b border-slate-700 hover:bg-slate-700/50';
+      const subText =
+        user.SubscriptionDaysLeft !== null && user.SubscriptionDaysLeft !== undefined
+          ? `${user.SubscriptionDaysLeft} days`
+          : 'None';
       row.innerHTML = `
         <td class="px-6 py-4">${user.ID}</td>
         <td class="px-6 py-4 font-medium">${user.Username}</td>
@@ -64,9 +68,11 @@
         <td class="px-6 py-4"><span class="px-2 py-1 text-xs font-semibold rounded-full ${isUserAdmin ? 'bg-red-500/20 text-red-300' : (user.UserType === 'Parent' ? 'bg-blue-500/20 text-blue-300' : 'bg-green-500/20 text-green-300')}">${user.UserType}</span></td>
         <td class="px-6 py-4">${user.ParentUsername || 'N/A'}</td>
         <td class="px-6 py-4">${new Date(user.CreatedOn).toLocaleDateString()}</td>
+        <td class="px-6 py-4">${subText}</td>
         <td class="px-6 py-4 text-center flex justify-center space-x-2">
           <button data-userid="${user.ID}" class="edit-user-btn bg-blue-800 text-white font-semibold py-1 px-3 text-sm rounded-full hover:bg-blue-700 ${isUserAdmin ? 'opacity-50 cursor-not-allowed' : ''}" ${isUserAdmin ? 'disabled' : ''}>Edit</button>
           <button data-userid="${user.ID}" data-username="${user.Username}" class="delete-user-btn bg-red-800 text-white font-semibold py-1 px-3 text-sm rounded-full hover:bg-red-700 ${isUserAdmin ? 'opacity-50 cursor-not-allowed' : ''}" ${isUserAdmin ? 'disabled' : ''}>Delete</button>
+          ${isUserAdmin ? '' : `<button data-userid="${user.ID}" class="renew-sub-btn bg-green-800 text-white font-semibold py-1 px-3 text-sm rounded-full hover:bg-green-700">Renew</button>`}
         </td>`;
       userTableBody.appendChild(row);
     });
@@ -91,7 +97,8 @@
         u.Username.toLowerCase().includes(query) ||
         (u.Email || '').toLowerCase().includes(query) ||
         (u.UserType || '').toLowerCase().includes(query) ||
-        (u.ParentUsername || '').toLowerCase().includes(query)
+        (u.ParentUsername || '').toLowerCase().includes(query) ||
+        String(u.SubscriptionDaysLeft ?? '').toLowerCase().includes(query)
       );
     } else {
       filtered = allUsers.filter(u => {

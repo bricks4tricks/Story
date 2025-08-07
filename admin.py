@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 import os
 import traceback
+from datetime import datetime, timezone
 from werkzeug.utils import secure_filename
 import version_cache
 from db_utils import db_cursor
@@ -19,22 +20,32 @@ def get_all_users():
         with db_cursor() as cursor:
             query = """
                 SELECT u.id, u.username, u.email, u.usertype, u.createdon,
-                       p.username AS parentusername
+                       p.username AS parentusername,
+                       s.active, s.expires_on
                 FROM tbl_user u
                 LEFT JOIN tbl_user p ON u.parentuserid = p.id
+                LEFT JOIN tbl_subscription s ON u.id = s.user_id
                 ORDER BY u.id;
             """
             cursor.execute(query)
             rows = cursor.fetchall()
             users = []
+            now = datetime.now(timezone.utc)
             for row in rows:
+                expires_on = row[7]
+                if expires_on and expires_on.tzinfo is None:
+                    expires_on = expires_on.replace(tzinfo=timezone.utc)
+                days_left = (
+                    (expires_on - now).days if expires_on and row[6] else None
+                )
                 users.append({
                     'ID': row[0],
                     'Username': row[1],
                     'Email': row[2],
                     'UserType': row[3],
                     'CreatedOn': row[4],
-                    'ParentUsername': row[5]
+                    'ParentUsername': row[5],
+                    'SubscriptionDaysLeft': days_left,
                 })
             return jsonify(users)
     except Exception as e:
