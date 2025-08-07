@@ -10,21 +10,6 @@
         body { font-family: 'Nunito', sans-serif; }
         .font-pacifico { font-family: 'Pacifico', cursive; }
         .gradient-text { background: linear-gradient(to right, #fde047, #fb923c); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .difficulty-indicator {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 4px;
-        }
-        .difficulty-star {
-            width: 20px;
-            height: 20px;
-            background-color: #475569; /* slate-600 */
-            border-radius: 50%;
-        }
-        .difficulty-star.filled {
-            background-color: #fde047; /* yellow-400 */
-        }
         .solution-area {
             transition: all 0.3s ease-in-out;
             max-height: 0;
@@ -77,9 +62,6 @@
                 <div class="flex justify-between items-start mb-4">
                     <p class="text-xl font-bold text-white pr-4" id="question-text"></p>
                     <div class="flex-shrink-0">
-                        <div id="difficulty-display" class="difficulty-indicator mb-2">
-                            <!-- Stars will be rendered here -->
-                        </div>
                         <button id="flag-question-btn" class="text-gray-400 hover:text-red-400 text-sm flex items-center space-x-1" title="Flag this question for review">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 21v-4m0 0V5a2 2 0 012-2h6.5l1 1H21l-3 6 3 6h-8.5l-1-1H5a2 2 0 00-2 2zm9-13.5V9m0 3.5V12"></path></svg>
                             <span>Flag</span>
@@ -146,7 +128,6 @@
             const quizContent = document.getElementById('quiz-content');
             const errorDisplay = document.getElementById('error-display');
             const questionTextElem = document.getElementById('question-text');
-            const difficultyDisplayElem = document.getElementById('difficulty-display');
             const answersContainer = document.getElementById('answers-container');
             const userFeedbackElem = document.getElementById('user-feedback');
             const submitAnswerBtn = document.getElementById('submit-answer-btn');
@@ -163,15 +144,6 @@
             // Constants for difficulty adjustment
             const MAX_DIFFICULTY = 5;
             const MIN_DIFFICULTY = 1;
-
-            function renderDifficultyStars(difficulty) {
-                difficultyDisplayElem.innerHTML = '';
-                for (let i = 1; i <= MAX_DIFFICULTY; i++) {
-                    const star = document.createElement('div');
-                    star.className = `difficulty-star ${i <= difficulty ? 'filled' : ''}`;
-                    difficultyDisplayElem.appendChild(star);
-                }
-            }
 
             async function fetchUserDifficulty() {
                 try {
@@ -227,7 +199,6 @@
                 if (!currentQuestionData) return;
 
                 questionTextElem.textContent = currentQuestionData.text;
-                renderDifficultyStars(currentQuestionData.difficulty);
                 answersContainer.innerHTML = '';
                 solutionStepsElem.innerHTML = '';
                 correctAnswerDisplay.textContent = '';
@@ -325,7 +296,6 @@
                 // Only update if difficulty actually changes
                 if (newDifficulty !== currentDifficulty) {
                     currentDifficulty = newDifficulty;
-                    renderDifficultyStars(currentDifficulty); // Update UI immediately
                     try {
                         const response = await fetch('/api/user/update-topic-difficulty', {
                             method: 'POST',
