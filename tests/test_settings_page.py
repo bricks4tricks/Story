@@ -16,3 +16,10 @@ def test_settings_page_loads(client):
     response = client.get('/settings.html')
     assert response.status_code == 200
     assert b'Settings' in response.data
+
+
+def test_settings_page_has_forms(client):
+    response = client.get('/settings.html')
+    assert b'Change Password' in response.data
+    assert b'Username' in response.data
+    assert b'Email' in response.data
