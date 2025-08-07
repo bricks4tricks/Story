@@ -108,6 +108,7 @@
             const darkModeToggle = document.getElementById('darkMode');
             const fontSizeSelect = document.getElementById('fontSize');
             const userType = localStorage.getItem('userType');
+            const mainSection = document.getElementById('mainSection');
 
             const applyPreferences = () => {
                 if (darkModeToggle.checked) {
@@ -121,8 +122,7 @@
             };
 
             if (userType === 'Student') {
-                profileForm.style.display = 'none';
-                passwordForm.style.display = 'none';
+                mainSection.classList.add('hidden');
                 preferencesSection.classList.remove('hidden');
 
                 fetch(`/api/preferences/${userId}`)
