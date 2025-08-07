@@ -181,21 +181,28 @@ def signin_user():
         conn = get_db_connection()
         cursor = conn.cursor()
         cursor.execute(
-            "SELECT id, username, passwordhash, usertype FROM tbl_user WHERE username = %s",
-            (username,)
+            "SELECT id, username, passwordhash, usertype, parentuserid FROM tbl_user WHERE username = %s",
+            (username,),
         )
         user = cursor.fetchone()
         if user and bcrypt.check_password_hash(user[2], password):
             days_left = None
             # Check subscription status for non-admin users
             if user[3] != 'Admin':
-                cursor.execute(
-                    "SELECT active, expires_on FROM tbl_subscription WHERE user_id = %s",
-                    (user[0],),
-                )
-                sub = cursor.fetchone()
                 now_utc = datetime.now(timezone.utc)
-                if user[3] != 'Parent':
+                # Determine whose subscription to check: parent for students, self for parents
+                if user[3] == 'Student':
+                    parent_id = user[4]
+                    if not parent_id:
+                        return jsonify({
+                            "status": "error",
+                            "message": "Subscription inactive. Please renew to access your account.",
+                        }), 403
+                    cursor.execute(
+                        "SELECT active, expires_on FROM tbl_subscription WHERE user_id = %s",
+                        (parent_id,),
+                    )
+                    sub = cursor.fetchone()
                     if not sub:
                         return jsonify({
                             "status": "error",
@@ -207,7 +214,7 @@ def signin_user():
                     if expires_on and expires_on <= now_utc:
                         cursor.execute(
                             "UPDATE tbl_subscription SET active = FALSE WHERE user_id = %s",
-                            (user[0],),
+                            (parent_id,),
                         )
                         conn.commit()
                         active = False
@@ -216,8 +223,17 @@ def signin_user():
                             "status": "error",
                             "message": "Subscription inactive. Please renew to access your account.",
                         }), 403
-                    days_left = (expires_on - now_utc).days if expires_on else None
+                    days_left = (
+                        (expires_on - now_utc).days
+                        if expires_on and expires_on > now_utc
+                        else None
+                    )
                 else:
+                    cursor.execute(
+                        "SELECT active, expires_on FROM tbl_subscription WHERE user_id = %s",
+                        (user[0],),
+                    )
+                    sub = cursor.fetchone()
                     if sub:
                         active, expires_on = sub
                         if expires_on and expires_on.tzinfo is None:
