@@ -30,6 +30,8 @@
                 <button id="cancelSubscriptionButton" class="hidden bg-red-600 text-white font-bold py-2 px-5 rounded-full hover:bg-red-500 transition-colors">
                     Cancel Subscription
                 </button>
+                <span id="subscriptionInfo" class="text-gray-300 text-sm hidden"></span>
+                <button id="renewSubscriptionButton" class="hidden bg-green-600 text-white font-bold py-2 px-5 rounded-full hover:bg-green-500 transition-colors">Renew Subscription</button>
                 <span id="noSubscriptionMessage" class="text-gray-400 text-sm hidden">No active subscription.</span>
                 <button id="signOutButton" class="bg-yellow-400 text-slate-900 font-bold py-2 px-5 rounded-full hover:bg-yellow-300 glow-button">
                     Sign Out
@@ -39,6 +41,8 @@
         <div id="mobile-menu" class="md:hidden hidden px-6 pb-4">
             <span id="welcome-username-mobile" class="block py-2 font-semibold text-white"></span>
             <button id="cancelSubscriptionButtonMobile" class="hidden bg-red-600 text-white font-bold py-2 px-5 rounded-full hover:bg-red-500 transition-colors mt-2">Cancel Subscription</button>
+            <p id="subscriptionInfoMobile" class="text-gray-300 text-sm hidden mt-2"></p>
+            <button id="renewSubscriptionButtonMobile" class="hidden bg-green-600 text-white font-bold py-2 px-5 rounded-full hover:bg-green-500 transition-colors mt-2">Renew Subscription</button>
             <p id="noSubscriptionMessageMobile" class="text-gray-400 text-sm hidden mt-2">No active subscription.</p>
             <button id="signOutButtonMobile" class="bg-yellow-400 text-slate-900 font-bold py-2 px-5 rounded-full hover:bg-yellow-300 glow-button mt-2">Sign Out</button>
         </div>
@@ -177,6 +181,10 @@
             const showCreateStudentModalBtn = document.getElementById('showCreateStudentModalBtn');
             const cancelButton = document.getElementById('cancelSubscriptionButton');
             const cancelButtonMobile = document.getElementById('cancelSubscriptionButtonMobile');
+            const renewButton = document.getElementById('renewSubscriptionButton');
+            const renewButtonMobile = document.getElementById('renewSubscriptionButtonMobile');
+            const subInfo = document.getElementById('subscriptionInfo');
+            const subInfoMobile = document.getElementById('subscriptionInfoMobile');
             const noSubMsg = document.getElementById('noSubscriptionMessage');
             const noSubMsgMobile = document.getElementById('noSubscriptionMessageMobile');
 
@@ -220,7 +228,27 @@
                 try {
                     const response = await fetch(`${window.location.origin}/api/subscription-status/${parentId}`);
                     const data = await response.json();
+                    if (renewButton) {
+                        renewButton.classList.remove('hidden');
+                        renewButton.addEventListener('click', () => {
+                            window.location.href = `/choose-plan.html?userId=${parentId}`;
+                        });
+                    }
+                    if (renewButtonMobile) {
+                        renewButtonMobile.classList.remove('hidden');
+                        renewButtonMobile.addEventListener('click', () => {
+                            window.location.href = `/choose-plan.html?userId=${parentId}`;
+                        });
+                    }
                     if (data.active) {
+                        if (subInfo) {
+                            subInfo.textContent = `Days left: ${data.days_left}`;
+                            subInfo.classList.remove('hidden');
+                        }
+                        if (subInfoMobile) {
+                            subInfoMobile.textContent = `Days left: ${data.days_left}`;
+                            subInfoMobile.classList.remove('hidden');
+                        }
                         if (cancelButton) {
                             cancelButton.classList.remove('hidden');
                             cancelButton.addEventListener('click', cancelSubscription);

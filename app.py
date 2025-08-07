@@ -1244,6 +1244,10 @@ def subscription_status(user_id):
                 update_users_version()
                 active = False
             if active:
+                now = datetime.now(timezone.utc)
+                days_left = (
+                    (expires_on.date() - now.date()).days if expires_on else None
+                )
                 return (
                     jsonify(
                         {
@@ -1251,11 +1255,12 @@ def subscription_status(user_id):
                             "expires_on": expires_on.date().isoformat()
                             if expires_on
                             else None,
+                            "days_left": days_left,
                         }
                     ),
                     200,
                 )
-        return jsonify({"active": False}), 200
+        return jsonify({"active": False, "days_left": None}), 200
     except Exception as e:
         print(f"Subscription Status API Error: {e}")
         traceback.print_exc()
@@ -1305,6 +1310,49 @@ def cancel_subscription(user_id):
         return jsonify({"status": "success", "message": "Subscription cancelled."}), 200
     except Exception as e:
         print(f"Cancel Subscription API Error: {e}")
+        traceback.print_exc()
+        return jsonify({"status": "error", "message": "Internal error"}), 500
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            release_db_connection(conn)
+
+
+@app.route('/api/renew-subscription/<int:user_id>', methods=['POST', 'OPTIONS'])
+def renew_subscription(user_id):
+    """Renew a user's subscription based on their current plan."""
+    if request.method == 'OPTIONS':
+        return jsonify(success=True)
+
+    conn = None
+    cursor = None
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        cursor.execute("SELECT plan FROM tbl_user WHERE id = %s", (user_id,))
+        row = cursor.fetchone()
+        if not row:
+            return jsonify({"status": "error", "message": "User not found"}), 404
+        plan = row[0] or 'Monthly'
+
+        if plan == 'Monthly':
+            expires_on = datetime.now(timezone.utc) + timedelta(days=30)
+        else:
+            expires_on = datetime.now(timezone.utc) + timedelta(days=365)
+
+        cursor.execute(
+            "INSERT INTO tbl_subscription (user_id, active, expires_on, cancelled_on) "
+            "VALUES (%s, TRUE, %s, NULL) "
+            "ON CONFLICT (user_id) DO UPDATE SET active = TRUE, expires_on = EXCLUDED.expires_on, cancelled_on = NULL",
+            (user_id, expires_on),
+        )
+        conn.commit()
+        update_users_version()
+        return jsonify({"status": "success", "message": "Subscription renewed."}), 200
+    except Exception as e:
+        print(f"Renew Subscription API Error: {e}")
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error"}), 500
     finally:

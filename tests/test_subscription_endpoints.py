@@ -11,9 +11,10 @@ from app import app as flask_app
 
 
 class DummyDB:
-    def __init__(self, user_exists=True, subscription=None):
+    def __init__(self, user_exists=True, subscription=None, plan='Monthly'):
         self.user_exists = user_exists
         self.subscription = subscription  # dict or None
+        self.plan = plan
 
 
 class DummyCursor:
@@ -30,12 +31,18 @@ class DummyCursor:
                 self.rowcount = 1
             else:
                 self.rowcount = 0
+        elif "INSERT INTO tbl_subscription" in query:
+            expires_on = params[1]
+            self.db.subscription = {"active": True, "expires_on": expires_on}
+            self.rowcount = 1
         else:
             self.rowcount = 0
 
     def fetchone(self):
         if "SELECT id FROM tbl_user" in self.last_query:
             return (1,) if self.db.user_exists else None
+        if "SELECT plan FROM tbl_user" in self.last_query:
+            return (self.db.plan,) if self.db.user_exists else None
         if "SELECT active, expires_on FROM tbl_subscription" in self.last_query:
             sub = self.db.subscription
             if sub:
@@ -81,7 +88,7 @@ def test_subscription_status_inactive(client):
     with patch("app.get_db_connection", return_value=DummyConnection(db)):
         resp = client.get("/api/subscription-status/1")
     assert resp.status_code == 200
-    assert resp.get_json() == {"active": False}
+    assert resp.get_json() == {"active": False, "days_left": None}
 
 
 def test_subscription_status_active_naive(client):
@@ -93,6 +100,7 @@ def test_subscription_status_active_naive(client):
     assert resp.status_code == 200
     assert data["active"] is True
     assert "expires_on" in data
+    assert data["days_left"] == 5
 
 
 def test_subscription_status_active_timezone_aware(client):
@@ -107,6 +115,7 @@ def test_subscription_status_active_timezone_aware(client):
     assert resp.status_code == 200
     assert data["active"] is True
     assert "expires_on" in data
+    assert data["days_left"] == 5
 
 
 def test_cancel_subscription_no_active(client):
@@ -137,6 +146,15 @@ def test_subscription_status_expired_triggers_cache_update(client):
         with patch("app.update_users_version") as mock_update:
             resp = client.get("/api/subscription-status/1")
             assert resp.status_code == 200
-            assert resp.get_json() == {"active": False}
+            assert resp.get_json() == {"active": False, "days_left": None}
             mock_update.assert_called_once()
+
+
+def test_renew_subscription_success(client):
+    sub = {"active": False, "expires_on": datetime.utcnow() - timedelta(days=1)}
+    db = DummyDB(subscription=sub, plan="Monthly")
+    with patch("app.get_db_connection", return_value=DummyConnection(db)):
+        resp = client.post("/api/renew-subscription/1")
+    assert resp.status_code == 200
+    assert db.subscription["active"] is True
 
