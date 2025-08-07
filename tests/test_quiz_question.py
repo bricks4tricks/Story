@@ -8,9 +8,10 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from app import app as flask_app
 
 class DummyCursor:
-    def __init__(self, question_row=None, answer_rows=None, questions_by_diff=None):
+    def __init__(self, question_row=None, answer_rows=None, step_rows=None, questions_by_diff=None):
         self.question_row = question_row
         self.answer_rows = answer_rows or []
+        self.step_rows = step_rows or []
         self.questions_by_diff = questions_by_diff
         self.last_query = None
         self.last_params = None
@@ -26,19 +27,29 @@ class DummyCursor:
         return self.question_row
 
     def fetchall(self):
-        return self.answer_rows
+        if self.last_query and 'tbl_answer' in self.last_query:
+            return self.answer_rows
+        if self.last_query and 'tbl_step' in self.last_query:
+            return self.step_rows
+        return []
+
     def close(self):
         pass
 
+
 class DummyConnection:
-    def __init__(self, question_row=None, answer_rows=None, questions_by_diff=None):
-        self.cursor_obj = DummyCursor(question_row, answer_rows, questions_by_diff)
+    def __init__(self, question_row=None, answer_rows=None, step_rows=None, questions_by_diff=None):
+        self.cursor_obj = DummyCursor(question_row, answer_rows, step_rows, questions_by_diff)
+
     def cursor(self, dictionary=False, cursor_factory=None):
         return self.cursor_obj
+
     def commit(self):
         pass
+
     def rollback(self):
         pass
+
     def close(self):
         pass
 
@@ -51,7 +62,8 @@ def client():
 def test_quiz_question_multiple_choice(client):
     question = (1, "What is 1+1?", "MultipleChoice", 3)
     answers = [("2", True), ("3", False)]
-    conn = DummyConnection(question, answers)
+    steps = [("Add the numbers",), ("Check your work",)]
+    conn = DummyConnection(question, answers, steps)
     with patch('quiz.get_db_connection', return_value=conn):
         resp = client.get('/api/quiz/question/1/1/3')
     assert resp.status_code == 200
@@ -63,6 +75,7 @@ def test_quiz_question_multiple_choice(client):
     assert q['type'] == 'MultipleChoice'
     assert q['difficulty'] == 3
     assert q['answers'] == [list(a) for a in answers]
+    assert q['steps'] == [s[0] for s in steps]
 
 def test_quiz_question_open_ended(client):
     question = (5, "Explain gravity", "OpenEnded", 2)
@@ -74,6 +87,7 @@ def test_quiz_question_open_ended(client):
     q = data['question']
     assert q['type'] == 'OpenEnded'
     assert q['answers'] == []
+    assert q['steps'] == []
 
 def test_quiz_question_not_found(client):
     conn = DummyConnection(None, [])

@@ -37,6 +37,13 @@ def get_quiz_question(user_id, topic_id, difficulty_level):
                 (question_id,),
             )
             answers = cursor.fetchall()
+
+        cursor.execute(
+            "SELECT stepname FROM tbl_step WHERE questionid = %s ORDER BY sequenceno",
+            (question_id,),
+        )
+        steps = [row[0] for row in cursor.fetchall()]
+
         response_data = {
             "status": "success",
             "question": {
@@ -45,6 +52,7 @@ def get_quiz_question(user_id, topic_id, difficulty_level):
                 "type": question[2],
                 "difficulty": question[3],
                 "answers": answers,
+                "steps": steps,
             },
         }
         return jsonify(response_data), 200
