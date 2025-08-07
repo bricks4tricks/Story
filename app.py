@@ -735,6 +735,21 @@ def get_story_for_topic(topic_id):
                     return v
             return None
 
+        def _format_story_text(text):
+            """Normalize line breaks and trim paragraph text.
+
+            Replaces newline characters with HTML ``<br>`` tags so that
+            multiline story sections retain their formatting when rendered
+            in the browser. Leading and trailing whitespace on each line is
+            stripped to avoid odd spacing artifacts.
+            """
+            if text is None:
+                return ""
+            # Normalize Windows line endings and split into lines
+            lines = text.replace("\r\n", "\n").split("\n")
+            # Trim each line and join with <br> for HTML display
+            return "<br>".join(line.strip() for line in lines).strip()
+
         # Fetch the default theme for this topic
         cursor.execute("""
             SELECT th.themename
@@ -813,10 +828,14 @@ def get_story_for_topic(topic_id):
                     }
                 else:
                     section_data['contentType'] = 'Paragraph'
-                    section_data['content'] = section.get('descriptiontext') or ""
+                    section_data['content'] = _format_story_text(
+                        section.get('descriptiontext')
+                    )
             else:
                 section_data['contentType'] = 'Paragraph'
-                section_data['content'] = section.get('descriptiontext') or ""
+                section_data['content'] = _format_story_text(
+                    section.get('descriptiontext')
+                )
 
             story_payload["sections"].append(section_data)
 
