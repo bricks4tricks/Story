@@ -109,21 +109,21 @@
             </div>
         </section>
 
-        <section class="mb-10" id="curriculum-section">
+        <section class="mb-10 hidden" id="curriculum-section">
             <h2 class="text-2xl font-bold text-white mb-4">Select Curriculum</h2>
             <div id="curriculum-tabs" class="flex flex-wrap gap-3">
                 <p class="text-gray-400">Select a grade first.</p>
             </div>
         </section>
 
-        <section class="mb-10" id="unit-section">
+        <section class="mb-10 hidden" id="unit-section">
             <h2 class="text-2xl font-bold text-white mb-4">Select Unit</h2>
             <div id="unit-tabs" class="flex flex-wrap gap-3">
                 <p class="text-gray-400">Select a curriculum first.</p>
             </div>
         </section>
 
-        <section id="topics-section">
+        <section id="topics-section" class="hidden">
             <h2 class="text-2xl font-bold text-white mb-4">Available Topics</h2>
             <div id="topics-list" class="bg-slate-800 rounded-lg p-6 border border-slate-700 max-h-96 overflow-y-auto custom-scrollbar">
                 <p class="text-gray-400">Select a unit to see topics.</p>
@@ -150,6 +150,9 @@
             const curriculumTabsContainer = document.getElementById('curriculum-tabs');
             const unitTabsContainer = document.getElementById('unit-tabs');
             const topicsListContainer = document.getElementById('topics-list');
+            const curriculumSection = document.getElementById('curriculum-section');
+            const unitSection = document.getElementById('unit-section');
+            const topicsSection = document.getElementById('topics-section');
             const signOutButton = document.getElementById('signOutButton');
             const signOutButtonMobile = document.getElementById('signOutButtonMobile');
             const cancelButton = document.getElementById('cancelSubscriptionButton');
@@ -240,6 +243,10 @@
                 selectedCurriculum = null;
                 selectedUnit = null;
 
+                curriculumSection.classList.remove('hidden');
+                unitSection.classList.add('hidden');
+                topicsSection.classList.add('hidden');
+
                 // Update active state for grade tabs
                 document.querySelectorAll('#grade-tabs button').forEach(btn => {
                     btn.classList.remove('active-grade-tab');
@@ -280,6 +287,9 @@
                 selectedCurriculum = curriculumName;
                 selectedUnit = null;
 
+                unitSection.classList.remove('hidden');
+                topicsSection.classList.add('hidden');
+
                 document.querySelectorAll('#curriculum-tabs button').forEach(btn => {
                     btn.classList.remove('active-curriculum-tab');
                 });
@@ -310,6 +320,8 @@
 
             const selectUnit = (unitName) => {
                 selectedUnit = unitName;
+
+                topicsSection.classList.remove('hidden');
 
                 document.querySelectorAll('#unit-tabs button').forEach(btn => {
                     btn.classList.remove('active-unit-tab');
