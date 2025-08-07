@@ -719,6 +719,42 @@ def save_story():
             conn.autocommit = True
             release_db_connection(conn)
 
+@app.route('/api/admin/add-video', methods=['POST', 'OPTIONS'])
+def add_video():
+    """Add a video link for a topic."""
+    if request.method == 'OPTIONS':
+        return jsonify(success=True)
+
+    data = request.get_json() or {}
+    topic_id = data.get('topicId')
+    youtube_url = data.get('youtubeUrl')
+
+    if not topic_id or not youtube_url:
+        return jsonify({"status": "error", "message": "Missing topicId or youtubeUrl"}), 400
+
+    conn = None
+    cursor = None
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute(
+            "INSERT INTO tbl_video (topicid, videourl, createdby) VALUES (%s, %s, %s)",
+            (topic_id, youtube_url, 'Admin'),
+        )
+        conn.commit()
+        return jsonify({"status": "success", "message": "Video added."}), 201
+    except Exception as e:
+        if conn:
+            conn.rollback()
+        print(f"Add Video API Error: {e}")
+        traceback.print_exc()
+        return jsonify({"status": "error", "message": "Internal server error"}), 500
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            release_db_connection(conn)
+
 @app.route('/api/story/<int:topic_id>', methods=['GET'])
 def get_story_for_topic(topic_id):
     conn = None

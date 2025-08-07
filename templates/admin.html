@@ -316,6 +316,19 @@
                 </form>
                 <div id="create-lesson-message" class="text-center mt-4 h-5"></div>
             </div>
+            <div class="bg-slate-800 rounded-2xl border border-slate-700 p-6 mb-6">
+                <h3 class="text-xl font-bold text-white mb-4">Add Video</h3>
+                <form id="addVideoForm" class="space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div id="video-curriculum-container"></div>
+                        <div id="video-unit-container"></div>
+                        <div id="video-topic-container"></div>
+                    </div>
+                    <input type="url" id="video-url-input" class="w-full bg-slate-700 rounded-lg p-2" placeholder="YouTube link" required>
+                    <button type="submit" class="w-full bg-green-600 text-white font-semibold py-2 px-4 rounded-full">Add Video</button>
+                </form>
+                <div id="add-video-message" class="text-center mt-4 h-5"></div>
+            </div>
             <div class="bg-slate-800 rounded-2xl border border-slate-700 p-6">
                 <div id="existing-curriculums-list" class="space-y-4">
                     <p class="text-center text-gray-400">Loading curriculums...</p>
@@ -519,6 +532,9 @@
             const lessonGradeSelect = document.getElementById('lesson-grade-select');
             const gradeOptions = document.getElementById('grade-options');
             const createLessonMessage = document.getElementById('create-lesson-message');
+            const addVideoForm = document.getElementById('addVideoForm');
+            const videoUrlInput = document.getElementById('video-url-input');
+            const addVideoMessage = document.getElementById('add-video-message');
             const seedDatabaseForm = document.getElementById('seedDatabaseForm');
             const seedFileInput = document.getElementById('seed-file');
             const seedDatabaseMessage = document.getElementById('seed-database-message');
@@ -588,6 +604,7 @@ const createCascadingSelectors = (prefix) => {
             const questionSelectors = createCascadingSelectors('q');
             const storySelectors = createCascadingSelectors('s');
             const editQuestionSelectors = createCascadingSelectors('edit-q');
+            const videoSelectors = createCascadingSelectors('video');
 
 
             const showModal = (modal) => {
@@ -705,7 +722,7 @@ const createCascadingSelectors = (prefix) => {
                     if (!resp.ok) throw new Error('Failed to fetch curriculums');
                     const curriculums = await resp.json();
                     const uniqueCurriculums = [...new Set(curriculums)];
-                    [questionSelectors, storySelectors, editQuestionSelectors].forEach(set => {
+                    [questionSelectors, storySelectors, editQuestionSelectors, videoSelectors].forEach(set => {
                         set.curriculumSelect.innerHTML = '<option value="">-- Select Curriculum --</option>';
                         uniqueCurriculums.forEach(name => { set.curriculumSelect.innerHTML += `<option value="${name}">${name}</option>`; });
                     });
@@ -2172,6 +2189,36 @@ const createCascadingSelectors = (prefix) => {
                     createLessonMessage.className = 'text-center text-red-400 mt-4 h-5';
                 }
                 setTimeout(() => { createLessonMessage.textContent = ''; }, 5000);
+            });
+
+            addVideoForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const topicId = videoSelectors.topicSelect.value;
+                const youtubeUrl = videoUrlInput.value.trim();
+                if (!topicId || !youtubeUrl) return;
+                try {
+                    const payload = { topicId: parseInt(topicId), youtubeUrl };
+                    const resp = await fetch('/api/admin/add-video', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    const result = await resp.json();
+                    addVideoMessage.textContent = result.message;
+                    addVideoMessage.className = resp.ok ? 'text-center text-green-400 mt-4 h-5' : 'text-center text-red-400 mt-4 h-5';
+                    if (resp.ok) {
+                        addVideoForm.reset();
+                        videoSelectors.curriculumSelect.value = '';
+                        videoSelectors.unitSelect.innerHTML = '<option value="">-- Select Unit --</option>';
+                        videoSelectors.unitSelect.disabled = true;
+                        videoSelectors.topicSelect.innerHTML = '<option value="">-- Select Topic --</option>';
+                        videoSelectors.topicSelect.disabled = true;
+                    }
+                } catch (error) {
+                    addVideoMessage.textContent = 'Server connection error.';
+                    addVideoMessage.className = 'text-center text-red-400 mt-4 h-5';
+                }
+                setTimeout(() => { addVideoMessage.textContent = ''; }, 5000);
             });
 
 
