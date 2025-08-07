@@ -232,7 +232,7 @@
                 solutionStepsElem.innerHTML = '';
                 correctAnswerDisplay.textContent = '';
 
-                if (currentQuestionData.type === 'MultipleChoice') {
+                if (currentQuestionData.type === 'MultipleChoice' && Array.isArray(currentQuestionData.answers)) {
                     currentQuestionData.answers.forEach(ans => {
                         const label = document.createElement('label');
                         label.className = 'block bg-slate-700/50 p-3 rounded-lg hover:bg-slate-700 cursor-pointer';
@@ -243,11 +243,13 @@
                     answersContainer.innerHTML = `<input type="text" id="open-ended-input" class="w-full bg-slate-700 border border-slate-600 rounded-lg p-3 text-white" placeholder="Type your answer here...">`;
                 }
 
-                currentQuestionData.steps.forEach((step, index) => {
-                    const p = document.createElement('p');
-                    p.textContent = `Step ${index + 1}: ${step}`;
-                    solutionStepsElem.appendChild(p);
-                });
+                if (Array.isArray(currentQuestionData.steps)) {
+                    currentQuestionData.steps.forEach((step, index) => {
+                        const p = document.createElement('p');
+                        p.textContent = `Step ${index + 1}: ${step}`;
+                        solutionStepsElem.appendChild(p);
+                    });
+                }
             }
 
             async function handleSubmitAnswer() {
