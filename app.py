@@ -755,6 +755,36 @@ def add_video():
         if conn:
             release_db_connection(conn)
 
+
+@app.route('/api/video/<int:topic_id>', methods=['GET'])
+def get_video_for_topic(topic_id):
+    """Fetch the video URL for a given topic."""
+    conn = None
+    cursor = None
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute(
+            "SELECT videourl FROM tbl_video WHERE topicid = %s ORDER BY id DESC LIMIT 1",
+            (topic_id,),
+        )
+        row = cursor.fetchone()
+        if row:
+            return jsonify({"status": "success", "videoUrl": row[0]}), 200
+        return (
+            jsonify({"status": "error", "message": "Video not found"}),
+            404,
+        )
+    except Exception as e:
+        print(f"Get Video API Error: {e}")
+        traceback.print_exc()
+        return jsonify({"status": "error", "message": "Internal server error"}), 500
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            release_db_connection(conn)
+
 @app.route('/api/story/<int:topic_id>', methods=['GET'])
 def get_story_for_topic(topic_id):
     conn = None

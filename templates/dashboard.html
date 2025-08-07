@@ -365,13 +365,26 @@
                                 <h3 class="text-xl font-bold text-white mb-1">${topic.name}</h3>
                                 <p class="text-sm ${statusColor}">Status: ${statusText}</p>
                             </div>
-                            <button
-                                class="start-lesson-btn ${buttonClasses} text-white font-bold py-2 px-6 rounded-full transition-colors"
-                                data-topic-id="${topic.id}"
-                                data-topic-name="${topic.name}"
-                            >
-                                Start Lesson
-                            </button>
+                            <div class="flex space-x-2">
+                                <button
+                                    class="start-story-btn ${buttonClasses} text-white font-bold py-2 px-4 rounded-full transition-colors"
+                                    data-topic-id="${topic.id}"
+                                >
+                                    Story
+                                </button>
+                                <button
+                                    class="start-quiz-btn bg-purple-600 hover:bg-purple-500 text-white font-bold py-2 px-4 rounded-full transition-colors"
+                                    data-topic-id="${topic.id}"
+                                >
+                                    Quiz
+                                </button>
+                                <button
+                                    class="watch-video-btn bg-red-600 hover:bg-red-500 text-white font-bold py-2 px-4 rounded-full transition-colors"
+                                    data-topic-id="${topic.id}"
+                                >
+                                    Video
+                                </button>
+                            </div>
                         `;
                         topicsListContainer.appendChild(topicDiv);
                     });
@@ -380,43 +393,30 @@
                 }
             };
 
-            // Event listener for starting a lesson
+            // Event listener for story, quiz, and video buttons
             topicsListContainer.addEventListener('click', async (event) => {
-                const startButton = event.target.closest('.start-lesson-btn');
-                if (startButton) {
-                    event.preventDefault();
+                const storyButton = event.target.closest('.start-story-btn');
+                const quizButton = event.target.closest('.start-quiz-btn');
+                const videoButton = event.target.closest('.watch-video-btn');
 
-                    const topicId = startButton.dataset.topicId;
-                    const topicName = startButton.dataset.topicName;
-
-                    if (!topicId) {
-                        alert('Error: Topic ID not found for this lesson.');
-                        return;
-                    }
-
-                    // First, check if a story exists for this topic
+                if (storyButton) {
+                    const topicId = storyButton.dataset.topicId;
+                    window.location.href = `/story-player.html?topicId=${topicId}`;
+                } else if (quizButton) {
+                    const topicId = quizButton.dataset.topicId;
+                    window.location.href = `/quiz-player.html?topicId=${topicId}`;
+                } else if (videoButton) {
+                    const topicId = videoButton.dataset.topicId;
                     try {
-                        const response = await fetch(`${window.location.origin}/api/story-exists/${topicId}`);
-                        const result = await response.json();
-
-                        if (response.ok && result.storyExists) {
-                            // Story exists, let the user choose to view it or go straight to the quiz
-                            const viewStory = confirm('This lesson includes a story. Would you like to read it before the quiz?');
-                            if (viewStory) {
-                                window.location.href = `/story-player.html?topicId=${topicId}`;
-                            } else {
-                                window.location.href = `/quiz-player.html?topicId=${topicId}`;
-                            }
-                        } else if (response.ok && !result.storyExists) {
-                            // No story found for this topic, go directly to quiz
-                            window.location.href = `/quiz-player.html?topicId=${topicId}`;
+                        const response = await fetch(`${window.location.origin}/api/video/${topicId}`);
+                        if (response.ok) {
+                            window.location.href = `/video-player.html?topicId=${topicId}`;
                         } else {
-                            // API call failed for some reason
-                            alert(`Error checking story availability: ${result.message || 'An unknown error occurred.'}`);
+                            alert('No video available for this topic.');
                         }
                     } catch (error) {
-                        console.error('Error fetching story availability:', error);
-                        alert('Could not connect to the server to check story availability. Please ensure the backend is running.');
+                        console.error('Error fetching video availability:', error);
+                        alert('Could not connect to the server to check video availability.');
                     }
                 }
             });
