@@ -27,8 +27,6 @@ class TrackCursor:
             self._fetchone = None  # unit does not exist yet
         elif "SELECT id FROM tbl_grade" in q:
             self._fetchone = (3,) if self.grade_exists else None
-        elif "SELECT id FROM tbl_subject WHERE subjecttype = 'Curriculum'" in q:
-            self._fetchall = [(1,), (2,)]
         elif "RETURNING id" in q:
             self._fetchone = (2,)
 
@@ -78,7 +76,7 @@ def test_create_lesson_success(client):
     assert data['status'] == 'success'
     assert any('INSERT INTO tbl_topicgrade' in q for q in conn.cursor_obj.queries)
     insert_links = [q for q in conn.cursor_obj.queries if 'INSERT INTO tbl_topicsubject' in q]
-    assert len(insert_links) == 2
+    assert len(insert_links) == 0
 
 
 def test_create_lesson_selected_curriculums(client):
@@ -92,7 +90,7 @@ def test_create_lesson_selected_curriculums(client):
                 'unit': 'Algebra',
                 'lesson': 'Addition',
                 'grade': '4th Grade',
-                'curriculum_ids': [1],
+                'curriculum_ids': [2],
             },
         )
     assert resp.status_code == 201

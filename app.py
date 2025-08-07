@@ -1639,21 +1639,19 @@ def create_lesson():
             (lesson_id, grade_id, 'API'),
         )
 
-        # Optionally map the new lesson to selected curriculums. If none are
-        # provided, link it to every curriculum so the lesson is available across
-        # programs by default.
+        # Optionally map the new lesson to additional curriculums selected in
+        # the admin dashboard. If none are provided, the lesson remains linked
+        # only to its primary curriculum.
         curriculum_ids = data.get('curriculum_ids') or data.get('curriculumIds')
-        if curriculum_ids is None:
-            cursor.execute("SELECT id FROM tbl_subject WHERE subjecttype = 'Curriculum'")
-            curriculum_ids = [row[0] for row in cursor.fetchall()]
-        elif not isinstance(curriculum_ids, list):
-            curriculum_ids = [curriculum_ids]
+        if curriculum_ids:
+            if not isinstance(curriculum_ids, list):
+                curriculum_ids = [curriculum_ids]
 
-        for cid in curriculum_ids:
-            cursor.execute(
-                "INSERT INTO tbl_topicsubject (topicid, subjectid, createdby) VALUES (%s, %s, %s) ON CONFLICT DO NOTHING",
-                (lesson_id, cid, 'API'),
-            )
+            for cid in curriculum_ids:
+                cursor.execute(
+                    "INSERT INTO tbl_topicsubject (topicid, subjectid, createdby) VALUES (%s, %s, %s) ON CONFLICT DO NOTHING",
+                    (lesson_id, cid, 'API'),
+                )
 
         conn.commit()
         return jsonify({"status": "success", "message": "Lesson created."}), 201
