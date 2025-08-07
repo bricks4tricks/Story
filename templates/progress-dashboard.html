@@ -28,7 +28,7 @@
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
             const userId = localStorage.getItem('userId');
-            if (!userId) {
+            if (!userId || localStorage.getItem('userType') !== 'Student') {
                 alert('Access denied.');
                 window.location.href = '/';
                 return;

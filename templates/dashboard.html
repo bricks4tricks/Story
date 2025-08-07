@@ -65,8 +65,8 @@
 <body class="bg-slate-900 text-gray-200 flex flex-col min-h-screen">
 
     <script>
-        // Redirect to home if not logged in as student or parent
-        if (!localStorage.getItem('userId') || (localStorage.getItem('userType') !== 'Student' && localStorage.getItem('userType') !== 'Parent')) {
+        // Redirect to home if not logged in as a student
+        if (!localStorage.getItem('userId') || localStorage.getItem('userType') !== 'Student') {
             window.location.href = '/';
         }
     </script>
@@ -394,39 +394,29 @@
                         return;
                     }
 
-                    // For Parent users, clicking "Start Lesson" takes them to the Admin page's story editing for that topic
-                    // For Student users, it takes them to story-player.html
-                    if (userType === 'Parent') {
-                        // Parents manage content, so redirect them to the admin story management tab
-                        // You might need a more sophisticated way to pass topicId to admin.html and select the tab/populate form
-                        alert(`Parent mode: You can manage the story content for "${topicName}" via the Admin dashboard.`);
-                        // window.location.href = `admin.html#stories-tab&topicId=${topicId}`; // Example, requires admin.html to handle URL params
-                        // For now, just alerting them.
-                    } else if (userType === 'Student') {
-                        // First, check if a story exists for this topic
-                        try {
-                            const response = await fetch(`${window.location.origin}/api/story-exists/${topicId}`);
-                            const result = await response.json();
+                    // First, check if a story exists for this topic
+                    try {
+                        const response = await fetch(`${window.location.origin}/api/story-exists/${topicId}`);
+                        const result = await response.json();
 
-                            if (response.ok && result.storyExists) {
-                                // Story exists, let the user choose to view it or go straight to the quiz
-                                const viewStory = confirm('This lesson includes a story. Would you like to read it before the quiz?');
-                                if (viewStory) {
-                                    window.location.href = `/story-player.html?topicId=${topicId}`;
-                                } else {
-                                    window.location.href = `/quiz-player.html?topicId=${topicId}`;
-                                }
-                            } else if (response.ok && !result.storyExists) {
-                                // No story found for this topic, go directly to quiz
-                                window.location.href = `/quiz-player.html?topicId=${topicId}`;
+                        if (response.ok && result.storyExists) {
+                            // Story exists, let the user choose to view it or go straight to the quiz
+                            const viewStory = confirm('This lesson includes a story. Would you like to read it before the quiz?');
+                            if (viewStory) {
+                                window.location.href = `/story-player.html?topicId=${topicId}`;
                             } else {
-                                // API call failed for some reason
-                                alert(`Error checking story availability: ${result.message || 'An unknown error occurred.'}`);
+                                window.location.href = `/quiz-player.html?topicId=${topicId}`;
                             }
-                        } catch (error) {
-                            console.error('Error fetching story availability:', error);
-                            alert('Could not connect to the server to check story availability. Please ensure the backend is running.');
+                        } else if (response.ok && !result.storyExists) {
+                            // No story found for this topic, go directly to quiz
+                            window.location.href = `/quiz-player.html?topicId=${topicId}`;
+                        } else {
+                            // API call failed for some reason
+                            alert(`Error checking story availability: ${result.message || 'An unknown error occurred.'}`);
                         }
+                    } catch (error) {
+                        console.error('Error fetching story availability:', error);
+                        alert('Could not connect to the server to check story availability. Please ensure the backend is running.');
                     }
                 }
             });
