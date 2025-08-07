@@ -113,6 +113,107 @@ def signup_user():
             release_db_connection(conn)
 
 
+@auth_bp.route('/update-profile', methods=['POST', 'OPTIONS'])
+def update_profile():
+    if request.method == 'OPTIONS':
+        return jsonify(success=True)
+    data = request.get_json(silent=True)
+    if data is None:
+        return jsonify({"status": "error", "message": "Invalid JSON"}), 400
+    user_id = data.get('userId')
+    username = data.get('username')
+    email = data.get('email')
+    if user_id is None or not username or not email:
+        return jsonify({"status": "error", "message": "Missing fields"}), 400
+    is_valid_email, email_msg = validate_email(email)
+    if not is_valid_email:
+        return jsonify({"status": "error", "message": email_msg}), 400
+    conn = None
+    cursor = None
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT usertype FROM tbl_user WHERE id = %s", (user_id,))
+        user = cursor.fetchone()
+        if not user:
+            return jsonify({"status": "error", "message": "User not found"}), 404
+        if user[0] == 'Student':
+            return jsonify({"status": "error", "message": "Students cannot update profile"}), 403
+        cursor.execute(
+            "SELECT id FROM tbl_user WHERE (username = %s OR email = %s) AND id != %s",
+            (username, email, user_id),
+        )
+        if cursor.fetchone():
+            return jsonify({"status": "error", "message": "username or email is already in use by another account."}), 409
+        cursor.execute(
+            "UPDATE tbl_user SET username = %s, email = %s WHERE id = %s",
+            (username, email, user_id),
+        )
+        if cursor.rowcount == 0:
+            conn.rollback()
+            return jsonify({"status": "error", "message": "User not found or no changes made."}), 404
+        conn.commit()
+        update_users_version()
+        return jsonify({"status": "success", "message": "Profile updated successfully!"}), 200
+    except Exception as e:
+        print(f"Update Profile API Error: {e}")
+        traceback.print_exc()
+        return jsonify({"status": "error", "message": "Internal error"}), 500
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            release_db_connection(conn)
+
+
+@auth_bp.route('/change-password', methods=['POST', 'OPTIONS'])
+def change_password():
+    if request.method == 'OPTIONS':
+        return jsonify(success=True)
+    data = request.get_json(silent=True)
+    if data is None:
+        return jsonify({"status": "error", "message": "Invalid JSON"}), 400
+    user_id = data.get('userId')
+    current_password = data.get('currentPassword')
+    new_password = data.get('newPassword')
+    if user_id is None or not current_password or not new_password:
+        return jsonify({"status": "error", "message": "Missing fields"}), 400
+    is_valid, message = validate_password(new_password)
+    if not is_valid:
+        return jsonify({"status": "error", "message": message}), 400
+    conn = None
+    cursor = None
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT passwordhash, usertype FROM tbl_user WHERE id = %s", (user_id,))
+        user = cursor.fetchone()
+        if not user:
+            return jsonify({"status": "error", "message": "User not found"}), 404
+        stored_hash, user_type = user
+        if user_type == 'Student':
+            return jsonify({"status": "error", "message": "Students cannot change password"}), 403
+        if not bcrypt.check_password_hash(stored_hash, current_password):
+            return jsonify({"status": "error", "message": "Current password is incorrect"}), 401
+        new_hash = bcrypt.generate_password_hash(new_password).decode('utf-8')
+        cursor.execute(
+            "UPDATE tbl_user SET passwordhash = %s WHERE id = %s",
+            (new_hash, user_id),
+        )
+        conn.commit()
+        update_users_version()
+        return jsonify({"status": "success", "message": "Password updated successfully."}), 200
+    except Exception as e:
+        print(f"Change Password API Error: {e}")
+        traceback.print_exc()
+        return jsonify({"status": "error", "message": "Internal error"}), 500
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            release_db_connection(conn)
+
+
 @auth_bp.route('/select-plan', methods=['POST', 'OPTIONS'])
 def select_plan():
     """Update a user's subscription plan after signup."""
