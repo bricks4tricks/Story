@@ -426,12 +426,16 @@
                             const result = await response.json();
 
                             if (response.ok && result.storyExists) {
-                                // Story exists, redirect to story player
-                                window.location.href = `/story-player.html?topicId=${topicId}`;
+                                // Story exists, let the user choose to view it or go straight to the quiz
+                                const viewStory = confirm('This lesson includes a story. Would you like to read it before the quiz?');
+                                if (viewStory) {
+                                    window.location.href = `/story-player.html?topicId=${topicId}`;
+                                } else {
+                                    window.location.href = `/quiz-player.html?topicId=${topicId}`;
+                                }
                             } else if (response.ok && !result.storyExists) {
-                                // No story found for this topic
-                                alert(`No interactive story content available yet for "${topicName}". Please try another topic or check back later.`);
-                                // Optionally, implement a fallback here (e.g., redirect to a static lesson page if you have one)
+                                // No story found for this topic, go directly to quiz
+                                window.location.href = `/quiz-player.html?topicId=${topicId}`;
                             } else {
                                 // API call failed for some reason
                                 alert(`Error checking story availability: ${result.message || 'An unknown error occurred.'}`);
