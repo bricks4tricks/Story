@@ -996,6 +996,13 @@ def get_dashboard(user_id):
     try:
         conn = get_db_connection()
         cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        cursor.execute(
+            "SELECT usertype FROM tbl_user WHERE id = %s",
+            (user_id,),
+        )
+        user_row = cursor.fetchone()
+        if not user_row or user_row.get("usertype") != "Student":
+            return jsonify({"status": "error", "message": "Unauthorized"}), 403
 
         cursor.execute(
             """
