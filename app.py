@@ -35,6 +35,16 @@ CORS(app, origins=["https://logicandstories.com", "https://www.logicandstories.c
      headers=["Content-Type", "Authorization"])
 
 
+@app.after_request
+def inject_preferences_script(response):
+    if response.content_type.startswith('text/html'):
+        script_tag = "<script src='/static/js/preferences.js'></script>"
+        data = response.get_data(as_text=True)
+        if '</body>' in data and script_tag not in data:
+            response.set_data(data.replace('</body>', f'{script_tag}</body>'))
+    return response
+
+
 # --- DATABASE CONFIGURATION ---
 # Moved to db_utils for reuse across scripts
 from db_utils import get_db_connection, release_db_connection

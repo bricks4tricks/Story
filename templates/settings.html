@@ -130,11 +130,15 @@
                     .then(data => {
                         darkModeToggle.checked = data.darkMode;
                         fontSizeSelect.value = data.fontSize || 'medium';
+                        localStorage.setItem('darkMode', data.darkMode);
+                        localStorage.setItem('fontSize', data.fontSize || 'medium');
                         applyPreferences();
                     })
                     .catch(() => {
                         darkModeToggle.checked = false;
                         fontSizeSelect.value = 'medium';
+                        localStorage.setItem('darkMode', false);
+                        localStorage.setItem('fontSize', 'medium');
                         applyPreferences();
                     });
 
@@ -153,6 +157,8 @@
                         const result = await response.json();
                         if (response.ok) {
                             applyPreferences();
+                            localStorage.setItem('darkMode', darkModeToggle.checked);
+                            localStorage.setItem('fontSize', fontSizeSelect.value);
                         }
                         alert(result.message || 'Preferences saved.');
                     } catch (error) {
