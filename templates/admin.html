@@ -1245,8 +1245,11 @@ const createCascadingSelectors = (prefix) => {
             };
 
             existingStoriesList.addEventListener('click', async (event) => {
-                if (event.target.classList.contains('delete-story-btn')) {
-                    const topicId = event.target.dataset.topicId;
+                const deleteBtn = event.target.closest('.delete-story-btn');
+                const editBtn = event.target.closest('.edit-story-btn');
+
+                if (deleteBtn) {
+                    const topicId = deleteBtn.dataset.topicId;
                     if (confirm(`Are you sure you want to delete the story for Topic ID: ${topicId}? This will remove all sections. This action cannot be undone.`)) {
                         try {
                             const response = await fetch(`/api/admin/delete-story/${topicId}`, {
@@ -1266,8 +1269,8 @@ const createCascadingSelectors = (prefix) => {
                             setTimeout(() => { adminMessageDiv.textContent = ''; }, 5000);
                         }
                     }
-                } else if (event.target.classList.contains('edit-story-btn')) {
-                    const topicId = event.target.dataset.topicId;
+                } else if (editBtn) {
+                    const topicId = editBtn.dataset.topicId;
                     handleOpenEditStory(topicId);
                 }
             });
