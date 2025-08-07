@@ -1638,10 +1638,18 @@ def create_lesson():
             "INSERT INTO tbl_topicgrade (topicid, gradeid, createdby) VALUES (%s, %s, %s)",
             (lesson_id, grade_id, 'API'),
         )
-        # Map the new lesson to all curriculums so it is available across programs
-        cursor.execute("SELECT id FROM tbl_subject WHERE subjecttype = 'Curriculum'")
-        all_curriculum_ids = [row[0] for row in cursor.fetchall()]
-        for cid in all_curriculum_ids:
+
+        # Optionally map the new lesson to selected curriculums. If none are
+        # provided, link it to every curriculum so the lesson is available across
+        # programs by default.
+        curriculum_ids = data.get('curriculum_ids') or data.get('curriculumIds')
+        if curriculum_ids is None:
+            cursor.execute("SELECT id FROM tbl_subject WHERE subjecttype = 'Curriculum'")
+            curriculum_ids = [row[0] for row in cursor.fetchall()]
+        elif not isinstance(curriculum_ids, list):
+            curriculum_ids = [curriculum_ids]
+
+        for cid in curriculum_ids:
             cursor.execute(
                 "INSERT INTO tbl_topicsubject (topicid, subjectid, createdby) VALUES (%s, %s, %s) ON CONFLICT DO NOTHING",
                 (lesson_id, cid, 'API'),

@@ -81,6 +81,27 @@ def test_create_lesson_success(client):
     assert len(insert_links) == 2
 
 
+def test_create_lesson_selected_curriculums(client):
+    """Lesson should link only to the curriculums provided."""
+    conn = DummyConnection()
+    with patch('app.get_db_connection', return_value=conn):
+        resp = client.post(
+            '/api/admin/create-lesson',
+            json={
+                'curriculum': 'Math',
+                'unit': 'Algebra',
+                'lesson': 'Addition',
+                'grade': '4th Grade',
+                'curriculum_ids': [1],
+            },
+        )
+    assert resp.status_code == 201
+    data = resp.get_json()
+    assert data['status'] == 'success'
+    insert_links = [q for q in conn.cursor_obj.queries if 'INSERT INTO tbl_topicsubject' in q]
+    assert len(insert_links) == 1
+
+
 def test_create_lesson_missing_fields(client):
     conn = DummyConnection()
     with patch('app.get_db_connection', return_value=conn):
