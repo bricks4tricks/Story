@@ -1422,9 +1422,10 @@ const createCascadingSelectors = (prefix) => {
 
                         let contentHtml = '';
                         if (section.contentType === 'Paragraph') {
+                            const textareaContent = (section.content || '').replace(/<br\s*\/?>/gi, '\n');
                             contentHtml = `
                                 <div class="paragraph-content">
-                                    <textarea class="w-full bg-slate-700/80 p-2 rounded-md" rows="4" placeholder="Type paragraph content here...">${section.content}</textarea>
+                                    <textarea class="w-full bg-slate-700/80 p-2 rounded-md" rows="4" placeholder="Type paragraph content here...">${textareaContent}</textarea>
                                 </div>
                             `;
                         } else if (section.contentType === 'Interactive') {
