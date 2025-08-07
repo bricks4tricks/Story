@@ -9,7 +9,12 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from extensions import bcrypt
 from utils import validate_password, validate_email
-from db_utils import ensure_plan_column, get_db_connection, release_db_connection
+from db_utils import (
+    ensure_plan_column,
+    get_db_connection,
+    release_db_connection,
+    ensure_user_preferences_table,
+)
 
 auth_bp = Blueprint('auth', __name__, url_prefix='/api')
 
@@ -207,6 +212,85 @@ def change_password():
         print(f"Change Password API Error: {e}")
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error"}), 500
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            release_db_connection(conn)
+
+
+@auth_bp.route('/preferences/<int:user_id>', methods=['GET', 'OPTIONS'])
+def get_preferences(user_id):
+    if request.method == 'OPTIONS':
+        return jsonify(success=True)
+    conn = None
+    cursor = None
+    try:
+        conn = get_db_connection()
+        ensure_user_preferences_table(conn)
+        cursor = conn.cursor()
+        cursor.execute(
+            "SELECT darkmode, fontsize FROM tbl_userpreferences WHERE user_id = %s",
+            (user_id,),
+        )
+        prefs = cursor.fetchone()
+        if prefs:
+            darkmode, fontsize = prefs
+        else:
+            darkmode, fontsize = False, 'medium'
+        return (
+            jsonify({
+                "status": "success",
+                "darkMode": darkmode,
+                "fontSize": fontsize,
+            }),
+            200,
+        )
+    except Exception as e:
+        print(f"Get Preferences API Error: {e}")
+        traceback.print_exc()
+        return jsonify({"status": "error", "message": "Could not retrieve preferences"}), 500
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            release_db_connection(conn)
+
+
+@auth_bp.route('/preferences', methods=['POST', 'OPTIONS'])
+def save_preferences():
+    if request.method == 'OPTIONS':
+        return jsonify(success=True)
+    data = request.get_json(silent=True)
+    if data is None:
+        return jsonify({"status": "error", "message": "Invalid JSON"}), 400
+    user_id = data.get('userId')
+    dark_mode = data.get('darkMode')
+    font_size = data.get('fontSize')
+    if user_id is None or font_size is None:
+        return jsonify({"status": "error", "message": "Missing fields"}), 400
+    conn = None
+    cursor = None
+    try:
+        conn = get_db_connection()
+        ensure_user_preferences_table(conn)
+        cursor = conn.cursor()
+        cursor.execute(
+            """
+            INSERT INTO tbl_userpreferences (user_id, darkmode, fontsize)
+            VALUES (%s, %s, %s)
+            ON CONFLICT (user_id) DO UPDATE
+            SET darkmode = EXCLUDED.darkmode,
+                fontsize = EXCLUDED.fontsize
+            """,
+            (user_id, dark_mode, font_size),
+        )
+        conn.commit()
+        return jsonify({"status": "success", "message": "Preferences saved."}), 200
+    except Exception as e:
+        print(f"Save Preferences API Error: {e}")
+        traceback.print_exc()
+        return jsonify({"status": "error", "message": "Could not save preferences"}), 500
     finally:
         if cursor:
             cursor.close()

@@ -154,3 +154,24 @@ def ensure_plan_column(conn):
     finally:
         cur.close()
 
+
+def ensure_user_preferences_table(conn):
+    """Create ``tbl_userpreferences`` if it does not already exist."""
+    cur = conn.cursor()
+    try:
+        cur.execute(
+            """
+            CREATE TABLE IF NOT EXISTS tbl_userpreferences (
+                user_id INTEGER PRIMARY KEY REFERENCES tbl_user(id) ON DELETE CASCADE,
+                darkmode BOOLEAN NOT NULL DEFAULT FALSE,
+                fontsize VARCHAR(10) NOT NULL DEFAULT 'medium'
+            )
+            """
+        )
+        conn.commit()
+    except Exception:
+        conn.rollback()
+        raise
+    finally:
+        cur.close()
+
