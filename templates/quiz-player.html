@@ -98,7 +98,7 @@
 
             <div id="solution-area" class="mt-4 bg-slate-700 border border-slate-600 p-6 rounded-lg solution-area">
                 <h3 class="font-bold text-gray-300 mb-2">Solution Steps:</h3>
-                <div id="solution-steps" class="text-gray-200 space-y-2"></div>
+                <ol id="solution-steps" class="list-decimal list-inside text-gray-200 space-y-1"></ol>
                 <p id="correct-answer-display" class="font-bold mt-4"></p>
             </div>
 
@@ -244,10 +244,10 @@
                 }
 
                 if (Array.isArray(currentQuestionData.steps)) {
-                    currentQuestionData.steps.forEach((step, index) => {
-                        const p = document.createElement('p');
-                        p.textContent = `Step ${index + 1}: ${step}`;
-                        solutionStepsElem.appendChild(p);
+                    currentQuestionData.steps.forEach(step => {
+                        const li = document.createElement('li');
+                        li.textContent = step;
+                        solutionStepsElem.appendChild(li);
                     });
                 }
             }
