@@ -2584,6 +2584,10 @@ def serve_signup():
 def serve_choose_plan():
     return render_template('choose-plan.html')
 
+@app.route('/settings.html')
+def serve_settings():
+    return render_template('settings.html')
+
 @app.route('/story-player.html')
 def serve_story_player():
     return render_template('story-player.html')
