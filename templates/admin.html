@@ -602,6 +602,23 @@ const createCascadingSelectors = (prefix) => {
                 setTimeout(() => modal.classList.add('modal-hidden'), 300);
             };
 
+            const waitForOption = (select, value) => {
+                return new Promise(resolve => {
+                    const hasOption = () => [...select.options].some(o => o.value === value);
+                    if (hasOption()) {
+                        resolve();
+                        return;
+                    }
+                    const observer = new MutationObserver(() => {
+                        if (hasOption()) {
+                            observer.disconnect();
+                            resolve();
+                        }
+                    });
+                    observer.observe(select, { childList: true });
+                });
+            };
+
             // user list is handled by static/js/userTable.js
             const handleDeleteUser = async (userId, username) => {
                 if (!confirm(`Are you sure you want to delete the user "${username}"? This action cannot be undone.`)) return;
@@ -1386,10 +1403,12 @@ const createCascadingSelectors = (prefix) => {
                     if (foundCurriculum) {
                         storySelectors.curriculumSelect.value = foundCurriculum;
                         storySelectors.curriculumSelect.dispatchEvent(new Event('change'));
+                        await waitForOption(storySelectors.unitSelect, foundUnit);
                     }
                     if (foundUnit) {
                         storySelectors.unitSelect.value = foundUnit;
                         storySelectors.unitSelect.dispatchEvent(new Event('change'));
+                        await waitForOption(storySelectors.topicSelect, String(topicId));
                     }
                     if (topicId) {
                         storySelectors.topicSelect.value = topicId;
