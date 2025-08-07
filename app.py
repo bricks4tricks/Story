@@ -1910,6 +1910,106 @@ def update_curriculum(subject_id):
             release_db_connection(conn)
 
 
+@app.route('/api/admin/update-topic/<int:topic_id>', methods=['PUT', 'OPTIONS'])
+def update_topic(topic_id):
+    if request.method == 'OPTIONS':
+        return jsonify(success=True)
+
+    data = request.get_json() or {}
+    name = data.get('name') or data.get('topicname')
+
+    if not name:
+        return jsonify({"status": "error", "message": "Missing topic name"}), 400
+
+    conn = None
+    cursor = None
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("UPDATE tbl_topic SET topicname = %s WHERE id = %s", (name, topic_id))
+        if cursor.rowcount == 0:
+            conn.rollback()
+            return jsonify({"status": "error", "message": "Topic not found or unchanged."}), 404
+        conn.commit()
+        return jsonify({"status": "success", "message": "Topic updated."}), 200
+    except Exception as e:
+        if conn:
+            conn.rollback()
+        print(f"Update Topic API Error: {e}")
+        traceback.print_exc()
+        return jsonify({"status": "error", "message": "Internal server error"}), 500
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            release_db_connection(conn)
+
+
+@app.route('/api/admin/delete-topic/<int:topic_id>', methods=['DELETE', 'OPTIONS'])
+def delete_topic(topic_id):
+    if request.method == 'OPTIONS':
+        return jsonify(success=True)
+
+    conn = None
+    cursor = None
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        # Remove theme links
+        cursor.execute("DELETE FROM tbl_topictheme WHERE topicid = %s", (topic_id,))
+
+        # Remove curriculum mappings
+        cursor.execute("DELETE FROM tbl_topicsubject WHERE topicid = %s", (topic_id,))
+
+        # Remove grade mappings
+        cursor.execute("DELETE FROM tbl_topicgrade WHERE topicid = %s", (topic_id,))
+
+        # Remove descriptions and related interactive elements
+        cursor.execute("SELECT interactiveelementid FROM tbl_description WHERE topicid = %s", (topic_id,))
+        interactive_ids = [row[0] for row in cursor.fetchall() if row[0] is not None]
+        if interactive_ids:
+            placeholders = sql.SQL(',').join(sql.Placeholder() * len(interactive_ids))
+            cursor.execute(
+                sql.SQL("DELETE FROM tbl_interactiveelement WHERE id IN ({})").format(placeholders),
+                tuple(interactive_ids),
+            )
+        cursor.execute("DELETE FROM tbl_description WHERE topicid = %s", (topic_id,))
+
+        # Remove user progress and quiz scores
+        cursor.execute("DELETE FROM tbl_userprogress WHERE topicid = %s", (topic_id,))
+        cursor.execute("DELETE FROM tbl_quizscore WHERE topicid = %s", (topic_id,))
+        cursor.execute("DELETE FROM tbl_usertopicdifficulty WHERE topicid = %s", (topic_id,))
+
+        # Remove questions, answers, and steps
+        cursor.execute("SELECT id FROM tbl_question WHERE topicid = %s", (topic_id,))
+        question_ids = [row[0] for row in cursor.fetchall()]
+        for qid in question_ids:
+            cursor.execute("DELETE FROM tbl_questionanswer WHERE questionid = %s", (qid,))
+            cursor.execute("DELETE FROM tbl_questionstep WHERE questionid = %s", (qid,))
+            cursor.execute("DELETE FROM tbl_question WHERE id = %s", (qid,))
+
+        # Finally remove the topic itself
+        cursor.execute("DELETE FROM tbl_topic WHERE id = %s", (topic_id,))
+        if cursor.rowcount == 0:
+            conn.rollback()
+            return jsonify({"status": "error", "message": "Topic not found."}), 404
+
+        conn.commit()
+        return jsonify({"status": "success", "message": "Topic deleted."}), 200
+    except Exception as e:
+        if conn:
+            conn.rollback()
+        print(f"Delete Topic API Error: {e}")
+        traceback.print_exc()
+        return jsonify({"status": "error", "message": "Internal server error"}), 500
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            release_db_connection(conn)
+
+
 @app.route('/api/curriculum', methods=['GET'])
 def get_curriculum():
     conn = None

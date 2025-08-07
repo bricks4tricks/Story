@@ -1923,7 +1923,12 @@ const createCascadingSelectors = (prefix) => {
                         topicsUl.className = 'ml-6 list-disc';
                         units[u].forEach(t => {
                             const topicLi = document.createElement('li');
-                            topicLi.textContent = t.name;
+                            topicLi.className = 'flex justify-between items-center';
+                            topicLi.innerHTML = `<span>${t.name}</span>
+                                <div class="space-x-2">
+                                    <button data-topic-id="${t.id}" data-topic-name="${t.name}" class="edit-topic-btn bg-blue-600 text-white font-semibold py-1 px-3 text-sm rounded-full hover:bg-blue-500">Edit</button>
+                                    <button data-topic-id="${t.id}" data-topic-name="${t.name}" class="delete-topic-btn bg-red-600 text-white font-semibold py-1 px-3 text-sm rounded-full hover:bg-red-500">Delete</button>
+                                </div>`;
                             topicsUl.appendChild(topicLi);
                         });
                         unitLi.appendChild(topicsUl);
@@ -1992,6 +1997,49 @@ const createCascadingSelectors = (prefix) => {
                             fetchCurriculumTable();
                         } else {
                             adminMessageDiv.className = 'text-center text-red-400 font-bold text-lg mb-4 h-6';
+                        }
+                    } catch (error) {
+                        adminMessageDiv.textContent = 'Server connection error.';
+                        adminMessageDiv.className = 'text-center text-red-400 font-bold text-lg mb-4 h-6';
+                    }
+                    setTimeout(() => { adminMessageDiv.textContent = ''; }, 5000);
+                } else if (e.target.closest('.edit-topic-btn')) {
+                    const btn = e.target.closest('.edit-topic-btn');
+                    const topicId = btn.dataset.topicId;
+                    const currentName = btn.dataset.topicName;
+                    const newName = prompt('Enter new topic name:', currentName);
+                    if (!newName || newName === currentName) return;
+                    try {
+                        const resp = await fetch(`/api/admin/update-topic/${topicId}`, {
+                            method: 'PUT',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ name: newName })
+                        });
+                        const result = await resp.json();
+                        adminMessageDiv.textContent = result.message;
+                        adminMessageDiv.className = resp.ok ? 'text-center text-green-400 font-bold text-lg mb-4 h-6' : 'text-center text-red-400 font-bold text-lg mb-4 h-6';
+                        if (resp.ok) {
+                            await initializeTopicData();
+                            fetchAndDisplayCurriculums();
+                        }
+                    } catch (error) {
+                        adminMessageDiv.textContent = 'Server connection error.';
+                        adminMessageDiv.className = 'text-center text-red-400 font-bold text-lg mb-4 h-6';
+                    }
+                    setTimeout(() => { adminMessageDiv.textContent = ''; }, 5000);
+                } else if (e.target.closest('.delete-topic-btn')) {
+                    const btn = e.target.closest('.delete-topic-btn');
+                    const topicId = btn.dataset.topicId;
+                    const topicName = btn.dataset.topicName;
+                    if (!confirm(`Are you sure you want to delete the topic "${topicName}"?`)) return;
+                    try {
+                        const resp = await fetch(`/api/admin/delete-topic/${topicId}`, { method: 'DELETE' });
+                        const result = await resp.json();
+                        adminMessageDiv.textContent = result.message;
+                        adminMessageDiv.className = resp.ok ? 'text-center text-green-400 font-bold text-lg mb-4 h-6' : 'text-center text-red-400 font-bold text-lg mb-4 h-6';
+                        if (resp.ok) {
+                            await initializeTopicData();
+                            fetchAndDisplayCurriculums();
                         }
                     } catch (error) {
                         adminMessageDiv.textContent = 'Server connection error.';
