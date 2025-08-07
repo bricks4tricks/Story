@@ -68,6 +68,7 @@
             const emailInput = document.getElementById('email');
             usernameInput.value = localStorage.getItem('username') || '';
             emailInput.value = localStorage.getItem('email') || '';
+            const userId = localStorage.getItem('userId');
 
             const profileForm = document.getElementById('profileForm');
             profileForm.addEventListener('submit', async (e) => {
@@ -78,7 +79,7 @@
                     const response = await fetch('/api/update-profile', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ username, email })
+                        body: JSON.stringify({ userId, username, email })
                     });
                     const result = await response.json();
                     alert(result.message || 'Profile updated.');
@@ -102,7 +103,7 @@
                     const response = await fetch('/api/change-password', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ currentPassword, newPassword })
+                        body: JSON.stringify({ userId, currentPassword, newPassword })
                     });
                     const result = await response.json();
                     passwordMessage.textContent = result.message || 'Password updated.';
