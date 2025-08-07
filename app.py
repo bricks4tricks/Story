@@ -1657,6 +1657,49 @@ def create_lesson():
             release_db_connection(conn)
 
 
+@app.route('/api/admin/map-topic-curriculums', methods=['POST', 'OPTIONS'])
+def map_topic_curriculums():
+    """Map a topic to one or more curriculums."""
+    if request.method == "OPTIONS":
+        return jsonify(success=True)
+
+    data = request.get_json() or {}
+    topic_id = data.get('topic_id') or data.get('topicId')
+    curriculum_ids = data.get('curriculum_ids') or data.get('curriculumIds')
+
+    if not topic_id or not curriculum_ids:
+        return (
+            jsonify({'status': 'error', 'message': 'Missing topic_id or curriculum_ids'}),
+            400,
+        )
+
+    if not isinstance(curriculum_ids, list):
+        curriculum_ids = [curriculum_ids]
+
+    conn = None
+    cursor = None
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        for cid in curriculum_ids:
+            cursor.execute(
+                "INSERT INTO tbl_topicsubject (topicid, subjectid, createdby) VALUES (%s, %s, %s) ON CONFLICT DO NOTHING",
+                (topic_id, cid, 'API'),
+            )
+        conn.commit()
+        return jsonify({'status': 'success', 'message': 'Topic mapped to curriculums'}), 201
+    except Exception as e:
+        if conn:
+            conn.rollback()
+        print(f"Map Topic Curriculums API Error: {e}")
+        traceback.print_exc()
+        return jsonify({'status': 'error', 'message': 'Internal server error'}), 500
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            release_db_connection(conn)
+
 @app.route('/api/admin/delete-curriculum/<int:subject_id>', methods=['DELETE', 'OPTIONS'])
 def delete_curriculum(subject_id):
     if request.method == 'OPTIONS':
@@ -1675,8 +1718,17 @@ def delete_curriculum(subject_id):
         cursor.execute("SELECT id FROM tbl_topic WHERE subjectid = %s", (subject_id,))
         topic_ids = [row[0] for row in cursor.fetchall()]
 
+        # Remove any mappings from the join table linking this curriculum to topics
+        cursor.execute("DELETE FROM tbl_topicsubject WHERE subjectid = %s", (subject_id,))
+
         if topic_ids:
             placeholders = sql.SQL(',').join(sql.Placeholder() * len(topic_ids))
+
+            # Remove cross-curriculum mappings for these topics
+            cursor.execute(
+                sql.SQL("DELETE FROM tbl_topicsubject WHERE topicid IN ({})").format(placeholders),
+                tuple(topic_ids),
+            )
 
             # Remove theme links for these topics
             cursor.execute(
