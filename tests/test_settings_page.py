@@ -23,3 +23,10 @@ def test_settings_page_has_forms(client):
     assert b'Change Password' in response.data
     assert b'Username' in response.data
     assert b'Email' in response.data
+
+
+def test_settings_page_student_preferences_logic(client):
+    response = client.get('/settings.html')
+    assert b"userType === 'Student'" in response.data
+    assert b'preferencesForm' in response.data
+    assert b'/api/preferences' in response.data

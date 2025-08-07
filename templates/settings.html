@@ -10,6 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Pacifico&display=swap" rel="stylesheet">
     <style>
         body { font-family: 'Inter', sans-serif; }
+        body.light { background-color: white; color: #1f2937; }
         .font-pacifico { font-family: 'Pacifico', cursive; }
         .gradient-text {
             background: linear-gradient(to right, #fde047, #fb923c);
@@ -28,8 +29,7 @@
     <main class="flex-grow container mx-auto px-6 py-12">
         <h2 class="text-3xl md:text-4xl font-bold text-white text-center">Settings</h2>
         <p class="text-gray-400 mt-4 text-center">Manage your account settings here.</p>
-
-        <section class="mt-10 max-w-xl mx-auto">
+        <section class="mt-10 max-w-xl mx-auto" id="mainSection">
             <div class="bg-slate-800 rounded-2xl p-8 border border-slate-700">
                 <h3 class="text-2xl font-semibold mb-6 text-white text-center">Profile</h3>
                 <form id="profileForm">
@@ -61,6 +61,27 @@
                 </form>
             </div>
         </section>
+
+        <section id="preferencesSection" class="mt-10 max-w-xl mx-auto hidden">
+            <div class="bg-slate-800 rounded-2xl p-8 border border-slate-700">
+                <h3 class="text-2xl font-semibold mb-6 text-white text-center">Preferences</h3>
+                <form id="preferencesForm">
+                    <div class="mb-4 text-left flex items-center">
+                        <label for="darkMode" class="block text-gray-300 mr-2 font-bold">Dark Mode</label>
+                        <input type="checkbox" id="darkMode" class="h-4 w-4 text-yellow-400">
+                    </div>
+                    <div class="mb-6 text-left">
+                        <label for="fontSize" class="block text-gray-300 mb-2 font-bold">Font Size</label>
+                        <select id="fontSize" class="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400">
+                            <option value="small">Small</option>
+                            <option value="medium">Medium</option>
+                            <option value="large">Large</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="w-full bg-yellow-400 text-slate-900 font-bold py-3 px-6 rounded-full hover:bg-yellow-300 transition-all transform hover:scale-105">Save Preferences</button>
+                </form>
+            </div>
+        </section>
     </main>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -71,6 +92,67 @@
             const userId = localStorage.getItem('userId');
 
             const profileForm = document.getElementById('profileForm');
+            const passwordForm = document.getElementById('passwordForm');
+            const passwordMessage = document.getElementById('passwordMessage');
+            const preferencesSection = document.getElementById('preferencesSection');
+            const preferencesForm = document.getElementById('preferencesForm');
+            const darkModeToggle = document.getElementById('darkMode');
+            const fontSizeSelect = document.getElementById('fontSize');
+            const userType = localStorage.getItem('userType');
+
+            const applyPreferences = () => {
+                if (darkModeToggle.checked) {
+                    document.body.classList.remove('light');
+                } else {
+                    document.body.classList.add('light');
+                }
+
+                const size = fontSizeSelect.value;
+                document.body.style.fontSize = size === 'small' ? '14px' : size === 'large' ? '18px' : '16px';
+            };
+
+            if (userType === 'Student') {
+                profileForm.style.display = 'none';
+                passwordForm.style.display = 'none';
+                preferencesSection.classList.remove('hidden');
+
+                fetch(`/api/preferences/${userId}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        darkModeToggle.checked = data.darkMode;
+                        fontSizeSelect.value = data.fontSize || 'medium';
+                        applyPreferences();
+                    })
+                    .catch(() => {
+                        darkModeToggle.checked = false;
+                        fontSizeSelect.value = 'medium';
+                        applyPreferences();
+                    });
+
+                preferencesForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    try {
+                        const response = await fetch('/api/preferences', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                userId,
+                                darkMode: darkModeToggle.checked,
+                                fontSize: fontSizeSelect.value
+                            })
+                        });
+                        const result = await response.json();
+                        if (response.ok) {
+                            applyPreferences();
+                        }
+                        alert(result.message || 'Preferences saved.');
+                    } catch (error) {
+                        alert('Could not save preferences.');
+                    }
+                });
+                return;
+            }
+
             profileForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const username = usernameInput.value.trim();
@@ -92,8 +174,6 @@
                 }
             });
 
-            const passwordForm = document.getElementById('passwordForm');
-            const passwordMessage = document.getElementById('passwordMessage');
             passwordForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 passwordMessage.textContent = '';
