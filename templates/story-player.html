@@ -236,7 +236,8 @@
                         throw new Error(err.message || 'Could not fetch story.');
                     }
                     const storyPayload = await response.json();
-                    storySectionsData = storyPayload.sections;
+                    // Ensure sections is always an array to avoid runtime errors
+                    storySectionsData = Array.isArray(storyPayload.sections) ? storyPayload.sections : [];
 
                     if (storySectionsData.length === 0) {
                         loader.classList.add('hidden');
@@ -267,6 +268,12 @@
                 sectionBody.className = 'bg-slate-800 p-8 rounded-2xl border border-slate-700';
 
                 const section = storySectionsData[index];
+                if (!section) {
+                    sectionTitle.textContent = '';
+                    sectionBody.innerHTML = `<p class="text-red-400">Invalid or missing story section.</p>`;
+                    nextBtn.disabled = true;
+                    return;
+                }
                 sectionTitle.textContent = section.sectionName;
 
                 if (section.contentType === 'Paragraph') {
