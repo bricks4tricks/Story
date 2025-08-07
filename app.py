@@ -1638,6 +1638,14 @@ def create_lesson():
             "INSERT INTO tbl_topicgrade (topicid, gradeid, createdby) VALUES (%s, %s, %s)",
             (lesson_id, grade_id, 'API'),
         )
+        # Map the new lesson to all curriculums so it is available across programs
+        cursor.execute("SELECT id FROM tbl_subject WHERE subjecttype = 'Curriculum'")
+        all_curriculum_ids = [row[0] for row in cursor.fetchall()]
+        for cid in all_curriculum_ids:
+            cursor.execute(
+                "INSERT INTO tbl_topicsubject (topicid, subjectid, createdby) VALUES (%s, %s, %s) ON CONFLICT DO NOTHING",
+                (lesson_id, cid, 'API'),
+            )
 
         conn.commit()
         return jsonify({"status": "success", "message": "Lesson created."}), 201
