@@ -25,9 +25,95 @@
             <a href="/dashboard.html" class="hover:text-yellow-400 transition-colors">Dashboard</a>
         </nav>
     </header>
-    <main class="flex-grow container mx-auto px-6 py-12 text-center">
-        <h2 class="text-3xl md:text-4xl font-bold text-white">Settings</h2>
-        <p class="text-gray-400 mt-4">Manage your account settings here.</p>
+    <main class="flex-grow container mx-auto px-6 py-12">
+        <h2 class="text-3xl md:text-4xl font-bold text-white text-center">Settings</h2>
+        <p class="text-gray-400 mt-4 text-center">Manage your account settings here.</p>
+
+        <section class="mt-10 max-w-xl mx-auto">
+            <div class="bg-slate-800 rounded-2xl p-8 border border-slate-700">
+                <h3 class="text-2xl font-semibold mb-6 text-white text-center">Profile</h3>
+                <form id="profileForm">
+                    <div class="mb-4 text-left">
+                        <label for="username" class="block text-gray-300 mb-2 font-bold">Username</label>
+                        <input type="text" id="username" name="username" class="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400" required>
+                    </div>
+                    <div class="mb-6 text-left">
+                        <label for="email" class="block text-gray-300 mb-2 font-bold">Email</label>
+                        <input type="email" id="email" name="email" class="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400" required>
+                    </div>
+                    <button type="submit" class="w-full bg-yellow-400 text-slate-900 font-bold py-3 px-6 rounded-full hover:bg-yellow-300 transition-all transform hover:scale-105">Save Changes</button>
+                </form>
+            </div>
+
+            <div class="bg-slate-800 rounded-2xl p-8 border border-slate-700 mt-10">
+                <h3 class="text-2xl font-semibold mb-6 text-white text-center">Change Password</h3>
+                <form id="passwordForm">
+                    <div class="mb-4 text-left">
+                        <label for="currentPassword" class="block text-gray-300 mb-2 font-bold">Current Password</label>
+                        <input type="password" id="currentPassword" name="currentPassword" class="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400" required>
+                    </div>
+                    <div class="mb-6 text-left">
+                        <label for="newPassword" class="block text-gray-300 mb-2 font-bold">New Password</label>
+                        <input type="password" id="newPassword" name="newPassword" minlength="8" class="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400" required>
+                    </div>
+                    <button type="submit" class="w-full bg-yellow-400 text-slate-900 font-bold py-3 px-6 rounded-full hover:bg-yellow-300 transition-all transform hover:scale-105">Update Password</button>
+                    <div id="passwordMessage" class="text-sm mt-4 text-center" aria-live="polite"></div>
+                </form>
+            </div>
+        </section>
     </main>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const usernameInput = document.getElementById('username');
+            const emailInput = document.getElementById('email');
+            usernameInput.value = localStorage.getItem('username') || '';
+            emailInput.value = localStorage.getItem('email') || '';
+
+            const profileForm = document.getElementById('profileForm');
+            profileForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const username = usernameInput.value.trim();
+                const email = emailInput.value.trim();
+                try {
+                    const response = await fetch('/api/update-profile', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ username, email })
+                    });
+                    const result = await response.json();
+                    alert(result.message || 'Profile updated.');
+                    if (response.ok) {
+                        localStorage.setItem('username', username);
+                        localStorage.setItem('email', email);
+                    }
+                } catch (error) {
+                    alert('Could not update profile.');
+                }
+            });
+
+            const passwordForm = document.getElementById('passwordForm');
+            const passwordMessage = document.getElementById('passwordMessage');
+            passwordForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                passwordMessage.textContent = '';
+                const currentPassword = document.getElementById('currentPassword').value;
+                const newPassword = document.getElementById('newPassword').value;
+                try {
+                    const response = await fetch('/api/change-password', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ currentPassword, newPassword })
+                    });
+                    const result = await response.json();
+                    passwordMessage.textContent = result.message || 'Password updated.';
+                    passwordMessage.style.color = response.ok ? '#4ade80' : '#f87171';
+                    if (response.ok) passwordForm.reset();
+                } catch (error) {
+                    passwordMessage.textContent = 'Could not update password.';
+                    passwordMessage.style.color = '#f87171';
+                }
+            });
+        });
+    </script>
 </body>
 </html>
