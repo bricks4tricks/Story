@@ -29,14 +29,17 @@ def get_quiz_question(user_id, topic_id, difficulty_level):
         if not question:
             return jsonify({"status": "error", "message": "No questions found for this topic."}), 404
         question_id = question[0]
-        question_type = question[2]
-        answers = []
-        if question_type == 'MultipleChoice':
-            cursor.execute(
-                "SELECT answername, iscorrect FROM tbl_answer WHERE questionid = %s",
-                (question_id,),
-            )
-            answers = cursor.fetchall()
+        # Always fetch answers so that OpenEnded questions still return the
+        # correct answer for display in the UI.  Convert the raw tuples into a
+        # list of dictionaries matching the front-end's expected shape.
+        cursor.execute(
+            "SELECT answername, iscorrect FROM tbl_answer WHERE questionid = %s",
+            (question_id,),
+        )
+        answers = [
+            {"AnswerName": row[0], "IsCorrect": row[1]}
+            for row in cursor.fetchall()
+        ]
 
         cursor.execute(
             "SELECT stepname FROM tbl_step WHERE questionid = %s ORDER BY sequenceno",

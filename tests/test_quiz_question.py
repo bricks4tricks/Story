@@ -74,19 +74,25 @@ def test_quiz_question_multiple_choice(client):
     assert q['text'] == "What is 1+1?"
     assert q['type'] == 'MultipleChoice'
     assert q['difficulty'] == 3
-    assert q['answers'] == [list(a) for a in answers]
+    expected_answers = [
+        {"AnswerName": "2", "IsCorrect": True},
+        {"AnswerName": "3", "IsCorrect": False},
+    ]
+    assert q['answers'] == expected_answers
     assert q['steps'] == [s[0] for s in steps]
 
 def test_quiz_question_open_ended(client):
     question = (5, "Explain gravity", "OpenEnded", 2)
-    conn = DummyConnection(question, [])
+    answers = [("Because of mass", True)]
+    conn = DummyConnection(question, answers)
     with patch('quiz.get_db_connection', return_value=conn):
         resp = client.get('/api/quiz/question/1/2/2')
     assert resp.status_code == 200
     data = resp.get_json()
     q = data['question']
     assert q['type'] == 'OpenEnded'
-    assert q['answers'] == []
+    expected_answers = [{"AnswerName": "Because of mass", "IsCorrect": True}]
+    assert q['answers'] == expected_answers
     assert q['steps'] == []
 
 def test_quiz_question_not_found(client):
