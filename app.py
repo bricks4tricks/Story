@@ -71,7 +71,10 @@ def edit_user(user_id):
     if request.method == 'OPTIONS':
         return jsonify(success=True)
 
-    data = request.get_json()
+    data = request.get_json(silent=True)
+    if data is None:
+        return jsonify({"status": "error", "message": "Invalid JSON"}), 400
+
     username = data.get('username')
     email = data.get('email')
     user_type = data.get('userType')
