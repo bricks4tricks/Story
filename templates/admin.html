@@ -63,6 +63,7 @@
                 <button id="flags-tab-btn" class="tab-button text-lg font-medium text-gray-400 hover:text-amber-500 py-4 px-1 border-b-2 border-transparent">Flagged Items</button>
                 <button id="attempts-tab-btn" class="tab-button text-lg font-medium text-gray-400 hover:text-amber-500 py-4 px-1 border-b-2 border-transparent">Question Attempts</button>
                 <button id="curriculums-tab-btn" class="tab-button text-lg font-medium text-gray-400 hover:text-amber-500 py-4 px-1 border-b-2 border-transparent">Curriculum Management</button>
+                <button id="videos-tab-btn" class="tab-button text-lg font-medium text-gray-400 hover:text-amber-500 py-4 px-1 border-b-2 border-transparent">Video Management</button>
             </nav>
         </div>
 
@@ -316,6 +317,15 @@
                 </form>
                 <div id="create-lesson-message" class="text-center mt-4 h-5"></div>
             </div>
+            <div class="bg-slate-800 rounded-2xl border border-slate-700 p-6">
+                <div id="existing-curriculums-list" class="space-y-4">
+                    <p class="text-center text-gray-400">Loading curriculums...</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="videos-section" class="hidden">
+            <h2 class="text-3xl font-bold text-white mb-6">Videos</h2>
             <div class="bg-slate-800 rounded-2xl border border-slate-700 p-6 mb-6">
                 <h3 class="text-xl font-bold text-white mb-4">Add Video</h3>
                 <form id="addVideoForm" class="space-y-4">
@@ -328,11 +338,6 @@
                     <button type="submit" class="w-full bg-green-600 text-white font-semibold py-2 px-4 rounded-full">Add Video</button>
                 </form>
                 <div id="add-video-message" class="text-center mt-4 h-5"></div>
-            </div>
-            <div class="bg-slate-800 rounded-2xl border border-slate-700 p-6">
-                <div id="existing-curriculums-list" class="space-y-4">
-                    <p class="text-center text-gray-400">Loading curriculums...</p>
-                </div>
             </div>
         </div>
 
@@ -482,6 +487,7 @@
             const storiesSection = document.getElementById('stories-section');
             const flagsSection = document.getElementById('flags-section');
             const attemptsSection = document.getElementById('attempts-section'); // NEW
+            const videosSection = document.getElementById('videos-section');
 
             const existingQuestionsList = document.getElementById('existing-questions-list');
             const existingStoriesList = document.getElementById('existing-stories-list');
@@ -514,6 +520,7 @@
             const editOpenEndedSection = document.getElementById('edit-open-ended-section');
 
             const curriculumsTabBtn = document.getElementById('curriculums-tab-btn');
+            const videosTabBtn = document.getElementById('videos-tab-btn');
             const curriculumsSection = document.getElementById('curriculums-section');
             const existingCurriculumsList = document.getElementById('existing-curriculums-list');
             const editCurriculumModal = document.getElementById('editCurriculumModal');
@@ -2230,12 +2237,14 @@ const createCascadingSelectors = (prefix) => {
                 flagsSection.classList.add('hidden');
                 attemptsSection.classList.add('hidden'); // NEW
                 curriculumsSection.classList.add('hidden');
+                videosSection.classList.add('hidden');
                 usersTabBtn.classList.add('active');
                 questionsTabBtn.classList.remove('active');
                 storiesTabBtn.classList.remove('active');
                 flagsTabBtn.classList.remove('active');
                 attemptsTabBtn.classList.remove('active'); // NEW
                 curriculumsTabBtn.classList.remove('active');
+                videosTabBtn.classList.remove('active');
             });
             questionsTabBtn.addEventListener('click', () => {
                 usersSection.classList.add('hidden');
@@ -2244,12 +2253,14 @@ const createCascadingSelectors = (prefix) => {
                 flagsSection.classList.add('hidden');
                 attemptsSection.classList.add('hidden'); // NEW
                 curriculumsSection.classList.add('hidden');
+                videosSection.classList.add('hidden');
                 usersTabBtn.classList.remove('active');
                 questionsTabBtn.classList.add('active');
                 storiesTabBtn.classList.remove('active');
                 flagsTabBtn.classList.remove('active');
                 attemptsTabBtn.classList.remove('active'); // NEW
                 curriculumsTabBtn.classList.remove('active');
+                videosTabBtn.classList.remove('active');
                 fetchAndDisplayQuestions();
             });
             storiesTabBtn.addEventListener('click', () => {
@@ -2259,12 +2270,14 @@ const createCascadingSelectors = (prefix) => {
                 flagsSection.classList.add('hidden');
                 attemptsSection.classList.add('hidden'); // NEW
                 curriculumsSection.classList.add('hidden');
+                videosSection.classList.add('hidden');
                 usersTabBtn.classList.remove('active');
                 questionsTabBtn.classList.remove('active');
                 storiesTabBtn.classList.add('active');
                 flagsTabBtn.classList.remove('active');
                 attemptsTabBtn.classList.remove('active'); // NEW
                 curriculumsTabBtn.classList.remove('active');
+                videosTabBtn.classList.remove('active');
                 fetchAndDisplayStories();
             });
             flagsTabBtn.addEventListener('click', () => {
@@ -2274,12 +2287,14 @@ const createCascadingSelectors = (prefix) => {
                 flagsSection.classList.remove('hidden');
                 attemptsSection.classList.add('hidden'); // NEW
                 curriculumsSection.classList.add('hidden');
+                videosSection.classList.add('hidden');
                 usersTabBtn.classList.remove('active');
                 questionsTabBtn.classList.remove('active');
                 storiesTabBtn.classList.remove('active');
                 flagsTabBtn.classList.add('active');
                 attemptsTabBtn.classList.remove('active'); // NEW
                 curriculumsTabBtn.classList.remove('active');
+                videosTabBtn.classList.remove('active');
                 fetchAndDisplayFlaggedItems();
             });
             // NEW: Event listener for Attempts tab
@@ -2290,12 +2305,14 @@ const createCascadingSelectors = (prefix) => {
                 flagsSection.classList.add('hidden');
                 attemptsSection.classList.remove('hidden'); // NEW
                 curriculumsSection.classList.add('hidden');
+                videosSection.classList.add('hidden');
                 usersTabBtn.classList.remove('active');
                 questionsTabBtn.classList.remove('active');
                 storiesTabBtn.classList.remove('active');
                 flagsTabBtn.classList.remove('active');
                 attemptsTabBtn.classList.add('active'); // NEW
                 curriculumsTabBtn.classList.remove('active');
+                videosTabBtn.classList.remove('active');
                 fetchAndDisplayQuestionAttempts(); // Fetch attempts when tab is clicked
             });
             curriculumsTabBtn.addEventListener('click', () => {
@@ -2305,14 +2322,33 @@ const createCascadingSelectors = (prefix) => {
                 flagsSection.classList.add('hidden');
                 attemptsSection.classList.add('hidden');
                 curriculumsSection.classList.remove('hidden');
+                videosSection.classList.add('hidden');
                 usersTabBtn.classList.remove('active');
                 questionsTabBtn.classList.remove('active');
                 storiesTabBtn.classList.remove('active');
                 flagsTabBtn.classList.remove('active');
                 attemptsTabBtn.classList.remove('active');
                 curriculumsTabBtn.classList.add('active');
+                videosTabBtn.classList.remove('active');
                 fetchAndDisplayCurriculums();
                 fetchCurriculumTable();
+            });
+
+            videosTabBtn.addEventListener('click', () => {
+                usersSection.classList.add('hidden');
+                questionsSection.classList.add('hidden');
+                storiesSection.classList.add('hidden');
+                flagsSection.classList.add('hidden');
+                attemptsSection.classList.add('hidden');
+                curriculumsSection.classList.add('hidden');
+                videosSection.classList.remove('hidden');
+                usersTabBtn.classList.remove('active');
+                questionsTabBtn.classList.remove('active');
+                storiesTabBtn.classList.remove('active');
+                flagsTabBtn.classList.remove('active');
+                attemptsTabBtn.classList.remove('active');
+                curriculumsTabBtn.classList.remove('active');
+                videosTabBtn.classList.add('active');
             });
 
 
