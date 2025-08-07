@@ -532,7 +532,7 @@ def get_all_stories():
         stories = []
         for row in stories_raw:
             stories.append({
-                'topicid': row['topicid'],
+                'TopicID': row['topicid'],
                 'TopicName': row['topicname'],
                 'DefaultTheme': row['defaulttheme']
             })
