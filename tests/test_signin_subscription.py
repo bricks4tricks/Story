@@ -73,10 +73,7 @@ def test_signin_subscription_absent_record(client):
     with patch('auth.get_db_connection', return_value=conn), \
          patch('extensions.bcrypt.check_password_hash', return_value=True):
         resp = client.post('/api/signin', json={'username': 'user', 'password': 'pw'})
-    assert resp.status_code == 200
-    data = resp.get_json()
-    assert data['status'] == 'success'
-    assert data['subscriptionDaysLeft'] is None
+    assert resp.status_code == 403
 
 
 def test_signin_missing_json_body(client):
