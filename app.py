@@ -11,6 +11,7 @@ import traceback
 import json
 import random
 import os  # Import os module to access environment variables
+import re
 from utils import validate_password
 
 # ---------------------------------
@@ -37,11 +38,18 @@ CORS(app, origins=["https://logicandstories.com", "https://www.logicandstories.c
 
 @app.after_request
 def inject_preferences_script(response):
-    if response.content_type.startswith('text/html'):
+    """Ensure the preferences script is added to every HTML response."""
+    if response.direct_passthrough:
+        return response
+
+    content_type = response.headers.get('Content-Type', '').lower()
+    if content_type.startswith('text/html'):
         script_tag = "<script src='/static/js/preferences.js'></script>"
         data = response.get_data(as_text=True)
-        if '</body>' in data and script_tag not in data:
-            response.set_data(data.replace('</body>', f'{script_tag}</body>'))
+        if script_tag not in data:
+            new_data, count = re.subn(r'</body>', f'{script_tag}</body>', data, flags=re.IGNORECASE)
+            if count:
+                response.set_data(new_data)
     return response
 
 
