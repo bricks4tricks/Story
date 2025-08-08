@@ -2679,9 +2679,9 @@ def serve_index():
 def serve_admin_login():
     return redirect(url_for('serve_signin'))
 
-@app.route('/admin.html')
+@app.route('/iygighukijh.html')
 def serve_admin():
-    return render_template('admin.html')
+    return render_template('iygighukijh.html')
 
 @app.route('/dashboard.html')
 def serve_dashboard():
