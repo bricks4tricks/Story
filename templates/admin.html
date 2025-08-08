@@ -313,6 +313,7 @@
                     <input type="text" id="new-lesson-name" class="flex-1 bg-slate-700 rounded-lg p-2" placeholder="Lesson name" required>
                     <input id="lesson-grade-select" list="grade-options" class="flex-1 bg-slate-700 rounded-lg p-2" placeholder="Select or type grade" required>
                     <datalist id="grade-options"></datalist>
+                    <select id="additional-curriculums-select" multiple class="flex-1 bg-slate-700 rounded-lg p-2" title="Additional Curriculums"></select>
                     <button type="submit" class="bg-green-600 text-white font-semibold py-2 px-4 rounded-full">Create</button>
                 </form>
                 <div id="create-lesson-message" class="text-center mt-4 h-5"></div>
@@ -537,6 +538,7 @@
             const newUnitNameInput = document.getElementById('new-unit-name');
             const newLessonNameInput = document.getElementById('new-lesson-name');
             const lessonGradeSelect = document.getElementById('lesson-grade-select');
+            const additionalCurriculumsSelect = document.getElementById('additional-curriculums-select');
             const gradeOptions = document.getElementById('grade-options');
             const createLessonMessage = document.getElementById('create-lesson-message');
             const addVideoForm = document.getElementById('addVideoForm');
@@ -1910,6 +1912,16 @@ const createCascadingSelectors = (prefix) => {
             let curriculumsHash = null;
             let curriculumTableHash = null;
             let allCurriculums = [];
+            const populateAdditionalCurriculumsSelect = () => {
+                if (!additionalCurriculumsSelect) return;
+                additionalCurriculumsSelect.innerHTML = '';
+                allCurriculums.forEach(c => {
+                    const opt = document.createElement('option');
+                    opt.value = c.id;
+                    opt.textContent = c.subjectname;
+                    additionalCurriculumsSelect.appendChild(opt);
+                });
+            };
             const fetchAndDisplayCurriculums = async () => {
                 if (curriculumsHash === null) {
                     existingCurriculumsList.innerHTML = '<p class="text-center text-gray-400">Loading curriculums...</p>';
@@ -1928,6 +1940,7 @@ const createCascadingSelectors = (prefix) => {
                     curriculumsHash = newHash;
                     allCurriculums = curriculums;
                     renderCurriculums(allCurriculums);
+                    populateAdditionalCurriculumsSelect();
                 } catch (error) {
                     console.error('Fetch curriculums error:', error);
                     existingCurriculumsList.innerHTML = `<p class="text-red-400">Error loading curriculums: ${error.message}</p>`;
@@ -2173,9 +2186,13 @@ const createCascadingSelectors = (prefix) => {
                 const unit = newUnitNameInput.value.trim();
                 const lesson = newLessonNameInput.value.trim();
                 const grade = lessonGradeSelect.value;
+                const additionalCurriculumIds = Array.from(additionalCurriculumsSelect.selectedOptions).map(o => parseInt(o.value)).filter(Boolean);
                 if (!curriculum || !unit || !lesson || !grade) return;
                 try {
                     const payload = { curriculum, unit, lesson, grade };
+                    if (additionalCurriculumIds.length) {
+                        payload.curriculum_ids = additionalCurriculumIds;
+                    }
                     const resp = await fetch('/api/admin/create-lesson', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -2190,6 +2207,7 @@ const createCascadingSelectors = (prefix) => {
                         await initializeTopicData();
                         fetchAndDisplayCurriculums();
                         fetchCurriculumTable();
+                        Array.from(additionalCurriculumsSelect.options).forEach(o => o.selected = false);
                     }
                 } catch (error) {
                     createLessonMessage.textContent = 'Server connection error.';
