@@ -175,3 +175,25 @@ def ensure_user_preferences_table(conn):
     finally:
         cur.close()
 
+
+def ensure_topicsubject_table(conn):
+    """Create the ``tbl_topicsubject`` join table if it doesn't exist."""
+    cur = conn.cursor()
+    try:
+        cur.execute(
+            """
+            CREATE TABLE IF NOT EXISTS tbl_topicsubject (
+                topicid INTEGER REFERENCES tbl_topic(id) ON DELETE CASCADE,
+                subjectid INTEGER REFERENCES tbl_subject(id) ON DELETE CASCADE,
+                createdby VARCHAR(50),
+                PRIMARY KEY (topicid, subjectid)
+            )
+            """
+        )
+        conn.commit()
+    except Exception:
+        conn.rollback()
+        raise
+    finally:
+        cur.close()
+

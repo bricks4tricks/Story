@@ -55,7 +55,7 @@ def inject_preferences_script(response):
 
 # --- DATABASE CONFIGURATION ---
 # Moved to db_utils for reuse across scripts
-from db_utils import get_db_connection, release_db_connection
+from db_utils import get_db_connection, release_db_connection, ensure_topicsubject_table
 from auth import auth_bp
 from admin import admin_bp
 from quiz import quiz_bp
@@ -1739,6 +1739,7 @@ def create_lesson():
     cursor = None
     try:
         conn = get_db_connection()
+        ensure_topicsubject_table(conn)
         cursor = conn.cursor()
 
         # Look up the curriculum id; error if it doesn't exist
@@ -1852,6 +1853,7 @@ def map_topic_curriculums():
     cursor = None
     try:
         conn = get_db_connection()
+        ensure_topicsubject_table(conn)
         cursor = conn.cursor()
         for cid in curriculum_ids:
             cursor.execute(
@@ -1881,6 +1883,7 @@ def delete_curriculum(subject_id):
     cursor = None
     try:
         conn = get_db_connection()
+        ensure_topicsubject_table(conn)
         cursor = conn.cursor()
 
         # Begin transaction as multiple tables are affected
@@ -2093,6 +2096,7 @@ def delete_topic(topic_id):
     cursor = None
     try:
         conn = get_db_connection()
+        ensure_topicsubject_table(conn)
         cursor = conn.cursor()
 
         # Remove theme links
