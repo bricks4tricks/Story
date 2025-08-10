@@ -1,3 +1,12 @@
+// Ensure the page starts in light mode when no preference is stored.
+// Because this script is injected just before </body>, the body element
+// is available immediately. Apply a light theme upfront to avoid a flash
+// of dark content for first-time visitors.
+const darkModeStored = localStorage.getItem('darkMode');
+if (darkModeStored === null || darkModeStored === 'false') {
+    document.body.classList.add('light');
+}
+
 const applyPreferences = (darkMode, fontSize) => {
     if (darkMode) {
         document.body.classList.remove('light');
@@ -10,7 +19,6 @@ const applyPreferences = (darkMode, fontSize) => {
 };
 
 document.addEventListener('DOMContentLoaded', () => {
-    const darkModeStored = localStorage.getItem('darkMode');
     const fontSizeStored = localStorage.getItem('fontSize');
 
     if (darkModeStored !== null && fontSizeStored !== null) {
