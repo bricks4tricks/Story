@@ -16,43 +16,13 @@ load_dotenv(find_dotenv())
 
 
 def _load_db_config() -> Dict[str, str]:
-    """Load database connection settings from environment variables.
+    """Load database connection settings optimized for Render PostgreSQL.
 
-    This helper understands both a ``DATABASE_URL`` connection string and the
-    individual ``DB_*`` variables. A ``RuntimeError`` is raised if required
-    values are missing so misconfiguration fails fast.
+    This helper prioritizes DATABASE_URL (Render standard) and handles
+    the postgres:// to postgresql:// conversion required by psycopg2.
     """
-
-    dsn = os.environ.get("DATABASE_URL")
-    if dsn:
-        # Ensure SSL is used when connecting to managed databases unless the URL
-        # already specifies ``sslmode``.
-        if "sslmode" not in dsn:
-            connector = "&" if "?" in dsn else "?"
-            dsn += f"{connector}sslmode=require"
-        return {"dsn": dsn}
-
-    required = ["DB_USER", "DB_PASSWORD", "DB_HOST", "DB_PORT", "DB_NAME"]
-    config = {}
-    missing = []
-    for var in required:
-        value = os.environ.get(var)
-        if not value:
-            missing.append(var)
-        config[var] = value
-
-    if missing:
-        raise RuntimeError(
-            f"Missing required database environment variables: {', '.join(missing)}"
-        )
-
-    return {
-        "user": config["DB_USER"],
-        "password": config["DB_PASSWORD"],
-        "host": config["DB_HOST"],
-        "port": config["DB_PORT"],
-        "database": config["DB_NAME"],
-    }
+    from config import get_database_config
+    return get_database_config()
 
 
 # Centralized database configuration loaded once at import time
@@ -63,23 +33,33 @@ connection_pool = None
 
 
 def _get_pool():
-    """Lazily create and return a global connection pool."""
+    """Lazily create and return a global connection pool optimized for Render."""
     global connection_pool
     if connection_pool is None:
         try:
+            # Connection pool settings optimized for Render PostgreSQL
             pool_kwargs = {
                 "keepalives": 1,
                 "keepalives_idle": 60,
                 "keepalives_interval": 30,
                 "keepalives_count": 5,
             }
+            
+            # Extract pool settings
+            pool_min = db_config.pop('pool_min', 2)
+            pool_max = db_config.pop('pool_max', 20)
+            
             if "dsn" in db_config:
                 connection_pool = SimpleConnectionPool(
-                    1, 10, db_config["dsn"], **pool_kwargs
+                    pool_min, pool_max, db_config["dsn"], **pool_kwargs
                 )
             else:
+                # Add sslmode for managed PostgreSQL if not present
+                if 'sslmode' not in db_config:
+                    db_config['sslmode'] = 'require'
+                
                 connection_pool = SimpleConnectionPool(
-                    1, 10, **db_config, **pool_kwargs
+                    pool_min, pool_max, **db_config, **pool_kwargs
                 )
         except Exception as e:
             error_msg = f"Failed to create database connection pool: {e}"

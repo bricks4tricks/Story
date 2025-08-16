@@ -183,26 +183,38 @@ def rate_limit(max_requests: int = 5, window: int = 300):
 
 
 def add_security_headers(response):
-    """Add security headers to response."""
-    # Content Security Policy
+    """Add comprehensive security headers to response."""
+    # Content Security Policy - more restrictive, using nonces for inline scripts
     csp = (
         "default-src 'self'; "
-        "script-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
-        "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://fonts.gstatic.com; "
+        "script-src 'self' https://cdn.tailwindcss.com 'nonce-{nonce}'; "
+        "style-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com https://cdn.tailwindcss.com 'unsafe-inline'; "
         "font-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com; "
         "img-src 'self' data: https:; "
         "connect-src 'self'; "
         "frame-ancestors 'none'; "
         "base-uri 'self'; "
-        "form-action 'self'"
-    )
+        "form-action 'self'; "
+        "object-src 'none'; "
+        "upgrade-insecure-requests"
+    ).format(nonce=secrets.token_urlsafe(16))
     
+    # Core security headers
     response.headers['Content-Security-Policy'] = csp
+    response.headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains; preload'
     response.headers['X-Content-Type-Options'] = 'nosniff'
     response.headers['X-Frame-Options'] = 'DENY'
     response.headers['X-XSS-Protection'] = '1; mode=block'
     response.headers['Referrer-Policy'] = 'strict-origin-when-cross-origin'
-    response.headers['Permissions-Policy'] = 'geolocation=(), microphone=(), camera=()'
+    response.headers['Permissions-Policy'] = (
+        'geolocation=(), microphone=(), camera=(), payment=(), '
+        'usb=(), magnetometer=(), accelerometer=(), gyroscope=()'
+    )
+    
+    # Additional security headers
+    response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, private'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '0'
     
     return response
 

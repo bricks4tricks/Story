@@ -7,7 +7,8 @@ import secrets
 import hashlib
 from datetime import datetime, timedelta, timezone
 from functools import wraps
-from flask import request, jsonify, g
+from typing import Dict, List, Optional, Callable, Any, Union
+from flask import request, jsonify, g, Response
 from db_utils import get_db_connection, release_db_connection
 
 
@@ -15,7 +16,7 @@ class SessionManager:
     """Manages user sessions with token-based authentication."""
     
     @staticmethod
-    def create_session(user_id, user_type='student'):
+    def create_session(user_id: int, user_type: str = 'student') -> Optional[str]:
         """Create a new session token for a user."""
         token = secrets.token_urlsafe(32)
         expires_at = datetime.now(timezone.utc) + timedelta(hours=24)
@@ -56,7 +57,7 @@ class SessionManager:
                 release_db_connection(conn)
     
     @staticmethod
-    def validate_session(token):
+    def validate_session(token: str) -> Optional[Dict[str, Any]]:
         """Validate a session token and return user info."""
         if not token:
             return None
@@ -94,7 +95,7 @@ class SessionManager:
                 release_db_connection(conn)
     
     @staticmethod
-    def destroy_session(token):
+    def destroy_session(token: str) -> None:
         """Destroy a session token."""
         if not token:
             return
@@ -122,7 +123,7 @@ class SessionManager:
                 release_db_connection(conn)
 
 
-def require_auth(allowed_user_types=['student', 'parent', 'admin']):
+def require_auth(allowed_user_types: List[str] = None) -> Callable:
     """
     Decorator to require authentication for endpoints.
     
@@ -132,9 +133,12 @@ def require_auth(allowed_user_types=['student', 'parent', 'admin']):
     Returns:
         Decorator function that validates session and sets g.current_user
     """
-    def decorator(f):
+    if allowed_user_types is None:
+        allowed_user_types = ['student', 'parent', 'admin']
+    
+    def decorator(f: Callable) -> Callable:
         @wraps(f)
-        def decorated_function(*args, **kwargs):
+        def decorated_function(*args: Any, **kwargs: Any) -> Union[Response, Any]:
             # Get token from Authorization header
             auth_header = request.headers.get('Authorization')
             if not auth_header or not auth_header.startswith('Bearer '):
@@ -157,13 +161,13 @@ def require_auth(allowed_user_types=['student', 'parent', 'admin']):
     return decorator
 
 
-def require_user_access(f):
+def require_user_access(f: Callable) -> Callable:
     """
     Decorator to ensure user can only access their own data.
     Requires that the endpoint has a user_id parameter or userId in request data.
     """
     @wraps(f)
-    def decorated_function(*args, **kwargs):
+    def decorated_function(*args: Any, **kwargs: Any) -> Union[Response, Any]:
         if not hasattr(g, 'current_user'):
             return jsonify({"status": "error", "message": "Authentication required"}), 401
         
@@ -215,7 +219,7 @@ def require_user_access(f):
     return decorated_function
 
 
-def create_session_table():
+def create_session_table() -> None:
     """Create the user session table if it doesn't exist."""
     conn = None
     cursor = None
