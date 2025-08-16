@@ -5,7 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Logic and Stories | Sign Up</title>
     <meta name="description" content="Create your Logic and Stories account to explore math through storytelling." />
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/static/favicon-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="/static/favicon-512x512.png">
+    <link rel="apple-touch-icon" href="/static/apple-touch-icon.png">
+    
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/static/js/secureDOM.js"></script>
+    <script src="/static/js/csrf.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Pacifico&display=swap" rel="stylesheet">
@@ -207,7 +217,7 @@
                         messageDiv.textContent = 'Account created successfully! Redirecting...';
                         messageDiv.className = 'text-center text-green-400 mb-4';
                         const destination = selectedPlan ? '/' : `/choose-plan.html?userId=${result.userId}`;
-                        setTimeout(() => { window.location.href = destination; }, 2000);
+                        SecureDOM.safeTimeout(() => { window.location.href = destination; }, 2000);
                     } else {
                         messageDiv.textContent = result.message || 'An error occurred.';
                         // Class already set for errors.

@@ -5,7 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Logic and Stories | Sign In</title>
     <meta name="description" content="Sign in to Logic and Stories to unlock engaging math stories and interactive learning adventures." />
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="/static/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/static/favicon-192x192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="/static/favicon-512x512.png">
+    <link rel="apple-touch-icon" href="/static/apple-touch-icon.png">
+    
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/static/js/secureDOM.js"></script>
+    <script src="/static/js/csrf.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Pacifico&display=swap" rel="stylesheet">
@@ -129,11 +139,11 @@
                         messageDiv.style.color = '#4ade80';
                         messageDiv.textContent = 'Login successful! Redirecting...';
                         if (result.user.userType === 'Admin') {
-                            setTimeout(() => { window.location.href = '/iygighukijh.html'; }, 1500);
+                            SecureDOM.safeTimeout(() => { window.location.href = '/iygighukijh.html'; }, 1500);
                         } else if (result.user.userType === 'Parent') {
-                            setTimeout(() => { window.location.href = '/parent-portal.html'; }, 1500);
+                            SecureDOM.safeTimeout(() => { window.location.href = '/parent-portal.html'; }, 1500);
                         } else {
-                            setTimeout(() => { window.location.href = '/dashboard.html'; }, 1500);
+                            SecureDOM.safeTimeout(() => { window.location.href = '/dashboard.html'; }, 1500);
                         }
                     } else {
                         messageDiv.textContent = result.message || 'An error occurred.';
