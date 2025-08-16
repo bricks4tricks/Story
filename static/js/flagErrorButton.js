@@ -12,15 +12,11 @@
       } else {
         description = prompt('Describe the issue (optional):') || '';
       }
-      fetch('/api/flag-page-error', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          userId: parseInt(localStorage.getItem('userId')) || null,
+      csrfManager.post('/api/flag-page-error', {
+          userId: null, // Will be determined server-side from session
           pagePath: window.location.pathname,
           description: description.trim()
         })
-      })
         .then(res => res.json())
         .then(data => {
           alert(data.message || (data.status === 'success'

@@ -7,7 +7,7 @@ import secrets
 import hashlib
 from datetime import datetime, timedelta, timezone
 from functools import wraps
-from flask import request, jsonify, g
+from flask import request, jsonify, g, session
 from db_utils import get_db_connection, release_db_connection
 
 
@@ -135,12 +135,18 @@ def require_auth(allowed_user_types=['student', 'parent', 'admin']):
     def decorator(f):
         @wraps(f)
         def decorated_function(*args, **kwargs):
-            # Get token from Authorization header
-            auth_header = request.headers.get('Authorization')
-            if not auth_header or not auth_header.startswith('Bearer '):
+            # First try httpOnly session cookie
+            token = session.get('session_token')
+            
+            # Fallback to Authorization header for backward compatibility
+            if not token:
+                auth_header = request.headers.get('Authorization')
+                if auth_header and auth_header.startswith('Bearer '):
+                    token = auth_header.split(' ')[1]
+            
+            if not token:
                 return jsonify({"status": "error", "message": "Authentication required"}), 401
             
-            token = auth_header.split(' ')[1]
             user_info = SessionManager.validate_session(token)
             
             if not user_info:

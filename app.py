@@ -60,6 +60,7 @@ from content import content_bp
 from user_management import user_mgmt_bp
 from flagging import flagging_bp
 from subscription import subscription_bp
+from routes.analytics import analytics_bp
 
 # Register blueprints
 app.register_blueprint(auth_bp)
@@ -69,6 +70,7 @@ app.register_blueprint(content_bp)
 app.register_blueprint(user_mgmt_bp)
 app.register_blueprint(flagging_bp)
 app.register_blueprint(subscription_bp)
+app.register_blueprint(analytics_bp)
 
 
 @app.route("/health", methods=["GET"])

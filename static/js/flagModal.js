@@ -29,23 +29,35 @@
   }
 
   async function loadOpenFlags() {
-    openFlagsDiv.innerHTML = '<p class="text-gray-400">Loading open reports...</p>';
+    SecureDOM.setLoadingState(openFlagsDiv, 'Loading open reports...');
     try {
       const res = await fetch('/api/open-flags');
       if (!res.ok) throw new Error('Failed to fetch');
       const flags = await res.json();
       if (flags.length === 0) {
-        openFlagsDiv.innerHTML = '<p class="text-gray-400">No open reports.</p>';
+        SecureDOM.setEmptyState(openFlagsDiv, 'No open reports.');
         return;
       }
-      openFlagsDiv.innerHTML = flags.map(f =>
-        `<div class="border-b border-slate-700 py-2">
-           <p class="font-semibold">${f.ItemType}: ${f.ItemName || ('ID: ' + f.FlaggedItemID)}</p>
-           <p class="text-xs text-gray-400">${f.Reason}</p>
-         </div>`
-      ).join('');
+      
+      SecureDOM.replaceContent(openFlagsDiv);
+      flags.forEach(f => {
+        const flagDiv = SecureDOM.createElement('div', {
+          className: 'border-b border-slate-700 py-2'
+        });
+        
+        const titleP = SecureDOM.createElement('p', {
+          className: 'font-semibold'
+        }, `${f.ItemType}: ${f.ItemName || ('ID: ' + f.FlaggedItemID)}`);
+        
+        const reasonP = SecureDOM.createElement('p', {
+          className: 'text-xs text-gray-400'
+        }, f.Reason);
+        
+        SecureDOM.appendContent(flagDiv, titleP, reasonP);
+        openFlagsDiv.appendChild(flagDiv);
+      });
     } catch (err) {
-      openFlagsDiv.innerHTML = '<p class="text-red-400">Error loading open reports.</p>';
+      SecureDOM.setErrorState(openFlagsDiv, 'Error loading open reports.');
     }
   }
 

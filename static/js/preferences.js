@@ -2,7 +2,7 @@
 // Because this script is injected just before </body>, the body element
 // is available immediately. Apply a light theme upfront to avoid a flash
 // of dark content for first-time visitors.
-const darkModeStored = localStorage.getItem('darkMode');
+const darkModeStored = sessionStorage.getItem('darkMode');
 if (darkModeStored === null || darkModeStored === 'false') {
     document.body.classList.add('light');
 }
@@ -19,26 +19,25 @@ const applyPreferences = (darkMode, fontSize) => {
 };
 
 document.addEventListener('DOMContentLoaded', () => {
-    const fontSizeStored = localStorage.getItem('fontSize');
+    const fontSizeStored = sessionStorage.getItem('fontSize');
 
     if (darkModeStored !== null && fontSizeStored !== null) {
         applyPreferences(darkModeStored === 'true', fontSizeStored);
         return;
     }
 
-    const userId = localStorage.getItem('userId');
-    if (!userId) {
-        applyPreferences(false, 'medium');
-        return;
-    }
-
-    fetch(`/api/preferences/${userId}`)
-        .then(res => res.json())
+    // For logged-in users, fetch preferences from server
+    // Note: With httpOnly cookies, we don't need to store userId in storage
+    fetch('/api/preferences/current')
+        .then(res => {
+            if (!res.ok) throw new Error('Not logged in');
+            return res.json();
+        })
         .then(data => {
             const dm = data.darkMode;
             const fs = data.fontSize || 'medium';
-            localStorage.setItem('darkMode', dm);
-            localStorage.setItem('fontSize', fs);
+            sessionStorage.setItem('darkMode', dm);
+            sessionStorage.setItem('fontSize', fs);
             applyPreferences(dm, fs);
         })
         .catch(() => {

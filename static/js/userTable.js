@@ -13,11 +13,9 @@
   let usersHash = null;
 
   async function fetchAndRenderUsers() {
-    userTableBody.innerHTML = '<tr><td colspan="8" class="text-center py-4 text-gray-400">Loading...</td></tr>';
+    SecureDOM.setLoadingState(userTableBody, 'Loading...');
     try {
-      const token = localStorage.getItem('token');
-      const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
-      const response = await fetch('/api/admin/all-users', { headers });
+      const response = await csrfManager.get('/api/admin/all-users');
       if (!response.ok) throw new Error('Failed to fetch users');
       const users = await response.json();
       const newHash = JSON.stringify(users);
@@ -32,14 +30,12 @@
       applyFilter();
     } catch (err) {
       console.error('Fetch users error:', err);
-      userTableBody.innerHTML = '<tr><td colspan="8" class="text-center py-4 text-red-400">Error loading users.</td></tr>';
+      SecureDOM.setErrorState(userTableBody, 'Error loading users.');
     }
   }
   async function refreshIfChanged() {
     try {
-      const token = localStorage.getItem('token');
-      const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
-      const verRes = await fetch('/api/admin/users-version', { headers });
+      const verRes = await csrfManager.get('/api/admin/users-version');
       if (!verRes.ok) throw new Error("Failed to fetch version");
       const { version } = await verRes.json();
       if (version !== usersVersion) {
@@ -52,32 +48,72 @@
   }
 
   function renderUsers(users) {
-    userTableBody.innerHTML = '';
+    SecureDOM.replaceContent(userTableBody);
     if (users.length === 0) {
-      userTableBody.innerHTML = '<tr><td colspan="8" class="text-center py-4 text-gray-400">No users found.</td></tr>';
+      SecureDOM.setEmptyState(userTableBody, 'No users found.');
       return;
     }
     users.forEach(user => {
       const isUserAdmin = user.UserType === 'Admin';
-      const row = document.createElement('tr');
-      row.className = 'border-b border-slate-700 hover:bg-slate-700/50';
-      const subText =
-        user.SubscriptionDaysLeft !== null && user.SubscriptionDaysLeft !== undefined
-          ? `${user.SubscriptionDaysLeft} days`
-          : 'None';
-      row.innerHTML = `
-        <td class="px-6 py-4">${user.ID}</td>
-        <td class="px-6 py-4 font-medium">${user.Username}</td>
-        <td class="px-6 py-4">${user.Email || 'N/A'}</td>
-        <td class="px-6 py-4"><span class="px-2 py-1 text-xs font-semibold rounded-full ${isUserAdmin ? 'bg-red-500/20 text-red-300' : (user.UserType === 'Parent' ? 'bg-blue-500/20 text-blue-300' : 'bg-green-500/20 text-green-300')}">${user.UserType}</span></td>
-        <td class="px-6 py-4">${user.ParentUsername || 'N/A'}</td>
-        <td class="px-6 py-4">${new Date(user.CreatedOn).toLocaleDateString()}</td>
-        <td class="px-6 py-4">${subText}</td>
-        <td class="px-6 py-4 text-center flex justify-center space-x-2">
-          <button data-userid="${user.ID}" class="edit-user-btn bg-blue-800 text-white font-semibold py-1 px-3 text-sm rounded-full hover:bg-blue-700 ${isUserAdmin ? 'opacity-50 cursor-not-allowed' : ''}" ${isUserAdmin ? 'disabled' : ''}>Edit</button>
-          <button data-userid="${user.ID}" data-username="${user.Username}" class="delete-user-btn bg-red-800 text-white font-semibold py-1 px-3 text-sm rounded-full hover:bg-red-700 ${isUserAdmin ? 'opacity-50 cursor-not-allowed' : ''}" ${isUserAdmin ? 'disabled' : ''}>Delete</button>
-          ${isUserAdmin ? '' : `<button data-userid="${user.ID}" class="renew-sub-btn bg-green-800 text-white font-semibold py-1 px-3 text-sm rounded-full hover:bg-green-700">Renew</button>`}
-        </td>`;
+      const row = SecureDOM.createElement('tr', {
+        className: 'border-b border-slate-700 hover:bg-slate-700/50'
+      });
+
+      const subText = user.SubscriptionDaysLeft !== null && user.SubscriptionDaysLeft !== undefined
+        ? `${user.SubscriptionDaysLeft} days`
+        : 'None';
+
+      // Create cells with secure DOM manipulation
+      const idCell = SecureDOM.createElement('td', { className: 'px-6 py-4' }, String(user.ID));
+      const usernameCell = SecureDOM.createElement('td', { className: 'px-6 py-4 font-medium' }, user.Username);
+      const emailCell = SecureDOM.createElement('td', { className: 'px-6 py-4' }, user.Email || 'N/A');
+      
+      // User type badge
+      const userTypeCell = SecureDOM.createElement('td', { className: 'px-6 py-4' });
+      const badge = SecureDOM.createElement('span', {
+        className: `px-2 py-1 text-xs font-semibold rounded-full ${
+          isUserAdmin ? 'bg-red-500/20 text-red-300' : 
+          (user.UserType === 'Parent' ? 'bg-blue-500/20 text-blue-300' : 'bg-green-500/20 text-green-300')
+        }`
+      }, user.UserType);
+      userTypeCell.appendChild(badge);
+
+      const parentCell = SecureDOM.createElement('td', { className: 'px-6 py-4' }, user.ParentUsername || 'N/A');
+      const dateCell = SecureDOM.createElement('td', { className: 'px-6 py-4' }, new Date(user.CreatedOn).toLocaleDateString());
+      const subCell = SecureDOM.createElement('td', { className: 'px-6 py-4' }, subText);
+      
+      // Actions cell
+      const actionsCell = SecureDOM.createElement('td', { className: 'px-6 py-4 text-center flex justify-center space-x-2' });
+      
+      // Edit button
+      const editBtn = SecureDOM.createElement('button', {
+        className: `edit-user-btn bg-blue-800 text-white font-semibold py-1 px-3 text-sm rounded-full hover:bg-blue-700 ${isUserAdmin ? 'opacity-50 cursor-not-allowed' : ''}`,
+        'data-userid': user.ID
+      }, 'Edit');
+      if (isUserAdmin) editBtn.disabled = true;
+      
+      // Delete button
+      const deleteBtn = SecureDOM.createElement('button', {
+        className: `delete-user-btn bg-red-800 text-white font-semibold py-1 px-3 text-sm rounded-full hover:bg-red-700 ${isUserAdmin ? 'opacity-50 cursor-not-allowed' : ''}`,
+        'data-userid': user.ID,
+        'data-username': user.Username
+      }, 'Delete');
+      if (isUserAdmin) deleteBtn.disabled = true;
+      
+      actionsCell.appendChild(editBtn);
+      actionsCell.appendChild(deleteBtn);
+      
+      // Renew button (if not admin)
+      if (!isUserAdmin) {
+        const renewBtn = SecureDOM.createElement('button', {
+          className: 'renew-sub-btn bg-green-800 text-white font-semibold py-1 px-3 text-sm rounded-full hover:bg-green-700',
+          'data-userid': user.ID
+        }, 'Renew');
+        actionsCell.appendChild(renewBtn);
+      }
+
+      // Append all cells to row
+      SecureDOM.appendContent(row, idCell, usernameCell, emailCell, userTypeCell, parentCell, dateCell, subCell, actionsCell);
       userTableBody.appendChild(row);
     });
   }

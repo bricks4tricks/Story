@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, session
 from datetime import datetime, timedelta, timezone
 import secrets
 import traceback
@@ -438,12 +438,16 @@ def signin_user():
             # Create session token
             session_token = SessionManager.create_session(user[0], user[3].lower())
             
+            # Store token in httpOnly session cookie
+            session['session_token'] = session_token
+            session['user_id'] = user[0]
+            session['user_type'] = user[3].lower()
+            
             return jsonify({
                 "status": "success",
                 "message": "Login successful!",
                 "user": {"id": user[0], "username": user[1], "userType": user[3]},
                 "subscriptionDaysLeft": days_left if user[3] != 'Admin' else None,
-                "sessionToken": session_token,
             }), 200
         return jsonify({"status": "error", "message": "Invalid username or password"}), 401
     except Exception as e:
@@ -483,11 +487,15 @@ def admin_signin():
             # Create session token like regular signin
             session_token = SessionManager.create_session(user[0], user[3].lower())
             
+            # Store token in httpOnly session cookie
+            session['session_token'] = session_token
+            session['user_id'] = user[0]
+            session['user_type'] = user[3].lower()
+            
             return jsonify({
                 "status": "success",
                 "message": "Admin login successful!",
                 "user": {"id": user[0], "username": user[1], "userType": user[3]},
-                "sessionToken": session_token,
             }), 200
         return jsonify({"status": "error", "message": "Invalid credentials or not an admin"}), 401
     except Exception as e:
@@ -580,3 +588,65 @@ def reset_password():
             cursor.close()
         if conn:
             release_db_connection(conn)
+
+
+@auth_bp.route('/preferences/current', methods=['GET', 'OPTIONS'])
+def get_current_user_preferences():
+    """Get preferences for the currently authenticated user."""
+    if request.method == 'OPTIONS':
+        return jsonify(success=True)
+    
+    # Get user ID from session
+    user_id = session.get('user_id')
+    if not user_id:
+        return jsonify({"status": "error", "message": "Not authenticated"}), 401
+    
+    conn = None
+    cursor = None
+    try:
+        conn = get_db_connection()
+        ensure_user_preferences_table(conn)
+        cursor = conn.cursor()
+        cursor.execute(
+            "SELECT darkmode, fontsize FROM tbl_userpreferences WHERE user_id = %s",
+            (user_id,),
+        )
+        prefs = cursor.fetchone()
+        if prefs:
+            darkmode, fontsize = prefs
+        else:
+            darkmode, fontsize = False, 'medium'
+        return (
+            jsonify({
+                "status": "success",
+                "darkMode": darkmode,
+                "fontSize": fontsize,
+            }),
+            200,
+        )
+    except Exception as e:
+        print(f"Get Current User Preferences API Error: {e}")
+        traceback.print_exc()
+        return jsonify({"status": "error", "message": "Could not retrieve preferences"}), 500
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            release_db_connection(conn)
+
+
+@auth_bp.route('/logout', methods=['POST', 'OPTIONS'])
+def logout():
+    """Logout and destroy session."""
+    if request.method == 'OPTIONS':
+        return jsonify(success=True)
+    
+    # Get session token and destroy it
+    session_token = session.get('session_token')
+    if session_token:
+        SessionManager.destroy_session(session_token)
+    
+    # Clear session
+    session.clear()
+    
+    return jsonify({"status": "success", "message": "Logged out successfully"}), 200
