@@ -1617,6 +1617,7 @@ def admin_get_curriculums():
 
 
 @app.route('/api/admin/curriculums/<int:subject_id>', methods=['GET'])
+@require_auth(['admin'])
 def admin_get_curriculum(subject_id):
     """Return a single curriculum by ID."""
     conn = None
