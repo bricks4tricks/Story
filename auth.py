@@ -480,10 +480,14 @@ def admin_signin():
         )
         user = cursor.fetchone()
         if user and bcrypt.check_password_hash(user[2], password) and user[3] == 'Admin':
+            # Create session token like regular signin
+            session_token = SessionManager.create_session(user[0], user[3].lower())
+            
             return jsonify({
                 "status": "success",
                 "message": "Admin login successful!",
                 "user": {"id": user[0], "username": user[1], "userType": user[3]},
+                "sessionToken": session_token,
             }), 200
         return jsonify({"status": "error", "message": "Invalid credentials or not an admin"}), 401
     except Exception as e:

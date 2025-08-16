@@ -1642,6 +1642,7 @@ def admin_get_curriculum(subject_id):
 
 
 @app.route('/api/admin/curriculum-hierarchy', methods=['GET'])
+@require_auth(['admin'])
 def admin_curriculum_hierarchy():
     """Return units and topics grouped under each curriculum."""
     conn = None
@@ -1757,6 +1758,7 @@ def create_curriculum():
 
 
 @app.route('/api/admin/create-lesson', methods=['POST', 'OPTIONS'])
+@require_auth(['admin'])
 def create_lesson():
     """Create a new lesson (topic) under a curriculum and unit."""
     if request.method == 'OPTIONS':
@@ -1870,6 +1872,7 @@ def create_lesson():
 
 
 @app.route('/api/admin/map-topic-curriculums', methods=['POST', 'OPTIONS'])
+@require_auth(['admin'])
 def map_topic_curriculums():
     """Map a topic to one or more curriculums."""
     if request.method == "OPTIONS":
@@ -2057,6 +2060,7 @@ def delete_curriculum(subject_id):
 
 
 @app.route('/api/admin/update-curriculum/<int:subject_id>', methods=['PUT', 'OPTIONS'])
+@require_auth(['admin'])
 def update_curriculum(subject_id):
     if request.method == 'OPTIONS':
         return jsonify(success=True)
@@ -2095,6 +2099,7 @@ def update_curriculum(subject_id):
 
 
 @app.route('/api/admin/update-topic/<int:topic_id>', methods=['PUT', 'OPTIONS'])
+@require_auth(['admin'])
 def update_topic(topic_id):
     if request.method == 'OPTIONS':
         return jsonify(success=True)
@@ -2130,6 +2135,7 @@ def update_topic(topic_id):
 
 
 @app.route('/api/admin/delete-topic/<int:topic_id>', methods=['DELETE', 'OPTIONS'])
+@require_auth(['admin'])
 def delete_topic(topic_id):
     if request.method == 'OPTIONS':
         return jsonify(success=True)
@@ -2409,6 +2415,7 @@ def flag_item():
 
 
 @app.route('/api/admin/flagged-items', methods=['GET'])
+@require_auth(['admin'])
 def get_flagged_items():
     conn = None
     cursor = None
@@ -2456,6 +2463,7 @@ def get_flagged_items():
 
 
 @app.route('/api/admin/update-flag-status/<int:flag_id>', methods=['PUT', 'OPTIONS'])
+@require_auth(['admin'])
 def update_flag_status(flag_id):
     if request.method == 'OPTIONS': return jsonify(success=True)
     data = request.get_json(silent=True)
@@ -2507,6 +2515,7 @@ def update_flag_status(flag_id):
             release_db_connection(conn)
 
 @app.route('/api/admin/delete-flag/<int:flag_id>', methods=['DELETE', 'OPTIONS'])
+@require_auth(['admin'])
 def delete_flag(flag_id):
     """Delete a flag report by its ID."""
     if request.method == 'OPTIONS':
@@ -2586,6 +2595,7 @@ def record_question_attempt():
 
 # --- ADMIN ENDPOINT TO GET ALL QUESTION ATTEMPTS ---
 @app.route('/api/admin/question-attempts', methods=['GET'])
+@require_auth(['admin'])
 def get_all_question_attempts():
     conn = None
     cursor = None
