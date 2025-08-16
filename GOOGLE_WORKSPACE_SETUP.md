@@ -1,7 +1,8 @@
 # Google Workspace Email Setup for LogicAndStories
 
 ## Email Configuration
-**Admin Email**: `admin@bricks4tricks.com`  
+**Admin Email**: `admin@bricks4tricks.com` (for authentication)  
+**Sender Email**: `noreply@logicandstories.com` (alias for outgoing emails)
 **Domain**: `bricks4tricks.com`  
 **Service**: Google Workspace  
 
@@ -46,7 +47,7 @@ SMTP_SERVER=smtp.gmail.com
 SMTP_PORT=587
 SMTP_USERNAME=admin@bricks4tricks.com
 SMTP_PASSWORD=your_16_character_app_password
-SENDER_EMAIL=admin@bricks4tricks.com
+SENDER_EMAIL=noreply@logicandstories.com
 FRONTEND_BASE_URL=https://logicandstories.com
 ```
 
