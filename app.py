@@ -13,6 +13,7 @@ import random
 import os  # Import os module to access environment variables
 import re
 from utils import validate_password
+from env_validator import validate_environment
 
 # ---------------------------------
 # --- NEW IMPORTS FOR EMAIL ---
@@ -24,6 +25,9 @@ from email.mime.text import MIMEText
 # =================================================================
 #  1. SETUP & CONFIGURATION
 # =================================================================
+
+# Validate environment variables before application setup
+validate_environment(fail_fast=True)
 app = Flask(__name__)
 bcrypt.init_app(app)
 # Configure Flask-CORS to allow requests from your frontend domain
