@@ -6,15 +6,18 @@ from werkzeug.utils import secure_filename
 import version_cache
 from db_utils import db_cursor
 from seed_database import seed_data
+from auth_utils import require_auth
 
 
 admin_bp = Blueprint('admin', __name__, url_prefix='/api/admin')
 
 @admin_bp.route("/users-version", methods=["GET"])
+@require_auth(['admin'])
 def get_users_version():
     return jsonify({"version": version_cache.users_version.isoformat()})
 
 @admin_bp.route('/all-users', methods=['GET'])
+@require_auth(['admin'])
 def get_all_users():
     try:
         with db_cursor() as cursor:
@@ -55,6 +58,7 @@ def get_all_users():
 
 
 @admin_bp.route('/seed-database', methods=['POST'])
+@require_auth(['admin'])
 def seed_database_upload():
     tmp_path = None
     try:
