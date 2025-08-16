@@ -16,9 +16,10 @@ def client():
 
 
 def test_edit_user_invalid_json_returns_error(client):
-    response = client.put(
-        "/api/admin/edit-user/1", data="invalid", content_type="application/json"
-    )
+    with mock_admin_auth():
+        response = client.put(
+            "/api/admin/edit-user/1", data="invalid", content_type="application/json", headers=get_admin_headers()
+        )
     assert response.status_code == 400
     assert response.mimetype == "application/json"
     data = response.get_json()

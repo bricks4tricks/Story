@@ -23,7 +23,7 @@ class MockSessionManager:
     def create_mock_student_session():
         """Create a mock student session for testing."""
         return {
-            'user_id': 2,
+            'user_id': 0,  # Use user_id 0 to match test data
             'user_type': 'student',
             'username': 'test_student'
         }
