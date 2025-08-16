@@ -6,6 +6,8 @@
     <title>Logic and Stories | Sign In</title>
     <meta name="description" content="Sign in to Logic and Stories to unlock engaging math stories and interactive learning adventures." />
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/static/js/secureDOM.js"></script>
+    <script src="/static/js/csrf.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Pacifico&display=swap" rel="stylesheet">
@@ -129,11 +131,11 @@
                         messageDiv.style.color = '#4ade80';
                         messageDiv.textContent = 'Login successful! Redirecting...';
                         if (result.user.userType === 'Admin') {
-                            setTimeout(() => { window.location.href = '/iygighukijh.html'; }, 1500);
+                            SecureDOM.safeTimeout(() => { window.location.href = '/iygighukijh.html'; }, 1500);
                         } else if (result.user.userType === 'Parent') {
-                            setTimeout(() => { window.location.href = '/parent-portal.html'; }, 1500);
+                            SecureDOM.safeTimeout(() => { window.location.href = '/parent-portal.html'; }, 1500);
                         } else {
-                            setTimeout(() => { window.location.href = '/dashboard.html'; }, 1500);
+                            SecureDOM.safeTimeout(() => { window.location.href = '/dashboard.html'; }, 1500);
                         }
                     } else {
                         messageDiv.textContent = result.message || 'An error occurred.';

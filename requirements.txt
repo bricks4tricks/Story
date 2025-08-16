@@ -1,6 +1,7 @@
 Flask
 Flask-Cors
 Flask-Bcrypt
+Flask-WTF
 psycopg2-binary>=2.9
 python-dotenv
 PyJWT
@@ -8,3 +9,4 @@ gunicorn
 pytest
 requests
 beautifulsoup4
+bleach

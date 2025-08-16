@@ -1,7 +1,7 @@
 import psycopg2
 import psycopg2.extras
 from psycopg2 import sql
-from flask import Flask, jsonify, request, render_template, send_from_directory, redirect, url_for
+from flask import Flask, jsonify, request, render_template, send_from_directory, redirect, url_for, session
 from flask_cors import CORS
 from extensions import bcrypt
 import secrets
@@ -15,6 +15,7 @@ import re
 from utils import validate_password
 from env_validator import validate_environment
 from auth_utils import require_auth, require_user_access
+from security_utils import csrf_protection, add_security_headers, get_csrf_token, sanitizer
 
 # ---------------------------------
 # --- NEW IMPORTS FOR EMAIL ---
@@ -31,7 +32,16 @@ from email.mime.text import MIMEText
 if not os.environ.get('PYTEST_CURRENT_TEST'):
     validate_environment(fail_fast=True)
 app = Flask(__name__)
+
+# Security configuration
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', secrets.token_hex(32))
+app.config['SESSION_COOKIE_SECURE'] = True
+app.config['SESSION_COOKIE_HTTPONLY'] = True
+app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(hours=24)
+
 bcrypt.init_app(app)
+csrf_protection.init_app(app)
 # Configure Flask-CORS to allow requests from your frontend domain
 # It's crucial to specify the exact origin of your frontend.
 # If your frontend is hosted at 'https://www.logicandstories.com', use that.
@@ -39,12 +49,15 @@ bcrypt.init_app(app)
 # Also, ensure methods and headers are allowed for preflight.
 CORS(app, origins=["https://logicandstories.com", "https://www.logicandstories.com"],
      methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-     headers=["Content-Type", "Authorization"])
+     headers=["Content-Type", "Authorization", "X-CSRF-Token"])
 
 
 @app.after_request
-def inject_preferences_script(response):
-    """Ensure the preferences script is added to every HTML response."""
+def inject_security_and_preferences(response):
+    """Add security headers and preferences script to responses."""
+    # Add security headers
+    response = add_security_headers(response)
+    
     if response.direct_passthrough:
         return response
 
@@ -74,6 +87,12 @@ app.register_blueprint(quiz_bp)
 @app.route("/health", methods=["GET"])
 def health_check():
     return jsonify({"status": "ok"}), 200
+
+
+@app.route("/api/csrf-token", methods=["GET"])
+def get_csrf_token_endpoint():
+    """Endpoint to get CSRF token for API requests."""
+    return jsonify({"csrf_token": get_csrf_token()}), 200
 
 
 # Define a mapping for questiontype (if using integer in DB)

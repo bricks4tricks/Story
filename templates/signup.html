@@ -6,6 +6,8 @@
     <title>Logic and Stories | Sign Up</title>
     <meta name="description" content="Create your Logic and Stories account to explore math through storytelling." />
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/static/js/secureDOM.js"></script>
+    <script src="/static/js/csrf.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Pacifico&display=swap" rel="stylesheet">
@@ -207,7 +209,7 @@
                         messageDiv.textContent = 'Account created successfully! Redirecting...';
                         messageDiv.className = 'text-center text-green-400 mb-4';
                         const destination = selectedPlan ? '/' : `/choose-plan.html?userId=${result.userId}`;
-                        setTimeout(() => { window.location.href = destination; }, 2000);
+                        SecureDOM.safeTimeout(() => { window.location.href = destination; }, 2000);
                     } else {
                         messageDiv.textContent = result.message || 'An error occurred.';
                         // Class already set for errors.

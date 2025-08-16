@@ -16,6 +16,7 @@ from db_utils import (
     ensure_user_preferences_table,
 )
 from auth_utils import SessionManager
+from security_utils import require_csrf, rate_limit, sanitizer
 
 auth_bp = Blueprint('auth', __name__, url_prefix='/api')
 
@@ -58,6 +59,8 @@ def send_email(receiver_email, subject, html_content):
 
 
 @auth_bp.route('/signup', methods=['POST', 'OPTIONS'])
+@rate_limit(max_requests=3, window=300)  # 3 signups per 5 minutes
+@require_csrf
 def signup_user():
     if request.method == 'OPTIONS':
         return jsonify(success=True)
@@ -350,6 +353,8 @@ def select_plan():
 
 
 @auth_bp.route('/signin', methods=['POST', 'OPTIONS'])
+@rate_limit(max_requests=5, window=300)  # 5 attempts per 5 minutes
+@require_csrf
 def signin_user():
     if request.method == 'OPTIONS':
         return jsonify(success=True)
@@ -458,6 +463,8 @@ def signin_user():
 
 
 @auth_bp.route('/admin-signin', methods=['POST', 'OPTIONS'])
+@rate_limit(max_requests=3, window=300)  # 3 attempts per 5 minutes for admin
+@require_csrf
 def admin_signin():
     if request.method == 'OPTIONS':
         return jsonify(success=True)
@@ -502,6 +509,8 @@ def admin_signin():
 
 
 @auth_bp.route('/forgot-password', methods=['POST', 'OPTIONS'])
+@rate_limit(max_requests=3, window=600)  # 3 attempts per 10 minutes
+@require_csrf
 def forgot_password():
     if request.method == 'OPTIONS':
         return jsonify(success=True)

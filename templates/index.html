@@ -63,6 +63,8 @@
     </style>
 </head>
 <body class="bg-slate-900 text-gray-200">
+    <script src="/static/js/secureDOM.js"></script>
+    <script src="/static/js/csrf.js"></script>
     <script src="/static/js/mobileNav.js" defer></script>
     <script src="/static/js/lazyLoad.js" defer></script>
     <script src="/static/js/accessibility.js" defer></script>
@@ -499,11 +501,11 @@
                         elements.messageDiv.className = 'text-center text-green-400 mb-4';
 
                         if (result.user.userType === 'Admin') {
-                            setTimeout(() => { window.location.href = '/iygighukijh.html'; }, 1500);
+                            SecureDOM.safeTimeout(() => { window.location.href = '/iygighukijh.html'; }, 1500);
                         } else if (result.user.userType === 'Parent') {
-                            setTimeout(() => { window.location.href = '/parent-portal.html'; }, 1500);
+                            SecureDOM.safeTimeout(() => { window.location.href = '/parent-portal.html'; }, 1500);
                         } else {
-                            setTimeout(() => { window.location.href = '/dashboard.html'; }, 1500);
+                            SecureDOM.safeTimeout(() => { window.location.href = '/dashboard.html'; }, 1500);
                         }
                     } else {
                         elements.messageDiv.textContent = result.message || 'An error occurred.';
