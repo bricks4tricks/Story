@@ -26,8 +26,9 @@ from email.mime.text import MIMEText
 #  1. SETUP & CONFIGURATION
 # =================================================================
 
-# Validate environment variables before application setup
-validate_environment(fail_fast=True)
+# Validate environment variables before application setup (skip during testing)
+if not os.environ.get('PYTEST_CURRENT_TEST'):
+    validate_environment(fail_fast=True)
 app = Flask(__name__)
 bcrypt.init_app(app)
 # Configure Flask-CORS to allow requests from your frontend domain
@@ -226,7 +227,9 @@ def get_topics_list():
 def add_question():
     if request.method == 'OPTIONS': return jsonify(success=True)
 
-    data = request.get_json()
+    data = request.get_json(silent=True)
+    if data is None:
+        return jsonify({"status": "error", "message": "Invalid JSON"}), 400
     topic_id = data.get('topicId')
     question_text = data.get('questionText')
     question_type_str = data.get('questionType')
@@ -410,7 +413,9 @@ def get_question_details(question_id):
 def edit_question(question_id):
     if request.method == 'OPTIONS': return jsonify(success=True)
 
-    data = request.get_json()
+    data = request.get_json(silent=True)
+    if data is None:
+        return jsonify({"status": "error", "message": "Invalid JSON"}), 400
     payload_question_id = data.get('questionId')
     if payload_question_id and payload_question_id != question_id:
         return jsonify({"status": "error", "message": "Mismatched question id in URL and payload."}), 400
@@ -625,7 +630,9 @@ def delete_story(topic_id):
 def save_story():
     if request.method == 'OPTIONS': return jsonify(success=True)
 
-    data = request.get_json()
+    data = request.get_json(silent=True)
+    if data is None:
+        return jsonify({"status": "error", "message": "Invalid JSON"}), 400
     topic_id = data.get('topicId')
     story_sections = data.get('storySections')
     default_theme_name = data.get('defaultTheme')
@@ -747,7 +754,7 @@ def add_video():
     if request.method == 'OPTIONS':
         return jsonify(success=True)
 
-    data = request.get_json() or {}
+    data = request.get_json(silent=True) or {}
     topic_id = data.get('topicId')
     youtube_url = data.get('youtubeUrl')
 
@@ -997,7 +1004,9 @@ def get_user_progress(user_id):
 
 @app.route('/api/progress/update', methods=['POST'])
 def update_user_progress():
-    data = request.get_json()
+    data = request.get_json(silent=True)
+    if data is None:
+        return jsonify({"status": "error", "message": "Invalid JSON"}), 400
     user_id = data.get('userId')
     topic_id = data.get('topicId')
     status = data.get('status')
@@ -1038,7 +1047,9 @@ def record_quiz_result():
     if request.method == 'OPTIONS':
         return jsonify(success=True)
 
-    data = request.get_json()
+    data = request.get_json(silent=True)
+    if data is None:
+        return jsonify({"status": "error", "message": "Invalid JSON"}), 400
     user_id = data.get('userId')
     topic_id = data.get('topicId')
     score = data.get('score')
@@ -1176,7 +1187,9 @@ def get_leaderboard():
 @app.route('/api/create-student', methods=['POST', 'OPTIONS'])
 def create_student():
     if request.method == 'OPTIONS': return jsonify(success=True)
-    data = request.get_json()
+    data = request.get_json(silent=True)
+    if data is None:
+        return jsonify({"status": "error", "message": "Invalid JSON"}), 400
     username, password, parent_id = data.get('username'), data.get('password'), data.get('parentId')
     if not all([username, password, parent_id]):
         return jsonify({"status": "error", "message": "Missing fields"}), 400
@@ -1250,7 +1263,9 @@ def get_my_students(parent_id):
 @app.route('/api/modify-student', methods=['POST', 'OPTIONS'])
 def modify_student():
     if request.method == 'OPTIONS': return jsonify(success=True)
-    data = request.get_json()
+    data = request.get_json(silent=True)
+    if data is None:
+        return jsonify({"status": "error", "message": "Invalid JSON"}), 400
     student_id, new_password = data.get('studentId'), data.get('newPassword')
     if not all([student_id, new_password]):
         return jsonify({"status": "error", "message": "Student id and new password are required"}), 400
@@ -1691,7 +1706,9 @@ def create_curriculum():
     if request.method == 'OPTIONS':
         return jsonify(success=True)
 
-    data = request.get_json()
+    data = request.get_json(silent=True)
+    if data is None:
+        return jsonify({"status": "error", "message": "Invalid JSON"}), 400
     name = data.get('name') if data else None
 
     if not name:
@@ -1727,7 +1744,7 @@ def create_lesson():
     if request.method == 'OPTIONS':
         return jsonify(success=True)
 
-    data = request.get_json() or {}
+    data = request.get_json(silent=True) or {}
     curriculum = data.get('curriculum')
     unit = data.get('unit')
     lesson = data.get('lesson')
@@ -1840,7 +1857,7 @@ def map_topic_curriculums():
     if request.method == "OPTIONS":
         return jsonify(success=True)
 
-    data = request.get_json() or {}
+    data = request.get_json(silent=True) or {}
     topic_id = data.get('topic_id') or data.get('topicId')
     curriculum_ids = data.get('curriculum_ids') or data.get('curriculumIds')
 
@@ -2025,7 +2042,9 @@ def update_curriculum(subject_id):
     if request.method == 'OPTIONS':
         return jsonify(success=True)
 
-    data = request.get_json()
+    data = request.get_json(silent=True)
+    if data is None:
+        return jsonify({"status": "error", "message": "Invalid JSON"}), 400
     name = data.get('name')
 
     if not name:
@@ -2061,7 +2080,7 @@ def update_topic(topic_id):
     if request.method == 'OPTIONS':
         return jsonify(success=True)
 
-    data = request.get_json() or {}
+    data = request.get_json(silent=True) or {}
     name = data.get('name') or data.get('topicname')
 
     if not name:
@@ -2274,7 +2293,9 @@ def get_user_topic_difficulty(user_id, topic_id):
 @app.route('/api/user/update-topic-difficulty', methods=['POST', 'OPTIONS'])
 def update_user_topic_difficulty():
     if request.method == 'OPTIONS': return jsonify(success=True)
-    data = request.get_json()
+    data = request.get_json(silent=True)
+    if data is None:
+        return jsonify({"status": "error", "message": "Invalid JSON"}), 400
     user_id = data.get('userId')
     topic_id = data.get('topicId')
     new_difficulty = data.get('newDifficulty')
@@ -2325,7 +2346,9 @@ def update_user_topic_difficulty():
 @app.route('/api/flag-item', methods=['POST', 'OPTIONS'])
 def flag_item():
     if request.method == 'OPTIONS': return jsonify(success=True)
-    data = request.get_json()
+    data = request.get_json(silent=True)
+    if data is None:
+        return jsonify({"status": "error", "message": "Invalid JSON"}), 400
     user_id = data.get('userId')
     flagged_item_id = data.get('flaggedItemId')
     item_type = data.get('itemType')
@@ -2412,7 +2435,9 @@ def get_flagged_items():
 @app.route('/api/admin/update-flag-status/<int:flag_id>', methods=['PUT', 'OPTIONS'])
 def update_flag_status(flag_id):
     if request.method == 'OPTIONS': return jsonify(success=True)
-    data = request.get_json()
+    data = request.get_json(silent=True)
+    if data is None:
+        return jsonify({"status": "error", "message": "Invalid JSON"}), 400
     new_status = data.get('status')
     admin_id = data.get('adminId')
 
