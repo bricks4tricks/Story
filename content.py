@@ -72,7 +72,7 @@ def story_exists(topic_id):
         cursor = conn.cursor()
         cursor.execute("SELECT COUNT(*) FROM tbl_story WHERE topicid = %s", (topic_id,))
         count = cursor.fetchone()[0]
-        return jsonify(success=True, exists=(count > 0))
+        return jsonify(success=True, storyExists=(count > 0))
     except Exception as e:
         print(f"Story Exists API Error: {e}")
         return jsonify(success=False, message="Failed to check story existence"), 500
@@ -93,7 +93,7 @@ def quiz_exists(topic_id):
         cursor = conn.cursor()
         cursor.execute("SELECT COUNT(*) FROM tbl_question WHERE topicid = %s", (topic_id,))
         count = cursor.fetchone()[0]
-        return jsonify(success=True, exists=(count > 0))
+        return jsonify(success=True, quizExists=(count > 0))
     except Exception as e:
         print(f"Quiz Exists API Error: {e}")
         return jsonify(success=False, message="Failed to check quiz existence"), 500
@@ -113,70 +113,74 @@ def get_curriculum():
         conn = get_db_connection()
         cursor = conn.cursor()
         
-        # Get curriculum hierarchy
-        cursor.execute("""
-            SELECT 
-                c.id as curriculum_id,
-                c.name as curriculum_name,
-                c.description as curriculum_description,
-                l.id as lesson_id,
-                l.name as lesson_name,
-                l.description as lesson_description,
-                l.order_index as lesson_order,
-                t.id as topic_id,
-                t.name as topic_name,
-                t.description as topic_description,
-                t.order_index as topic_order
-            FROM tbl_curriculum c
-            LEFT JOIN tbl_lesson l ON c.id = l.curriculum_id
-            LEFT JOIN tbl_topic t ON l.id = t.lesson_id
-            ORDER BY c.name, l.order_index, t.order_index
-        """)
-        
+        query = """
+            SELECT
+                g.gradename,
+                s.subjectname AS CurriculumType,
+                unit.topicname AS UnitName,
+                topic.topicname,
+                topic.id AS topicid
+            FROM tbl_topic topic
+            JOIN tbl_topic unit ON topic.parenttopicid = unit.id
+            JOIN tbl_subject s ON unit.subjectid = s.id
+            JOIN tbl_topicgrade tg ON topic.id = tg.topicid
+            JOIN tbl_grade g ON tg.gradeid = g.id
+            ORDER BY g.id, s.id, unit.id, topic.id;
+        """
+        cursor.execute(query)
         rows = cursor.fetchall()
-        curriculum_dict = {}
-        
+
+        curriculum_data = {}
+        # This mapping is for frontend display, so it's kept here.
+        # In a very large app, this might come from a config or DB.
+        grade_color_map = {
+            "4th Grade": {"icon": "4th", "color": "fde047"},
+            "5th Grade": {"icon": "5th", "color": "fb923c"},
+            "6th Grade": {"icon": "6th", "color": "a78bfa"},
+            "7th Grade": {"icon": "7th", "color": "60a5fa"},
+            "8th Grade": {"icon": "8th", "color": "f472b6"},
+            "9th Grade": {"icon": "9th", "color": "818cf8"},
+            "10th Grade": {"icon": "10th", "color": "34d399"},
+            "11th Grade": {"icon": "11th", "color": "22d3ee"},
+            "Algebra 1": {"icon": "Alg1", "color": "fcd34d"},
+            "Geometry": {"icon": "Geom", "color": "2dd4bf"},
+            "Pre-Calculus": {"icon": "Pre-C", "color": "a3e635"},
+            "Calculus": {"icon": "Calc", "color": "f87171"},
+            "Statistics": {"icon": "Stats", "color": "c084fc"},
+            "Contest Math (AMC)": {"icon": "AMC", "color": "e11d48"},
+            "IB Math AA SL": {"icon": "AA SL", "color": "f9a8d4"},
+            "IB Math AA HL": {"icon": "AA HL", "color": "f0abfc"},
+            "IB Math AI SL": {"icon": "AI SL", "color": "a5f3fc"},
+            "IB Math AI HL": {"icon": "AI HL", "color": "bbf7d0"},
+        }
         for row in rows:
-            curr_id = row[0]
-            if curr_id not in curriculum_dict:
-                curriculum_dict[curr_id] = {
-                    'id': curr_id,
-                    'name': row[1],
-                    'description': row[2],
-                    'lessons': {}
-                }
+            grade_name = row[0]
+            curriculum_type = row[1]
+            unit_name = row[2]
+            topic_name = row[3]
+            topic_id = row[4]
             
-            lesson_id = row[3]
-            if lesson_id and lesson_id not in curriculum_dict[curr_id]['lessons']:
-                curriculum_dict[curr_id]['lessons'][lesson_id] = {
-                    'id': lesson_id,
-                    'name': row[4],
-                    'description': row[5],
-                    'order_index': row[6],
-                    'topics': []
-                }
-            
-            if row[7]:  # topic_id exists
-                topic = {
-                    'id': row[7],
-                    'name': row[8],
-                    'description': row[9],
-                    'order_index': row[10]
-                }
-                if lesson_id:
-                    curriculum_dict[curr_id]['lessons'][lesson_id]['topics'].append(topic)
-        
-        # Convert to list format
-        curriculum_list = []
-        for curr in curriculum_dict.values():
-            curr['lessons'] = list(curr['lessons'].values())
-            curriculum_list.append(curr)
-        
-        return jsonify(success=True, curriculum=curriculum_list)
-        
+            clean_grade_name = ' '.join(grade_name.replace('grade', 'Grade').split()).strip()
+            if clean_grade_name not in curriculum_data:
+                style = grade_color_map.get(clean_grade_name, { "icon": clean_grade_name[:3], "color": "94a3b8" })
+                curriculum_data[clean_grade_name] = {**style, "curriculums": {}}
+            if curriculum_type not in curriculum_data[clean_grade_name]['curriculums']:
+                curriculum_data[clean_grade_name]['curriculums'][curriculum_type] = {"units": {}}
+            if unit_name not in curriculum_data[clean_grade_name]['curriculums'][curriculum_type]['units']:
+                curriculum_data[clean_grade_name]['curriculums'][curriculum_type]['units'][unit_name] = []
+
+            curriculum_data[clean_grade_name]['curriculums'][curriculum_type]['units'][unit_name].append({
+                "name": topic_name,
+                "id": topic_id,
+                "availableThemes": [],
+                "defaultTheme": None
+            })
+
+        return jsonify(curriculum_data)
     except Exception as e:
-        print(f"Get Curriculum API Error: {e}")
-        return jsonify(success=False, message="Failed to fetch curriculum"), 500
+        print(f"API Error in get_curriculum: {e}")
+        traceback.print_exc()
+        return jsonify({ "status": "error", "message": str(e) }), 500
     finally:
         if cursor:
             cursor.close()

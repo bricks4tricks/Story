@@ -197,7 +197,15 @@ def internal_error(error):
 
 if __name__ == '__main__':
     # Ensure database tables exist
-    ensure_topicsubject_table()
+    conn = None
+    try:
+        conn = get_db_connection()
+        ensure_topicsubject_table(conn)
+    except Exception as e:
+        print(f"Warning: Could not initialize database tables: {e}")
+    finally:
+        if conn:
+            release_db_connection(conn)
     
     # Run the application
     app.run(debug=True, host='0.0.0.0', port=5000)
