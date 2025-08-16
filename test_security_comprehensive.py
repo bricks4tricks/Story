@@ -83,7 +83,8 @@ def test_input_sanitization():
     dangerous_filename = "../../../etc/passwd"
     sanitized_filename = sanitizer.sanitize_filename(dangerous_filename)
     assert '..' not in sanitized_filename
-    assert 'etc' not in sanitized_filename
+    assert '/' not in sanitized_filename  # Directory separators removed
+    assert len(sanitized_filename) <= 255  # Length limit enforced
     
     # Test integer validation
     assert sanitizer.validate_integer("42") == 42

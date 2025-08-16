@@ -92,6 +92,15 @@ class InputSanitizer:
         if not isinstance(text, str):
             return str(text)
         
+        # Remove dangerous attributes and scripts first
+        dangerous_patterns = [
+            r'javascript:', r'vbscript:', r'onload', r'onerror', r'onclick',
+            r'onmouseover', r'onfocus', r'onblur', r'onsubmit', r'onchange'
+        ]
+        
+        for pattern in dangerous_patterns:
+            text = re.sub(pattern, '', text, flags=re.IGNORECASE)
+        
         # Basic HTML escaping
         html_escape_map = {
             '&': '&amp;',
