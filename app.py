@@ -91,6 +91,7 @@ QUESTION_TYPE_REVERSE_MAP = {
 
 
 @app.route('/api/admin/edit-user/<int:user_id>', methods=['PUT', 'OPTIONS'])
+@require_auth(['admin'])
 def edit_user(user_id):
     if request.method == 'OPTIONS':
         return jsonify(success=True)
@@ -141,6 +142,7 @@ def edit_user(user_id):
             release_db_connection(conn)
 
 @app.route('/api/admin/delete-user/<int:user_id>', methods=['DELETE', 'OPTIONS'])
+@require_auth(['admin'])
 def delete_user(user_id):
     if request.method == 'OPTIONS': return jsonify(success=True)
     conn = None
@@ -193,6 +195,7 @@ def delete_user(user_id):
 
 
 @app.route('/api/admin/topics-list', methods=['GET'])
+@require_auth(['admin'])
 def get_topics_list():
     conn = None
     cursor = None
@@ -225,6 +228,7 @@ def get_topics_list():
             release_db_connection(conn)
 
 @app.route('/api/admin/add-question', methods=['POST', 'OPTIONS'])
+@require_auth(['admin'])
 def add_question():
     if request.method == 'OPTIONS': return jsonify(success=True)
 
@@ -299,6 +303,7 @@ def add_question():
             release_db_connection(conn)
 
 @app.route('/api/admin/questions', methods=['GET'])
+@require_auth(['admin'])
 def get_all_questions():
     conn = None
     cursor = None
@@ -342,6 +347,7 @@ def get_all_questions():
             release_db_connection(conn)
 
 @app.route('/api/admin/question/<int:question_id>', methods=['GET'])
+@require_auth(['admin'])
 def get_question_details(question_id):
     conn = None
     cursor = None
@@ -411,6 +417,7 @@ def get_question_details(question_id):
             release_db_connection(conn)
 
 @app.route('/api/admin/edit-question/<int:question_id>', methods=['PUT', 'OPTIONS'])
+@require_auth(['admin'])
 def edit_question(question_id):
     if request.method == 'OPTIONS': return jsonify(success=True)
 
@@ -493,6 +500,7 @@ def edit_question(question_id):
 
 
 @app.route('/api/admin/delete-question/<int:question_id>', methods=['DELETE', 'OPTIONS'])
+@require_auth(['admin'])
 def delete_question(question_id):
     if request.method == 'OPTIONS': return jsonify(success=True)
 
@@ -533,6 +541,7 @@ def delete_question(question_id):
 
 
 @app.route('/api/admin/stories', methods=['GET'])
+@require_auth(['admin'])
 def get_all_stories():
     conn = None
     cursor = None
@@ -577,6 +586,7 @@ def get_all_stories():
             release_db_connection(conn)
 
 @app.route('/api/admin/delete-story/<int:topic_id>', methods=['DELETE', 'OPTIONS'])
+@require_auth(['admin'])
 def delete_story(topic_id):
     if request.method == 'OPTIONS': return jsonify(success=True)
 
@@ -628,6 +638,7 @@ def delete_story(topic_id):
 
 
 @app.route('/api/admin/save-story', methods=['POST', 'OPTIONS'])
+@require_auth(['admin'])
 def save_story():
     if request.method == 'OPTIONS': return jsonify(success=True)
 
@@ -750,6 +761,7 @@ def save_story():
             release_db_connection(conn)
 
 @app.route('/api/admin/add-video', methods=['POST', 'OPTIONS'])
+@require_auth(['admin'])
 def add_video():
     """Add a video link for a topic."""
     if request.method == 'OPTIONS':
@@ -1575,6 +1587,7 @@ def get_topics(curriculum, unit):
 
 
 @app.route('/api/admin/curriculums', methods=['GET'])
+@require_auth(['admin'])
 def admin_get_curriculums():
     """Return curriculums, optionally filtered by a search term."""
     search = request.args.get('search', '').strip()
@@ -1705,6 +1718,7 @@ def get_curriculum_table():
 
 
 @app.route('/api/admin/create-curriculum', methods=['POST', 'OPTIONS'])
+@require_auth(['admin'])
 def create_curriculum():
     if request.method == 'OPTIONS':
         return jsonify(success=True)
@@ -1899,6 +1913,7 @@ def map_topic_curriculums():
             release_db_connection(conn)
 
 @app.route('/api/admin/delete-curriculum/<int:subject_id>', methods=['DELETE', 'OPTIONS'])
+@require_auth(['admin'])
 def delete_curriculum(subject_id):
     if request.method == 'OPTIONS':
         return jsonify(success=True)
