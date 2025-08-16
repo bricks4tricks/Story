@@ -373,6 +373,8 @@ def signin_user():
         user = cursor.fetchone()
         if user and bcrypt.check_password_hash(user[2], password):
             days_left = None
+            subscription_status = "active"  # Default for admins
+            
             # Check subscription status for non-admin users
             if user[3] != 'Admin':
                 now_utc = datetime.now(timezone.utc)
@@ -380,61 +382,74 @@ def signin_user():
                 if user[3] == 'Student':
                     parent_id = user[4]
                     if not parent_id:
-                        return jsonify({
-                            "status": "error",
-                            "message": "Subscription inactive. Please renew to access your account.",
-                        }), 403
-                    cursor.execute(
-                        "SELECT active, expires_on FROM tbl_subscription WHERE user_id = %s",
-                        (parent_id,),
-                    )
-                    sub = cursor.fetchone()
-                    if not sub:
-                        return jsonify({
-                            "status": "error",
-                            "message": "Subscription inactive. Please renew to access your account.",
-                        }), 403
-                    active, expires_on = sub
-                    if expires_on and expires_on.tzinfo is None:
-                        expires_on = expires_on.replace(tzinfo=timezone.utc)
-                    if expires_on and expires_on <= now_utc:
+                        # Student without parent - allow login but mark as no subscription
+                        subscription_status = "missing_parent"
+                        days_left = None
+                    else:
                         cursor.execute(
-                            "UPDATE tbl_subscription SET active = FALSE WHERE user_id = %s",
+                            "SELECT active, expires_on FROM tbl_subscription WHERE user_id = %s",
                             (parent_id,),
                         )
-                        conn.commit()
-                        active = False
-                    if not active:
-                        return jsonify({
-                            "status": "error",
-                            "message": "Subscription inactive. Please renew to access your account.",
-                        }), 403
-                    days_left = (
-                        (expires_on - now_utc).days
-                        if expires_on and expires_on > now_utc
-                        else None
-                    )
+                        sub = cursor.fetchone()
+                        if not sub:
+                            # No subscription record - allow login but mark as inactive
+                            subscription_status = "inactive"
+                            days_left = None
+                        else:
+                            active, expires_on = sub
+                            if expires_on and expires_on.tzinfo is None:
+                                expires_on = expires_on.replace(tzinfo=timezone.utc)
+                            
+                            # Check if subscription has expired
+                            if expires_on and expires_on <= now_utc:
+                                cursor.execute(
+                                    "UPDATE tbl_subscription SET active = FALSE WHERE user_id = %s",
+                                    (parent_id,),
+                                )
+                                conn.commit()
+                                active = False
+                                subscription_status = "expired"
+                                # Calculate negative days for expired subscriptions
+                                days_left = (expires_on - now_utc).days
+                            elif not active:
+                                subscription_status = "inactive"
+                                days_left = None
+                            else:
+                                subscription_status = "active"
+                                days_left = (expires_on - now_utc).days if expires_on else None
                 else:
+                    # Parent or other user type
                     cursor.execute(
                         "SELECT active, expires_on FROM tbl_subscription WHERE user_id = %s",
                         (user[0],),
                     )
                     sub = cursor.fetchone()
-                    if sub:
+                    if not sub:
+                        # No subscription record - allow login but mark as inactive
+                        subscription_status = "inactive"
+                        days_left = None
+                    else:
                         active, expires_on = sub
                         if expires_on and expires_on.tzinfo is None:
                             expires_on = expires_on.replace(tzinfo=timezone.utc)
+                        
+                        # Check if subscription has expired
                         if expires_on and expires_on <= now_utc:
                             cursor.execute(
                                 "UPDATE tbl_subscription SET active = FALSE WHERE user_id = %s",
                                 (user[0],),
                             )
                             conn.commit()
-                        days_left = (
-                            (expires_on - now_utc).days
-                            if expires_on and expires_on > now_utc
-                            else None
-                        )
+                            active = False
+                            subscription_status = "expired"
+                            # Calculate negative days for expired subscriptions
+                            days_left = (expires_on - now_utc).days
+                        elif not active:
+                            subscription_status = "inactive"
+                            days_left = None
+                        else:
+                            subscription_status = "active"
+                            days_left = (expires_on - now_utc).days if expires_on else None
             # Create session token
             session_token = SessionManager.create_session(user[0], user[3].lower())
             
@@ -447,6 +462,7 @@ def signin_user():
                 "status": "success",
                 "message": "Login successful!",
                 "user": {"id": user[0], "username": user[1], "userType": user[3]},
+                "subscriptionStatus": subscription_status,
                 "subscriptionDaysLeft": days_left if user[3] != 'Admin' else None,
             }), 200
         return jsonify({"status": "error", "message": "Invalid username or password"}), 401
