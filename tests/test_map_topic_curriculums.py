@@ -6,6 +6,7 @@ import pytest
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from app import app as flask_app
+from test_auth_utils import mock_admin_auth, get_admin_headers
 
 
 class TrackCursor:
@@ -51,10 +52,11 @@ def client():
 
 def test_map_topic_curriculums_inserts_links(client):
     conn = DummyConnection()
-    with patch('app.get_db_connection', return_value=conn):
+    with patch('app.get_db_connection', return_value=conn), mock_admin_auth():
         resp = client.post(
             '/api/admin/map-topic-curriculums',
             json={'topic_id': 5, 'curriculum_ids': [1, 2]},
+            headers=get_admin_headers()
         )
     assert resp.status_code == 201
     data = resp.get_json()

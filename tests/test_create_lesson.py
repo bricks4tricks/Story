@@ -6,6 +6,7 @@ import pytest
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from app import app as flask_app
+from test_auth_utils import mock_admin_auth, get_admin_headers
 
 
 class TrackCursor:
@@ -66,10 +67,11 @@ def client():
 
 def test_create_lesson_success(client):
     conn = DummyConnection()
-    with patch('app.get_db_connection', return_value=conn):
+    with patch('app.get_db_connection', return_value=conn), mock_admin_auth():
         resp = client.post(
             '/api/admin/create-lesson',
-            json={'curriculum': 'Math', 'unit': 'Algebra', 'lesson': 'Addition', 'grade': '4th Grade'}
+            json={'curriculum': 'Math', 'unit': 'Algebra', 'lesson': 'Addition', 'grade': '4th Grade'},
+            headers=get_admin_headers()
         )
     assert resp.status_code == 201
     data = resp.get_json()
@@ -82,7 +84,7 @@ def test_create_lesson_success(client):
 def test_create_lesson_selected_curriculums(client):
     """Lesson should link only to the curriculums provided."""
     conn = DummyConnection()
-    with patch('app.get_db_connection', return_value=conn):
+    with patch('app.get_db_connection', return_value=conn), mock_admin_auth():
         resp = client.post(
             '/api/admin/create-lesson',
             json={
@@ -92,6 +94,7 @@ def test_create_lesson_selected_curriculums(client):
                 'grade': '4th Grade',
                 'curriculum_ids': [2],
             },
+            headers=get_admin_headers()
         )
     assert resp.status_code == 201
     data = resp.get_json()
@@ -102,10 +105,11 @@ def test_create_lesson_selected_curriculums(client):
 
 def test_create_lesson_missing_fields(client):
     conn = DummyConnection()
-    with patch('app.get_db_connection', return_value=conn):
+    with patch('app.get_db_connection', return_value=conn), mock_admin_auth():
         resp = client.post(
             '/api/admin/create-lesson',
-            json={'curriculum': 'Math', 'unit': 'Algebra', 'lesson': 'Addition'}
+            json={'curriculum': 'Math', 'unit': 'Algebra', 'lesson': 'Addition'},
+            headers=get_admin_headers()
         )
     assert resp.status_code == 400
     data = resp.get_json()
@@ -114,10 +118,11 @@ def test_create_lesson_missing_fields(client):
 
 def test_create_lesson_curriculum_not_found(client):
     conn = DummyConnection(curriculum_exists=False)
-    with patch('app.get_db_connection', return_value=conn):
+    with patch('app.get_db_connection', return_value=conn), mock_admin_auth():
         resp = client.post(
             '/api/admin/create-lesson',
-            json={'curriculum': 'Nope', 'unit': 'Algebra', 'lesson': 'Addition', 'grade': '4th Grade'}
+            json={'curriculum': 'Nope', 'unit': 'Algebra', 'lesson': 'Addition', 'grade': '4th Grade'},
+            headers=get_admin_headers()
         )
     assert resp.status_code == 404
     data = resp.get_json()
@@ -126,10 +131,11 @@ def test_create_lesson_curriculum_not_found(client):
 
 def test_create_lesson_creates_grade_when_missing(client):
     conn = DummyConnection(grade_exists=False)
-    with patch('app.get_db_connection', return_value=conn):
+    with patch('app.get_db_connection', return_value=conn), mock_admin_auth():
         resp = client.post(
             '/api/admin/create-lesson',
-            json={'curriculum': 'Math', 'unit': 'Algebra', 'lesson': 'Addition', 'grade': 'Unknown'}
+            json={'curriculum': 'Math', 'unit': 'Algebra', 'lesson': 'Addition', 'grade': 'Unknown'},
+            headers=get_admin_headers()
         )
     assert resp.status_code == 201
     data = resp.get_json()

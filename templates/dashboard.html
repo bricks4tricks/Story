@@ -247,12 +247,12 @@
                     button.style.color = `#${gradeData.color}`;       /* Apply color to text dynamically */
                     button.textContent = gradeName;
                     button.dataset.gradeName = gradeName;
-                    button.onclick = () => selectGrade(gradeName);
+                    button.onclick = async () => await selectGrade(gradeName);
                     gradeTabsContainer.appendChild(button);
                 });
             };
 
-            const selectGrade = (gradeName) => {
+            const selectGrade = async (gradeName) => {
                 selectedGrade = gradeName;
                 selectedCurriculum = null;
                 selectedUnit = null;
@@ -276,28 +276,42 @@
                     activeBtn.style.color = `#fde047`;       // Highlight color
                 }
 
-                renderCurriculumTabs();
+                await renderCurriculumTabs();
                 renderUnitTabs(); // Clear units
                 renderTopicsList(); // Clear topics
             };
 
-            const renderCurriculumTabs = () => {
+            const renderCurriculumTabs = async () => {
                 curriculumTabsContainer.innerHTML = '';
                 if (selectedGrade && allCurriculumData[selectedGrade]?.curriculums) {
-                    Object.keys(allCurriculumData[selectedGrade].curriculums).sort().forEach(curriculumName => {
-                        const button = document.createElement('button');
-                        button.className = `px-5 py-2 rounded-full font-semibold bg-slate-700 hover:bg-slate-600 text-white transition-colors`;
-                        button.textContent = curriculumName;
-                        button.dataset.curriculumName = curriculumName;
-                        button.onclick = () => selectCurriculum(curriculumName);
-                        curriculumTabsContainer.appendChild(button);
-                    });
+                    const curriculumsWithContent = [];
+                    
+                    for (const curriculumName of Object.keys(allCurriculumData[selectedGrade].curriculums).sort()) {
+                        // Check if this curriculum has any units with content
+                        const hasContent = await checkCurriculumHasContent(selectedGrade, curriculumName);
+                        if (hasContent) {
+                            curriculumsWithContent.push(curriculumName);
+                        }
+                    }
+                    
+                    if (curriculumsWithContent.length > 0) {
+                        curriculumsWithContent.forEach(curriculumName => {
+                            const button = document.createElement('button');
+                            button.className = `px-5 py-2 rounded-full font-semibold bg-slate-700 hover:bg-slate-600 text-white transition-colors`;
+                            button.textContent = curriculumName;
+                            button.dataset.curriculumName = curriculumName;
+                            button.onclick = async () => await selectCurriculum(curriculumName);
+                            curriculumTabsContainer.appendChild(button);
+                        });
+                    } else {
+                        curriculumTabsContainer.innerHTML = '<p class="text-gray-400">No curriculums with available content found for this grade.</p>';
+                    }
                 } else {
                     curriculumTabsContainer.innerHTML = '<p class="text-gray-400">Select a grade first.</p>';
                 }
             };
 
-            const selectCurriculum = (curriculumName) => {
+            const selectCurriculum = async (curriculumName) => {
                 selectedCurriculum = curriculumName;
                 selectedUnit = null;
 
@@ -312,21 +326,35 @@
                     activeBtn.classList.add('active-curriculum-tab');
                 }
 
-                renderUnitTabs();
+                await renderUnitTabs();
                 renderTopicsList(); // Clear topics
             };
 
-            const renderUnitTabs = () => {
+            const renderUnitTabs = async () => {
                 unitTabsContainer.innerHTML = '';
                 if (selectedGrade && selectedCurriculum && allCurriculumData[selectedGrade]?.curriculums[selectedCurriculum]?.units) {
-                    Object.keys(allCurriculumData[selectedGrade].curriculums[selectedCurriculum].units).sort().forEach(unitName => {
-                        const button = document.createElement('button');
-                        button.className = `px-5 py-2 rounded-full font-semibold bg-slate-700 hover:bg-slate-600 text-white transition-colors`;
-                        button.textContent = unitName;
-                        button.dataset.unitName = unitName;
-                        button.onclick = () => selectUnit(unitName);
-                        unitTabsContainer.appendChild(button);
-                    });
+                    const unitsWithContent = [];
+                    
+                    for (const unitName of Object.keys(allCurriculumData[selectedGrade].curriculums[selectedCurriculum].units).sort()) {
+                        // Check if this unit has any topics with content
+                        const hasContent = await checkUnitHasContent(selectedGrade, selectedCurriculum, unitName);
+                        if (hasContent) {
+                            unitsWithContent.push(unitName);
+                        }
+                    }
+                    
+                    if (unitsWithContent.length > 0) {
+                        unitsWithContent.forEach(unitName => {
+                            const button = document.createElement('button');
+                            button.className = `px-5 py-2 rounded-full font-semibold bg-slate-700 hover:bg-slate-600 text-white transition-colors`;
+                            button.textContent = unitName;
+                            button.dataset.unitName = unitName;
+                            button.onclick = () => selectUnit(unitName);
+                            unitTabsContainer.appendChild(button);
+                        });
+                    } else {
+                        unitTabsContainer.innerHTML = '<p class="text-gray-400">No units with available content found for this curriculum.</p>';
+                    }
                 } else {
                     unitTabsContainer.innerHTML = '<p class="text-gray-400">Select a curriculum first.</p>';
                 }
@@ -348,7 +376,75 @@
                 renderTopicsList();
             };
 
-            const renderTopicsList = () => {
+            // Helper functions to check content availability
+            const checkStoryExists = async (topicId) => {
+                try {
+                    const response = await fetch(`${window.location.origin}/api/story-exists/${topicId}`);
+                    if (response.ok) {
+                        const data = await response.json();
+                        return data.storyExists;
+                    }
+                    return false;
+                } catch (error) {
+                    console.error('Error checking story availability:', error);
+                    return false;
+                }
+            };
+
+            const checkQuizExists = async (topicId) => {
+                try {
+                    const response = await fetch(`${window.location.origin}/api/quiz-exists/${topicId}`);
+                    if (response.ok) {
+                        const data = await response.json();
+                        return data.quizExists;
+                    }
+                    return false;
+                } catch (error) {
+                    console.error('Error checking quiz availability:', error);
+                    return false;
+                }
+            };
+
+            const checkVideoExists = async (topicId) => {
+                try {
+                    const response = await fetch(`${window.location.origin}/api/video/${topicId}`);
+                    return response.ok;
+                } catch (error) {
+                    console.error('Error checking video availability:', error);
+                    return false;
+                }
+            };
+
+            const checkCurriculumHasContent = async (gradeName, curriculumName) => {
+                const units = allCurriculumData[gradeName]?.curriculums[curriculumName]?.units;
+                if (!units) return false;
+                
+                for (const unitName of Object.keys(units)) {
+                    const hasContent = await checkUnitHasContent(gradeName, curriculumName, unitName);
+                    if (hasContent) return true;
+                }
+                return false;
+            };
+
+            const checkUnitHasContent = async (gradeName, curriculumName, unitName) => {
+                const topics = allCurriculumData[gradeName]?.curriculums[curriculumName]?.units[unitName];
+                if (!topics || topics.length === 0) return false;
+                
+                for (const topic of topics) {
+                    const [storyExists, quizExists, videoExists] = await Promise.all([
+                        checkStoryExists(topic.id),
+                        checkQuizExists(topic.id),
+                        checkVideoExists(topic.id)
+                    ]);
+                    
+                    if (storyExists || quizExists || videoExists) {
+                        return true;
+                    }
+                }
+                return false;
+            };
+
+            const renderTopicsList = async () => {
                 topicsListContainer.innerHTML = '';
                 if (selectedGrade && selectedCurriculum && selectedUnit && allCurriculumData[selectedGrade]?.curriculums[selectedCurriculum]?.units[selectedUnit]) {
                     const topics = allCurriculumData[selectedGrade].curriculums[selectedCurriculum].units[selectedUnit];
@@ -356,7 +452,11 @@
                         topicsListContainer.innerHTML = '<p class="text-gray-400">No topics found for this unit.</p>';
                         return;
                     }
-                    topics.forEach(topic => {
+                    
+                    // Show loading state
+                    topicsListContainer.innerHTML = '<p class="text-gray-400">Loading topics...</p>';
+                    
+                    for (const topic of topics) {
                         const progressStatus = userProgress[topic.id] || 'notStarted'; // Default status
                         let statusColor = 'text-gray-400';
                         let statusText = 'Not Started';
@@ -372,36 +472,74 @@
                             buttonClasses = 'bg-green-600 hover:bg-green-500';
                         }
 
+                        // Check content availability
+                        const [storyExists, quizExists, videoExists] = await Promise.all([
+                            checkStoryExists(topic.id),
+                            checkQuizExists(topic.id),
+                            checkVideoExists(topic.id)
+                        ]);
+
+                        // Only render topic if at least one content type is available
+                        if (!storyExists && !quizExists && !videoExists) {
+                            continue; // Skip this topic if no content is available
+                        }
+
                         const topicDiv = document.createElement('div');
                         topicDiv.className = 'bg-slate-700 rounded-lg p-4 mb-3 flex justify-between items-center border border-slate-600';
-                        topicDiv.innerHTML = `
-                            <div>
-                                <h3 class="text-xl font-bold text-white mb-1">${topic.name}</h3>
-                                <p class="text-sm ${statusColor}">Status: ${statusText}</p>
-                            </div>
-                            <div class="flex space-x-2">
+                        
+                        // Build buttons HTML based on availability
+                        let buttonsHTML = '';
+                        if (storyExists) {
+                            buttonsHTML += `
                                 <button
                                     class="start-story-btn ${buttonClasses} text-white font-bold py-2 px-4 rounded-full transition-colors"
                                     data-topic-id="${topic.id}"
                                 >
                                     Story
                                 </button>
+                            `;
+                        }
+                        if (quizExists) {
+                            buttonsHTML += `
                                 <button
                                     class="start-quiz-btn bg-purple-600 hover:bg-purple-500 text-white font-bold py-2 px-4 rounded-full transition-colors"
                                     data-topic-id="${topic.id}"
                                 >
                                     Quiz
                                 </button>
+                            `;
+                        }
+                        if (videoExists) {
+                            buttonsHTML += `
                                 <button
                                     class="watch-video-btn bg-red-600 hover:bg-red-500 text-white font-bold py-2 px-4 rounded-full transition-colors"
                                     data-topic-id="${topic.id}"
                                 >
                                     Video
                                 </button>
+                            `;
+                        }
+                        
+                        topicDiv.innerHTML = `
+                            <div>
+                                <h3 class="text-xl font-bold text-white mb-1">${topic.name}</h3>
+                                <p class="text-sm ${statusColor}">Status: ${statusText}</p>
+                            </div>
+                            <div class="flex space-x-2">
+                                ${buttonsHTML}
                             </div>
                         `;
+                        
+                        if (topicsListContainer.innerHTML === '<p class="text-gray-400">Loading topics...</p>') {
+                            topicsListContainer.innerHTML = '';
+                        }
                         topicsListContainer.appendChild(topicDiv);
-                    });
+                    }
+                    
+                    // If no topics were added, show appropriate message
+                    if (topicsListContainer.innerHTML === '<p class="text-gray-400">Loading topics...</p>' || topicsListContainer.innerHTML === '') {
+                        topicsListContainer.innerHTML = '<p class="text-gray-400">No topics with available content found for this unit.</p>';
+                    }
                 } else {
                     topicsListContainer.innerHTML = '<p class="text-gray-400">Select a unit to see topics.</p>';
                 }
@@ -421,17 +559,8 @@
                     window.location.href = `/quiz-player.html?topicId=${topicId}`;
                 } else if (videoButton) {
                     const topicId = videoButton.dataset.topicId;
-                    try {
-                        const response = await fetch(`${window.location.origin}/api/video/${topicId}`);
-                        if (response.ok) {
-                            window.location.href = `/video-player.html?topicId=${topicId}`;
-                        } else {
-                            alert('No video available for this topic.');
-                        }
-                    } catch (error) {
-                        console.error('Error fetching video availability:', error);
-                        alert('Could not connect to the server to check video availability.');
-                    }
+                    // Since we already checked availability when rendering, just navigate directly
+                    window.location.href = `/video-player.html?topicId=${topicId}`;
                 }
             });
 

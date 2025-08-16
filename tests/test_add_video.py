@@ -1,13 +1,12 @@
 import os
 import sys
-import os
-import sys
 from unittest.mock import patch
 import pytest
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from app import app as flask_app
+from test_auth_utils import mock_admin_auth, get_admin_headers
 
 
 class DummyCursor:
@@ -44,10 +43,11 @@ def client():
 
 def test_add_video_success(client):
     conn = DummyConnection()
-    with patch("app.get_db_connection", return_value=conn):
+    with patch("app.get_db_connection", return_value=conn), mock_admin_auth():
         resp = client.post(
             "/api/admin/add-video",
             json={"topicId": 1, "youtubeUrl": "https://youtu.be/test"},
+            headers=get_admin_headers()
         )
     assert resp.status_code == 201
     data = resp.get_json()
@@ -56,8 +56,8 @@ def test_add_video_success(client):
 
 def test_add_video_missing_fields(client):
     conn = DummyConnection()
-    with patch("app.get_db_connection", return_value=conn):
-        resp = client.post("/api/admin/add-video", json={})
+    with patch("app.get_db_connection", return_value=conn), mock_admin_auth():
+        resp = client.post("/api/admin/add-video", json={}, headers=get_admin_headers())
     assert resp.status_code == 400
     data = resp.get_json()
     assert data["status"] == "error"

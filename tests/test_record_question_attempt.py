@@ -6,6 +6,7 @@ import pytest
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from app import app as flask_app
+from test_auth_utils import mock_student_auth, get_student_headers
 
 
 class DummyCursor:
@@ -52,8 +53,8 @@ def test_record_question_attempt_accepts_zero_ids(client):
         'isCorrect': True,
         'difficultyAtAttempt': 1
     }
-    with patch('app.get_db_connection', return_value=conn):
-        resp = client.post('/api/record-question-attempt', json=payload)
+    with patch('app.get_db_connection', return_value=conn), mock_student_auth():
+        resp = client.post('/api/record-question-attempt', json=payload, headers=get_student_headers())
     assert resp.status_code == 201
     data = resp.get_json()
     assert data['status'] == 'success'
@@ -71,8 +72,8 @@ def test_record_question_attempt_rejects_none(client):
         'isCorrect': False,
         'difficultyAtAttempt': 2
     }
-    with patch('app.get_db_connection', return_value=conn):
-        resp = client.post('/api/record-question-attempt', json=payload)
+    with patch('app.get_db_connection', return_value=conn), mock_student_auth():
+        resp = client.post('/api/record-question-attempt', json=payload, headers=get_student_headers())
     assert resp.status_code == 400
     data = resp.get_json()
     assert data['status'] == 'error'

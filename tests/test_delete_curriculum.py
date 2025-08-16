@@ -7,6 +7,7 @@ import psycopg2
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from app import app as flask_app
+from test_auth_utils import mock_admin_auth, get_admin_headers
 
 class DummyCursor:
     def __init__(self, rowcount=1):
@@ -47,16 +48,16 @@ def client():
 
 def test_delete_curriculum_success(client):
     conn = DummyConnection()
-    with patch('app.get_db_connection', return_value=conn):
-        resp = client.delete('/api/admin/delete-curriculum/1')
+    with patch('app.get_db_connection', return_value=conn), mock_admin_auth():
+        resp = client.delete('/api/admin/delete-curriculum/1', headers=get_admin_headers())
     assert resp.status_code == 200
     data = resp.get_json()
     assert data['status'] == 'success'
 
 def test_delete_curriculum_not_found(client):
     conn = DummyConnection(rowcount=0)
-    with patch('app.get_db_connection', return_value=conn):
-        resp = client.delete('/api/admin/delete-curriculum/99')
+    with patch('app.get_db_connection', return_value=conn), mock_admin_auth():
+        resp = client.delete('/api/admin/delete-curriculum/99', headers=get_admin_headers())
     assert resp.status_code == 404
     data = resp.get_json()
     assert data['status'] == 'error'
@@ -108,8 +109,8 @@ def test_delete_curriculum_cascades_topics(client):
             pass
 
     conn = TrackConnection()
-    with patch('app.get_db_connection', return_value=conn):
-        resp = client.delete('/api/admin/delete-curriculum/1')
+    with patch('app.get_db_connection', return_value=conn), mock_admin_auth():
+        resp = client.delete('/api/admin/delete-curriculum/1', headers=get_admin_headers())
 
     assert resp.status_code == 200
     queries = conn.cursor_obj.executed
@@ -166,8 +167,8 @@ def test_delete_curriculum_removes_steps_before_questions(client):
             pass
 
     conn = TrackConnection()
-    with patch('app.get_db_connection', return_value=conn):
-        resp = client.delete('/api/admin/delete-curriculum/1')
+    with patch('app.get_db_connection', return_value=conn), mock_admin_auth():
+        resp = client.delete('/api/admin/delete-curriculum/1', headers=get_admin_headers())
 
     assert resp.status_code == 200
     queries = conn.cursor_obj.executed
@@ -224,8 +225,8 @@ def test_delete_curriculum_removes_answers_before_questions(client):
             pass
 
     conn = TrackConnection()
-    with patch('app.get_db_connection', return_value=conn):
-        resp = client.delete('/api/admin/delete-curriculum/1')
+    with patch('app.get_db_connection', return_value=conn), mock_admin_auth():
+        resp = client.delete('/api/admin/delete-curriculum/1', headers=get_admin_headers())
 
     assert resp.status_code == 200
     queries = conn.cursor_obj.executed
@@ -253,8 +254,8 @@ def test_delete_curriculum_missing_quizscore_table(client):
             self.autocommit = True
 
     conn = MissingQuizConnection()
-    with patch('app.get_db_connection', return_value=conn):
-        resp = client.delete('/api/admin/delete-curriculum/1')
+    with patch('app.get_db_connection', return_value=conn), mock_admin_auth():
+        resp = client.delete('/api/admin/delete-curriculum/1', headers=get_admin_headers())
 
     assert resp.status_code == 200
     data = resp.get_json()
@@ -281,8 +282,8 @@ def test_delete_curriculum_missing_flagreport_table(client):
             self.autocommit = True
 
     conn = MissingFlagConnection()
-    with patch('app.get_db_connection', return_value=conn):
-        resp = client.delete('/api/admin/delete-curriculum/1')
+    with patch('app.get_db_connection', return_value=conn), mock_admin_auth():
+        resp = client.delete('/api/admin/delete-curriculum/1', headers=get_admin_headers())
 
     assert resp.status_code == 200
     data = resp.get_json()

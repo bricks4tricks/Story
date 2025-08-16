@@ -15,6 +15,7 @@ from db_utils import (
     release_db_connection,
     ensure_user_preferences_table,
 )
+from auth_utils import SessionManager
 
 auth_bp = Blueprint('auth', __name__, url_prefix='/api')
 
@@ -434,11 +435,15 @@ def signin_user():
                             if expires_on and expires_on > now_utc
                             else None
                         )
+            # Create session token
+            session_token = SessionManager.create_session(user[0], user[3].lower())
+            
             return jsonify({
                 "status": "success",
                 "message": "Login successful!",
                 "user": {"id": user[0], "username": user[1], "userType": user[3]},
                 "subscriptionDaysLeft": days_left if user[3] != 'Admin' else None,
+                "sessionToken": session_token,
             }), 200
         return jsonify({"status": "error", "message": "Invalid username or password"}), 401
     except Exception as e:
@@ -475,10 +480,14 @@ def admin_signin():
         )
         user = cursor.fetchone()
         if user and bcrypt.check_password_hash(user[2], password) and user[3] == 'Admin':
+            # Create session token like regular signin
+            session_token = SessionManager.create_session(user[0], user[3].lower())
+            
             return jsonify({
                 "status": "success",
                 "message": "Admin login successful!",
                 "user": {"id": user[0], "username": user[1], "userType": user[3]},
+                "sessionToken": session_token,
             }), 200
         return jsonify({"status": "error", "message": "Invalid credentials or not an admin"}), 401
     except Exception as e:

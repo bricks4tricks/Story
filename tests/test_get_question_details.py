@@ -6,6 +6,7 @@ from unittest.mock import patch
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from app import app as flask_app
+from test_auth_utils import mock_admin_auth, get_admin_headers
 
 class DummyCursor:
     def __init__(self, question_row, topic_row):
@@ -75,8 +76,8 @@ def test_get_question_details_handles_topicid_variants(client, key):
     cursor = DummyCursor(question_row, topic_row)
     conn = DummyConnection(cursor)
 
-    with patch("app.get_db_connection", return_value=conn):
-        resp = client.get("/api/admin/question/1")
+    with patch("app.get_db_connection", return_value=conn), mock_admin_auth():
+        resp = client.get("/api/admin/question/1", headers=get_admin_headers())
 
     assert resp.status_code == 200
     data = resp.get_json()

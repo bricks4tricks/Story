@@ -92,7 +92,7 @@ def test_subscription_status_inactive(client):
 
 
 def test_subscription_status_active_naive(client):
-    sub = {"active": True, "expires_on": datetime.utcnow() + timedelta(days=5)}
+    sub = {"active": True, "expires_on": datetime.now(timezone.utc) + timedelta(days=5)}
     db = DummyDB(subscription=sub)
     with patch("app.get_db_connection", return_value=DummyConnection(db)):
         resp = client.get("/api/subscription-status/1")
@@ -128,7 +128,7 @@ def test_cancel_subscription_no_active(client):
 
 
 def test_cancel_subscription_success_marks_inactive(client):
-    sub = {"active": True, "expires_on": datetime.utcnow() + timedelta(days=5)}
+    sub = {"active": True, "expires_on": datetime.now(timezone.utc) + timedelta(days=5)}
     db = DummyDB(subscription=sub)
     with patch("app.get_db_connection", return_value=DummyConnection(db)):
         resp = client.post("/api/cancel-subscription/1")
@@ -140,7 +140,7 @@ def test_cancel_subscription_success_marks_inactive(client):
 
 
 def test_subscription_status_expired_triggers_cache_update(client):
-    sub = {"active": True, "expires_on": datetime.utcnow() - timedelta(days=1)}
+    sub = {"active": True, "expires_on": datetime.now(timezone.utc) - timedelta(days=1)}
     db = DummyDB(subscription=sub)
     with patch("app.get_db_connection", return_value=DummyConnection(db)):
         with patch("app.update_users_version") as mock_update:
@@ -151,7 +151,7 @@ def test_subscription_status_expired_triggers_cache_update(client):
 
 
 def test_renew_subscription_success(client):
-    sub = {"active": False, "expires_on": datetime.utcnow() - timedelta(days=1)}
+    sub = {"active": False, "expires_on": datetime.now(timezone.utc) - timedelta(days=1)}
     db = DummyDB(subscription=sub, plan="Monthly")
     with patch("app.get_db_connection", return_value=DummyConnection(db)):
         resp = client.post("/api/renew-subscription/1")

@@ -428,6 +428,28 @@
         </div>
     </div>
     <script>
+        // Utility function for authenticated admin requests
+        function getAuthHeaders() {
+            const token = localStorage.getItem('token');
+            return token ? {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            } : {
+                'Content-Type': 'application/json'
+            };
+        }
+
+        function authenticatedFetch(url, options = {}) {
+            const headers = getAuthHeaders();
+            return fetch(url, {
+                ...options,
+                headers: {
+                    ...headers,
+                    ...options.headers
+                }
+            });
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             console.log("iygighukijh.html script loaded."); // ADD THIS LOG
             const mobileMenuToggle = document.getElementById('mobile-menu-toggle');
@@ -651,7 +673,7 @@ const createCascadingSelectors = (prefix) => {
                 if (!confirm(`Are you sure you want to delete the user "${username}"? This action cannot be undone.`)) return;
 
                 try {
-                    const response = await fetch(`/api/admin/delete-user/${userId}`, {
+                    const response = await authenticatedFetch(`/api/admin/delete-user/${userId}`, {
                         method: 'DELETE'
                     });
 
@@ -704,7 +726,7 @@ const createCascadingSelectors = (prefix) => {
                 const userId = document.getElementById('edit-userid').value;
                 const userData = { username: document.getElementById('edit-username').value, email: document.getElementById('edit-email').value, userType: document.getElementById('edit-usertype').value };
                 try {
-                    const response = await fetch(`/api/admin/edit-user/${userId}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(userData) });
+                    const response = await authenticatedFetch(`/api/admin/edit-user/${userId}`, { method: 'PUT', body: JSON.stringify(userData) });
                     const result = await response.json();
                     editMessageDiv.textContent = result.message;
                     editMessageDiv.className = response.ok ? 'text-green-400' : 'text-red-400';
@@ -717,7 +739,7 @@ const createCascadingSelectors = (prefix) => {
 
             const initializeTopicData = async () => {
                 try {
-                    const response = await fetch(`${window.location.origin}/api/admin/curriculum-hierarchy`);
+                    const response = await authenticatedFetch(`${window.location.origin}/api/admin/curriculum-hierarchy`);
                     if (!response.ok) throw new Error('Failed to fetch topics');
                     hierarchicalTopics = await response.json();
                 } catch (error) {
@@ -904,7 +926,7 @@ const createCascadingSelectors = (prefix) => {
                 const questionData = { topicId: parseInt(topicId), questionText, questionType, answers, steps, difficultyRating: parseInt(difficultyRating) };
 
                 try {
-                    const response = await fetch('/api/admin/add-question', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(questionData) });
+                    const response = await authenticatedFetch('/api/admin/add-question', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(questionData) });
                     const result = await response.json();
                     questionFormMessage.textContent = result.message;
                     questionFormMessage.className = response.ok ? 'text-green-400' : 'text-red-400';
@@ -935,7 +957,7 @@ const createCascadingSelectors = (prefix) => {
                     existingQuestionsList.innerHTML = '<p class="text-center text-gray-400">Loading questions...</p>';
                 }
                 try {
-                    const response = await fetch('/api/admin/questions');
+                    const response = await authenticatedFetch('/api/admin/questions');
                     if (!response.ok) throw new Error('Failed to fetch questions');
                     const questions = await response.json();
                     const newHash = JSON.stringify(questions);
@@ -1001,7 +1023,7 @@ const createCascadingSelectors = (prefix) => {
                     const questionId = event.target.dataset.id;
                     if (confirm(`Are you sure you want to delete this question (ID: ${questionId})? This action cannot be undone.`)) {
                         try {
-                            const response = await fetch(`/api/admin/delete-question/${questionId}`, {
+                            const response = await authenticatedFetch(`/api/admin/delete-question/${questionId}`, {
                                 method: 'DELETE'
                             });
                             const result = await response.json();
@@ -1089,7 +1111,7 @@ const createCascadingSelectors = (prefix) => {
                 showModal(editQuestionModal);
 
                 try {
-                    const response = await fetch(`/api/admin/question/${questionId}`);
+                    const response = await authenticatedFetch(`/api/admin/question/${questionId}`);
                     if (!response.ok) {
                         const errorResult = await response.json();
                         throw new Error(errorResult.message || 'Failed to fetch question details with unknown error.');
@@ -1217,7 +1239,7 @@ const createCascadingSelectors = (prefix) => {
                 const questionData = { questionId: parseInt(questionId), topicId: parseInt(topicId), questionText, questionType, answers, steps, difficultyRating: parseInt(editedDifficultyRating) }; /* Used renamed variable */
 
                 try {
-                    const response = await fetch(`/api/admin/edit-question/${questionId}`, {
+                    const response = await authenticatedFetch(`/api/admin/edit-question/${questionId}`, {
                         method: 'PUT',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify(questionData)
@@ -1244,7 +1266,7 @@ const createCascadingSelectors = (prefix) => {
                     existingStoriesList.innerHTML = '<p class="text-center text-gray-400">Loading stories...</p>';
                 }
                 try {
-                    const response = await fetch('/api/admin/stories');
+                    const response = await authenticatedFetch('/api/admin/stories');
                     if (!response.ok) throw new Error('Failed to fetch stories');
                     const stories = await response.json();
                     const newHash = JSON.stringify(stories);
@@ -1310,7 +1332,7 @@ const createCascadingSelectors = (prefix) => {
                     const topicId = deleteBtn.dataset.topicId;
                     if (confirm(`Are you sure you want to delete the story for Topic ID: ${topicId}? This will remove all sections. This action cannot be undone.`)) {
                         try {
-                            const response = await fetch(`/api/admin/delete-story/${topicId}`, {
+                            const response = await authenticatedFetch(`/api/admin/delete-story/${topicId}`, {
                                 method: 'DELETE'
                             });
                             const result = await response.json();
@@ -1700,7 +1722,7 @@ const createCascadingSelectors = (prefix) => {
                 }
 
                 try {
-                    const response = await fetch('/api/admin/save-story', {
+                    const response = await authenticatedFetch('/api/admin/save-story', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ topicId, storySections: storySectionsPayload, defaultTheme: defaultTheme }) // NEW: Include defaultTheme
@@ -1727,7 +1749,7 @@ const createCascadingSelectors = (prefix) => {
                     flaggedItemsList.innerHTML = '<p class="text-center text-gray-400">Loading flagged items...</p>';
                 }
                 try {
-                    const response = await fetch('/api/admin/flagged-items');
+                    const response = await authenticatedFetch('/api/admin/flagged-items');
                     if (!response.ok) throw new Error('Failed to fetch flagged items');
                     const flags = await response.json();
                     const newHash = JSON.stringify(flags);
@@ -1821,7 +1843,7 @@ const createCascadingSelectors = (prefix) => {
                     const flagId = target.dataset.flagId;
                     if (confirm(`Delete flag ${flagId}?`)) {
                         try {
-                            const response = await fetch(`/api/admin/delete-flag/${flagId}`, { method: 'DELETE' });
+                            const response = await authenticatedFetch(`/api/admin/delete-flag/${flagId}`, { method: 'DELETE' });
                             const result = await response.json();
                             adminMessageDiv.textContent = result.message;
                             adminMessageDiv.className = response.ok ? 'text-center text-green-400 font-bold text-lg mb-4 h-6' : 'text-center text-red-400 font-bold text-lg mb-4 h-6';
@@ -1847,7 +1869,7 @@ const createCascadingSelectors = (prefix) => {
                     attemptsTableBody.innerHTML = '<tr><td colspan="9" class="text-center py-4 text-gray-400">Loading attempts...</td></tr>'; // Adjusted colspan
                 }
                 try {
-                    const response = await fetch('/api/admin/question-attempts');
+                    const response = await authenticatedFetch('/api/admin/question-attempts');
                     if (!response.ok) throw new Error('Failed to fetch question attempts');
                     const attempts = await response.json();
                     const newHash = JSON.stringify(attempts);
@@ -1927,7 +1949,7 @@ const createCascadingSelectors = (prefix) => {
                     existingCurriculumsList.innerHTML = '<p class="text-center text-gray-400">Loading curriculums...</p>';
                 }
                 try {
-                    const response = await fetch('/api/admin/curriculums');
+                    const response = await authenticatedFetch('/api/admin/curriculums');
                     if (!response.ok) throw new Error('Failed to fetch curriculums');
                     const curriculums = await response.json();
                     if (!Array.isArray(curriculums)) {
@@ -2037,7 +2059,7 @@ const createCascadingSelectors = (prefix) => {
                     const id = e.target.dataset.id;
                     if (!confirm('Are you sure you want to delete this curriculum?')) return;
                     try {
-                        const resp = await fetch(`/api/admin/delete-curriculum/${id}`, { method: 'DELETE' });
+                        const resp = await authenticatedFetch(`/api/admin/delete-curriculum/${id}`, { method: 'DELETE' });
                         const result = await resp.json();
                         adminMessageDiv.textContent = result.message;
                         if (resp.ok) {
@@ -2085,7 +2107,7 @@ const createCascadingSelectors = (prefix) => {
                     const topicName = btn.dataset.topicName;
                     if (!confirm(`Are you sure you want to delete the topic "${topicName}"?`)) return;
                     try {
-                        const resp = await fetch(`/api/admin/delete-topic/${topicId}`, { method: 'DELETE' });
+                        const resp = await authenticatedFetch(`/api/admin/delete-topic/${topicId}`, { method: 'DELETE' });
                         const result = await resp.json();
                         adminMessageDiv.textContent = result.message;
                         adminMessageDiv.className = resp.ok ? 'text-center text-green-400 font-bold text-lg mb-4 h-6' : 'text-center text-red-400 font-bold text-lg mb-4 h-6';
@@ -2131,7 +2153,7 @@ const createCascadingSelectors = (prefix) => {
                 const formData = new FormData();
                 formData.append('file', seedFileInput.files[0]);
                 try {
-                    const resp = await fetch('/api/admin/seed-database', {
+                    const resp = await authenticatedFetch('/api/admin/seed-database', {
                         method: 'POST',
                         body: formData
                     });
