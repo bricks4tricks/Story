@@ -15,7 +15,9 @@
   async function fetchAndRenderUsers() {
     userTableBody.innerHTML = '<tr><td colspan="8" class="text-center py-4 text-gray-400">Loading...</td></tr>';
     try {
-      const response = await fetch('/api/admin/all-users');
+      const token = localStorage.getItem('token');
+      const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
+      const response = await fetch('/api/admin/all-users', { headers });
       if (!response.ok) throw new Error('Failed to fetch users');
       const users = await response.json();
       const newHash = JSON.stringify(users);
@@ -35,7 +37,9 @@
   }
   async function refreshIfChanged() {
     try {
-      const verRes = await fetch('/api/admin/users-version');
+      const token = localStorage.getItem('token');
+      const headers = token ? { 'Authorization': `Bearer ${token}` } : {};
+      const verRes = await fetch('/api/admin/users-version', { headers });
       if (!verRes.ok) throw new Error("Failed to fetch version");
       const { version } = await verRes.json();
       if (version !== usersVersion) {
