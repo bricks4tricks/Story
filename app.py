@@ -23,7 +23,14 @@ from auth_utils import require_auth, require_user_access
 # Validate environment variables before application setup (skip during testing)
 if not os.environ.get('PYTEST_CURRENT_TEST'):
     validate_environment(fail_fast=True)
+
 app = Flask(__name__)
+
+# Load configuration
+from config import get_config
+config = get_config()
+app.config.from_object(config)
+
 bcrypt.init_app(app)
 
 # Configure Flask-CORS
