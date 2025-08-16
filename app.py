@@ -14,6 +14,7 @@ import os  # Import os module to access environment variables
 import re
 from utils import validate_password
 from env_validator import validate_environment
+from auth_utils import require_auth, require_user_access
 
 # ---------------------------------
 # --- NEW IMPORTS FOR EMAIL ---
@@ -1003,6 +1004,8 @@ def get_user_progress(user_id):
             release_db_connection(conn)
 
 @app.route('/api/progress/update', methods=['POST'])
+@require_auth(['student', 'parent'])
+@require_user_access
 def update_user_progress():
     data = request.get_json(silent=True)
     if data is None:
@@ -2291,6 +2294,8 @@ def get_user_topic_difficulty(user_id, topic_id):
             release_db_connection(conn)
 
 @app.route('/api/user/update-topic-difficulty', methods=['POST', 'OPTIONS'])
+@require_auth(['student', 'parent'])
+@require_user_access
 def update_user_topic_difficulty():
     if request.method == 'OPTIONS': return jsonify(success=True)
     data = request.get_json(silent=True)
@@ -2344,6 +2349,8 @@ def update_user_topic_difficulty():
 # --- FLAGGING ENDPOINTS ---
 
 @app.route('/api/flag-item', methods=['POST', 'OPTIONS'])
+@require_auth(['student', 'parent'])
+@require_user_access
 def flag_item():
     if request.method == 'OPTIONS': return jsonify(success=True)
     data = request.get_json(silent=True)
@@ -2517,6 +2524,8 @@ def delete_flag(flag_id):
 
 # --- QUESTION ATTEMPT LOGGING ENDPOINT ---
 @app.route('/api/record-question-attempt', methods=['POST', 'OPTIONS'])
+@require_auth(['student', 'parent'])
+@require_user_access
 def record_question_attempt():
     if request.method == 'OPTIONS': return jsonify(success=True)
     data = request.get_json(silent=True)
