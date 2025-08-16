@@ -6,6 +6,7 @@ import pytest
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from app import app as flask_app
+from test_auth_utils import mock_admin_auth, get_admin_headers
 
 class DummyCursor:
     def __init__(self, rows):
@@ -43,8 +44,8 @@ def test_curriculum_hierarchy(client):
         {'curriculum': 'Science', 'unitname': 'Biology', 'topicname': 'Cells', 'topicid': 3},
     ]
     conn = DummyConnection(rows)
-    with patch('app.get_db_connection', return_value=conn):
-        resp = client.get('/api/admin/curriculum-hierarchy')
+    with patch('app.get_db_connection', return_value=conn), mock_admin_auth():
+        resp = client.get('/api/admin/curriculum-hierarchy', headers=get_admin_headers())
     assert resp.status_code == 200
     data = resp.get_json()
     assert 'Math' in data

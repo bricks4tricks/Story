@@ -6,6 +6,7 @@ from unittest.mock import patch
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from app import app as flask_app
+from test_auth_utils import mock_admin_auth, get_admin_headers
 
 class DummyCursor:
     def __init__(self):
@@ -37,8 +38,8 @@ def client():
 
 def test_reopen_flag(client):
     conn = DummyConnection()
-    with patch('app.get_db_connection', return_value=conn):
-        resp = client.put('/api/admin/update-flag-status/1', json={'status': 'Pending', 'adminId': 2})
+    with patch('app.get_db_connection', return_value=conn), mock_admin_auth():
+        resp = client.put('/api/admin/update-flag-status/1', json={'status': 'Pending', 'adminId': 2}, headers=get_admin_headers())
     assert resp.status_code == 200
     query, params = conn.cursor_obj.executed[0]
     assert 'ResolvedOn = NULL' in query
@@ -47,8 +48,8 @@ def test_reopen_flag(client):
 
 def test_update_flag_status_admin_id_zero(client):
     conn = DummyConnection()
-    with patch('app.get_db_connection', return_value=conn):
-        resp = client.put('/api/admin/update-flag-status/1', json={'status': 'Reviewed', 'adminId': 0})
+    with patch('app.get_db_connection', return_value=conn), mock_admin_auth():
+        resp = client.put('/api/admin/update-flag-status/1', json={'status': 'Reviewed', 'adminId': 0}, headers=get_admin_headers())
     assert resp.status_code == 200
     query, params = conn.cursor_obj.executed[0]
     assert 'ResolvedOn = NOW()' in query

@@ -6,6 +6,7 @@ from unittest.mock import patch
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from app import app as flask_app
+from test_auth_utils import mock_admin_auth, get_admin_headers
 
 class DummyCursor:
     def __init__(self, question_row, topic_row):

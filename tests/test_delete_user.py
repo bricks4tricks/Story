@@ -6,6 +6,7 @@ from unittest.mock import patch
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from app import app as flask_app
+from test_auth_utils import mock_admin_auth, get_admin_headers
 
 class DummyCursor:
     def __init__(self, user_exists=True, user_type='Student', has_children=False, delete_rowcount=1):
@@ -51,8 +52,8 @@ def client():
 
 def test_delete_user_success_removes_subscription(client):
     conn = DummyConnection()
-    with patch('app.get_db_connection', return_value=conn):
-        resp = client.delete('/api/admin/delete-user/1')
+    with patch('app.get_db_connection', return_value=conn), mock_admin_auth():
+        resp = client.delete('/api/admin/delete-user/1', headers=get_admin_headers())
     assert resp.status_code == 200
     q = " ".join(conn.cursor_obj.queries)
     assert "DELETE FROM tbl_subscription" in q
@@ -61,9 +62,9 @@ def test_delete_user_success_removes_subscription(client):
 
 def test_delete_user_not_found(client):
     conn = DummyConnection(user_exists=True, delete_rowcount=0)
-    with patch('app.get_db_connection', return_value=conn):
+    with patch('app.get_db_connection', return_value=conn), mock_admin_auth():
         with patch('app.update_users_version') as mock_update:
-            resp = client.delete('/api/admin/delete-user/99')
+            resp = client.delete('/api/admin/delete-user/99', headers=get_admin_headers())
     assert resp.status_code == 404
     assert conn.rollback_called is True
     assert conn.commit_called is False

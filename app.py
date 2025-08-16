@@ -987,6 +987,34 @@ def story_exists(topic_id):
             release_db_connection(conn)
 
 
+@app.route('/api/quiz-exists/<int:topic_id>', methods=['GET'])
+def quiz_exists(topic_id):
+    """Check if quiz content exists for a given topic."""
+    conn = None
+    cursor = None
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        cursor.execute("SELECT COUNT(*) FROM tbl_question WHERE topicid = %s", (topic_id,))
+        count = cursor.fetchone()[0]
+
+        if count > 0:
+            return jsonify({"status": "success", "quizExists": True}), 200
+        else:
+            return jsonify({"status": "success", "quizExists": False}), 200
+
+    except Exception as e:
+        print(f"Quiz Exists API Error: {e}")
+        traceback.print_exc()
+        return jsonify({"status": "error", "message": "Internal error checking quiz availability."}), 500
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            release_db_connection(conn)
+
+
 @app.route('/api/progress/<int:user_id>', methods=['GET'])
 def get_user_progress(user_id):
     conn = None

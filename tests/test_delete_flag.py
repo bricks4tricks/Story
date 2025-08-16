@@ -6,6 +6,7 @@ from unittest.mock import patch
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 from app import app as flask_app
+from test_auth_utils import mock_admin_auth, get_admin_headers
 
 class DummyCursor:
     def __init__(self, rowcount=1):
@@ -37,16 +38,16 @@ def client():
 
 
 def test_delete_flag_success(client):
-    with patch('app.get_db_connection', return_value=DummyConnection()):
-        resp = client.delete('/api/admin/delete-flag/1')
+    with patch('app.get_db_connection', return_value=DummyConnection()), mock_admin_auth():
+        resp = client.delete('/api/admin/delete-flag/1', headers=get_admin_headers())
     assert resp.status_code == 200
     data = resp.get_json()
     assert data['status'] == 'success'
 
 
 def test_delete_flag_not_found(client):
-    with patch('app.get_db_connection', return_value=DummyConnection(rowcount=0)):
-        resp = client.delete('/api/admin/delete-flag/99')
+    with patch('app.get_db_connection', return_value=DummyConnection(rowcount=0)), mock_admin_auth():
+        resp = client.delete('/api/admin/delete-flag/99', headers=get_admin_headers())
     assert resp.status_code == 404
     data = resp.get_json()
     assert data['status'] == 'error'

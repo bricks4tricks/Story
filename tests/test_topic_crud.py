@@ -4,6 +4,7 @@ import pytest
 
 
 from app import app as flask_app
+from test_auth_utils import mock_admin_auth, get_admin_headers
 
 
 class DummyCursor:
@@ -90,24 +91,24 @@ def client():
 
 def test_update_topic_success(client):
     conn = DummyConnection(rowcount=1)
-    with patch('app.get_db_connection', return_value=conn):
-        resp = client.put('/api/admin/update-topic/1', json={'name': 'New Name'})
+    with patch('app.get_db_connection', return_value=conn), mock_admin_auth():
+        resp = client.put('/api/admin/update-topic/1', json={'name': 'New Name'}, headers=get_admin_headers())
     assert resp.status_code == 200
     assert resp.get_json()['status'] == 'success'
 
 
 def test_update_topic_not_found(client):
     conn = DummyConnection(rowcount=0)
-    with patch('app.get_db_connection', return_value=conn):
-        resp = client.put('/api/admin/update-topic/1', json={'name': 'New Name'})
+    with patch('app.get_db_connection', return_value=conn), mock_admin_auth():
+        resp = client.put('/api/admin/update-topic/1', json={'name': 'New Name'}, headers=get_admin_headers())
     assert resp.status_code == 404
     assert resp.get_json()['status'] == 'error'
 
 
 def test_delete_topic_success(client):
     conn = TrackConnection()
-    with patch('app.get_db_connection', return_value=conn):
-        resp = client.delete('/api/admin/delete-topic/1')
+    with patch('app.get_db_connection', return_value=conn), mock_admin_auth():
+        resp = client.delete('/api/admin/delete-topic/1', headers=get_admin_headers())
     assert resp.status_code == 200
     queries = conn.cursor_obj.executed
     assert any("DELETE FROM tbl_topic" in q for q in queries)
@@ -115,8 +116,8 @@ def test_delete_topic_success(client):
 
 def test_delete_topic_not_found(client):
     conn = TrackConnection(final_rowcount=0)
-    with patch('app.get_db_connection', return_value=conn):
-        resp = client.delete('/api/admin/delete-topic/99')
+    with patch('app.get_db_connection', return_value=conn), mock_admin_auth():
+        resp = client.delete('/api/admin/delete-topic/99', headers=get_admin_headers())
     assert resp.status_code == 404
     assert resp.get_json()['status'] == 'error'
 
