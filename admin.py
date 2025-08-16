@@ -60,13 +60,22 @@ def get_all_users():
 @admin_bp.route('/seed-database', methods=['POST'])
 @require_auth(['admin'])
 def seed_database_upload():
+    import tempfile
     tmp_path = None
     try:
         file = request.files.get('file')
         if not file:
             return jsonify({"message": "No file uploaded"}), 400
-        tmp_path = os.path.join('/tmp', secure_filename(file.filename))
-        file.save(tmp_path)
+        
+        # Use secure temporary directory
+        with tempfile.NamedTemporaryFile(delete=False, suffix='.csv') as tmp_file:
+            tmp_path = tmp_file.name
+            # Validate file type
+            if not file.filename.lower().endswith('.csv'):
+                return jsonify({"message": "Only CSV files are allowed"}), 400
+            
+            file.save(tmp_path)
+        
         seed_data(csv_file_name=tmp_path)
         return jsonify({"message": "Database seeded successfully"})
     except Exception as e:

@@ -113,9 +113,9 @@ class InputSanitizer:
         if not isinstance(filename, str):
             return "unknown"
         
-        # Remove dangerous characters
-        filename = re.sub(r'[^\w\s-.]', '', filename)
-        filename = re.sub(r'[-\s]+', '-', filename)
+        # Remove dangerous characters (fix regex pattern)
+        filename = re.sub(r'[^\w\s\-.]', '', filename)
+        filename = re.sub(r'[\-\s]+', '-', filename)
         
         # Prevent directory traversal
         filename = filename.replace('..', '')

@@ -21,8 +21,13 @@ if __name__ == "__main__":
     debug = os.environ.get('FLASK_ENV') == 'development'
     port = int(os.environ.get('PORT', 5000))
     
+    # Use secure host binding - only bind to all interfaces in production with proper setup
+    host = '127.0.0.1'  # Default to localhost for security
+    if os.environ.get('FLASK_ENV') == 'production' and os.environ.get('ALLOW_EXTERNAL_ACCESS') == 'true':
+        host = '0.0.0.0'  # Only bind to all interfaces if explicitly allowed in production
+    
     app.run(
-        host='0.0.0.0',
+        host=host,
         port=port,
         debug=debug
     )

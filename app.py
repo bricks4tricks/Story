@@ -2876,4 +2876,7 @@ def serve_static(filename):
 #  4. RUN THE SERVER
 # =================================================================
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+    # Use environment variable for debug mode, default to False for security
+    debug_mode = os.environ.get('FLASK_DEBUG', 'False').lower() == 'true'
+    port = int(os.environ.get('PORT', 5000))
+    app.run(debug=debug_mode, port=port, host='127.0.0.1')
