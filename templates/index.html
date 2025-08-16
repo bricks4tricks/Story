@@ -9,9 +9,17 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Pacifico&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/animations.css">
     <style>
         html {
             scroll-behavior: smooth;
+        }
+        [data-src] {
+            filter: blur(5px);
+            transition: filter 0.5s;
+        }
+        [data-src].fade-in {
+            filter: blur(0);
         }
         body {
             font-family: 'Nunito', sans-serif;
@@ -55,12 +63,15 @@
     </style>
 </head>
 <body class="bg-slate-900 text-gray-200">
+    <script src="/static/js/mobileNav.js" defer></script>
+    <script src="/static/js/lazyLoad.js" defer></script>
+    <script src="/static/js/accessibility.js" defer></script>
 
     <!-- Header -->
     <header class="bg-slate-900/80 backdrop-blur-sm sticky top-0 z-50">
         <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
             <a href="/" class="text-3xl font-pacifico gradient-text pb-1 leading-normal">Logic and Stories</a>
-            <button id="mobile-menu-toggle" class="md:hidden text-gray-200 focus:outline-none">
+            <button id="mobile-menu-toggle" class="md:hidden text-gray-200 focus:outline-none" aria-label="Toggle mobile menu" aria-expanded="false">
                 <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg>
             </button>
             <div class="hidden md:flex items-center space-x-8">
@@ -69,8 +80,8 @@
                 <a href="#faq" class="hover:text-yellow-400 transition-colors">FAQ</a>
             </div>
             <div id="auth-links" class="flex items-center space-x-4">
-                <a href="/signin.html" class="bg-yellow-400 text-slate-900 font-bold py-2 px-4 rounded-full hover:bg-yellow-300 transition-all transform hover:scale-105 glow-button">Sign In</a>
-                <a href="/signup.html" class="bg-yellow-400 text-slate-900 font-bold py-2 px-5 rounded-full hover:bg-yellow-300 transition-all transform hover:scale-105 glow-button">
+                <a href="/signin.html" class="bg-yellow-400 text-slate-900 font-bold py-2 px-4 rounded-full hover:bg-yellow-300 transition-all transform hover:scale-105 glow-button button-press">Sign In</a>
+                <a href="/signup.html" class="bg-yellow-400 text-slate-900 font-bold py-2 px-5 rounded-full hover:bg-yellow-300 transition-all transform hover:scale-105 glow-button pulse-glow button-press">
                     Start Free Trial
                 </a>
             </div>
@@ -87,9 +98,9 @@
         </div>
     </header>
 
-    <main>
+    <main id="main-content" role="main">
         <!-- Hero Section -->
-        <section class="py-20 md:py-32">
+        <section class="py-20 md:py-32 animate-on-scroll" role="region" aria-label="Hero section">
             <div class="container mx-auto px-6 text-center">
                 <h1 class="text-4xl md:text-6xl font-extrabold text-white leading-tight mb-4">
                     Unlock the Magic of Math with <br><span class="gradient-text">Stories & Logic Puzzles</span>.
@@ -98,10 +109,10 @@
                     Say goodbye to boring drills. Logic and Stories transforms complex math concepts into captivating stories that ignite curiosity and build a genuine love for learning.
                 </p>
                 <div class="flex justify-center items-center space-x-4">
-                    <a href="#pricing" class="bg-yellow-400 text-slate-900 font-bold py-3 px-8 rounded-full hover:bg-yellow-300 transition-all transform hover:scale-105 glow-button">
+                    <a href="#pricing" class="bg-yellow-400 text-slate-900 font-bold py-3 px-8 rounded-full hover:bg-yellow-300 transition-all transform hover:scale-105 glow-button button-press">
                         Explore Plans
                     </a>
-                    <a href="#stories" class="bg-gray-700 text-white font-bold py-3 px-8 rounded-full hover:bg-gray-600 transition-colors">
+                    <a href="#stories" class="bg-gray-700 text-white font-bold py-3 px-8 rounded-full hover:bg-gray-600 transition-colors button-press">
                         See Sample Stories
                     </a>
                 </div>
@@ -109,28 +120,28 @@
         </section>
 
         <!-- "How It Works" Section -->
-        <section id="how-it-works" class="py-20 bg-slate-800/50">
+        <section id="how-it-works" class="py-20 bg-slate-800/50" role="region" aria-label="How it works">
             <div class="container mx-auto px-6">
                 <div class="text-center mb-12">
                     <h2 class="text-3xl md:text-4xl font-bold text-white">Learning Math Through Stories is an Adventure</h2>
                     <p class="text-gray-400 mt-2">Follow these simple steps to begin your journey.</p>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
-                    <div class="bg-slate-800 p-8 rounded-2xl border border-slate-700">
+                    <div class="bg-slate-800 p-8 rounded-2xl border border-slate-700 hover-lift animate-on-scroll">
                         <div class="flex justify-center items-center mb-4">
                              <svg class="w-16 h-16 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
                         </div>
                         <h3 class="text-xl font-bold text-white mb-2">Choose Your Plan</h3>
                         <p class="text-gray-400">Select a subscription that fits your family's needs. Get started with a 7-day free trial.</p>
                     </div>
-                    <div class="bg-slate-800 p-8 rounded-2xl border border-slate-700">
+                    <div class="bg-slate-800 p-8 rounded-2xl border border-slate-700 hover-lift animate-on-scroll">
                         <div class="flex justify-center items-center mb-4">
                             <svg class="w-16 h-16 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 10l-2 1m0 0l-2-1m2 1v2.5M20 7H4a2 2 0 00-2 2v6a2 2 0 002 2h16a2 2 0 002-2V9a2 2 0 00-2-2z"></path></svg>
                         </div>
                         <h3 class="text-xl font-bold text-white mb-2">Pick a Story & Theme</h3>
                         <p class="text-gray-400">Dive into our library and choose a story. Then, select your favorite theme: Detective, Fantasy, or Indian Epics!</p>
                     </div>
-                    <div class="bg-slate-800 p-8 rounded-2xl border border-slate-700">
+                    <div class="bg-slate-800 p-8 rounded-2xl border border-slate-700 hover-lift animate-on-scroll">
                         <div class="flex justify-center items-center mb-4">
                             <svg class="w-16 h-16 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 3.055A9.001 9.001 0 1020.945 13H11V3.055z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"></path></svg>
                         </div>
@@ -142,7 +153,7 @@
         </section>
 
         <!-- Story Showcase Section -->
-        <section id="stories" class="py-20">
+        <section id="stories" class="py-20" role="region" aria-label="Featured stories">
             <div class="container mx-auto px-6">
                 <div class="text-center mb-12">
                     <h2 class="text-3xl md:text-4xl font-bold text-white">Featured Adventures</h2>
