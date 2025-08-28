@@ -5,11 +5,24 @@ Usage: python admin_password_reset.py [username] [new_password]
 """
 
 import sys
+import secrets
+import string
 from extensions import bcrypt
 from db_utils import get_db_connection, release_db_connection
 
-def reset_admin_password(username="admin", new_password="admin123"):
+def generate_secure_password(length=16):
+    """Generate a secure random password."""
+    alphabet = string.ascii_letters + string.digits + "!@#$%^&*"
+    return ''.join(secrets.choice(alphabet) for _ in range(length))
+
+def reset_admin_password(username="admin", new_password=None):
     """Reset admin user password."""
+    # Generate secure password if none provided
+    if new_password is None:
+        new_password = generate_secure_password()
+        print(f"🔐 Generated secure password: {new_password}")
+        print("⚠️  IMPORTANT: Save this password securely - it won't be shown again!")
+    
     try:
         conn = get_db_connection()
         cursor = conn.cursor()

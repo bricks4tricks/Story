@@ -108,7 +108,9 @@ def flag_page_error():
     data = request.get_json()
     page_url = data.get('page_url')
     error_description = data.get('error_description')
-    user_agent = request.headers.get('User-Agent', '')
+    # Sanitize User-Agent header - limit length and remove dangerous characters
+    user_agent = request.headers.get('User-Agent', '')[:500]  # Limit to 500 chars
+    user_agent = ''.join(c for c in user_agent if c.isprintable())  # Remove non-printable chars
     user_id = data.get('user_id')  # Optional, for logged-in users
     
     if not all([page_url, error_description]):

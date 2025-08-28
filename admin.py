@@ -7,6 +7,8 @@ import version_cache
 from db_utils import db_cursor, get_db_connection, release_db_connection
 from seed_database import seed_data
 from auth_utils import require_auth
+from file_security import require_secure_file_upload, save_uploaded_file_securely
+from security_utils import require_csrf, rate_limit
 import psycopg2.extras
 
 
@@ -60,23 +62,36 @@ def get_all_users():
 
 @admin_bp.route('/seed-database', methods=['POST'])
 @require_auth(['admin'])
+@require_csrf
+@rate_limit(max_requests=3, window=3600)  # 3 uploads per hour
+@require_secure_file_upload('csv', 'file')
 def seed_database_upload():
-    tmp_path = None
+    secure_path = None
     try:
-        file = request.files.get('file')
-        if not file:
-            return jsonify({"message": "No file uploaded"}), 400
-        tmp_path = os.path.join('/tmp', secure_filename(file.filename))
-        file.save(tmp_path)
-        seed_data(csv_file_name=tmp_path)
-        return jsonify({"message": "Database seeded successfully"})
+        # Get validated file info from security decorator
+        file_info = request.secure_file_info
+        
+        # Save file securely 
+        secure_path = save_uploaded_file_securely(file_info)
+        
+        # Process the secure file
+        seed_data(csv_file_name=secure_path)
+        
+        return jsonify({
+            "message": "Database seeded successfully",
+            "file_info": {
+                "filename": file_info['secure_filename'],
+                "size": file_info['file_size'],
+                "hash": file_info['file_hash'][:16]  # Partial hash for verification
+            }
+        })
     except Exception as e:
         print(f"Seed Database API Error: {e}")
         traceback.print_exc()
         return jsonify({"message": "Internal error"}), 500
     finally:
-        if tmp_path and os.path.exists(tmp_path):
-            os.remove(tmp_path)
+        if secure_path and os.path.exists(secure_path):
+            os.remove(secure_path)
 
 
 # =================================================================
@@ -85,6 +100,7 @@ def seed_database_upload():
 
 @admin_bp.route('/edit-user/<int:user_id>', methods=['PUT', 'OPTIONS'])
 @require_auth(['admin'])
+@require_csrf
 def edit_user(user_id):
     """Edit user account details."""
     if request.method == 'OPTIONS':
@@ -116,6 +132,8 @@ def get_topics_list():
 
 @admin_bp.route('/add-question', methods=['POST', 'OPTIONS'])
 @require_auth(['admin'])
+@require_csrf
+@rate_limit(max_requests=20, window=3600)
 def add_question():
     """Add a new question."""
     if request.method == 'OPTIONS':
@@ -150,6 +168,8 @@ def delete_story(topic_id):
 
 @admin_bp.route('/save-story', methods=['POST', 'OPTIONS'])
 @require_auth(['admin'])
+@require_csrf
+@rate_limit(max_requests=10, window=3600)
 def save_story():
     """Save a story."""
     if request.method == 'OPTIONS':
@@ -160,6 +180,8 @@ def save_story():
 
 @admin_bp.route('/add-video', methods=['POST', 'OPTIONS'])
 @require_auth(['admin'])
+@require_csrf
+@rate_limit(max_requests=10, window=3600)
 def add_video():
     """Add a video."""
     if request.method == 'OPTIONS':

@@ -239,7 +239,24 @@ def search_curriculums():
         return jsonify(success=True)
     
     try:
-        search_term = request.args.get('q', '').strip()
+        # Validate and sanitize search parameter
+        search_term_raw = request.args.get('q', '').strip()
+        search_term = ''
+        if search_term_raw:
+            # Limit length to prevent DOS attacks
+            if len(search_term_raw) > 100:
+                return jsonify(success=False, message="Search term too long"), 400
+            
+            # Remove dangerous characters but allow basic search terms
+            search_term = ''.join(c for c in search_term_raw if c.isalnum() or c.isspace() or c in '-_.@')
+            search_term = search_term.strip()
+            
+            # Prevent SQL injection patterns in search
+            dangerous_patterns = ['--', '/*', '*/', ';', 'union', 'select', 'drop', 'insert', 'update', 'delete']
+            search_lower = search_term.lower()
+            for pattern in dangerous_patterns:
+                if pattern in search_lower:
+                    return jsonify(success=False, message="Invalid search term"), 400
         
         conn = None
         cursor = None

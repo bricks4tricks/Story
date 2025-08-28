@@ -233,7 +233,12 @@
                     renderGradeTabs();
                 } catch (error) {
                     console.error('Error fetching curriculum:', error);
-                    gradeTabsContainer.innerHTML = `<p class="text-red-400">Error loading curriculum: ${error.message}</p>`;
+                    // Secure XSS-safe error display
+                    gradeTabsContainer.innerHTML = '';
+                    const errorP = document.createElement('p');
+                    errorP.className = 'text-red-400';
+                    errorP.textContent = 'Error loading curriculum: ' + (error.message || 'Unknown error');
+                    gradeTabsContainer.appendChild(errorP);
                 }
             };
 
@@ -332,10 +337,18 @@
                             curriculumTabsContainer.appendChild(button);
                         });
                     } else {
-                        curriculumTabsContainer.innerHTML = '<p class="text-gray-400">No curriculums with available content found for this grade.</p>';
+                        curriculumTabsContainer.innerHTML = '';
+                        const noContentP = document.createElement('p');
+                        noContentP.className = 'text-gray-400';
+                        noContentP.textContent = 'No curriculums with available content found for this grade.';
+                        curriculumTabsContainer.appendChild(noContentP);
                     }
                 } else {
-                    curriculumTabsContainer.innerHTML = '<p class="text-gray-400">Select a grade first.</p>';
+                    curriculumTabsContainer.innerHTML = '';
+                    const selectGradeP = document.createElement('p');
+                    selectGradeP.className = 'text-gray-400';
+                    selectGradeP.textContent = 'Select a grade first.';
+                    curriculumTabsContainer.appendChild(selectGradeP);
                 }
             };
 
@@ -381,10 +394,18 @@
                             unitTabsContainer.appendChild(button);
                         });
                     } else {
-                        unitTabsContainer.innerHTML = '<p class="text-gray-400">No units with available content found for this curriculum.</p>';
+                        unitTabsContainer.innerHTML = '';
+                        const noUnitsP = document.createElement('p');
+                        noUnitsP.className = 'text-gray-400';
+                        noUnitsP.textContent = 'No units with available content found for this curriculum.';
+                        unitTabsContainer.appendChild(noUnitsP);
                     }
                 } else {
-                    unitTabsContainer.innerHTML = '<p class="text-gray-400">Select a curriculum first.</p>';
+                    unitTabsContainer.innerHTML = '';
+                    const selectCurriculumP = document.createElement('p');
+                    selectCurriculumP.className = 'text-gray-400';
+                    selectCurriculumP.textContent = 'Select a curriculum first.';
+                    unitTabsContainer.appendChild(selectCurriculumP);
                 }
             };
 
@@ -474,15 +495,24 @@
 
             const renderTopicsList = async () => {
                 topicsListContainer.innerHTML = '';
+                let hasTopicsAdded = false;
                 if (selectedGrade && selectedCurriculum && selectedUnit && allCurriculumData[selectedGrade]?.curriculums[selectedCurriculum]?.units[selectedUnit]) {
                     const topics = allCurriculumData[selectedGrade].curriculums[selectedCurriculum].units[selectedUnit];
                     if (topics.length === 0) {
-                        topicsListContainer.innerHTML = '<p class="text-gray-400">No topics found for this unit.</p>';
+                        topicsListContainer.innerHTML = '';
+                        const noTopicsP = document.createElement('p');
+                        noTopicsP.className = 'text-gray-400';
+                        noTopicsP.textContent = 'No topics found for this unit.';
+                        topicsListContainer.appendChild(noTopicsP);
                         return;
                     }
                     
                     // Show loading state
-                    topicsListContainer.innerHTML = '<p class="text-gray-400">Loading topics...</p>';
+                    topicsListContainer.innerHTML = '';
+                    const loadingP = document.createElement('p');
+                    loadingP.className = 'text-gray-400';
+                    loadingP.textContent = 'Loading topics...';
+                    topicsListContainer.appendChild(loadingP);
                     
                     for (const topic of topics) {
                         const progressStatus = userProgress[topic.id] || 'notStarted'; // Default status
@@ -515,61 +545,75 @@
                         const topicDiv = document.createElement('div');
                         topicDiv.className = 'bg-slate-700 rounded-lg p-4 mb-3 flex justify-between items-center border border-slate-600';
                         
-                        // Build buttons HTML based on availability
-                        let buttonsHTML = '';
+                        // Build buttons securely using DOM creation - XSS SAFE
+                        const buttonsContainer = document.createElement('div');
+                        buttonsContainer.className = 'flex space-x-2';
+                        
                         if (storyExists) {
-                            buttonsHTML += `
-                                <button
-                                    class="start-story-btn ${buttonClasses} text-white font-bold py-2 px-4 rounded-full transition-colors"
-                                    data-topic-id="${topic.id}"
-                                >
-                                    Story
-                                </button>
-                            `;
+                            const storyBtn = document.createElement('button');
+                            storyBtn.className = `start-story-btn ${buttonClasses} text-white font-bold py-2 px-4 rounded-full transition-colors`;
+                            storyBtn.setAttribute('data-topic-id', topic.id || '');
+                            storyBtn.textContent = 'Story';
+                            buttonsContainer.appendChild(storyBtn);
                         }
+                        
                         if (quizExists) {
-                            buttonsHTML += `
-                                <button
-                                    class="start-quiz-btn bg-purple-600 hover:bg-purple-500 text-white font-bold py-2 px-4 rounded-full transition-colors"
-                                    data-topic-id="${topic.id}"
-                                >
-                                    Quiz
-                                </button>
-                            `;
+                            const quizBtn = document.createElement('button');
+                            quizBtn.className = 'start-quiz-btn bg-purple-600 hover:bg-purple-500 text-white font-bold py-2 px-4 rounded-full transition-colors';
+                            quizBtn.setAttribute('data-topic-id', topic.id || '');
+                            quizBtn.textContent = 'Quiz';
+                            buttonsContainer.appendChild(quizBtn);
                         }
+                        
                         if (videoExists) {
-                            buttonsHTML += `
-                                <button
-                                    class="watch-video-btn bg-red-600 hover:bg-red-500 text-white font-bold py-2 px-4 rounded-full transition-colors"
-                                    data-topic-id="${topic.id}"
-                                >
-                                    Video
-                                </button>
-                            `;
+                            const videoBtn = document.createElement('button');
+                            videoBtn.className = 'watch-video-btn bg-red-600 hover:bg-red-500 text-white font-bold py-2 px-4 rounded-full transition-colors';
+                            videoBtn.setAttribute('data-topic-id', topic.id || '');
+                            videoBtn.textContent = 'Video';
+                            buttonsContainer.appendChild(videoBtn);
                         }
                         
-                        topicDiv.innerHTML = `
-                            <div>
-                                <h3 class="text-xl font-bold text-white mb-1">${topic.name}</h3>
-                                <p class="text-sm ${statusColor}">Status: ${statusText}</p>
-                            </div>
-                            <div class="flex space-x-2">
-                                ${buttonsHTML}
-                            </div>
-                        `;
+                        // Create topic info section - XSS SAFE
+                        const topicInfo = document.createElement('div');
                         
-                        if (topicsListContainer.innerHTML === '<p class="text-gray-400">Loading topics...</p>') {
+                        const topicTitle = document.createElement('h3');
+                        topicTitle.className = 'text-xl font-bold text-white mb-1';
+                        topicTitle.textContent = topic.name || 'Unknown Topic';
+                        
+                        const topicStatus = document.createElement('p');
+                        topicStatus.className = `text-sm ${statusColor}`;
+                        topicStatus.textContent = `Status: ${statusText}`;
+                        
+                        topicInfo.appendChild(topicTitle);
+                        topicInfo.appendChild(topicStatus);
+                        
+                        // Assemble the complete topic div safely
+                        topicDiv.appendChild(topicInfo);
+                        topicDiv.appendChild(buttonsContainer);
+                        
+                        // Clear loading state if it exists
+                        if (topicsListContainer.children.length === 1 && 
+                            topicsListContainer.firstChild?.textContent === 'Loading topics...') {
                             topicsListContainer.innerHTML = '';
                         }
                         topicsListContainer.appendChild(topicDiv);
+                        hasTopicsAdded = true;
                     }
                     
                     // If no topics were added, show appropriate message
-                    if (topicsListContainer.innerHTML === '<p class="text-gray-400">Loading topics...</p>' || topicsListContainer.innerHTML === '') {
-                        topicsListContainer.innerHTML = '<p class="text-gray-400">No topics with available content found for this unit.</p>';
+                    if (!hasTopicsAdded) {
+                        topicsListContainer.innerHTML = '';
+                        const noContentP = document.createElement('p');
+                        noContentP.className = 'text-gray-400';
+                        noContentP.textContent = 'No topics with available content found for this unit.';
+                        topicsListContainer.appendChild(noContentP);
                     }
                 } else {
-                    topicsListContainer.innerHTML = '<p class="text-gray-400">Select a unit to see topics.</p>';
+                    topicsListContainer.innerHTML = '';
+                    const selectUnitP = document.createElement('p');
+                    selectUnitP.className = 'text-gray-400';
+                    selectUnitP.textContent = 'Select a unit to see topics.';
+                    topicsListContainer.appendChild(selectUnitP);
                 }
             };
 

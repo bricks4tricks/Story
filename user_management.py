@@ -8,6 +8,7 @@ import traceback
 from auth_utils import require_auth, require_user_access
 from db_utils import get_db_connection, release_db_connection
 from version_cache import update_users_version
+from security_utils import require_csrf
 
 user_mgmt_bp = Blueprint('user_mgmt', __name__, url_prefix='/api')
 
@@ -83,6 +84,7 @@ def get_progress(user_id):
 
 @user_mgmt_bp.route('/progress/update', methods=['POST'])
 @require_auth(['student', 'parent'])
+@require_csrf
 def update_progress():
     """Update user progress for stories or videos."""
     data = request.get_json()

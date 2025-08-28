@@ -38,8 +38,8 @@ def test_password_security():
     """Test password security implementation."""
     from extensions import bcrypt
     
-    # Test password hashing
-    password = "SecurePassword123!"
+    # Test password hashing - TEST VALUE ONLY
+    password = "TestPassword123!"  # Test credential - not used in production
     hashed = bcrypt.generate_password_hash(password).decode('utf-8')
     
     # Hash should be different from original

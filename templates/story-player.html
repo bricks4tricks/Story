@@ -130,7 +130,17 @@
             const topicId = urlParams.get('topicId'); // This is the ID for the story itself
 
             if (!topicId) {
-                document.getElementById('loader').innerHTML = `<h2 class="text-2xl font-bold text-red-500">Error: No Topic ID provided.</h2><a href="/dashboard.html" class="text-yellow-400 hover:underline">Return to Dashboard</a>`;
+                // Secure XSS-safe error display
+                const loader = document.getElementById('loader');
+                const errorHeader = document.createElement('h2');
+                errorHeader.className = 'text-2xl font-bold text-red-500';
+                errorHeader.textContent = 'Error: No Topic ID provided.';
+                const returnLink = document.createElement('a');
+                returnLink.href = '/dashboard.html';
+                returnLink.className = 'text-yellow-400 hover:underline';
+                returnLink.textContent = 'Return to Dashboard';
+                loader.appendChild(errorHeader);
+                loader.appendChild(returnLink);
                 return;
             }
 
@@ -178,7 +188,7 @@
                 }
             }
 
-            // Function to render interactive elements
+            // Function to render interactive elements - XSS-safe version
             function renderInteractiveElement(elementBody, elementType, config) {
                 elementBody.innerHTML = ''; // Clear previous content
 
@@ -189,35 +199,75 @@
                 switch (elementType) {
                     case 'FractionBuilder':
                         elementBody.className += ' fraction-builder-interactive'; // Apply specific styles
-                        elementBody.innerHTML = `
-                            <p class="text-xl font-semibold mb-2">Build a Fraction:</p>
-                            <div class="fraction-display">${config.whole !== 0 ? config.whole + ' ' : ''}${config.numerator}/${config.denominator}</div>
-                            <p class="text-sm text-gray-400 mt-2">Interact with this fraction builder! (Frontend interaction not yet implemented for demo).</p>
-                        `;
+                        
+                        // Secure DOM creation
+                        const fractionTitle = document.createElement('p');
+                        fractionTitle.className = 'text-xl font-semibold mb-2';
+                        fractionTitle.textContent = 'Build a Fraction:';
+                        
+                        const fractionDisplay = document.createElement('div');
+                        fractionDisplay.className = 'fraction-display';
+                        const wholeText = (config.whole !== 0 ? config.whole + ' ' : '');
+                        fractionDisplay.textContent = wholeText + config.numerator + '/' + config.denominator;
+                        
+                        const fractionNote = document.createElement('p');
+                        fractionNote.className = 'text-sm text-gray-400 mt-2';
+                        fractionNote.textContent = 'Interact with this fraction builder! (Frontend interaction not yet implemented for demo).';
+                        
+                        elementBody.appendChild(fractionTitle);
+                        elementBody.appendChild(fractionDisplay);
+                        elementBody.appendChild(fractionNote);
                         break;
+                        
                     case 'EquationBalancer':
                         elementBody.className += ' equation-balancer-interactive'; // Apply specific styles
-                        elementBody.innerHTML = `
-                            <p class="text-xl font-semibold mb-2">Balance the Equation:</p>
-                            <div class="equation-display">${config.equation}</div>
-                            <p class="text-sm text-gray-400 mt-2">Use the balance scale to solve for X! (Frontend interaction not yet implemented for demo).</p>
-                        `;
+                        
+                        const eqTitle = document.createElement('p');
+                        eqTitle.className = 'text-xl font-semibold mb-2';
+                        eqTitle.textContent = 'Balance the Equation:';
+                        
+                        const eqDisplay = document.createElement('div');
+                        eqDisplay.className = 'equation-display';
+                        eqDisplay.textContent = config.equation || '';
+                        
+                        const eqNote = document.createElement('p');
+                        eqNote.className = 'text-sm text-gray-400 mt-2';
+                        eqNote.textContent = 'Use the balance scale to solve for X! (Frontend interaction not yet implemented for demo).';
+                        
+                        elementBody.appendChild(eqTitle);
+                        elementBody.appendChild(eqDisplay);
+                        elementBody.appendChild(eqNote);
                         break;
+                        
                     case 'ShapeManipulator':
                         elementBody.className += ' shape-manipulator-interactive'; // Apply specific styles
-                        elementBody.innerHTML = `
-                            <p class="text-xl font-semibold mb-2">Manipulate the Shape:</p>
-                            <canvas class="shape-canvas" width="200" height="200"></canvas>
-                            <p class="text-sm text-gray-400 mt-2">Change its size or rotation! (Frontend interaction not yet implemented for demo).</p>
-                        `;
-                        const canvas = elementBody.querySelector('.shape-canvas');
-                        if (canvas) {
-                            // Initial draw
-                            drawShape(canvas, config.shape, config.size);
-                        }
+                        
+                        const shapeTitle = document.createElement('p');
+                        shapeTitle.className = 'text-xl font-semibold mb-2';
+                        shapeTitle.textContent = 'Manipulate the Shape:';
+                        
+                        const canvas = document.createElement('canvas');
+                        canvas.className = 'shape-canvas';
+                        canvas.width = 200;
+                        canvas.height = 200;
+                        
+                        const shapeNote = document.createElement('p');
+                        shapeNote.className = 'text-sm text-gray-400 mt-2';
+                        shapeNote.textContent = 'Change its size or rotation! (Frontend interaction not yet implemented for demo).';
+                        
+                        elementBody.appendChild(shapeTitle);
+                        elementBody.appendChild(canvas);
+                        elementBody.appendChild(shapeNote);
+                        
+                        // Initial draw
+                        drawShape(canvas, config.shape, config.size);
                         break;
+                        
                     default:
-                        elementBody.innerHTML = `<p class="text-red-400">Unknown interactive element type: ${elementType}</p>`;
+                        const errorP = document.createElement('p');
+                        errorP.className = 'text-red-400';
+                        errorP.textContent = 'Unknown interactive element type: ' + (elementType || 'undefined');
+                        elementBody.appendChild(errorP);
                         break;
                 }
             }
@@ -249,7 +299,18 @@
                     if (storySectionsData.length === 0) {
                         loader.classList.add('hidden');
                         errorDisplay.classList.remove('hidden');
-                        errorDisplay.innerHTML = `<h2>No story content available for this topic.</h2><a href="/dashboard.html" class="text-yellow-400 hover:underline">Return to Dashboard</a>`;
+                        
+                        // Secure XSS-safe error display
+                        const noContentHeader = document.createElement('h2');
+                        noContentHeader.textContent = 'No story content available for this topic.';
+                        const returnLink = document.createElement('a');
+                        returnLink.href = '/dashboard.html';
+                        returnLink.className = 'text-yellow-400 hover:underline';
+                        returnLink.textContent = 'Return to Dashboard';
+                        
+                        errorDisplay.innerHTML = ''; // Clear first
+                        errorDisplay.appendChild(noContentHeader);
+                        errorDisplay.appendChild(returnLink);
                         return;
                     }
 
@@ -264,7 +325,18 @@
                 } catch (error) {
                     loader.classList.add('hidden');
                     errorDisplay.classList.remove('hidden');
-                    errorDisplay.innerHTML = `<h2>Error: ${error.message}</h2><a href="/dashboard.html" class="text-yellow-400 hover:underline">Return to Dashboard</a>`;
+                    
+                    // Secure XSS-safe error display
+                    const errorHeader = document.createElement('h2');
+                    errorHeader.textContent = 'Error: ' + (error.message || 'Unknown error occurred');
+                    const returnLink = document.createElement('a');
+                    returnLink.href = '/dashboard.html';
+                    returnLink.className = 'text-yellow-400 hover:underline';
+                    returnLink.textContent = 'Return to Dashboard';
+                    
+                    errorDisplay.innerHTML = ''; // Clear first
+                    errorDisplay.appendChild(errorHeader);
+                    errorDisplay.appendChild(returnLink);
                 }
             }
 
@@ -277,20 +349,36 @@
                 const section = storySectionsData[index];
                 if (!section) {
                     sectionTitle.textContent = '';
-                    sectionBody.innerHTML = `<p class="text-red-400">Invalid or missing story section.</p>`;
+                    
+                    // Secure XSS-safe error display
+                    sectionBody.innerHTML = ''; // Clear first
+                    const errorP = document.createElement('p');
+                    errorP.className = 'text-red-400';
+                    errorP.textContent = 'Invalid or missing story section.';
+                    sectionBody.appendChild(errorP);
+                    
                     nextBtn.disabled = true;
                     return;
                 }
                 sectionTitle.textContent = section.sectionName;
 
                 if (section.contentType === 'Paragraph') {
-                    sectionBody.innerHTML = `<p class="text-lg leading-relaxed">${section.content}</p>`;
+                    // Secure XSS-safe content display
+                    sectionBody.innerHTML = ''; // Clear first
+                    const contentP = document.createElement('p');
+                    contentP.className = 'text-lg leading-relaxed';
+                    contentP.textContent = section.content || '';
+                    sectionBody.appendChild(contentP);
                 } else if (section.contentType === 'Interactive') {
                     const interactiveElement = section.content;
                     renderInteractiveElement(sectionBody, interactiveElement.elementType, interactiveElement.configuration);
                 } else {
-                    // Fallback for unexpected content types
-                    sectionBody.innerHTML = `<p class="text-red-400">Error: Unknown content type for this section.</p>`;
+                    // Fallback for unexpected content types - secure display
+                    sectionBody.innerHTML = ''; // Clear first
+                    const errorP = document.createElement('p');
+                    errorP.className = 'text-red-400';
+                    errorP.textContent = 'Error: Unknown content type for this section.';
+                    sectionBody.appendChild(errorP);
                 }
 
                 // Enable/disable previous button based on current section index

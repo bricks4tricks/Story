@@ -1630,7 +1630,24 @@ def get_topics(curriculum, unit):
 @require_auth(['admin'])
 def admin_get_curriculums():
     """Return curriculums, optionally filtered by a search term."""
-    search = request.args.get('search', '').strip()
+    # Validate and sanitize search parameter
+    search_raw = request.args.get('search', '').strip()
+    search = ''
+    if search_raw:
+        # Limit length to prevent DOS attacks
+        if len(search_raw) > 100:
+            return jsonify(success=False, message="Search term too long"), 400
+        
+        # Remove dangerous characters but allow basic search terms
+        search = ''.join(c for c in search_raw if c.isalnum() or c.isspace() or c in '-_.@')
+        search = search.strip()
+        
+        # Prevent SQL injection patterns in search
+        dangerous_patterns = ['--', '/*', '*/', ';', 'union', 'select', 'drop', 'insert', 'update', 'delete']
+        search_lower = search.lower()
+        for pattern in dangerous_patterns:
+            if pattern in search_lower:
+                return jsonify(success=False, message="Invalid search term"), 400
     conn = None
     cursor = None
     try:

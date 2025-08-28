@@ -16,6 +16,8 @@ from db_utils import (
     ensure_user_preferences_table,
 )
 from auth_utils import SessionManager
+from input_validation import validate_json_input, validate_user_registration, validator
+from security_utils import require_csrf, rate_limit
 
 auth_bp = Blueprint('auth', __name__, url_prefix='/api')
 
@@ -58,24 +60,21 @@ def send_email(receiver_email, subject, html_content):
 
 
 @auth_bp.route('/signup', methods=['POST', 'OPTIONS'])
+@rate_limit(max_requests=5, window=300)  # 5 signups per 5 minutes
+@validate_json_input(required_fields=['username', 'email', 'password'], optional_fields=['plan'])
+@validate_user_registration()
 def signup_user():
     if request.method == 'OPTIONS':
         return jsonify(success=True)
-    data = request.get_json(silent=True)
-    if data is None:
-        return jsonify({"status": "error", "message": "Invalid JSON"}), 400
+    
+    # Use validated data from security decorators
+    data = request.validated_data
     username = data.get('username')
     email = data.get('email')
     password = data.get('password')
     plan = data.get('plan')  # optional during initial signup
-    if not all([username, email, password]):
-        return jsonify({"status": "error", "message": "Missing fields"}), 400
-    is_valid_email, email_msg = validate_email(email)
-    if not is_valid_email:
-        return jsonify({"status": "error", "message": email_msg}), 400
-    is_valid, message = validate_password(password)
-    if not is_valid:
-        return jsonify({"status": "error", "message": message}), 400
+    
+    # Additional plan validation
     allowed_plans = {'Monthly', 'Annual', 'Family'}
     if plan and plan not in allowed_plans:
         return jsonify({"status": "error", "message": "Invalid plan selected"}), 400
@@ -173,6 +172,8 @@ def update_profile():
 
 
 @auth_bp.route('/change-password', methods=['POST', 'OPTIONS'])
+@require_csrf
+@rate_limit(max_requests=5, window=3600)
 def change_password():
     if request.method == 'OPTIONS':
         return jsonify(success=True)
@@ -350,17 +351,16 @@ def select_plan():
 
 
 @auth_bp.route('/signin', methods=['POST', 'OPTIONS'])
+@rate_limit(max_requests=10, window=300)  # 10 signin attempts per 5 minutes
+@validate_json_input(required_fields=['username', 'password'])
 def signin_user():
     if request.method == 'OPTIONS':
         return jsonify(success=True)
-    data = request.get_json(silent=True)
-    if data is None:
-        return jsonify({"status": "error", "message": "Missing JSON body"}), 400
-    username, password = data.get('username'), data.get('password')
-    username = username.strip() if isinstance(username, str) else ''
-    password = password.strip() if isinstance(password, str) else ''
-    if not username or not password:
-        return jsonify({"status": "error", "message": "Missing fields"}), 400
+    
+    # Use validated data from security decorators
+    data = request.validated_data
+    username = data.get('username', '').strip()
+    password = data.get('password', '').strip()
     conn = None
     cursor = None
     try:
@@ -567,6 +567,8 @@ def forgot_password():
 
 
 @auth_bp.route('/reset-password', methods=['POST', 'OPTIONS'])
+@require_csrf
+@rate_limit(max_requests=3, window=3600)
 def reset_password():
     if request.method == 'OPTIONS':
         return jsonify(success=True)
