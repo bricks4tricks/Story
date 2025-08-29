@@ -92,6 +92,12 @@
         .faq-question svg {
             transition: transform 0.3s ease-out;
         }
+        /* Hide tour and level elements on index page */
+        [id*="tour"], [class*="tour"], 
+        [id*="level"], [class*="level"],
+        .tour-overlay, .level-display {
+            display: none !important;
+        }
     </style>
 </head>
 <body class="bg-slate-900 text-gray-200">
@@ -656,9 +662,35 @@
     <script src="/static/js/flagErrorButton.js"></script>
     <script src="/static/js/imgFallback.js"></script>
     <script src="/static/js/backToTop.js"></script>
-    <!-- Redirect unauthenticated users who click "Start Story" -->
+    <!-- Prevent tour and level displays on index page -->
     <script>
       document.addEventListener('DOMContentLoaded', () => {
+        // Remove any tour overlays or popups that might appear
+        const removeTourElements = () => {
+          const tourElements = document.querySelectorAll('[id*="tour"], [class*="tour"], [id*="level"], [class*="level"]');
+          tourElements.forEach(element => {
+            if (element.style.position === 'fixed' || element.style.position === 'absolute' || 
+                element.classList.contains('overlay') || element.classList.contains('popup') ||
+                element.classList.contains('modal')) {
+              element.remove();
+            }
+          });
+        };
+
+        // Remove immediately and set up observer for dynamic content
+        removeTourElements();
+        
+        // Set up mutation observer to remove any dynamically added tour/level elements
+        const observer = new MutationObserver(() => {
+          removeTourElements();
+        });
+        
+        observer.observe(document.body, {
+          childList: true,
+          subtree: true
+        });
+
+        // Handle start story button clicks
         document.querySelectorAll('.start-story-btn').forEach(btn => {
           btn.addEventListener('click', () => {
             const userId = localStorage.getItem('userId');

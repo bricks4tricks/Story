@@ -527,10 +527,18 @@ class GamificationSystem {
     }
 }
 
-// Initialize gamification system
+// Initialize gamification system only on appropriate pages
 document.addEventListener('DOMContentLoaded', () => {
-    window.gamificationSystem = new GamificationSystem();
-    window.gamificationSystem.initialize();
+    // Only initialize gamification on dashboard, settings, and story pages
+    const currentPath = window.location.pathname;
+    const allowedPaths = ['/dashboard.html', '/settings.html', '/story-player.html'];
+    const isAllowedPage = allowedPaths.some(path => currentPath.includes(path)) || 
+                         currentPath === '/' && document.getElementById('gamification-progress'); // Only if gamification elements exist
+    
+    if (isAllowedPage) {
+        window.gamificationSystem = new GamificationSystem();
+        window.gamificationSystem.initialize();
+    }
 });
 
 // Export for use in other modules

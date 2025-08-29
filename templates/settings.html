@@ -55,6 +55,37 @@
             </div>
 
             <div class="bg-slate-800 rounded-2xl p-8 border border-slate-700 mt-10">
+                <h3 class="text-2xl font-semibold mb-6 text-white text-center">Level & Progress</h3>
+                <div id="levelInfo" class="space-y-4">
+                    <!-- Level info will be populated by JavaScript -->
+                    <div class="text-center">
+                        <div class="text-4xl font-bold text-yellow-400 mb-2" id="currentLevel">--</div>
+                        <div class="text-gray-300 mb-4">Current Level</div>
+                    </div>
+                    <div class="bg-slate-700 rounded-lg p-4">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-gray-300">Total Points</span>
+                            <span class="text-white font-semibold" id="totalPoints">--</span>
+                        </div>
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-gray-300">Reading Streak</span>
+                            <span class="text-white font-semibold" id="currentStreak">--</span>
+                        </div>
+                        <div class="flex justify-between items-center">
+                            <span class="text-gray-300">Longest Streak</span>
+                            <span class="text-white font-semibold" id="longestStreak">--</span>
+                        </div>
+                    </div>
+                    <div id="badgesContainer" class="hidden">
+                        <h4 class="text-white font-semibold mb-2">Badges Earned</h4>
+                        <div id="badgesList" class="flex flex-wrap gap-2">
+                            <!-- Badges will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-slate-800 rounded-2xl p-8 border border-slate-700 mt-10">
                 <h3 class="text-2xl font-semibold mb-6 text-white text-center">Change Password</h3>
                 <form id="passwordForm">
                     <div class="mb-4 text-left">
@@ -109,6 +140,50 @@
             const fontSizeSelect = document.getElementById('fontSize');
             const userType = localStorage.getItem('userType');
             const mainSection = document.getElementById('mainSection');
+
+            // Load user profile and level information
+            const loadLevelInfo = async () => {
+                try {
+                    const response = await fetch('/api/user/profile', {
+                        method: 'GET',
+                        headers: { 'Content-Type': 'application/json' }
+                    });
+                    const result = await response.json();
+                    
+                    if (response.ok && result.success) {
+                        const level = result.profile.level;
+                        
+                        // Update level display
+                        document.getElementById('currentLevel').textContent = level.current_level;
+                        document.getElementById('totalPoints').textContent = level.total_points.toLocaleString();
+                        document.getElementById('currentStreak').textContent = level.reading_streak.current + ' days';
+                        document.getElementById('longestStreak').textContent = level.reading_streak.longest + ' days';
+                        
+                        // Show badges if any
+                        if (level.badges_earned && level.badges_earned.length > 0) {
+                            const badgesContainer = document.getElementById('badgesContainer');
+                            const badgesList = document.getElementById('badgesList');
+                            
+                            badgesList.innerHTML = '';
+                            level.badges_earned.forEach(badge => {
+                                const badgeElement = document.createElement('span');
+                                badgeElement.className = 'bg-yellow-400 text-slate-900 px-3 py-1 rounded-full text-sm font-semibold';
+                                badgeElement.textContent = badge.replace(/[-_]/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                                badgesList.appendChild(badgeElement);
+                            });
+                            
+                            badgesContainer.classList.remove('hidden');
+                        }
+                    }
+                } catch (error) {
+                    console.error('Failed to load level information:', error);
+                }
+            };
+
+            // Load level info on page load (only for Parent and Admin users)
+            if (userType !== 'Student') {
+                loadLevelInfo();
+            }
 
             const applyPreferences = () => {
                 if (darkModeToggle.checked) {
