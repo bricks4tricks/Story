@@ -60,6 +60,7 @@
                 <button id="users-tab-btn" class="tab-button active text-lg font-medium text-gray-400 hover:text-amber-500 py-4 px-1 border-b-2 border-transparent">User Management</button>
                 <button id="questions-tab-btn" class="tab-button text-lg font-medium text-gray-400 hover:text-amber-500 py-4 px-1 border-b-2 border-transparent">Question Management</button>
                 <button id="stories-tab-btn" class="tab-button text-lg font-medium text-gray-400 hover:text-amber-500 py-4 px-1 border-b-2 border-transparent">Story Management</button>
+                <button id="images-tab-btn" class="tab-button text-lg font-medium text-gray-400 hover:text-amber-500 py-4 px-1 border-b-2 border-transparent">Image Generator</button>
                 <button id="flags-tab-btn" class="tab-button text-lg font-medium text-gray-400 hover:text-amber-500 py-4 px-1 border-b-2 border-transparent">Flagged Items</button>
                 <button id="attempts-tab-btn" class="tab-button text-lg font-medium text-gray-400 hover:text-amber-500 py-4 px-1 border-b-2 border-transparent">Question Attempts</button>
                 <button id="curriculums-tab-btn" class="tab-button text-lg font-medium text-gray-400 hover:text-amber-500 py-4 px-1 border-b-2 border-transparent">Curriculum Management</button>
@@ -212,6 +213,154 @@
             <div class="bg-slate-800 rounded-2xl border border-slate-700 overflow-x-auto p-6">
                 <div id="existing-stories-list" class="space-y-4">
                     <p class="text-center text-gray-400">Loading stories...</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="images-section" class="hidden">
+            <h2 class="text-3xl font-bold text-white mb-6">Image Generator</h2>
+            
+            <div id="image-generator-message" class="text-center text-lg font-bold mb-4 h-6"></div>
+            
+            <!-- Image Generation Tools -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+                
+                <!-- Diagram Generator -->
+                <div class="bg-slate-800 rounded-2xl border border-slate-700 p-6">
+                    <h3 class="text-xl font-bold text-white mb-4">Diagram Generator</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-gray-300 mb-2">Diagram Type</label>
+                            <select id="diagram-type" class="w-full bg-slate-700 rounded-lg p-2 text-white">
+                                <option value="rectangle">Rectangle</option>
+                                <option value="circle">Circle</option>
+                                <option value="line">Line</option>
+                                <option value="arrow">Arrow</option>
+                                <option value="grid">Grid</option>
+                            </select>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-gray-300 mb-2">Width</label>
+                                <input type="number" id="diagram-width" value="400" min="200" max="800" 
+                                       class="w-full bg-slate-700 rounded-lg p-2 text-white">
+                            </div>
+                            <div>
+                                <label class="block text-gray-300 mb-2">Height</label>
+                                <input type="number" id="diagram-height" value="300" min="200" max="600" 
+                                       class="w-full bg-slate-700 rounded-lg p-2 text-white">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-gray-300 mb-2">Color</label>
+                            <input type="color" id="diagram-color" value="#3b82f6" 
+                                   class="w-full bg-slate-700 rounded-lg p-2">
+                        </div>
+                        <button id="generate-diagram-btn" 
+                                class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-4 rounded-lg">
+                            Generate Diagram
+                        </button>
+                    </div>
+                    
+                    <!-- Interactive Canvas -->
+                    <div class="mt-6">
+                        <h4 class="text-lg font-semibold text-white mb-3">Interactive Canvas</h4>
+                        <div id="interactive-canvas" class="border border-slate-600 rounded-lg bg-slate-900"></div>
+                        <button onclick="imageGenerator.initCanvas('interactive-canvas', 400, 300)" 
+                                class="mt-2 bg-green-600 hover:bg-green-500 text-white px-4 py-2 rounded text-sm">
+                            Initialize Canvas
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Math Function Generator -->
+                <div class="bg-slate-800 rounded-2xl border border-slate-700 p-6">
+                    <h3 class="text-xl font-bold text-white mb-4">Math Function Generator</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="block text-gray-300 mb-2">Function Type</label>
+                            <select id="function-type" class="w-full bg-slate-700 rounded-lg p-2 text-white">
+                                <option value="linear">Linear (y = mx + b)</option>
+                                <option value="parabola">Parabola (y = ax² + bx + c)</option>
+                            </select>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-gray-300 mb-2">Width</label>
+                                <input type="number" id="math-width" value="400" min="200" max="800" 
+                                       class="w-full bg-slate-700 rounded-lg p-2 text-white">
+                            </div>
+                            <div>
+                                <label class="block text-gray-300 mb-2">Height</label>
+                                <input type="number" id="math-height" value="300" min="200" max="600" 
+                                       class="w-full bg-slate-700 rounded-lg p-2 text-white">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-gray-300 mb-2">Line Color</label>
+                            <input type="color" id="math-color" value="#3b82f6" 
+                                   class="w-full bg-slate-700 rounded-lg p-2">
+                        </div>
+                        
+                        <!-- Linear Parameters -->
+                        <div id="linear-params" class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-gray-300 mb-2">Slope (m)</label>
+                                <input type="number" id="slope" value="1" step="0.1" 
+                                       class="w-full bg-slate-700 rounded-lg p-2 text-white">
+                            </div>
+                            <div>
+                                <label class="block text-gray-300 mb-2">Y-intercept (b)</label>
+                                <input type="number" id="intercept" value="0" step="0.1" 
+                                       class="w-full bg-slate-700 rounded-lg p-2 text-white">
+                            </div>
+                        </div>
+                        
+                        <!-- Parabola Parameters -->
+                        <div id="parabola-params" class="grid grid-cols-3 gap-2 hidden">
+                            <div>
+                                <label class="block text-gray-300 mb-2">a</label>
+                                <input type="number" id="param-a" value="1" step="0.1" 
+                                       class="w-full bg-slate-700 rounded-lg p-2 text-white">
+                            </div>
+                            <div>
+                                <label class="block text-gray-300 mb-2">b</label>
+                                <input type="number" id="param-b" value="0" step="0.1" 
+                                       class="w-full bg-slate-700 rounded-lg p-2 text-white">
+                            </div>
+                            <div>
+                                <label class="block text-gray-300 mb-2">c</label>
+                                <input type="number" id="param-c" value="0" step="0.1" 
+                                       class="w-full bg-slate-700 rounded-lg p-2 text-white">
+                            </div>
+                        </div>
+                        
+                        <button id="generate-math-btn" 
+                                class="w-full bg-purple-600 hover:bg-purple-500 text-white font-bold py-2 px-4 rounded-lg">
+                            Generate Math Graph
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Image Upload -->
+            <div class="bg-slate-800 rounded-2xl border border-slate-700 p-6 mb-8">
+                <h3 class="text-xl font-bold text-white mb-4">Upload Image</h3>
+                <div class="space-y-4">
+                    <p class="text-gray-300">Upload your own images (PNG, JPG, GIF) - Max 5MB</p>
+                    <input type="file" id="image-file-input" accept="image/*" class="hidden">
+                    <button id="upload-image-btn" 
+                            class="bg-green-600 hover:bg-green-500 text-white font-bold py-2 px-6 rounded-lg">
+                        Choose Image to Upload
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Generated Images Gallery -->
+            <div class="bg-slate-800 rounded-2xl border border-slate-700 p-6">
+                <h3 class="text-xl font-bold text-white mb-4">Generated Images</h3>
+                <div id="generated-images-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                    <p class="text-gray-400 text-center col-span-full">Loading images...</p>
                 </div>
             </div>
         </div>
@@ -502,12 +651,14 @@
             const usersTabBtn = document.getElementById('users-tab-btn');
             const questionsTabBtn = document.getElementById('questions-tab-btn');
             const storiesTabBtn = document.getElementById('stories-tab-btn');
+            const imagesTabBtn = document.getElementById('images-tab-btn');
             const flagsTabBtn = document.getElementById('flags-tab-btn');
             const attemptsTabBtn = document.getElementById('attempts-tab-btn'); // NEW
 
             const usersSection = document.getElementById('users-section');
             const questionsSection = document.getElementById('questions-section');
             const storiesSection = document.getElementById('stories-section');
+            const imagesSection = document.getElementById('images-section');
             const flagsSection = document.getElementById('flags-section');
             const attemptsSection = document.getElementById('attempts-section'); // NEW
             const videosSection = document.getElementById('videos-section');
@@ -2274,6 +2425,7 @@ const createCascadingSelectors = (prefix) => {
                 usersSection.classList.remove('hidden');
                 questionsSection.classList.add('hidden');
                 storiesSection.classList.add('hidden');
+                imagesSection.classList.add('hidden');
                 flagsSection.classList.add('hidden');
                 attemptsSection.classList.add('hidden'); // NEW
                 curriculumsSection.classList.add('hidden');
@@ -2281,6 +2433,7 @@ const createCascadingSelectors = (prefix) => {
                 usersTabBtn.classList.add('active');
                 questionsTabBtn.classList.remove('active');
                 storiesTabBtn.classList.remove('active');
+                imagesTabBtn.classList.remove('active');
                 flagsTabBtn.classList.remove('active');
                 attemptsTabBtn.classList.remove('active'); // NEW
                 curriculumsTabBtn.classList.remove('active');
@@ -2290,6 +2443,7 @@ const createCascadingSelectors = (prefix) => {
                 usersSection.classList.add('hidden');
                 questionsSection.classList.remove('hidden');
                 storiesSection.classList.add('hidden');
+                imagesSection.classList.add('hidden');
                 flagsSection.classList.add('hidden');
                 attemptsSection.classList.add('hidden'); // NEW
                 curriculumsSection.classList.add('hidden');
@@ -2297,6 +2451,7 @@ const createCascadingSelectors = (prefix) => {
                 usersTabBtn.classList.remove('active');
                 questionsTabBtn.classList.add('active');
                 storiesTabBtn.classList.remove('active');
+                imagesTabBtn.classList.remove('active');
                 flagsTabBtn.classList.remove('active');
                 attemptsTabBtn.classList.remove('active'); // NEW
                 curriculumsTabBtn.classList.remove('active');
@@ -2307,6 +2462,7 @@ const createCascadingSelectors = (prefix) => {
                 usersSection.classList.add('hidden');
                 questionsSection.classList.add('hidden');
                 storiesSection.classList.remove('hidden');
+                imagesSection.classList.add('hidden');
                 flagsSection.classList.add('hidden');
                 attemptsSection.classList.add('hidden'); // NEW
                 curriculumsSection.classList.add('hidden');
@@ -2314,16 +2470,57 @@ const createCascadingSelectors = (prefix) => {
                 usersTabBtn.classList.remove('active');
                 questionsTabBtn.classList.remove('active');
                 storiesTabBtn.classList.add('active');
+                imagesTabBtn.classList.remove('active');
                 flagsTabBtn.classList.remove('active');
                 attemptsTabBtn.classList.remove('active'); // NEW
                 curriculumsTabBtn.classList.remove('active');
                 videosTabBtn.classList.remove('active');
                 fetchAndDisplayStories();
             });
+            imagesTabBtn.addEventListener('click', () => {
+                usersSection.classList.add('hidden');
+                questionsSection.classList.add('hidden');
+                storiesSection.classList.add('hidden');
+                imagesSection.classList.remove('hidden');
+                flagsSection.classList.add('hidden');
+                attemptsSection.classList.add('hidden');
+                curriculumsSection.classList.add('hidden');
+                videosSection.classList.add('hidden');
+                usersTabBtn.classList.remove('active');
+                questionsTabBtn.classList.remove('active');
+                storiesTabBtn.classList.remove('active');
+                imagesTabBtn.classList.add('active');
+                flagsTabBtn.classList.remove('active');
+                attemptsTabBtn.classList.remove('active');
+                curriculumsTabBtn.classList.remove('active');
+                videosTabBtn.classList.remove('active');
+                // Initialize image generator if not already done
+                if (!window.imageGenerator) {
+                    window.imageGenerator = new ImageGenerator();
+                }
+                
+                // Setup function type switching
+                const functionTypeSelect = document.getElementById('function-type');
+                const linearParams = document.getElementById('linear-params');
+                const parabolaParams = document.getElementById('parabola-params');
+                
+                if (functionTypeSelect) {
+                    functionTypeSelect.addEventListener('change', (e) => {
+                        if (e.target.value === 'linear') {
+                            linearParams.classList.remove('hidden');
+                            parabolaParams.classList.add('hidden');
+                        } else if (e.target.value === 'parabola') {
+                            linearParams.classList.add('hidden');
+                            parabolaParams.classList.remove('hidden');
+                        }
+                    });
+                }
+            });
             flagsTabBtn.addEventListener('click', () => {
                 usersSection.classList.add('hidden');
                 questionsSection.classList.add('hidden');
                 storiesSection.classList.add('hidden');
+                imagesSection.classList.add('hidden');
                 flagsSection.classList.remove('hidden');
                 attemptsSection.classList.add('hidden'); // NEW
                 curriculumsSection.classList.add('hidden');
@@ -2331,6 +2528,7 @@ const createCascadingSelectors = (prefix) => {
                 usersTabBtn.classList.remove('active');
                 questionsTabBtn.classList.remove('active');
                 storiesTabBtn.classList.remove('active');
+                imagesTabBtn.classList.remove('active');
                 flagsTabBtn.classList.add('active');
                 attemptsTabBtn.classList.remove('active'); // NEW
                 curriculumsTabBtn.classList.remove('active');
@@ -2489,6 +2687,7 @@ const createCascadingSelectors = (prefix) => {
     </div>
 
     <script src="/static/js/userTable.js"></script>
+    <script src="/static/js/imageGenerator.js"></script>
     <!-- Back to Top button -->
     <button id="backToTop" aria-label="Back to top"
       class="hidden fixed bottom-20 right-4 px-4 py-2 rounded-full bg-yellow-400 text-black shadow-lg transition-opacity duration-300">
