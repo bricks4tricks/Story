@@ -37,7 +37,9 @@
       "Bash(timeout 120s python -m pytest:*)",
       "Bash(timeout 60s git push origin fix-remaining-endpoints)",
       "Bash(git fetch:*)",
-      "Bash(git merge:*)"
+      "Bash(git merge:*)",
+      "Bash(timeout 60s git push)",
+      "Bash(git rebase:*)"
     ],
     "deny": [],
     "ask": []
