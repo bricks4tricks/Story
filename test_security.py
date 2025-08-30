@@ -51,14 +51,13 @@ class TestAuthentication:
     
     def test_admin_session_security(self):
         """Test enhanced admin session security."""
+        # Test create_admin_session first
         with patch('admin_security.get_db_connection') as mock_conn:
             mock_cursor = MagicMock()
             mock_conn.return_value.cursor.return_value = mock_cursor
-            mock_cursor.fetchone.side_effect = [
-                [2],  # Session count
-                [1],  # Token creation
-                (1, 'admin', '192.168.1.1', '2024-01-01 12:00:00+00:00')  # Session validation - fixed tuple
-            ]
+            
+            # Mock the session count check for create_admin_session
+            mock_cursor.fetchone.return_value = [2]  # Session count
             
             # Test admin session creation with tracking
             token = AdminSessionManager.create_admin_session(
@@ -68,6 +67,14 @@ class TestAuthentication:
             )
             assert token is not None
             assert len(token) >= 48  # Longer token for admins
+        
+        # Test validate_admin_session separately with fresh mock
+        with patch('admin_security.get_db_connection') as mock_conn2:
+            mock_cursor2 = MagicMock()
+            mock_conn2.return_value.cursor.return_value = mock_cursor2
+            
+            # Mock validation query result - 4-tuple as expected by the code
+            mock_cursor2.fetchone.return_value = (1, 'admin', '192.168.1.1', '2024-01-01 12:00:00+00:00')
             
             # Test IP verification in session validation
             user_info = AdminSessionManager.validate_admin_session(token, '192.168.1.1')
@@ -185,18 +192,18 @@ class TestCSRFProtection:
     def test_csrf_token_generation(self):
         """Test CSRF token generation."""
         with self.app.test_request_context('/'):
-            with self.client.session_transaction() as sess:
-                # Token should be generated on session creation
-                csrf_protection._before_request()
-                token = sess.get('csrf_token')
-                assert token is not None
-                assert len(token) > 20
+            # Token should be generated on session creation within request context
+            csrf_protection._before_request()
+            from flask import session
+            token = session.get('csrf_token')
+            assert token is not None
+            assert len(token) > 20
     
     def test_csrf_token_validation(self):
         """Test CSRF token validation."""
         with self.app.test_request_context('/'):
-            with self.client.session_transaction() as sess:
-                sess['csrf_token'] = 'test_token_123'
+            from flask import session
+            session['csrf_token'] = 'test_token_123'
             
             # Valid token should pass
             assert csrf_protection.validate_csrf('test_token_123')
