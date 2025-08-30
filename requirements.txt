@@ -11,6 +11,6 @@ beautifulsoup4>=4.12.0
 # Security-focused packages
 cryptography>=45.0.6
 Werkzeug>=3.0.0
-# File type detection
+# File security and validation
 python-magic>=0.4.27
-python-magic-bin>=0.4.14
+python-magic-bin>=0.4.14  # Required for Windows support
