@@ -130,7 +130,34 @@ def delete_user(user_id):
     if request.method == 'OPTIONS':
         return jsonify(success=True)
     
-    return jsonify({"status": "success", "message": "User delete functionality"})
+    conn = None
+    cursor = None
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        
+        # Delete subscription first
+        cursor.execute("DELETE FROM tbl_subscription WHERE user_id = %s", (user_id,))
+        
+        # Delete the user
+        cursor.execute("DELETE FROM tbl_user WHERE id = %s", (user_id,))
+        
+        if cursor.rowcount == 0:
+            return jsonify({"status": "error", "message": "User not found"}), 404
+        
+        conn.commit()
+        return jsonify({"status": "success", "message": "User deleted successfully"})
+        
+    except Exception as e:
+        print(f"Delete user error: {e}")
+        if conn:
+            conn.rollback()
+        return jsonify({"status": "error", "message": "Failed to delete user"}), 500
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            release_db_connection(conn)
 
 
 @admin_bp.route('/topics-list', methods=['GET'])
@@ -214,7 +241,33 @@ def create_curriculum():
     if request.method == 'OPTIONS':
         return jsonify(success=True)
     
-    return jsonify({"status": "success", "message": "Curriculum create functionality"})
+    data = request.get_json()
+    if not data or 'name' not in data:
+        return jsonify({"status": "error", "message": "Missing name field"}), 400
+    
+    conn = None
+    cursor = None
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        
+        cursor.execute("""
+            INSERT INTO tbl_subject (subjectname) VALUES (%s)
+        """, (data['name'],))
+        
+        conn.commit()
+        return jsonify({"status": "success", "message": "Curriculum created successfully"}), 201
+        
+    except Exception as e:
+        print(f"Create curriculum error: {e}")
+        if conn:
+            conn.rollback()
+        return jsonify({"status": "error", "message": "Failed to create curriculum"}), 500
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            release_db_connection(conn)
 
 
 @admin_bp.route('/delete-curriculum/<int:subject_id>', methods=['DELETE', 'OPTIONS'])
@@ -224,7 +277,61 @@ def delete_curriculum(subject_id):
     if request.method == 'OPTIONS':
         return jsonify(success=True)
     
-    return jsonify({"status": "success", "message": "Curriculum delete functionality"})
+    conn = None
+    cursor = None
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        
+        # Get topics for this curriculum first
+        cursor.execute("""
+            SELECT DISTINCT t.id 
+            FROM tbl_topic t
+            JOIN tbl_topicsubject ts ON t.id = ts.topicid
+            WHERE ts.subjectid = %s
+        """, (subject_id,))
+        topic_ids = cursor.fetchall()
+        
+        # Delete cascade for each topic
+        for (topic_id,) in topic_ids:
+            # Get questions for this topic
+            cursor.execute("SELECT id FROM tbl_question WHERE topicid = %s", (topic_id,))
+            question_ids = cursor.fetchall()
+            
+            # Delete question data
+            for (question_id,) in question_ids:
+                cursor.execute("DELETE FROM tbl_step WHERE questionid = %s", (question_id,))
+                cursor.execute("DELETE FROM tbl_answer WHERE questionid = %s", (question_id,))
+            
+            # Delete questions
+            cursor.execute("DELETE FROM tbl_question WHERE topicid = %s", (topic_id,))
+            
+            # Delete videos and stories
+            cursor.execute("DELETE FROM tbl_video WHERE topicid = %s", (topic_id,))
+            cursor.execute("DELETE FROM tbl_story WHERE topicid = %s", (topic_id,))
+        
+        # Delete topic-subject links
+        cursor.execute("DELETE FROM tbl_topicsubject WHERE subjectid = %s", (subject_id,))
+        
+        # Delete the subject
+        cursor.execute("DELETE FROM tbl_subject WHERE id = %s", (subject_id,))
+        
+        if cursor.rowcount == 0:
+            return jsonify({"status": "error", "message": "Curriculum not found"}), 404
+        
+        conn.commit()
+        return jsonify({"status": "success", "message": "Curriculum deleted successfully"})
+        
+    except Exception as e:
+        print(f"Delete curriculum error: {e}")
+        if conn:
+            conn.rollback()
+        return jsonify({"status": "error", "message": "Failed to delete curriculum"}), 500
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            release_db_connection(conn)
 
 
 @admin_bp.route('/flagged-items', methods=['GET'])
@@ -241,7 +348,43 @@ def update_flag_status(flag_id):
     if request.method == 'OPTIONS':
         return jsonify(success=True)
     
-    return jsonify({"status": "success", "message": "Flag status update functionality"})
+    data = request.get_json()
+    if not data or 'status' not in data:
+        return jsonify({"status": "error", "message": "Missing status field"}), 400
+    
+    conn = None
+    cursor = None
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        
+        # Update flag status
+        admin_id = data.get('adminId')
+        if admin_id == 0:
+            admin_id = None  # Handle zero as null
+            
+        cursor.execute("""
+            UPDATE tbl_flag 
+            SET status = %s, reviewed_by_admin_id = %s, reviewed_at = NOW()
+            WHERE id = %s
+        """, (data['status'], admin_id, flag_id))
+        
+        if cursor.rowcount == 0:
+            return jsonify({"status": "error", "message": "Flag not found"}), 404
+        
+        conn.commit()
+        return jsonify({"status": "success", "message": "Flag status updated successfully"})
+        
+    except Exception as e:
+        print(f"Update flag status error: {e}")
+        if conn:
+            conn.rollback()
+        return jsonify({"status": "error", "message": "Failed to update flag status"}), 500
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            release_db_connection(conn)
 
 
 @admin_bp.route('/delete-flag/<int:flag_id>', methods=['DELETE', 'OPTIONS'])
@@ -251,7 +394,30 @@ def delete_flag(flag_id):
     if request.method == 'OPTIONS':
         return jsonify(success=True)
     
-    return jsonify({"status": "success", "message": "Flag delete functionality"})
+    conn = None
+    cursor = None
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        
+        cursor.execute("DELETE FROM tbl_flag WHERE id = %s", (flag_id,))
+        
+        if cursor.rowcount == 0:
+            return jsonify({"status": "error", "message": "Flag not found"}), 404
+        
+        conn.commit()
+        return jsonify({"status": "success", "message": "Flag deleted successfully"})
+        
+    except Exception as e:
+        print(f"Delete flag error: {e}")
+        if conn:
+            conn.rollback()
+        return jsonify({"status": "error", "message": "Failed to delete flag"}), 500
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            release_db_connection(conn)
 
 
 @admin_bp.route('/question-attempts', methods=['GET'])
@@ -414,6 +580,231 @@ def get_curriculum_by_id(subject_id):
         print(f"Get curriculum by ID error: {e}")
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error"}), 500
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            release_db_connection(conn)
+# =================================================================
+#  MISSING ADMIN ENDPOINTS TO ADD TO admin.py
+# =================================================================
+
+@admin_bp.route('/create-lesson', methods=['POST', 'OPTIONS'])
+@require_auth(['admin'])
+def create_lesson():
+    """Create a new lesson."""
+    if request.method == 'OPTIONS':
+        return jsonify(success=True)
+    
+    data = request.get_json()
+    if not data or not all(k in data for k in ['curriculum', 'unit', 'lesson', 'grade']):
+        return jsonify({"status": "error", "message": "Missing required fields"}), 400
+    
+    conn = None
+    cursor = None
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        
+        # Check if curriculum exists
+        cursor.execute("SELECT id FROM tbl_subject WHERE subjectname = %s", (data['curriculum'],))
+        curriculum = cursor.fetchone()
+        if not curriculum:
+            return jsonify({"status": "error", "message": "Curriculum not found"}), 404
+        
+        curriculum_id = curriculum[0]
+        
+        # Insert lesson
+        cursor.execute("""
+            INSERT INTO tbl_lesson (lesson_name, unit_name, grade_name, curriculum_id)
+            VALUES (%s, %s, %s, %s)
+        """, (data['lesson'], data['unit'], data['grade'], curriculum_id))
+        
+        conn.commit()
+        return jsonify({"status": "success", "message": "Lesson created successfully"}), 201
+        
+    except Exception as e:
+        print(f"Create lesson error: {e}")
+        if conn:
+            conn.rollback()
+        return jsonify({"status": "error", "message": "Failed to create lesson"}), 500
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            release_db_connection(conn)
+
+
+@admin_bp.route('/update-topic/<int:topic_id>', methods=['PUT', 'OPTIONS'])
+@require_auth(['admin'])
+def update_topic(topic_id):
+    """Update a topic."""
+    if request.method == 'OPTIONS':
+        return jsonify(success=True)
+    
+    data = request.get_json()
+    if not data or 'name' not in data:
+        return jsonify({"status": "error", "message": "Missing name field"}), 400
+    
+    conn = None
+    cursor = None
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        
+        cursor.execute("""
+            UPDATE tbl_topic SET topicname = %s WHERE id = %s
+        """, (data['name'], topic_id))
+        
+        if cursor.rowcount == 0:
+            return jsonify({"status": "error", "message": "Topic not found"}), 404
+        
+        conn.commit()
+        return jsonify({"status": "success", "message": "Topic updated successfully"})
+        
+    except Exception as e:
+        print(f"Update topic error: {e}")
+        if conn:
+            conn.rollback()
+        return jsonify({"status": "error", "message": "Failed to update topic"}), 500
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            release_db_connection(conn)
+
+
+@admin_bp.route('/delete-topic/<int:topic_id>', methods=['DELETE', 'OPTIONS'])
+@require_auth(['admin'])
+def delete_topic(topic_id):
+    """Delete a topic and cascade to related data."""
+    if request.method == 'OPTIONS':
+        return jsonify(success=True)
+    
+    conn = None
+    cursor = None
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        
+        # Delete questions and related data for this topic
+        cursor.execute("SELECT id FROM tbl_question WHERE topicid = %s", (topic_id,))
+        question_ids = cursor.fetchall()
+        
+        for (question_id,) in question_ids:
+            # Delete steps
+            cursor.execute("DELETE FROM tbl_step WHERE questionid = %s", (question_id,))
+            # Delete answers
+            cursor.execute("DELETE FROM tbl_answer WHERE questionid = %s", (question_id,))
+        
+        # Delete questions
+        cursor.execute("DELETE FROM tbl_question WHERE topicid = %s", (topic_id,))
+        
+        # Delete videos and stories
+        cursor.execute("DELETE FROM tbl_video WHERE topicid = %s", (topic_id,))
+        cursor.execute("DELETE FROM tbl_story WHERE topicid = %s", (topic_id,))
+        
+        # Delete topic subject links
+        cursor.execute("DELETE FROM tbl_topicsubject WHERE topicid = %s", (topic_id,))
+        
+        # Delete the topic
+        cursor.execute("DELETE FROM tbl_topic WHERE id = %s", (topic_id,))
+        
+        if cursor.rowcount == 0:
+            return jsonify({"status": "error", "message": "Topic not found"}), 404
+        
+        conn.commit()
+        return jsonify({"status": "success", "message": "Topic deleted successfully"})
+        
+    except Exception as e:
+        print(f"Delete topic error: {e}")
+        if conn:
+            conn.rollback()
+        return jsonify({"status": "error", "message": "Failed to delete topic"}), 500
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            release_db_connection(conn)
+
+
+@admin_bp.route('/update-curriculum/<int:curriculum_id>', methods=['PUT', 'OPTIONS'])
+@require_auth(['admin'])
+def update_curriculum(curriculum_id):
+    """Update a curriculum."""
+    if request.method == 'OPTIONS':
+        return jsonify(success=True)
+    
+    data = request.get_json()
+    if not data or 'name' not in data:
+        return jsonify({"status": "error", "message": "Missing name field"}), 400
+    
+    conn = None
+    cursor = None
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        
+        cursor.execute("""
+            UPDATE tbl_subject SET subjectname = %s WHERE id = %s
+        """, (data['name'], curriculum_id))
+        
+        if cursor.rowcount == 0:
+            return jsonify({"status": "error", "message": "Curriculum not found"}), 404
+        
+        conn.commit()
+        return jsonify({"status": "success", "message": "Curriculum updated successfully"})
+        
+    except Exception as e:
+        print(f"Update curriculum error: {e}")
+        if conn:
+            conn.rollback()
+        return jsonify({"status": "error", "message": "Failed to update curriculum"}), 500
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            release_db_connection(conn)
+
+
+@admin_bp.route('/map-topic-curriculums', methods=['POST', 'OPTIONS'])
+@require_auth(['admin'])
+def map_topic_curriculums():
+    """Map a topic to multiple curriculums."""
+    if request.method == 'OPTIONS':
+        return jsonify(success=True)
+    
+    data = request.get_json()
+    if not data or not all(k in data for k in ['topic_id', 'curriculum_ids']):
+        return jsonify({"status": "error", "message": "Missing required fields"}), 400
+    
+    conn = None
+    cursor = None
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        
+        topic_id = data['topic_id']
+        curriculum_ids = data['curriculum_ids']
+        
+        # Clear existing mappings
+        cursor.execute("DELETE FROM tbl_topicsubject WHERE topicid = %s", (topic_id,))
+        
+        # Add new mappings
+        for curriculum_id in curriculum_ids:
+            cursor.execute("""
+                INSERT INTO tbl_topicsubject (topicid, subjectid)
+                VALUES (%s, %s)
+            """, (topic_id, curriculum_id))
+        
+        conn.commit()
+        return jsonify({"status": "success", "message": "Topic mapped to curriculums successfully"}), 201
+        
+    except Exception as e:
+        print(f"Map topic curriculums error: {e}")
+        if conn:
+            conn.rollback()
+        return jsonify({"status": "error", "message": "Failed to map topic"}), 500
     finally:
         if cursor:
             cursor.close()
