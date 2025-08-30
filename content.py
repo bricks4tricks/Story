@@ -72,10 +72,10 @@ def story_exists(topic_id):
         cursor = conn.cursor()
         cursor.execute("SELECT COUNT(*) FROM tbl_story WHERE topicid = %s", (topic_id,))
         count = cursor.fetchone()[0]
-        return jsonify(success=True, storyExists=(count > 0))
+        return jsonify(success=True, storyExists=(count > 0), isPlaceholder=(count == 0))
     except Exception as e:
         print(f"Story Exists API Error: {e}")
-        return jsonify(success=False, message="Failed to check story existence"), 500
+        return jsonify(success=False, storyExists=False, isPlaceholder=True, message="Failed to check story existence"), 500
     finally:
         if cursor:
             cursor.close()
