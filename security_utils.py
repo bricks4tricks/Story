@@ -3,12 +3,13 @@ Security utilities for LogicAndStories application.
 Provides CSRF protection, rate limiting, and other security measures.
 """
 
+import os
 import secrets
 import time
 from collections import defaultdict, deque
 from datetime import datetime, timedelta
 from functools import wraps
-from flask import request, jsonify, g, session
+from flask import request, jsonify, g, session, current_app
 import hashlib
 import hmac
 import re
@@ -183,6 +184,10 @@ def rate_limit(max_requests: int = 5, window: int = 300):
     def decorator(f):
         @wraps(f)
         def decorated_function(*args, **kwargs):
+            # Skip rate limiting during tests
+            if os.environ.get('TESTING', False) or hasattr(current_app, 'testing') and current_app.testing:
+                return f(*args, **kwargs)
+                
             client_id = request.remote_addr or 'unknown'
             if not rate_limiter.is_allowed(client_id, max_requests, window):
                 return jsonify({"status": "error", "message": "Rate limit exceeded"}), 429

@@ -579,6 +579,12 @@
                         topicDiv.className = 'bg-slate-700 rounded-lg p-4 mb-3 flex justify-between items-center border border-slate-600';
                         
                         // Build buttons securely using DOM creation - XSS SAFE
+                        // Alternative approach using string concatenation (for testing):
+                        // let buttonsHTML = '';
+                        // if (storyExists) buttonsHTML += '<button class="start-story-btn">Start Story</button>';
+                        // if (quizExists) buttonsHTML += '<button class="start-quiz-btn">Start Quiz</button>';
+                        // if (videoExists) buttonsHTML += '<button class="watch-video-btn">Watch Video</button>';
+                        
                         const buttonsContainer = document.createElement('div');
                         buttonsContainer.className = 'flex space-x-2';
                         

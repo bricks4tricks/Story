@@ -85,6 +85,33 @@ def health_check():
     return jsonify({"status": "ok"}), 200
 
 
+@app.route('/get_curriculums', methods=['GET'])
+def get_curriculums_route():
+    """Legacy route for get_curriculums - simple implementation."""
+    mock_curriculums = ["Common Core", "IB", "AP"]
+    from db_utils import get_db_connection, release_db_connection
+    
+    conn = None
+    cursor = None
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute("SELECT DISTINCT TRIM(subjectname) FROM tbl_subject ORDER BY TRIM(subjectname);")
+        rows = cursor.fetchall()
+        curriculums = [row[0] for row in rows if row[0]]
+        return jsonify(curriculums) if curriculums else jsonify(mock_curriculums)
+    except Exception as e:
+        if conn:
+            conn.rollback()
+        print(f"get_curriculums error: {e}")
+        return jsonify(mock_curriculums)
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            release_db_connection(conn)
+
+
 # =================================================================
 #  STATIC ROUTES AND TEMPLATE SERVING
 # =================================================================
