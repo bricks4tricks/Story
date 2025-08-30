@@ -100,6 +100,17 @@ def record_quiz_result():
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
+        
+        # Check if user exists
+        cursor.execute("SELECT id FROM tbl_user WHERE id = %s", (user_id,))
+        if not cursor.fetchone():
+            return jsonify({"status": "error", "message": "User not found."}), 400
+        
+        # Check if topic exists
+        cursor.execute("SELECT id FROM tbl_topic WHERE id = %s", (topic_id,))
+        if not cursor.fetchone():
+            return jsonify({"status": "error", "message": "Topic not found."}), 400
+        
         cursor.execute(
             "INSERT INTO tbl_quizscore (userid, topicid, score, takenon) VALUES (%s, %s, %s, NOW())",
             (user_id, topic_id, score),
