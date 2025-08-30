@@ -14,6 +14,16 @@ import psycopg2.extras
 
 admin_bp = Blueprint('admin', __name__, url_prefix='/api/admin')
 
+# Question type mappings
+QUESTION_TYPE_MAP = {
+    'MultipleChoice': 1,
+    'OpenEnded': 2
+}
+QUESTION_TYPE_REVERSE_MAP = {
+    1: 'MultipleChoice',
+    2: 'OpenEnded'
+}
+
 @admin_bp.route("/users-version", methods=["GET"])
 @require_auth(['admin'])
 def get_users_version():
@@ -249,3 +259,163 @@ def delete_flag(flag_id):
 def get_all_question_attempts():
     """Get all question attempts for analytics."""
     return jsonify({"status": "success", "attempts": []})
+
+
+@admin_bp.route('/question/<int:question_id>', methods=['GET'])
+@require_auth(['admin'])
+def get_question_details(question_id):
+    """Get detailed information about a specific question."""
+    conn = None
+    cursor = None
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+
+        cursor.execute("SELECT id, topicid, questionname, questiontype, difficultyrating FROM tbl_question WHERE id = %s", (question_id,))
+        question = cursor.fetchone()
+        if not question:
+            return jsonify({"status": "error", "message": "Question not found."}), 404
+
+        qt = question.get('questiontype')
+        question_type_display = QUESTION_TYPE_REVERSE_MAP.get(qt, qt)
+
+        cursor.execute("SELECT answername, iscorrect FROM tbl_answer WHERE questionid = %s", (question_id,))
+        answers = cursor.fetchall()
+
+        cursor.execute("SELECT stepname FROM tbl_step WHERE questionid = %s ORDER BY sequenceno", (question_id,))
+        steps = cursor.fetchall()
+
+        topic_id = question.get('topicid')
+        if topic_id is None:
+            topic_id = question.get('TopicID')
+        
+        # Get topic information - handle potential missing schema elements gracefully
+        topic_info = None
+        try:
+            cursor.execute(
+                """
+                SELECT
+                    t.id AS topicid,
+                    t.topicname AS TopicName,
+                    unit.topicname AS UnitName,
+                    s.subjectname AS CurriculumType
+                FROM tbl_topic t
+                LEFT JOIN tbl_topic unit ON t.parenttopicid = unit.id
+                LEFT JOIN tbl_subject s ON unit.subjectid = s.id
+                WHERE t.id = %s
+                """,
+                (topic_id,),
+            )
+            topic_info = cursor.fetchone()
+        except:
+            # Fallback if schema doesn't match expected structure
+            pass
+
+        question_details = {
+            "ID": question.get('id'),
+            "TopicID": topic_id,
+            "TopicName": topic_info.get('topicname') if topic_info else None,
+            "UnitName": topic_info.get('unitname') if topic_info else None,
+            "CurriculumType": topic_info.get('curriculumtype') if topic_info else None,
+            "QuestionName": question.get('questionname'),
+            "QuestionType": question_type_display,
+            "DifficultyRating": question.get('difficultyrating'),
+            "Answers": [{
+                'AnswerName': a.get('answername'),
+                'IsCorrect': a.get('iscorrect')
+            } for a in answers],
+            "Steps": [s.get('stepname') for s in steps]
+        }
+
+        return jsonify(question_details), 200
+
+    except Exception as e:
+        print(f"Get Question Details API Error: {e}")
+        traceback.print_exc()
+        return jsonify({"status": "error", "message": "Internal error fetching question details."}), 500
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            release_db_connection(conn)
+
+
+@admin_bp.route('/curriculum-hierarchy', methods=['GET'])
+@require_auth(['admin'])
+def admin_curriculum_hierarchy():
+    """Return units and topics grouped under each curriculum."""
+    conn = None
+    cursor = None
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        
+        # Use a more flexible query that works with current schema
+        query = """
+            SELECT 
+                COALESCE(s.subjectname, 'Unknown') AS curriculum,
+                COALESCE(t.topicname, 'Unknown Unit') AS unitname,
+                t.topicname AS topicname,
+                t.id AS topicid
+            FROM tbl_topic t
+            LEFT JOIN tbl_topicsubject ts ON t.id = ts.topicid
+            LEFT JOIN tbl_subject s ON ts.subjectid = s.id
+            ORDER BY curriculum, unitname, topicname;
+        """
+        cursor.execute(query)
+        rows = cursor.fetchall()
+
+        hierarchy = {}
+        for row in rows:
+            cur = row['curriculum']
+            unit = row['unitname']
+            topic = row['topicname']
+            tid = row['topicid']
+            if cur not in hierarchy:
+                hierarchy[cur] = {}
+            if unit not in hierarchy[cur]:
+                hierarchy[cur][unit] = []
+            hierarchy[cur][unit].append({'id': tid, 'name': topic})
+
+        return jsonify(hierarchy)
+    except Exception as e:
+        print(f"Admin curriculum hierarchy error: {e}")
+        traceback.print_exc()
+        return jsonify({"status": "error", "message": "Internal error"}), 500
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            release_db_connection(conn)
+
+
+@admin_bp.route('/curriculums/<int:subject_id>', methods=['GET'])
+@require_auth(['admin'])
+def get_curriculum_by_id(subject_id):
+    """Get a specific curriculum by ID."""
+    conn = None
+    cursor = None
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        
+        cursor.execute("SELECT id, subjectname FROM tbl_subject WHERE id = %s", (subject_id,))
+        subject = cursor.fetchone()
+        
+        if not subject:
+            return jsonify({"status": "error", "message": "Curriculum not found"}), 404
+        
+        return jsonify({
+            "id": subject['id'],
+            "subjectname": subject['subjectname']
+        })
+        
+    except Exception as e:
+        print(f"Get curriculum by ID error: {e}")
+        traceback.print_exc()
+        return jsonify({"status": "error", "message": "Internal error"}), 500
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            release_db_connection(conn)

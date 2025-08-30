@@ -17,12 +17,12 @@
     try {
       // Get authentication token from localStorage
       const token = localStorage.getItem('token');
-      const headers = {
+      const headers = token ? {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      } : {
         'Content-Type': 'application/json'
       };
-      if (token) {
-        headers['Authorization'] = `Bearer ${token}`;
-      }
       
       const response = await fetch('/api/admin/all-users', {
         method: 'GET',
@@ -50,12 +50,12 @@
     try {
       // Get authentication token from localStorage
       const token = localStorage.getItem('token');
-      const headers = {
+      const headers = token ? {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      } : {
         'Content-Type': 'application/json'
       };
-      if (token) {
-        headers['Authorization'] = `Bearer ${token}`;
-      }
       
       const verRes = await fetch('/api/admin/users-version', {
         method: 'GET',

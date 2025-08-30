@@ -234,3 +234,30 @@ def get_curriculum_table():
             cursor.close()
         if conn:
             release_db_connection(conn)
+
+
+@content_bp.route('/curriculums_simple', methods=['GET'])  # Use different name to avoid conflicts
+def get_curriculums():
+    """Return a list of curriculum names from the database or a mock list."""
+    mock_curriculums = ["Common Core", "IB", "AP"]
+    conn = None
+    cursor = None
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute(
+            "SELECT DISTINCT TRIM(subjectname) FROM tbl_subject ORDER BY TRIM(subjectname);"
+        )
+        rows = cursor.fetchall()
+        curriculums = [row[0] for row in rows if row[0]]
+        return jsonify(curriculums) if curriculums else jsonify(mock_curriculums)
+    except Exception as e:
+        if conn:
+            conn.rollback()
+        print(f"get_curriculums error: {e}")
+        return jsonify(mock_curriculums)
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            release_db_connection(conn)
