@@ -39,7 +39,11 @@
       "Bash(git fetch:*)",
       "Bash(git merge:*)",
       "Bash(timeout 60s git push)",
-      "Bash(git rebase:*)"
+      "Bash(git rebase:*)",
+      "Bash(timeout 60s git push origin fix-libmagic-windows-support)",
+      "Bash(timeout 60s python -m pytest:*)",
+      "Bash(timeout:*)",
+      "Bash(sed:*)"
     ],
     "deny": [],
     "ask": []

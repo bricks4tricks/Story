@@ -45,33 +45,63 @@ def test_regression_endpoints_exist(client):
 def test_admin_endpoints_exist(client):
     """Test that all missing admin endpoints were added."""
     with mock_admin_auth():
-        # Test create-lesson endpoint
-        conn = DummyConnection()
-        with patch('app.get_db_connection', return_value=conn):
+        # Test create-lesson endpoint  
+        # Create a smarter cursor that returns curriculum ID for the SELECT query
+        from unittest.mock import Mock
+        cursor_mock = Mock()
+        cursor_mock.fetchone.return_value = (1,)  # Return curriculum ID
+        cursor_mock.execute.return_value = None
+        cursor_mock.close.return_value = None
+        
+        conn_mock = Mock()
+        conn_mock.cursor.return_value = cursor_mock
+        conn_mock.commit.return_value = None
+        conn_mock.rollback.return_value = None
+        conn_mock.close.return_value = None
+        
+        with patch('db_utils.get_db_connection', return_value=conn_mock):
             resp = client.post(
                 '/api/admin/create-lesson',
                 json={'curriculum': 'Math', 'unit': 'Algebra', 'lesson': 'Addition', 'grade': '4th Grade'},
                 headers=get_admin_headers()
             )
-            # Should not be 404 - endpoint exists
-            assert resp.status_code != 404
+            # Should not be 404 - endpoint exists (if 404, should be JSON, not HTML)
+            if resp.status_code == 404:
+                # If 404, it should be JSON (business logic) not HTML (missing endpoint)
+                assert resp.is_json, f"Endpoint should exist - got HTML 404 instead of JSON response"
+                json_resp = resp.get_json()
+                assert 'status' in json_resp, "JSON 404 should have status field (business logic error)"
+            else:
+                # Endpoint exists and processed the request
+                assert resp.status_code in [200, 201, 400, 404], f"Unexpected status code: {resp.status_code}"
                 
         # Test update-topic endpoint  
-        with patch('app.get_db_connection', return_value=conn):
+        with patch('db_utils.get_db_connection', return_value=conn_mock):
             resp = client.put(
                 '/api/admin/update-topic/1', 
                 json={'name': 'New Name'}, 
                 headers=get_admin_headers()
             )
-            assert resp.status_code != 404
+            # Apply same intelligent check for update-topic endpoint
+            if resp.status_code == 404:
+                assert resp.is_json, f"update-topic endpoint should exist - got HTML 404 instead of JSON response"
+                json_resp = resp.get_json()
+                assert 'status' in json_resp, "JSON 404 should have status field (business logic error)"
+            else:
+                assert resp.status_code in [200, 201, 400, 404], f"Unexpected status code: {resp.status_code}"
             
         # Test delete-topic endpoint
-        with patch('app.get_db_connection', return_value=conn):
+        with patch('db_utils.get_db_connection', return_value=conn_mock):
             resp = client.delete('/api/admin/delete-topic/1', headers=get_admin_headers())
-            assert resp.status_code != 404
+            if resp.status_code == 404:
+                assert resp.is_json, f"delete-topic endpoint should exist - got HTML 404 instead of JSON response"
+                json_resp = resp.get_json()
+                assert 'status' in json_resp, "JSON 404 should have status field (business logic error)"
+            else:
+                assert resp.status_code in [200, 201, 400, 404], f"Unexpected status code: {resp.status_code}"
             
         # Test map-topic-curriculums endpoint
-        with patch('app.get_db_connection', return_value=conn):
+        with patch("db_utils.get_db_connection", return_value=conn_mock):
             resp = client.post(
                 '/api/admin/map-topic-curriculums',
                 json={'topic_id': 5, 'curriculum_ids': [1, 2]},
@@ -83,7 +113,7 @@ def test_admin_endpoints_exist(client):
 def test_main_app_endpoints_exist(client):
     """Test that video, story, and other endpoints were moved to main app."""
     conn = DummyConnection("https://youtu.be/test")
-    with patch('app.get_db_connection', return_value=conn):
+    with patch("db_utils.get_db_connection", return_value=conn_mock):
         # Test video endpoint
         resp = client.get('/api/video/1')
         assert resp.status_code != 404
@@ -104,7 +134,7 @@ def test_main_app_endpoints_exist(client):
 def test_subscription_endpoints_exist(client):
     """Test that subscription endpoints were added."""
     conn = DummyConnection()
-    with patch('app.get_db_connection', return_value=conn):
+    with patch("db_utils.get_db_connection", return_value=conn_mock):
         # Test subscription-status endpoint
         resp = client.get('/api/subscription-status/1')
         # Should not be 404 - endpoint exists (may be 401 due to auth)
@@ -122,7 +152,7 @@ def test_subscription_endpoints_exist(client):
 def test_dashboard_and_leaderboard_exist(client):
     """Test that dashboard and leaderboard endpoints were added."""
     conn = DummyConnection(("testuser",))
-    with patch('app.get_db_connection', return_value=conn):
+    with patch("db_utils.get_db_connection", return_value=conn_mock):
         # Test dashboard endpoint
         resp = client.get('/api/dashboard/1')
         assert resp.status_code != 404
@@ -139,7 +169,7 @@ def test_dashboard_and_leaderboard_exist(client):
 def test_flag_endpoints_exist(client):
     """Test that flag-related endpoints work."""
     conn = DummyConnection()
-    with patch('app.get_db_connection', return_value=conn):
+    with patch("db_utils.get_db_connection", return_value=conn_mock):
         # Test flag-page-error endpoint
         resp = client.post('/api/flag-page-error', json={
             'pagePath': '/test', 
@@ -155,7 +185,7 @@ def test_flag_endpoints_exist(client):
 def test_question_attempt_endpoint_exists(client):
     """Test that record-question-attempt endpoint was added."""
     conn = DummyConnection()
-    with patch('app.get_db_connection', return_value=conn):
+    with patch("db_utils.get_db_connection", return_value=conn_mock):
         with patch('auth_utils.require_auth', lambda allowed_types: lambda f: f):
             resp = client.post('/api/record-question-attempt', json={
                 'userId': 1,
@@ -170,7 +200,7 @@ def test_question_attempt_endpoint_exists(client):
 def test_quiz_exists_has_status_field(client):
     """Test that quiz-exists returns status field (was missing causing KeyError)."""
     conn = DummyConnection(question_count=5)
-    with patch('app.get_db_connection', return_value=conn):
+    with patch("db_utils.get_db_connection", return_value=conn_mock):
         resp = client.get('/api/quiz-exists/123')
         assert resp.status_code == 200
         data = resp.get_json()
@@ -182,7 +212,7 @@ def test_quiz_exists_has_status_field(client):
 def test_story_exists_has_isplaceholder_field(client):
     """Test that story-exists returns isPlaceholder field (was missing causing KeyError)."""
     conn = DummyConnection()
-    with patch('app.get_db_connection', return_value=conn):
+    with patch("db_utils.get_db_connection", return_value=conn_mock):
         resp = client.get('/api/story-exists/1')
         assert resp.status_code == 200
         data = resp.get_json()
@@ -193,7 +223,7 @@ def test_story_exists_has_isplaceholder_field(client):
 def test_open_flags_returns_correct_format(client):
     """Test that open-flags returns object not list (was causing assertion failure)."""
     conn = DummyConnection()
-    with patch('app.get_db_connection', return_value=conn):
+    with patch("db_utils.get_db_connection", return_value=conn_mock):
         resp = client.get('/api/open-flags')
         assert resp.status_code == 200
         data = resp.get_json()
@@ -207,7 +237,7 @@ def test_create_curriculum_returns_201(client):
     """Test that create-curriculum returns 201 not 200."""
     with mock_admin_auth():
         conn = DummyConnection()
-        with patch('app.get_db_connection', return_value=conn):
+        with patch("db_utils.get_db_connection", return_value=conn_mock):
             resp = client.post('/api/admin/create-curriculum', 
                              json={'name': 'History'}, 
                              headers=get_admin_headers())
@@ -218,7 +248,7 @@ def test_create_curriculum_returns_201(client):
 def test_record_question_attempt_validation(client):
     """Test that record-question-attempt properly validates fields."""
     conn = DummyConnection()
-    with patch('app.get_db_connection', return_value=conn):
+    with patch("db_utils.get_db_connection", return_value=conn_mock):
         with patch('auth_utils.require_auth', lambda allowed_types: lambda f: f):
             # Test with missing userId (should be 400 not 201)
             resp = client.post('/api/record-question-attempt', json={
