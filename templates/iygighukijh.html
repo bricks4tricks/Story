@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Portal - Logic and Stories</title>
     <link rel="stylesheet" href="/static/css/styles.css">
-    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-100">
     <!-- Essential security scripts must be loaded first -->
@@ -13,7 +12,11 @@
     <script src="/static/js/csrf.js"></script>
     
     <div class="container mx-auto px-4 py-8">
-        <h1 class="text-3xl font-bold mb-8">Admin Portal</h1>
+        <h1 class="text-3xl font-bold mb-8">Admin Dashboard</h1>
+        
+        <!-- Admin authentication elements -->
+        <div id="welcome-username" class="mb-4"></div>
+        <button id="signOutButton" class="mb-4 px-4 py-2 bg-red-600 text-white rounded">Sign Out</button>
         
         <!-- Placeholder admin content -->
         <div class="bg-white rounded-lg shadow p-6">
@@ -37,6 +40,19 @@
     <!-- Load admin scripts after DOM is ready -->
     <script src="/static/js/userTable.js"></script>
     <script>
+        // Authentication helper function
+        function authenticatedFetch(url, options = {}) {
+            const token = localStorage.getItem('token');
+            return fetch(url, {
+                ...options,
+                headers: {
+                    ...options.headers,
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+        }
+        
         document.addEventListener('DOMContentLoaded', function() {
             console.log('iygrighukijh.html script loaded.');
             
