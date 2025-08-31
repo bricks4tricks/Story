@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: logicandstories
+    runtime: python3
+    buildCommand: "./build.sh"
+    startCommand: "./start.sh"
+    plan: starter
+    region: oregon
+    branch: main
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: FLASK_APP
+        value: app.py
+      - key: FLASK_ENV
+        value: production
+      - key: PYTHONDONTWRITEBYTECODE
+        value: "1"
+      - key: PYTHONUNBUFFERED
+        value: "1"
+    # Environment variables like DATABASE_URL, SMTP_*, etc. 
+    # should be configured in the Render dashboard for security
