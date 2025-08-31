@@ -63,6 +63,7 @@ def test_admin_endpoints_require_authentication():
             assert False, f"CRITICAL SECURITY BREACH: {len(failed_endpoints)} admin endpoints not properly secured"
         else:
             print("\n🛡️ All admin endpoints properly secured!")
+            assert True
 
 
 def test_admin_with_invalid_token():
@@ -79,6 +80,7 @@ def test_admin_with_invalid_token():
         print(f"Invalid admin token test: {response.status_code}")
         if response.status_code in [401, 403]:  # Both 401 and 403 are valid security responses
             print("✅ Invalid admin token properly rejected")
+            assert True
         else:
             print("❌ Invalid admin token was accepted!")
             assert False, f"SECURITY BREACH: Invalid admin token accepted (HTTP {response.status_code})"
@@ -89,14 +91,10 @@ if __name__ == "__main__":
     print("=" * 50)
     
     print("\n1. Testing admin endpoint authentication...")
-    auth_test = test_admin_endpoints_require_authentication()
+    test_admin_endpoints_require_authentication()
     
     print("\n2. Testing invalid admin token rejection...")
-    token_test = test_admin_with_invalid_token()
+    test_admin_with_invalid_token()
     
-    if auth_test and token_test:
-        print("\n✅ ALL ADMIN SECURITY TESTS PASSED!")
-        print("🛡️ Admin endpoints are now properly secured against unauthorized access.")
-    else:
-        print("\n❌ SECURITY TESTS FAILED!")
-        print("🚨 Admin endpoints still have vulnerabilities!")
+    print("\n✅ ALL ADMIN SECURITY TESTS PASSED!")
+    print("🛡️ Admin endpoints are now properly secured against unauthorized access.")
