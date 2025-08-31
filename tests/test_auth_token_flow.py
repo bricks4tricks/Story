@@ -27,17 +27,29 @@ class TestAuthTokenFlow:
     
     def test_signin_api_returns_session_token(self, client):
         """Test that /api/signin endpoint returns proper JSON structure."""
-        # Test with invalid credentials to check response structure
-        response = client.post('/api/signin', json={
-            'username': 'nonexistent',
-            'password': 'wrongpass'
-        })
+        # Mock the database connection to avoid bcrypt issues with MagicMock
+        from unittest.mock import MagicMock
         
-        # Should get JSON response (not 500 error)
-        assert response.status_code in [401, 400]
-        data = response.get_json()
-        assert data is not None
-        assert 'status' in data
+        def mock_db_connection():
+            conn = MagicMock()
+            cursor = MagicMock()
+            # Mock empty user query result (user not found)
+            cursor.fetchone.return_value = None
+            conn.cursor.return_value = cursor
+            return conn
+        
+        with patch("auth.get_db_connection", side_effect=mock_db_connection):
+            # Test with invalid credentials to check response structure
+            response = client.post('/api/signin', json={
+                'username': 'nonexistent',
+                'password': 'wrongpass'
+            })
+            
+            # Should get JSON response (not 500 error)
+            assert response.status_code in [401, 400]
+            data = response.get_json()
+            assert data is not None
+            assert 'status' in data
         
         # Critical: Verify the endpoint is designed to return sessionToken
         # (Check the response structure includes the sessionToken field for successful logins)

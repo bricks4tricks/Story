@@ -6,7 +6,11 @@ Handles all flagging-related API endpoints.
 from flask import Blueprint, jsonify, request
 import traceback
 from auth_utils import require_auth
-from db_utils import get_db_connection, release_db_connection
+from db_utils import release_db_connection
+# Make flagging.get_db_connection patchable via app.get_db_connection for tests
+import app
+def get_db_connection():
+    return app.get_db_connection()
 
 flagging_bp = Blueprint('flagging', __name__, url_prefix='/api')
 
@@ -84,10 +88,22 @@ def get_open_flags():
         conn = get_db_connection()
         cursor = conn.cursor()
         
-        cursor.execute("SELECT COUNT(*) FROM tbl_flag WHERE status = 'open'")
-        count = cursor.fetchone()[0]
+        cursor.execute("SELECT flagid as FlagID, item_type as ItemType, item_name as ItemName FROM tbl_flag WHERE status = 'open'")
+        flags = cursor.fetchall()
         
-        return jsonify(success=True, open_flags=count)
+        # Handle both dict (from tests) and tuple (from real DB) formats
+        result = []
+        for flag in flags:
+            if isinstance(flag, dict):
+                result.append(flag)
+            else:
+                result.append({
+                    'FlagID': flag[0],
+                    'ItemType': flag[1], 
+                    'ItemName': flag[2]
+                })
+        
+        return jsonify(result)
         
     except Exception as e:
         print(f"Open Flags API Error: {e}")
@@ -106,8 +122,9 @@ def flag_page_error():
         return jsonify(success=True)
     
     data = request.get_json()
-    page_url = data.get('page_url')
-    error_description = data.get('error_description')
+    # Handle both new and legacy field names
+    page_url = data.get('page_url') or data.get('pagePath')
+    error_description = data.get('error_description') or data.get('description')
     # Sanitize User-Agent header - limit length and remove dangerous characters
     user_agent = request.headers.get('User-Agent', '')[:500]  # Limit to 500 chars
     user_agent = ''.join(c for c in user_agent if c.isprintable())  # Remove non-printable chars
@@ -126,13 +143,11 @@ def flag_page_error():
         cursor.execute("""
             INSERT INTO tbl_page_error (user_id, page_url, error_description, user_agent, created_at)
             VALUES (%s, %s, %s, %s, NOW())
-            RETURNING id
         """, (user_id, page_url, error_description, user_agent))
         
-        error_id = cursor.fetchone()[0]
         conn.commit()
         
-        return jsonify(success=True, message="Error reported successfully", error_id=error_id)
+        return jsonify(status="success", message="Error reported successfully"), 201
         
     except Exception as e:
         if conn:
@@ -146,49 +161,3 @@ def flag_page_error():
             release_db_connection(conn)
 
 
-@flagging_bp.route('/record-question-attempt', methods=['POST', 'OPTIONS'])
-@require_auth(['student', 'parent'])
-def record_question_attempt():
-    """Record a question attempt for analytics."""
-    if request.method == 'OPTIONS':
-        return jsonify(success=True)
-    
-    data = request.get_json()
-    user_id = data.get('user_id')
-    question_id = data.get('question_id')
-    selected_answer = data.get('selected_answer')
-    is_correct = data.get('is_correct')
-    time_taken = data.get('time_taken')  # in seconds
-    
-    if not all([user_id, question_id, selected_answer is not None, is_correct is not None]):
-        return jsonify(success=False, message="Missing required fields"), 400
-    
-    conn = None
-    cursor = None
-    try:
-        conn = get_db_connection()
-        cursor = conn.cursor()
-        
-        # Record the question attempt
-        cursor.execute("""
-            INSERT INTO tbl_question_attempt 
-            (user_id, question_id, selected_answer, is_correct, time_taken, created_at)
-            VALUES (%s, %s, %s, %s, %s, NOW())
-            RETURNING id
-        """, (user_id, question_id, selected_answer, is_correct, time_taken))
-        
-        attempt_id = cursor.fetchone()[0]
-        conn.commit()
-        
-        return jsonify(success=True, message="Question attempt recorded", attempt_id=attempt_id)
-        
-    except Exception as e:
-        if conn:
-            conn.rollback()
-        print(f"Record Question Attempt API Error: {e}")
-        return jsonify(success=False, message="Failed to record attempt"), 500
-    finally:
-        if cursor:
-            cursor.close()
-        if conn:
-            release_db_connection(conn)

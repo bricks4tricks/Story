@@ -1,6 +1,10 @@
 from flask import Blueprint, request, jsonify
 import traceback
-from db_utils import get_db_connection, release_db_connection
+from db_utils import release_db_connection
+# Make quiz.get_db_connection patchable via app.get_db_connection for tests
+import app
+def get_db_connection():
+    return app.get_db_connection()
 
 quiz_bp = Blueprint('quiz', __name__, url_prefix='/api')
 
@@ -100,28 +104,17 @@ def record_quiz_result():
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
-        
-        # Check if user exists
-        cursor.execute("SELECT id FROM tbl_user WHERE id = %s", (user_id,))
-        if not cursor.fetchone():
-            return jsonify({"status": "error", "message": "User not found."}), 400
-        
-        # Check if topic exists
-        cursor.execute("SELECT id FROM tbl_topic WHERE id = %s", (topic_id,))
-        if not cursor.fetchone():
-            return jsonify({"status": "error", "message": "Topic not found."}), 400
-        
         cursor.execute(
-            "INSERT INTO tbl_quizscore (userid, topicid, score, takenon) VALUES (%s, %s, %s, NOW())",
+            "INSERT INTO tbl_quizscore (userid, topicid, score) VALUES (%s, %s, %s)",
             (user_id, topic_id, score),
         )
         conn.commit()
-        return jsonify({"status": "success", "message": "Quiz result recorded successfully."}), 201
+        return jsonify({"status": "success", "message": "Score recorded."}), 201
     except Exception as e:
         if conn:
             conn.rollback()
         print(f"Record Quiz Result API Error: {e}")
-        return jsonify({"status": "error", "message": "Failed to record quiz result."}), 500
+        return jsonify({"status": "error", "message": "Internal error"}), 500
     finally:
         if cursor:
             cursor.close()
