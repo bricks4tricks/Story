@@ -68,8 +68,10 @@ from user_management import user_mgmt_bp
 from flagging import flagging_bp
 # from subscription import subscription_bp  # Commented out for test compatibility
 from routes.analytics import analytics_bp
+from routes.core import core_bp
 
 # Register blueprints
+app.register_blueprint(core_bp)
 app.register_blueprint(auth_bp)
 app.register_blueprint(admin_bp)
 app.register_blueprint(quiz_bp)
