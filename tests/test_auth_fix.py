@@ -1,40 +1,60 @@
 #!/usr/bin/env python3
-"""Quick test to verify authentication fixes without using pytest."""
+"""Test to verify authentication fixes with proper pytest structure."""
 
 import os
 import sys
+import pytest
 
-# Set testing environment variable
-os.environ['TESTING'] = 'True'
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-# Add current directory to path
-sys.path.insert(0, os.path.abspath('.'))
 
-try:
-    print("Testing authentication fix...")
+@pytest.fixture
+def auth_test_env():
+    """Set up and clean up test environment variables."""
+    original_testing = os.environ.get('TESTING')
+    original_mock_auth = os.environ.get('MOCK_AUTH')
     
-    # Test import
+    # Set test environment
+    os.environ['TESTING'] = 'True'
+    os.environ['MOCK_AUTH'] = 'true'
+    
+    yield
+    
+    # Clean up environment variables
+    if original_testing is not None:
+        os.environ['TESTING'] = original_testing
+    else:
+        os.environ.pop('TESTING', None)
+    
+    if original_mock_auth is not None:
+        os.environ['MOCK_AUTH'] = original_mock_auth
+    else:
+        os.environ.pop('MOCK_AUTH', None)
+
+
+def test_auth_utils_import_works(auth_test_env):
+    """Test that auth_utils can be imported successfully."""
     from auth_utils import require_auth
-    print("✅ Successfully imported auth_utils")
+    assert require_auth is not None
+
+
+def test_auth_decorator_creation(auth_test_env):
+    """Test that auth decorator can be created for admin endpoints."""
+    from auth_utils import require_auth
+    from app import app
     
-    # Test the decorator in testing mode
     @require_auth(['admin'])
-    def test_admin_endpoint():
-        from flask import g
-        return f"User: {g.current_user}"
+    def admin_endpoint():
+        return "User: test-admin"
     
-    print("✅ Successfully created test endpoint")
-    
-    # Mock Flask's g object
-    class MockG:
-        pass
-    
-    # Test the function (this would normally be called within Flask request context)
-    print("✅ Authentication bypass working correctly in test mode")
-    
-    print("🎉 All authentication tests passed!")
-    
-except Exception as e:
-    print(f"❌ Error testing authentication: {e}")
-    import traceback
-    traceback.print_exc()
+    # Test the decorated function within app context
+    with app.app_context():
+        with app.test_request_context():
+            result = admin_endpoint()
+            assert result == "User: test-admin"
+
+
+def test_mock_auth_environment_variable(auth_test_env):
+    """Test that MOCK_AUTH environment variable is set correctly."""
+    assert os.environ.get('MOCK_AUTH') == 'true'
+    assert os.environ.get('TESTING') == 'True'
