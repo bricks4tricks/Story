@@ -4,7 +4,7 @@ Quick test to verify admin authentication is working
 """
 import pytest
 from unittest.mock import patch
-from tests.test_auth_utils import mock_admin_auth, get_admin_headers
+from test_auth_utils import mock_admin_auth, get_admin_headers
 from app import app
 
 def test_simple_auth():
