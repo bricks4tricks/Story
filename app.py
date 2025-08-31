@@ -168,6 +168,39 @@ def get_units(curriculum):
             release_db_connection(conn)
 
 
+@app.route('/get_topics/<curriculum>/<unit>', methods=['GET'])
+def get_topics(curriculum, unit):
+    """Return topics for the given curriculum and unit."""
+    conn = None
+    cursor = None
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+        query = sql.SQL(
+            """
+            SELECT t.id, t.TopicName
+            FROM tbl_topic t
+            JOIN tbl_topic unit ON t.parenttopicid = unit.id
+            JOIN tbl_subject s ON unit.subjectid = s.id
+              WHERE s.SubjectName = %s
+              AND unit.TopicName = %s
+            ORDER BY t.TopicName;
+            """
+        )
+        cursor.execute(query, (curriculum, unit))
+        topics = [{"id": row["id"], "name": row["topicname"]} for row in cursor.fetchall()]
+        return jsonify(topics)
+    except Exception as e:
+        print(f"get_topics error: {e}")
+        traceback.print_exc()
+        return jsonify([])
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            release_db_connection(conn)
+
+
 # =================================================================
 #  STATIC ROUTES AND TEMPLATE SERVING
 # =================================================================

@@ -44,6 +44,7 @@ jobs:
         run: |
           python tests/test_admin_routes_regression.py
           python tests/test_admin_portal_access.py
+          python tests/test_admin_portal_production_fixes.py
           
       - name: Validate environment configuration
         run: |
