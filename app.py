@@ -182,6 +182,16 @@ def admin_login():
     return render_template('iygighukijh.html')
 
 
+@app.route('/admin')
+@app.route('/admin/')
+@app.route('/admin/portal')
+@app.route('/admin-portal')
+@app.route('/admin-dashboard')
+def admin_portal():
+    """Redirect various admin URLs to the admin login/dashboard page."""
+    return render_template('iygighukijh.html')
+
+
 @app.route('/dashboard.html')
 def dashboard():
     return render_template('dashboard.html')
