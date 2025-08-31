@@ -7,6 +7,8 @@ import os
 import sys
 os.environ['PYTEST_CURRENT_TEST'] = '1'  # Skip env validation
 
+# Add parent directory to path so we can import app
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 from app import app
 import json
 
@@ -58,6 +60,7 @@ def test_admin_py_endpoints_require_authentication():
         else:
             print("\n🛡️ All admin.py endpoints properly secured!")
             print("✅ Critical authentication bypass vulnerability FIXED!")
+            return True
 
 
 def test_admin_py_with_invalid_token():
@@ -75,6 +78,7 @@ def test_admin_py_with_invalid_token():
         print(f"Invalid admin token test (admin.py): {response.status_code}")
         if response.status_code in [401, 403]:  # Both 401 and 403 are valid security responses
             print("✅ Invalid admin token properly rejected by admin.py")
+            return True
         else:
             print("❌ Invalid admin token was accepted by admin.py!")
             assert False, f"SECURITY BREACH: Invalid admin token accepted by admin.py (HTTP {response.status_code})"
