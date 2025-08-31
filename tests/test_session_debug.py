@@ -55,8 +55,16 @@ def test_actual_signin_flow():
         if response.is_json:
             print(f"Signin response: {response.get_json()}")
         
-        # Check if we can see any session cookies
-        cookies = [cookie for cookie in client.cookie_jar]
+        # Check if we can see any session cookies (compatible with newer Werkzeug)
+        try:
+            cookies = [cookie for cookie in client.cookie_jar]
+        except AttributeError:
+            # Newer Werkzeug versions don't expose cookie_jar directly
+            # We can still check response headers for Set-Cookie
+            cookies = []
+            set_cookie_headers = response.headers.getlist('Set-Cookie')
+            for cookie_header in set_cookie_headers:
+                cookies.append(cookie_header)
         print(f"Cookies after signin attempt: {cookies}")
 
 
