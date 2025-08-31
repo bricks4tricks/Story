@@ -23,8 +23,8 @@ jobs:
           
       - name: Run security tests
         run: |
-          python test_admin_security.py
-          python test_admin_py_security.py
+          PYTHONPATH=. python tests/test_admin_security.py
+          PYTHONPATH=. python tests/test_admin_py_security.py
           
       - name: Validate environment configuration
         run: |
