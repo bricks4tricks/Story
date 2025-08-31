@@ -60,10 +60,9 @@ def test_admin_endpoints_require_authentication():
             print("\n🚨 CRITICAL SECURITY VULNERABILITIES:")
             for endpoint, status in failed_endpoints:
                 print(f"   - {endpoint} (HTTP {status})")
-            return False
+            assert False, f"CRITICAL SECURITY BREACH: {len(failed_endpoints)} admin endpoints not properly secured"
         else:
             print("\n🛡️ All admin endpoints properly secured!")
-            return True
 
 
 def test_admin_with_invalid_token():
@@ -78,12 +77,11 @@ def test_admin_with_invalid_token():
         response = client.delete('/api/admin/delete-user/999', headers=headers)
         
         print(f"Invalid admin token test: {response.status_code}")
-        if response.status_code == 401:
+        if response.status_code in [401, 403]:  # Both 401 and 403 are valid security responses
             print("✅ Invalid admin token properly rejected")
-            return True
         else:
             print("❌ Invalid admin token was accepted!")
-            return False
+            assert False, f"SECURITY BREACH: Invalid admin token accepted (HTTP {response.status_code})"
 
 
 if __name__ == "__main__":
