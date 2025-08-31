@@ -4,6 +4,10 @@ Quick test to verify admin authentication is working
 """
 import pytest
 from unittest.mock import patch
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 from test_auth_utils import mock_admin_auth, get_admin_headers
 from app import app
 

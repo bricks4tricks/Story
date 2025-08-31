@@ -104,7 +104,7 @@ class EnvironmentValidator:
             print("Environment Variable Validation Failed:")
             print("=" * 50)
             for error in errors:
-                print(f"❌ {error}")
+                print(f"ERROR: {error}")
             
             print("\nRequired Environment Variables:")
             self._print_help()
@@ -115,7 +115,7 @@ class EnvironmentValidator:
             
             return False
         
-        print("✅ Environment variable validation passed")
+        print("Environment variable validation passed")
         return True
     
     def _print_help(self):
