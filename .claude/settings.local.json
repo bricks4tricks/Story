@@ -43,7 +43,8 @@
       "Bash(timeout 60s git push origin fix-libmagic-windows-support)",
       "Bash(timeout 60s python -m pytest:*)",
       "Bash(timeout:*)",
-      "Bash(sed:*)"
+      "Bash(sed:*)",
+      "Bash(curl:*)"
     ],
     "deny": [],
     "ask": []

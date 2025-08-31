@@ -51,7 +51,7 @@ def test_curriculum_api_structure(client):
     sample_rows = [
         {
             'gradename': '4th Grade',
-            'curriculumtype': 'Math',
+            'curriculumtype': 'Florida',
             'unitname': 'Addition',
             'topicname': 'Basic Addition',
             'topicid': 1,
@@ -60,7 +60,7 @@ def test_curriculum_api_structure(client):
         },
         {
             'gradename': '4th Grade',
-            'curriculumtype': 'Math',
+            'curriculumtype': 'Florida',
             'unitname': 'Subtraction',
             'topicname': 'Basic Subtraction',
             'topicid': 2,
@@ -69,7 +69,7 @@ def test_curriculum_api_structure(client):
         },
         {
             'gradename': '5th Grade',
-            'curriculumtype': 'Science',
+            'curriculumtype': 'Florida',
             'unitname': 'Biology',
             'topicname': 'Cells',
             'topicid': 3,

@@ -89,7 +89,24 @@ class DummyConnection:
 def mock_admin_auth():
     """Mock admin authentication for tests."""
     from unittest.mock import patch
-    return patch('auth_utils.require_auth', lambda allowed_types: lambda f: f)
+    import os
+    
+    # Set environment variable to bypass auth
+    def setup_mock():
+        os.environ['MOCK_AUTH'] = 'true'
+    
+    def teardown_mock():
+        if 'MOCK_AUTH' in os.environ:
+            del os.environ['MOCK_AUTH']
+    
+    class MockAuthContext:
+        def __enter__(self):
+            setup_mock()
+            return self
+        def __exit__(self, exc_type, exc_val, exc_tb):
+            teardown_mock()
+    
+    return MockAuthContext()
 
 
 def mock_student_auth():
@@ -110,3 +127,31 @@ def get_student_headers():
 
 # Disable rate limiting for tests by setting environment variable
 os.environ['TESTING'] = 'True'
+
+
+def patch_db_connection(mock_connection):
+    """Patch get_db_connection across multiple modules."""
+    from unittest.mock import patch
+    
+    class MultiPatch:
+        def __init__(self, connection):
+            self.connection = connection
+            self.patches = []
+        
+        def __enter__(self):
+            # Patch all the different import paths where get_db_connection is used
+            self.patches = [
+                patch('app.get_db_connection', return_value=self.connection),
+                patch('admin.get_db_connection', return_value=self.connection),
+                patch('content.get_db_connection', return_value=self.connection),
+                patch('db_utils.get_db_connection', return_value=self.connection)
+            ]
+            for p in self.patches:
+                p.__enter__()
+            return self
+        
+        def __exit__(self, exc_type, exc_val, exc_tb):
+            for p in reversed(self.patches):
+                p.__exit__(exc_type, exc_val, exc_tb)
+    
+    return MultiPatch(mock_connection)

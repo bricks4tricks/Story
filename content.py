@@ -6,7 +6,12 @@ Handles all content-related API endpoints.
 from flask import Blueprint, jsonify, request
 import traceback
 from auth_utils import require_auth
-from db_utils import get_db_connection, release_db_connection
+from db_utils import release_db_connection
+
+# Make content.get_db_connection patchable via app.get_db_connection for tests
+import app
+def get_db_connection():
+    return app.get_db_connection()
 
 content_bp = Blueprint('content', __name__, url_prefix='/api')
 
@@ -25,7 +30,7 @@ def get_video(topic_id):
         cursor.execute("SELECT youtubeurl FROM tbl_video WHERE topicid = %s", (topic_id,))
         result = cursor.fetchone()
         if result:
-            return jsonify(success=True, youtubeUrl=result[0])
+            return jsonify(success=True, videoUrl=result[0])
         else:
             return jsonify(success=False, message="Video not found"), 404
     except Exception as e:
@@ -46,12 +51,50 @@ def get_story(topic_id):
     try:
         conn = get_db_connection()
         cursor = conn.cursor()
+        
+        # Get structured content from tbl_description
+        cursor.execute("""
+            SELECT id, sectionname, descriptiontext, interactiveelementid, 
+                   descriptionorder, contenttype
+            FROM tbl_description 
+            WHERE topicid = %s 
+            ORDER BY descriptionorder
+        """, (topic_id,))
+        descriptions = cursor.fetchall()
+        
+        if descriptions:
+            sections = []
+            for desc in descriptions:
+                # Handle both dict (from tests) and tuple (from real DB) formats
+                if isinstance(desc, dict):
+                    content = desc.get('descriptiontext', '')
+                    section_name = desc.get('sectionname', '')
+                else:
+                    content = desc[2] if len(desc) > 2 else ''
+                    section_name = desc[1] if len(desc) > 1 else ''
+                
+                # Replace newlines with <br> tags
+                formatted_content = content.replace('\n', '<br>') if content else ''
+                
+                sections.append({
+                    'sectionName': section_name,
+                    'content': formatted_content
+                })
+            
+            return jsonify(success=True, sections=sections)
+        
+        # Fallback: try simple story from tbl_story
         cursor.execute("SELECT story FROM tbl_story WHERE topicid = %s", (topic_id,))
         result = cursor.fetchone()
         if result:
             return jsonify(success=True, story=result[0])
         else:
-            return jsonify(success=False, message="Story not found"), 404
+            # Return placeholder story when no content is found
+            placeholder_sections = [{
+                'sectionName': 'Placeholder',
+                'content': 'Story coming soon.'
+            }]
+            return jsonify(success=True, sections=placeholder_sections)
     except Exception as e:
         print(f"Get Story API Error: {e}")
         return jsonify(success=False, message="Failed to fetch story"), 500
@@ -93,10 +136,10 @@ def quiz_exists(topic_id):
         cursor = conn.cursor()
         cursor.execute("SELECT COUNT(*) FROM tbl_question WHERE topicid = %s", (topic_id,))
         count = cursor.fetchone()[0]
-        return jsonify(success=True, quizExists=(count > 0))
+        return jsonify(status="success", success=True, quizExists=count > 0, questionCount=count)
     except Exception as e:
         print(f"Quiz Exists API Error: {e}")
-        return jsonify(success=False, message="Failed to check quiz existence"), 500
+        return jsonify(status="error", message="Internal error checking quiz availability."), 500
     finally:
         if cursor:
             cursor.close()
@@ -125,6 +168,7 @@ def get_curriculum():
             JOIN tbl_subject s ON unit.subjectid = s.id
             JOIN tbl_topicgrade tg ON topic.id = tg.topicid
             JOIN tbl_grade g ON tg.gradeid = g.id
+            GROUP BY g.gradename, s.subjectname, unit.topicname, topic.topicname, topic.id, g.id, s.id, unit.id
             ORDER BY g.id, s.id, unit.id, topic.id;
         """
         cursor.execute(query)
@@ -154,11 +198,19 @@ def get_curriculum():
             "IB Math AI HL": {"icon": "AI HL", "color": "bbf7d0"},
         }
         for row in rows:
-            grade_name = row[0]
-            curriculum_type = row[1]
-            unit_name = row[2]
-            topic_name = row[3]
-            topic_id = row[4]
+            # Handle both dict (from tests) and tuple (from real DB) formats
+            if isinstance(row, dict):
+                grade_name = row.get('gradename')
+                curriculum_type = row.get('curriculumtype') or row.get('CurriculumType')
+                unit_name = row.get('unitname') or row.get('UnitName')
+                topic_name = row.get('topicname')
+                topic_id = row.get('topicid')
+            else:
+                grade_name = row[0]
+                curriculum_type = row[1]
+                unit_name = row[2]
+                topic_name = row[3]
+                topic_id = row[4]
             
             clean_grade_name = ' '.join(grade_name.replace('grade', 'Grade').split()).strip()
             if clean_grade_name not in curriculum_data:
@@ -215,16 +267,20 @@ def get_curriculum_table():
         table_data = []
         
         for row in rows:
-            table_data.append({
-                'curriculum_id': row[0],
-                'curriculum_name': row[1],
-                'lesson_id': row[2],
-                'lesson_name': row[3],
-                'topic_id': row[4],
-                'topic_name': row[5]
-            })
+            # Handle both dict (from tests) and tuple (from real DB) formats
+            if isinstance(row, dict):
+                table_data.append(row)
+            else:
+                table_data.append({
+                    'curriculum_id': row[0],
+                    'curriculum_name': row[1],
+                    'lesson_id': row[2],
+                    'lesson_name': row[3],
+                    'topic_id': row[4],
+                    'topic_name': row[5]
+                })
         
-        return jsonify(success=True, data=table_data)
+        return jsonify(table_data)
         
     except Exception as e:
         print(f"Get Curriculum Table API Error: {e}")

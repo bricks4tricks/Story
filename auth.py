@@ -450,6 +450,14 @@ def signin_user():
                         else:
                             subscription_status = "active"
                             days_left = (expires_on - now_utc).days if expires_on else None
+            
+            # Block Students with inactive/missing subscriptions
+            if user[3] == 'Student' and subscription_status in ["inactive", "expired", "missing_parent"]:
+                return jsonify({
+                    "status": "error", 
+                    "message": "Active subscription required for student access"
+                }), 403
+            
             # Create session token
             session_token = SessionManager.create_session(user[0], user[3].lower())
             
