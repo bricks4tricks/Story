@@ -54,11 +54,10 @@ def test_admin_py_endpoints_require_authentication():
             print("   - Complete user database dump (/all-users)")
             print("   - Database seeding/corruption (/seed-database)")
             print("   - Version information disclosure (/users-version)")
-            return False
+            assert False, f"CRITICAL SECURITY BREACH: {len(failed_endpoints)} admin.py endpoints not properly secured"
         else:
             print("\n🛡️ All admin.py endpoints properly secured!")
             print("✅ Critical authentication bypass vulnerability FIXED!")
-            return True
 
 
 def test_admin_py_with_invalid_token():
@@ -74,12 +73,11 @@ def test_admin_py_with_invalid_token():
         response = client.get('/api/admin/all-users', headers=headers)
         
         print(f"Invalid admin token test (admin.py): {response.status_code}")
-        if response.status_code == 401:
+        if response.status_code in [401, 403]:  # Both 401 and 403 are valid security responses
             print("✅ Invalid admin token properly rejected by admin.py")
-            return True
         else:
             print("❌ Invalid admin token was accepted by admin.py!")
-            return False
+            assert False, f"SECURITY BREACH: Invalid admin token accepted by admin.py (HTTP {response.status_code})"
 
 
 if __name__ == "__main__":
