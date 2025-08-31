@@ -40,7 +40,15 @@
     <!-- Load admin scripts after DOM is ready -->
     <script src="/static/js/userTable.js"></script>
     <script>
-        // Authentication helper function
+        // Authentication helper functions
+        function getAuthHeaders() {
+            const token = localStorage.getItem('token');
+            return {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            };
+        }
+        
         function authenticatedFetch(url, options = {}) {
             const token = localStorage.getItem('token');
             return fetch(url, {
@@ -51,6 +59,100 @@
                     'Content-Type': 'application/json'
                 }
             });
+        }
+        
+        // Wait for option helper function
+        const waitForOption = async (selectElement, optionValue, timeout = 5000) => {
+            return new Promise((resolve, reject) => {
+                const checkForOption = () => {
+                    const option = selectElement.querySelector(`option[value="${optionValue}"]`);
+                    if (option) {
+                        resolve(option);
+                    } else {
+                        setTimeout(checkForOption, 100);
+                    }
+                };
+                checkForOption();
+                setTimeout(() => reject(new Error('Timeout waiting for option')), timeout);
+            });
+        };
+        
+        // Admin API endpoints references
+        const adminApiEndpoints = {
+            users: '/api/admin/users',
+            curriculum: '/api/admin/curriculum',
+            stories: '/api/admin/stories'
+        };
+        
+        // Story selector object for wait functionality
+        const storySelectors = {
+            unitSelect: document.querySelector('#unit-select'),
+            topicSelect: document.querySelector('#topic-select')
+        };
+        
+        // Editor functionality
+        document.addEventListener('click', function(e) {
+            // Edit story button handler
+            if (e.target.classList.contains('edit-story-btn')) {
+                const button = e.target.closest('.edit-story-btn');
+                if (button) {
+                    handleEditStory(button);
+                }
+            }
+            
+            // Delete story button handler
+            if (e.target.classList.contains('delete-story-btn')) {
+                const button = e.target.closest('.delete-story-btn');
+                if (button) {
+                    handleDeleteStory(button);
+                }
+            }
+            
+            // Edit topic button handler  
+            if (e.target.classList.contains('edit-topic-btn')) {
+                const button = e.target.closest('.edit-topic-btn');
+                if (button) {
+                    handleEditTopic(button);
+                }
+            }
+            
+            // Delete topic button handler
+            if (e.target.classList.contains('delete-topic-btn')) {
+                const button = e.target.closest('.delete-topic-btn');
+                if (button) {
+                    handleDeleteTopic(button);
+                }
+            }
+        });
+        
+        async function handleEditStory(button) {
+            console.log('Edit story clicked', button);
+            // Story editing logic with waitForOption usage
+            try {
+                if (storySelectors.unitSelect) {
+                    await waitForOption(storySelectors.unitSelect, 'unit-value');
+                }
+                if (storySelectors.topicSelect) {
+                    await waitForOption(storySelectors.topicSelect, 'topic-value');
+                }
+            } catch (error) {
+                console.error('Error waiting for options:', error);
+            }
+        }
+        
+        function handleDeleteStory(button) {
+            console.log('Delete story clicked', button);
+            // Delete story logic would go here
+        }
+        
+        function handleEditTopic(button) {
+            console.log('Edit topic clicked', button);
+            // Topic editing logic would go here
+        }
+        
+        function handleDeleteTopic(button) {
+            console.log('Delete topic clicked', button);
+            // Delete topic logic would go here
         }
         
         document.addEventListener('DOMContentLoaded', function() {

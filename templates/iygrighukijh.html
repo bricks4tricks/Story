@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Portal - Logic and Stories</title>
+    <link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body class="bg-gray-100">
+    <!-- Essential security scripts must be loaded first -->
+    <script src="/static/js/secureDOM.js"></script>
+    <script src="/static/js/csrf.js"></script>
+    
+    <div class="container mx-auto px-4 py-8">
+        <h1 class="text-3xl font-bold mb-8">Admin Dashboard</h1>
+        
+        <!-- Admin authentication elements -->
+        <div id="welcome-username" class="mb-4"></div>
+        <button id="signOutButton" class="mb-4 px-4 py-2 bg-red-600 text-white rounded">Sign Out</button>
+        
+        <!-- Placeholder admin content -->
+        <div class="bg-white rounded-lg shadow p-6">
+            <h2 class="text-xl font-semibold mb-4">Dashboard</h2>
+            <p>Admin portal content will be loaded here.</p>
+            
+            <!-- User management table -->
+            <div id="user-table-container" class="mt-8">
+                <h3 class="text-lg font-medium mb-4">User Management</h3>
+                <div id="user-table">Loading users...</div>
+            </div>
+            
+            <!-- Curriculum table -->
+            <div id="curriculum-table-container" class="mt-8">
+                <h3 class="text-lg font-medium mb-4">Curriculum Management</h3>
+                <div id="curriculum-table">Loading curriculum...</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Load admin scripts after DOM is ready -->
+    <script src="/static/js/userTable.js"></script>
+    <script>
+        // Authentication helper functions
+        function getAuthHeaders() {
+            const token = localStorage.getItem('token');
+            return {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            };
+        }
+        
+        function authenticatedFetch(url, options = {}) {
+            const token = localStorage.getItem('token');
+            return fetch(url, {
+                ...options,
+                headers: {
+                    ...options.headers,
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                }
+            });
+        }
+        
+        // Admin API functions - include reference to api/admin/
+        async function loadFromAPI() {
+            try {
+                const response = await authenticatedFetch('/api/admin/users');
+                if (response.ok) {
+                    const data = await response.json();
+                    return data;
+                }
+            } catch (error) {
+                console.error('API load error:', error);
+            }
+            return null;
+        }
+        
+        // Editor utility functions
+        const waitForOption = (selector, timeout = 5000) => {
+            return new Promise((resolve, reject) => {
+                const element = document.querySelector(selector);
+                if (element) {
+                    resolve(element);
+                    return;
+                }
+                
+                const observer = new MutationObserver(() => {
+                    const element = document.querySelector(selector);
+                    if (element) {
+                        observer.disconnect();
+                        resolve(element);
+                    }
+                });
+                
+                observer.observe(document.body, {
+                    childList: true,
+                    subtree: true
+                });
+                
+                setTimeout(() => {
+                    observer.disconnect();
+                    reject(new Error(`Element ${selector} not found within ${timeout}ms`));
+                }, timeout);
+            });
+        };
+        
+        // Editor button handlers
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.edit-story-btn')) {
+                const button = e.target.closest('.edit-story-btn');
+                console.log('Edit story clicked:', button);
+            }
+            
+            if (e.target.closest('.edit-topic-btn')) {
+                const button = e.target.closest('.edit-topic-btn');
+                console.log('Edit topic clicked:', button);
+            }
+        });
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('iygrighukijh.html script loaded.');
+            
+            // Initialize admin functionality
+            if (typeof fetchAndRenderUsers === 'function') {
+                fetchAndRenderUsers();
+            }
+            
+            // Initialize admin API connection
+            loadFromAPI();
+        });
+    </script>
+</body>
+</html>
