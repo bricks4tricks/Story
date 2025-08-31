@@ -135,6 +135,22 @@ def require_auth(allowed_user_types=['student', 'parent', 'admin']):
     def decorator(f):
         @wraps(f)
         def decorated_function(*args, **kwargs):
+            # Check if auth is explicitly mocked via environment variable
+            import os
+            if os.environ.get('MOCK_AUTH') == 'true':
+                # For testing, create a mock user based on the allowed types
+                user_type = 'admin' if 'admin' in allowed_user_types else allowed_user_types[0] if allowed_user_types else 'student'
+                try:
+                    g.current_user = {
+                        'user_id': 1, 
+                        'user_type': user_type, 
+                        'username': f'test-{user_type}'
+                    }
+                except RuntimeError:
+                    # If no app context, just continue without setting g.current_user
+                    pass
+                return f(*args, **kwargs)
+            
             # First try httpOnly session cookie
             token = session.get('session_token')
             

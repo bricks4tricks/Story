@@ -1,6 +1,10 @@
 from flask import Blueprint, request, jsonify
 import traceback
-from db_utils import get_db_connection, release_db_connection
+from db_utils import release_db_connection
+# Make quiz.get_db_connection patchable via app.get_db_connection for tests
+import app
+def get_db_connection():
+    return app.get_db_connection()
 
 quiz_bp = Blueprint('quiz', __name__, url_prefix='/api')
 
@@ -63,6 +67,54 @@ def get_quiz_question(user_id, topic_id, difficulty_level):
         print(f"Get Quiz Question API Error: {e}")
         traceback.print_exc()
         return jsonify({"status": "error", "message": "Internal error fetching quiz question."}), 500
+    finally:
+        if cursor:
+            cursor.close()
+        if conn:
+            release_db_connection(conn)
+
+
+@quiz_bp.route('/quiz/result', methods=['POST', 'OPTIONS'])
+def record_quiz_result():
+    """Record a user's quiz score."""
+    if request.method == 'OPTIONS':
+        return jsonify(success=True)
+
+    data = request.get_json(silent=True)
+    if data is None:
+        return jsonify({"status": "error", "message": "Invalid JSON"}), 400
+    
+    user_id = data.get('userId')
+    topic_id = data.get('topicId')
+    score = data.get('score')
+
+    if None in (user_id, topic_id, score):
+        return jsonify({"status": "error", "message": "Missing required fields."}), 400
+
+    try:
+        score = int(score)
+    except (ValueError, TypeError):
+        return jsonify({"status": "error", "message": "Score must be an integer between 0 and 100."}), 400
+
+    if not 0 <= score <= 100:
+        return jsonify({"status": "error", "message": "Score must be an integer between 0 and 100."}), 400
+
+    conn = None
+    cursor = None
+    try:
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute(
+            "INSERT INTO tbl_quizscore (userid, topicid, score) VALUES (%s, %s, %s)",
+            (user_id, topic_id, score),
+        )
+        conn.commit()
+        return jsonify({"status": "success", "message": "Score recorded."}), 201
+    except Exception as e:
+        if conn:
+            conn.rollback()
+        print(f"Record Quiz Result API Error: {e}")
+        return jsonify({"status": "error", "message": "Internal error"}), 500
     finally:
         if cursor:
             cursor.close()

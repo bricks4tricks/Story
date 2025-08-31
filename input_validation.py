@@ -62,7 +62,10 @@ class InputValidator:
         
         # Pattern validation
         if pattern and not re.match(pattern, value):
-            raise ValidationError(f"{field_name} contains invalid characters")
+            if field_name.lower() == "email":
+                raise ValidationError("Invalid email address")
+            else:
+                raise ValidationError(f"{field_name} contains invalid characters")
         
         # XSS prevention
         sanitized_value = sanitizer.sanitize_html(value.strip())

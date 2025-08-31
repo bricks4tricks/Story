@@ -78,8 +78,12 @@ class DatabaseError(LogicAndStoriesError):
 def safe_error_response(error: Exception, include_details: bool = False) -> Tuple[Dict[str, Any], int]:
     """Generate a safe error response that doesn't leak sensitive information."""
     
-    # Determine if we're in development mode
-    is_development = request.environ.get('FLASK_ENV') == 'development'
+    # Determine if we're in development mode - handle case where request context is not available
+    try:
+        is_development = request.environ.get('FLASK_ENV') == 'development'
+    except RuntimeError:
+        # Outside request context - assume production for safety
+        is_development = False
     
     if isinstance(error, LogicAndStoriesError):
         response = {

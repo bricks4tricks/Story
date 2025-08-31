@@ -15,7 +15,20 @@
   async function fetchAndRenderUsers() {
     SecureDOM.setLoadingState(userTableBody, 'Loading...');
     try {
-      const response = await csrfManager.get('/api/admin/all-users');
+      // Get authentication token from localStorage
+      const token = localStorage.getItem('token');
+      const headers = token ? {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      } : {
+        'Content-Type': 'application/json'
+      };
+      
+      const response = await fetch('/api/admin/all-users', {
+        method: 'GET',
+        headers: headers,
+        credentials: 'same-origin'
+      });
       if (!response.ok) throw new Error('Failed to fetch users');
       const users = await response.json();
       const newHash = JSON.stringify(users);
@@ -35,7 +48,20 @@
   }
   async function refreshIfChanged() {
     try {
-      const verRes = await csrfManager.get('/api/admin/users-version');
+      // Get authentication token from localStorage
+      const token = localStorage.getItem('token');
+      const headers = token ? {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      } : {
+        'Content-Type': 'application/json'
+      };
+      
+      const verRes = await fetch('/api/admin/users-version', {
+        method: 'GET',
+        headers: headers,
+        credentials: 'same-origin'
+      });
       if (!verRes.ok) throw new Error("Failed to fetch version");
       const { version } = await verRes.json();
       if (version !== usersVersion) {

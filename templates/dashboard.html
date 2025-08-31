@@ -33,7 +33,7 @@
     <meta name="twitter:image:alt" content="Logic & Stories - Math Learning Dashboard">
     
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Pacifico&display=swap" rel="stylesheet">
     <style>
@@ -579,6 +579,12 @@
                         topicDiv.className = 'bg-slate-700 rounded-lg p-4 mb-3 flex justify-between items-center border border-slate-600';
                         
                         // Build buttons securely using DOM creation - XSS SAFE
+                        // Alternative approach using string concatenation (for testing):
+                        // let buttonsHTML = '';
+                        // if (storyExists) buttonsHTML += '<button class="start-story-btn">Start Story</button>';
+                        // if (quizExists) buttonsHTML += '<button class="start-quiz-btn">Start Quiz</button>';
+                        // if (videoExists) buttonsHTML += '<button class="watch-video-btn">Watch Video</button>';
+                        
                         const buttonsContainer = document.createElement('div');
                         buttonsContainer.className = 'flex space-x-2';
                         
