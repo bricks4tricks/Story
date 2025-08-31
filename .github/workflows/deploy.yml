@@ -40,6 +40,11 @@ jobs:
           python tests/test_admin_py_security.py
           python tests/test_test_integrity.py
           
+      - name: Run regression tests
+        run: |
+          python tests/test_admin_routes_regression.py
+          python tests/test_admin_portal_access.py
+          
       - name: Validate environment configuration
         run: |
           python env_validator.py
