@@ -205,8 +205,8 @@ def add_security_headers(response):
     # Content Security Policy - more restrictive, using nonces for inline scripts
     csp = (
         "default-src 'self'; "
-        "script-src 'self' https://cdn.tailwindcss.com 'nonce-{nonce}'; "
-        "style-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com https://cdn.tailwindcss.com 'unsafe-inline'; "
+        "script-src 'self' 'nonce-{nonce}'; "
+        "style-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com 'unsafe-inline'; "
         "font-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com; "
         "img-src 'self' data: https:; "
         "connect-src 'self'; "

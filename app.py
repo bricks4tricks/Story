@@ -213,6 +213,7 @@ def index():
 
 
 @app.route('/admin-login.html')
+@app.route('/iygighukijh.html')
 def admin_login():
     return render_template('iygighukijh.html')
 
