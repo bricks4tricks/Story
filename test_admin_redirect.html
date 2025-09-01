@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Admin Redirect</title>
+</head>
+<body>
+    <h1>Admin Redirect Test</h1>
+    <p>Testing different userType values:</p>
+    
+    <button onclick="testRedirect('Admin')">Test Admin</button>
+    <button onclick="testRedirect('Parent')">Test Parent</button>
+    <button onclick="testRedirect('Student')">Test Student</button>
+    <button onclick="testRedirect(null)">Test Null</button>
+    
+    <div id="result"></div>
+
+    <script>
+        function testRedirect(userType) {
+            console.log('Testing userType:', userType);
+            
+            const result = document.getElementById('result');
+            
+            if (userType === 'Admin') {
+                console.log('Admin detected - would redirect to /iygighukijh.html');
+                result.innerHTML = `<p><strong>Admin:</strong> Would redirect to <a href="/iygighukijh.html">/iygrighukijh.html</a></p>`;
+            } else if (userType === 'Parent') {
+                console.log('Parent detected - would redirect to /parent-portal.html');
+                result.innerHTML = `<p><strong>Parent:</strong> Would redirect to <a href="/parent-portal.html">/parent-portal.html</a></p>`;
+            } else {
+                console.log('Regular user - would redirect to /dashboard.html, userType was:', userType);
+                result.innerHTML = `<p><strong>Other (${userType}):</strong> Would redirect to <a href="/dashboard.html">/dashboard.html</a></p>`;
+            }
+        }
+    </script>
+</body>
+</html>
