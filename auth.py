@@ -520,6 +520,7 @@ def admin_signin():
                 "status": "success",
                 "message": "Admin login successful!",
                 "user": {"id": user[0], "username": user[1], "userType": user[3]},
+                "sessionToken": session_token,
             }), 200
         return jsonify({"status": "error", "message": "Invalid credentials or not an admin"}), 401
     except Exception as e:
