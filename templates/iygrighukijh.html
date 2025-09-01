@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Portal - Logic and Stories</title>
+    <title>Admin Dashboard</title>
     <link href="/static/css/styles.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,16 +16,15 @@
     <script src="/static/js/authUtils.js"></script>
     
     <!-- Header -->
-    <header class="bg-slate-800 shadow-lg border-b border-slate-700">
-        <div class="container mx-auto px-6 py-4">
+    <header class="bg-slate-900 border-b border-slate-700">
+        <div class="px-6 py-4">
             <div class="flex justify-between items-center">
-                <div class="flex items-center space-x-4">
-                    <h1 class="text-3xl font-bold text-white font-pacifico">Logic and Stories</h1>
-                    <span class="bg-yellow-400 text-slate-900 px-3 py-1 rounded-full text-sm font-semibold">Admin Portal</span>
+                <div class="flex items-center">
+                    <h1 class="text-2xl font-bold text-white">Admin Dashboard</h1>
                 </div>
                 <div class="flex items-center space-x-4">
                     <div id="welcome-username" class="text-white font-medium"></div>
-                    <button id="signOutButton" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-colors">
+                    <button id="signOutButton" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded transition-colors">
                         Sign Out
                     </button>
                 </div>
@@ -33,103 +32,140 @@
         </div>
     </header>
 
+    <!-- Navigation Tabs -->
+    <nav class="bg-slate-800 border-b border-slate-700">
+        <div class="px-6">
+            <div class="flex space-x-8">
+                <button class="admin-tab px-3 py-3 text-sm font-medium border-b-2 border-yellow-400 text-yellow-400" data-tab="users">
+                    User Management
+                </button>
+                <button class="admin-tab px-3 py-3 text-sm font-medium border-b-2 border-transparent text-gray-400 hover:text-white hover:border-gray-300" data-tab="questions">
+                    Question Management
+                </button>
+                <button class="admin-tab px-3 py-3 text-sm font-medium border-b-2 border-transparent text-gray-400 hover:text-white hover:border-gray-300" data-tab="stories">
+                    Story Management
+                </button>
+                <button class="admin-tab px-3 py-3 text-sm font-medium border-b-2 border-transparent text-gray-400 hover:text-white hover:border-gray-300" data-tab="images">
+                    Image Generator
+                </button>
+                <button class="admin-tab px-3 py-3 text-sm font-medium border-b-2 border-transparent text-gray-400 hover:text-white hover:border-gray-300" data-tab="flagged">
+                    Flagged Items
+                </button>
+                <button class="admin-tab px-3 py-3 text-sm font-medium border-b-2 border-transparent text-gray-400 hover:text-white hover:border-gray-300" data-tab="attempts">
+                    Question Attempts
+                </button>
+                <button class="admin-tab px-3 py-3 text-sm font-medium border-b-2 border-transparent text-gray-400 hover:text-white hover:border-gray-300" data-tab="curriculum">
+                    Curriculum Management
+                </button>
+                <button class="admin-tab px-3 py-3 text-sm font-medium border-b-2 border-transparent text-gray-400 hover:text-white hover:border-gray-300" data-tab="videos">
+                    Video Management
+                </button>
+            </div>
+        </div>
+    </nav>
+
     <!-- Main Content -->
-    <main class="container mx-auto px-6 py-8">
-        <!-- Dashboard Overview -->
-        <div class="mb-8">
-            <h2 class="text-2xl font-bold text-white mb-6">Dashboard Overview</h2>
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-                <!-- Stats Cards -->
-                <div class="bg-slate-800 rounded-xl p-6 border border-slate-700">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-gray-400 text-sm">Total Users</p>
-                            <p class="text-2xl font-bold text-white" id="total-users">-</p>
-                        </div>
-                        <div class="bg-blue-600 p-3 rounded-lg">
-                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
-                            </svg>
-                        </div>
+    <main class="flex-1 bg-slate-900">
+        <!-- User Management Tab -->
+        <div id="users-tab" class="admin-tab-content">
+            <div class="p-6">
+                <div class="mb-6">
+                    <h2 class="text-xl font-bold text-white mb-4">All Users</h2>
+                    <div class="flex gap-4 mb-4">
+                        <select id="user-filter-column" class="bg-slate-700 text-white border border-slate-600 rounded px-3 py-2 text-sm">
+                            <option value="all">All Columns</option>
+                            <option value="Username">Username</option>
+                            <option value="Email">Email</option>
+                            <option value="UserType">Type</option>
+                            <option value="ParentUsername">Parent</option>
+                        </select>
+                        <input type="text" id="user-filter" placeholder="Search users..." 
+                               class="bg-slate-700 text-white border border-slate-600 rounded px-3 py-2 text-sm flex-1 max-w-md">
                     </div>
                 </div>
                 
-                <div class="bg-slate-800 rounded-xl p-6 border border-slate-700">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-gray-400 text-sm">Active Students</p>
-                            <p class="text-2xl font-bold text-white" id="active-students">-</p>
-                        </div>
-                        <div class="bg-green-600 p-3 rounded-lg">
-                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                            </svg>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="bg-slate-800 rounded-xl p-6 border border-slate-700">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-gray-400 text-sm">Parents</p>
-                            <p class="text-2xl font-bold text-white" id="total-parents">-</p>
-                        </div>
-                        <div class="bg-purple-600 p-3 rounded-lg">
-                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                            </svg>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="bg-slate-800 rounded-xl p-6 border border-slate-700">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <p class="text-gray-400 text-sm">Stories Completed</p>
-                            <p class="text-2xl font-bold text-white" id="stories-completed">-</p>
-                        </div>
-                        <div class="bg-yellow-600 p-3 rounded-lg">
-                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
-                            </svg>
-                        </div>
-                    </div>
+                <div class="bg-slate-800 rounded-lg overflow-hidden">
+                    <table class="min-w-full">
+                        <thead class="bg-slate-700">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">ID</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Username</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Email</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Type</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Parent</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Created On</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Subscription</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-300 uppercase tracking-wider">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="user-table-body" class="bg-slate-800 divide-y divide-slate-700">
+                            <!-- User rows will be populated here -->
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
 
-        <!-- User Management Section -->
-        <div class="bg-slate-800 rounded-xl p-6 border border-slate-700 mb-8">
-            <div class="flex justify-between items-center mb-6">
-                <h3 class="text-xl font-bold text-white">User Management</h3>
-                <button class="bg-yellow-400 hover:bg-yellow-300 text-slate-900 px-4 py-2 rounded-lg font-semibold transition-colors">
-                    Add New User
-                </button>
-            </div>
-            <div id="user-table-container">
-                <div id="user-table">
-                    <div class="flex items-center justify-center py-8">
-                        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-yellow-400"></div>
-                        <span class="ml-3 text-gray-400">Loading users...</span>
-                    </div>
+        <!-- Other Tabs (Initially Hidden) -->
+        <div id="questions-tab" class="admin-tab-content hidden">
+            <div class="p-6">
+                <h2 class="text-xl font-bold text-white mb-4">Question Management</h2>
+                <div class="bg-slate-800 rounded-lg p-6">
+                    <p class="text-gray-400">Question management features coming soon...</p>
                 </div>
             </div>
         </div>
 
-        <!-- Content Management Section -->
-        <div class="bg-slate-800 rounded-xl p-6 border border-slate-700">
-            <div class="flex justify-between items-center mb-6">
-                <h3 class="text-xl font-bold text-white">Content Management</h3>
-                <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold transition-colors">
-                    Manage Content
-                </button>
+        <div id="stories-tab" class="admin-tab-content hidden">
+            <div class="p-6">
+                <h2 class="text-xl font-bold text-white mb-4">Story Management</h2>
+                <div class="bg-slate-800 rounded-lg p-6">
+                    <p class="text-gray-400">Story management features coming soon...</p>
+                </div>
             </div>
-            <div id="curriculum-table-container">
-                <div id="curriculum-table">
-                    <div class="flex items-center justify-center py-8">
-                        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-400"></div>
-                        <span class="ml-3 text-gray-400">Loading content...</span>
-                    </div>
+        </div>
+
+        <div id="images-tab" class="admin-tab-content hidden">
+            <div class="p-6">
+                <h2 class="text-xl font-bold text-white mb-4">Image Generator</h2>
+                <div class="bg-slate-800 rounded-lg p-6">
+                    <p class="text-gray-400">Image generation tools coming soon...</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="flagged-tab" class="admin-tab-content hidden">
+            <div class="p-6">
+                <h2 class="text-xl font-bold text-white mb-4">Flagged Items</h2>
+                <div class="bg-slate-800 rounded-lg p-6">
+                    <p class="text-gray-400">Flagged content management coming soon...</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="attempts-tab" class="admin-tab-content hidden">
+            <div class="p-6">
+                <h2 class="text-xl font-bold text-white mb-4">Question Attempts</h2>
+                <div class="bg-slate-800 rounded-lg p-6">
+                    <p class="text-gray-400">Question attempts tracking coming soon...</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="curriculum-tab" class="admin-tab-content hidden">
+            <div class="p-6">
+                <h2 class="text-xl font-bold text-white mb-4">Curriculum Management</h2>
+                <div class="bg-slate-800 rounded-lg p-6">
+                    <p class="text-gray-400">Curriculum management features coming soon...</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="videos-tab" class="admin-tab-content hidden">
+            <div class="p-6">
+                <h2 class="text-xl font-bold text-white mb-4">Video Management</h2>
+                <div class="bg-slate-800 rounded-lg p-6">
+                    <p class="text-gray-400">Video management features coming soon...</p>
                 </div>
             </div>
         </div>
