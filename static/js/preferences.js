@@ -27,10 +27,31 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // For logged-in users, fetch preferences from server
-    // Note: With httpOnly cookies, we don't need to store userId in storage
-    fetch('/api/preferences/current')
+    // Include Authorization header if token is available
+    const token = localStorage.getItem('token');
+    const headers = {};
+    if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+    }
+    
+    fetch('/api/preferences/current', {
+        headers: headers,
+        credentials: 'same-origin'  // Include session cookies too
+    })
         .then(res => {
-            if (!res.ok) throw new Error('Not logged in');
+            if (!res.ok) {
+                // If we have a token but got 401, it's likely stale from previous deployment
+                if (res.status === 401 && token) {
+                    console.log('Token appears stale after deployment, clearing localStorage');
+                    localStorage.removeItem('token');
+                    // Optionally redirect to login or show login prompt
+                    if (window.location.pathname.includes('dashboard') || window.location.pathname.includes('admin')) {
+                        window.location.href = '/signin.html';
+                        return;
+                    }
+                }
+                throw new Error('Not logged in');
+            }
             return res.json();
         })
         .then(data => {

@@ -103,6 +103,7 @@
 <body class="bg-slate-900 text-gray-200">
     <script src="/static/js/secureDOM.js"></script>
     <script src="/static/js/csrf.js"></script>
+    <script src="/static/js/authUtils.js"></script>
     <script src="/static/js/mobileNav.js" defer></script>
     <script src="/static/js/lazyLoad.js" defer></script>
     <script src="/static/js/accessibility.js" defer></script>
@@ -127,7 +128,7 @@
             </div>
              <div id="welcome-message" class="hidden items-center space-x-4">
                 <span id="welcome-username-display" class="font-semibold text-white"></span>
-                <a href="/dashboard.html" class="text-yellow-400 hover:underline">Go to Dashboard</a>
+                <a href="/dashboard.html" id="dashboardLink" class="text-yellow-400 hover:underline">Go to Dashboard</a>
                 <a href="#" id="signOutButton" class="bg-gray-700 text-white font-bold py-2 px-5 rounded-full hover:bg-gray-600 transition-colors">Sign Out</a>
             </div>
         </nav>
@@ -490,12 +491,23 @@
             const updateAuthState = () => {
                 isLoggedIn = localStorage.getItem('isStudentLoggedIn') === 'true';
                 const username = localStorage.getItem('username');
+                const userType = localStorage.getItem('userType');
 
                 if (isLoggedIn && username) {
                     elements.authLinks.classList.add('hidden');
                     elements.welcomeMessage.classList.remove('hidden');
                     elements.welcomeMessage.classList.add('flex');
                     elements.welcomeUsernameDisplay.textContent = `Welcome, ${username}!`;
+                    
+                    // Update dashboard link based on user type
+                    const dashboardLink = document.getElementById('dashboardLink');
+                    if (userType === 'Admin') {
+                        dashboardLink.href = '/iygrighukijh.html';
+                    } else if (userType === 'Parent') {
+                        dashboardLink.href = '/parent-portal.html';
+                    } else {
+                        dashboardLink.href = '/dashboard.html';
+                    }
                 } else {
                     elements.authLinks.classList.remove('hidden');
                     elements.welcomeMessage.classList.add('hidden');

@@ -296,17 +296,15 @@ def get_curriculum_table():
         cursor = conn.cursor()
         
         cursor.execute("""
-            SELECT 
-                c.id as curriculum_id,
-                c.name as curriculum_name,
-                l.id as lesson_id,
-                l.name as lesson_name,
-                t.id as topic_id,
-                t.name as topic_name
-            FROM tbl_curriculum c
-            LEFT JOIN tbl_lesson l ON c.id = l.curriculum_id
-            LEFT JOIN tbl_topic t ON l.id = t.lesson_id
-            ORDER BY c.name, l.order_index, t.order_index
+            SELECT DISTINCT
+                'Grade 1' as gradename,
+                s.subjectname AS curriculumtype,
+                t.topicname AS unitname,
+                t.topicname
+            FROM tbl_topic t
+            LEFT JOIN tbl_subject s ON t.subjectid = s.id
+            ORDER BY curriculumtype, unitname, topicname
+            LIMIT 100
         """)
         
         rows = cursor.fetchall()
@@ -318,12 +316,10 @@ def get_curriculum_table():
                 table_data.append(row)
             else:
                 table_data.append({
-                    'curriculum_id': row[0],
-                    'curriculum_name': row[1],
-                    'lesson_id': row[2],
-                    'lesson_name': row[3],
-                    'topic_id': row[4],
-                    'topic_name': row[5]
+                    "gradename": row[0] or "Unknown Grade",
+                    "curriculumtype": row[1] or "Unknown Curriculum", 
+                    "unitname": row[2] or "Unknown Unit",
+                    "topicname": row[3] or "Unknown Topic"
                 })
         
         return jsonify(table_data)

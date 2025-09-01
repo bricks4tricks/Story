@@ -13,7 +13,7 @@
     <link rel="icon" type="image/png" sizes="512x512" href="/static/favicon-512x512.png">
     <link rel="apple-touch-icon" href="/static/apple-touch-icon.png">
     
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="/static/css/styles.css" rel="stylesheet">
     <script src="/static/js/secureDOM.js"></script>
     <script src="/static/js/csrf.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
@@ -138,11 +138,20 @@
                         }
                         messageDiv.style.color = '#4ade80';
                         messageDiv.textContent = 'Login successful! Redirecting...';
+                        
+                        // Debug logging - remove after troubleshooting
+                        console.log('Signin success - User data:', result.user);
+                        console.log('UserType:', result.user.userType);
+                        console.log('UserType type:', typeof result.user.userType);
+                        
                         if (result.user.userType === 'Admin') {
+                            console.log('Redirecting admin to /iygrighukijh.html');
                             SecureDOM.safeTimeout(() => { window.location.href = '/iygighukijh.html'; }, 1500);
                         } else if (result.user.userType === 'Parent') {
+                            console.log('Redirecting parent to /parent-portal.html');
                             SecureDOM.safeTimeout(() => { window.location.href = '/parent-portal.html'; }, 1500);
                         } else {
+                            console.log('Redirecting regular user to /dashboard.html, userType was:', result.user.userType);
                             SecureDOM.safeTimeout(() => { window.location.href = '/dashboard.html'; }, 1500);
                         }
                     } else {
