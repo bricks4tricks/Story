@@ -27,8 +27,17 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // For logged-in users, fetch preferences from server
-    // Note: With httpOnly cookies, we don't need to store userId in storage
-    fetch('/api/preferences/current')
+    // Include Authorization header if token is available
+    const token = localStorage.getItem('token');
+    const headers = {};
+    if (token) {
+        headers['Authorization'] = `Bearer ${token}`;
+    }
+    
+    fetch('/api/preferences/current', {
+        headers: headers,
+        credentials: 'same-origin'  // Include session cookies too
+    })
         .then(res => {
             if (!res.ok) throw new Error('Not logged in');
             return res.json();

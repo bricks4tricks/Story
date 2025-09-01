@@ -622,8 +622,24 @@ def get_current_user_preferences():
     if request.method == 'OPTIONS':
         return jsonify(success=True)
     
-    # Get user ID from session
+    # Get user ID from session first
     user_id = session.get('user_id')
+    
+    # Fallback: Try Bearer token authentication if session auth failed
+    if not user_id:
+        auth_header = request.headers.get('Authorization')
+        if auth_header and auth_header.startswith('Bearer '):
+            token = auth_header.split(' ')[1]
+            try:
+                # Verify JWT token (simplified - should use proper JWT verification)
+                import jwt
+                from flask import current_app
+                payload = jwt.decode(token, current_app.secret_key, algorithms=['HS256'])
+                user_id = payload.get('user_id')
+            except Exception as e:
+                print(f"Token verification failed: {e}")
+                user_id = None
+    
     if not user_id:
         return jsonify({"status": "error", "message": "Not authenticated"}), 401
     
