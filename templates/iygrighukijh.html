@@ -4,39 +4,136 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Portal - Logic and Stories</title>
-    <link rel="stylesheet" href="/static/css/styles.css">
+    <link href="/static/css/styles.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Pacifico&display=swap" rel="stylesheet">
 </head>
-<body class="bg-gray-100">
+<body class="bg-slate-900 text-gray-200 font-nunito">
     <!-- Essential security scripts must be loaded first -->
     <script src="/static/js/secureDOM.js"></script>
     <script src="/static/js/csrf.js"></script>
     <script src="/static/js/authUtils.js"></script>
     
-    <div class="container mx-auto px-4 py-8">
-        <h1 class="text-3xl font-bold mb-8">Admin Dashboard</h1>
-        
-        <!-- Admin authentication elements -->
-        <div id="welcome-username" class="mb-4"></div>
-        <button id="signOutButton" class="mb-4 px-4 py-2 bg-red-600 text-white rounded">Sign Out</button>
-        
-        <!-- Placeholder admin content -->
-        <div class="bg-white rounded-lg shadow p-6">
-            <h2 class="text-xl font-semibold mb-4">Dashboard</h2>
-            <p>Admin portal content will be loaded here.</p>
-            
-            <!-- User management table -->
-            <div id="user-table-container" class="mt-8">
-                <h3 class="text-lg font-medium mb-4">User Management</h3>
-                <div id="user-table">Loading users...</div>
-            </div>
-            
-            <!-- Curriculum table -->
-            <div id="curriculum-table-container" class="mt-8">
-                <h3 class="text-lg font-medium mb-4">Curriculum Management</h3>
-                <div id="curriculum-table">Loading curriculum...</div>
+    <!-- Header -->
+    <header class="bg-slate-800 shadow-lg border-b border-slate-700">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex justify-between items-center">
+                <div class="flex items-center space-x-4">
+                    <h1 class="text-3xl font-bold text-white font-pacifico">Logic and Stories</h1>
+                    <span class="bg-yellow-400 text-slate-900 px-3 py-1 rounded-full text-sm font-semibold">Admin Portal</span>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div id="welcome-username" class="text-white font-medium"></div>
+                    <button id="signOutButton" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-colors">
+                        Sign Out
+                    </button>
+                </div>
             </div>
         </div>
-    </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto px-6 py-8">
+        <!-- Dashboard Overview -->
+        <div class="mb-8">
+            <h2 class="text-2xl font-bold text-white mb-6">Dashboard Overview</h2>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                <!-- Stats Cards -->
+                <div class="bg-slate-800 rounded-xl p-6 border border-slate-700">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-400 text-sm">Total Users</p>
+                            <p class="text-2xl font-bold text-white" id="total-users">-</p>
+                        </div>
+                        <div class="bg-blue-600 p-3 rounded-lg">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-slate-800 rounded-xl p-6 border border-slate-700">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-400 text-sm">Active Students</p>
+                            <p class="text-2xl font-bold text-white" id="active-students">-</p>
+                        </div>
+                        <div class="bg-green-600 p-3 rounded-lg">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-slate-800 rounded-xl p-6 border border-slate-700">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-400 text-sm">Parents</p>
+                            <p class="text-2xl font-bold text-white" id="total-parents">-</p>
+                        </div>
+                        <div class="bg-purple-600 p-3 rounded-lg">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-slate-800 rounded-xl p-6 border border-slate-700">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-400 text-sm">Stories Completed</p>
+                            <p class="text-2xl font-bold text-white" id="stories-completed">-</p>
+                        </div>
+                        <div class="bg-yellow-600 p-3 rounded-lg">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- User Management Section -->
+        <div class="bg-slate-800 rounded-xl p-6 border border-slate-700 mb-8">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-bold text-white">User Management</h3>
+                <button class="bg-yellow-400 hover:bg-yellow-300 text-slate-900 px-4 py-2 rounded-lg font-semibold transition-colors">
+                    Add New User
+                </button>
+            </div>
+            <div id="user-table-container">
+                <div id="user-table">
+                    <div class="flex items-center justify-center py-8">
+                        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-yellow-400"></div>
+                        <span class="ml-3 text-gray-400">Loading users...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content Management Section -->
+        <div class="bg-slate-800 rounded-xl p-6 border border-slate-700">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-xl font-bold text-white">Content Management</h3>
+                <button class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold transition-colors">
+                    Manage Content
+                </button>
+            </div>
+            <div id="curriculum-table-container">
+                <div id="curriculum-table">
+                    <div class="flex items-center justify-center py-8">
+                        <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-400"></div>
+                        <span class="ml-3 text-gray-400">Loading content...</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
     
     <!-- Load admin scripts after DOM is ready -->
     <script src="/static/js/userTable.js"></script>
@@ -118,57 +215,35 @@
             }
         });
         
-        // Admin login functionality
-        async function handleAdminLogin() {
-            const username = document.getElementById('admin-username').value;
-            const password = document.getElementById('admin-password').value;
-            
-            if (!username || !password) {
-                alert('Please enter both username and password');
-                return;
-            }
-            
-            try {
-                const response = await fetch('/api/signin', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ username, password })
-                });
-                
-                const data = await response.json();
-                
-                if (response.ok && data.status === 'success') {
-                    localStorage.setItem('token', data.sessionToken);
-                    document.getElementById('welcome-username').textContent = `Welcome, ${username}!`;
-                    document.getElementById('login-section').style.display = 'none';
-                    document.getElementById('signOutButton').style.display = 'block';
-                    
-                    // Now try to load users
-                    if (typeof fetchAndRenderUsers === 'function') {
-                        fetchAndRenderUsers();
-                    }
-                } else {
-                    alert('Login failed: ' + (data.message || 'Invalid credentials'));
-                }
-            } catch (error) {
-                console.error('Login error:', error);
-                alert('Login failed: ' + error.message);
-            }
-        }
-        
         // Sign out functionality
         function handleSignOut() {
-            localStorage.removeItem('token');
-            document.getElementById('welcome-username').textContent = '';
-            document.getElementById('login-section').style.display = 'block';
-            document.getElementById('signOutButton').style.display = 'none';
-            
-            // Clear user table
-            const userTableBody = document.getElementById('user-table-body');
-            if (userTableBody) {
-                userTableBody.innerHTML = '<tr><td colspan="4" class="px-6 py-4 text-center">Please login to view users</td></tr>';
+            localStorage.clear();
+            window.location.href = '/';
+        }
+        
+        // Load dashboard statistics
+        async function loadDashboardStats() {
+            try {
+                const token = localStorage.getItem('token');
+                if (!token) return;
+                
+                // Load user statistics
+                const userStats = await fetch('/api/admin/user-stats', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                if (userStats.ok) {
+                    const stats = await userStats.json();
+                    document.getElementById('total-users').textContent = stats.totalUsers || '0';
+                    document.getElementById('active-students').textContent = stats.activeStudents || '0';
+                    document.getElementById('total-parents').textContent = stats.totalParents || '0';
+                    document.getElementById('stories-completed').textContent = stats.storiesCompleted || '0';
+                }
+            } catch (error) {
+                console.error('Error loading dashboard stats:', error);
             }
         }
         
@@ -176,21 +251,25 @@
             console.log('iygrighukijh.html script loaded.');
             
             // Add event listeners
-            document.getElementById('loginButton').addEventListener('click', handleAdminLogin);
             document.getElementById('signOutButton').addEventListener('click', handleSignOut);
             
             // Check if already logged in
             const token = localStorage.getItem('token');
-            if (token) {
-                const username = localStorage.getItem('username') || 'Admin';
+            const username = localStorage.getItem('username');
+            
+            if (token && username) {
                 document.getElementById('welcome-username').textContent = `Welcome, ${username}!`;
-                document.getElementById('login-section').style.display = 'none';
-                document.getElementById('signOutButton').style.display = 'block';
+                
+                // Load dashboard data
+                loadDashboardStats();
                 
                 // Try to load users if already authenticated
                 if (typeof fetchAndRenderUsers === 'function') {
                     fetchAndRenderUsers();
                 }
+            } else {
+                // Redirect to login if not authenticated
+                window.location.href = '/signin.html';
             }
         });
     </script>
