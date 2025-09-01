@@ -16,7 +16,12 @@
         
         <!-- Admin authentication elements -->
         <div id="welcome-username" class="mb-4"></div>
-        <button id="signOutButton" class="mb-4 px-4 py-2 bg-red-600 text-white rounded">Sign Out</button>
+        <div id="login-section" class="mb-4">
+            <input type="text" id="admin-username" placeholder="Admin Username" class="border rounded px-3 py-2 mr-2">
+            <input type="password" id="admin-password" placeholder="Admin Password" class="border rounded px-3 py-2 mr-2">
+            <button id="loginButton" class="px-4 py-2 bg-blue-600 text-white rounded">Login</button>
+        </div>
+        <button id="signOutButton" class="mb-4 px-4 py-2 bg-red-600 text-white rounded" style="display: none;">Sign Out</button>
         
         <!-- Placeholder admin content -->
         <div class="bg-white rounded-lg shadow p-6">
@@ -26,7 +31,29 @@
             <!-- User management table -->
             <div id="user-table-container" class="mt-8">
                 <h3 class="text-lg font-medium mb-4">User Management</h3>
-                <div id="user-table">Loading users...</div>
+                <div class="mb-4">
+                    <input type="text" id="user-filter" placeholder="Filter users..." class="border rounded px-3 py-2 mr-2">
+                    <select id="user-filter-column" class="border rounded px-3 py-2">
+                        <option value="username">Username</option>
+                        <option value="email">Email</option>
+                        <option value="role">Role</option>
+                    </select>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white border border-gray-300">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Username</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="user-table-body" class="bg-white divide-y divide-gray-200">
+                            <tr><td colspan="4" class="px-6 py-4 text-center">Loading users...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
             
             <!-- Curriculum table -->
