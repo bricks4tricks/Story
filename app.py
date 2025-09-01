@@ -33,10 +33,42 @@ app.config.from_object(config)
 
 bcrypt.init_app(app)
 
-# Configure Flask-CORS
-CORS(app, origins=["https://logicandstories.com", "https://www.logicandstories.com"],
+# Configure Flask-CORS - include PR deployment domains
+def is_allowed_origin(origin):
+    """Check if origin is allowed for CORS."""
+    allowed_origins = [
+        "https://logicandstories.com", 
+        "https://www.logicandstories.com"
+    ]
+    
+    # Add PR deployment domains for testing
+    pr_domain = os.environ.get('RENDER_EXTERNAL_URL')
+    if pr_domain:
+        allowed_origins.append(pr_domain)
+    
+    # Check if origin matches PR deployment pattern
+    import re
+    if origin and re.match(r'https://logicandstories-pr-\d+\.onrender\.com', origin):
+        return True
+    
+    return origin in allowed_origins
+
+# Use a simpler CORS setup to avoid test issues
+allowed_origins_list = [
+    "https://logicandstories.com", 
+    "https://www.logicandstories.com",
+    r"https://logicandstories-pr-\d+\.onrender\.com"
+]
+
+# Add RENDER_EXTERNAL_URL if available
+pr_domain = os.environ.get('RENDER_EXTERNAL_URL')
+if pr_domain:
+    allowed_origins_list.append(pr_domain)
+
+CORS(app, origins=allowed_origins_list,
      methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-     headers=["Content-Type", "Authorization"])
+     headers=["Content-Type", "Authorization"],
+     supports_credentials=True)
 
 
 @app.after_request
