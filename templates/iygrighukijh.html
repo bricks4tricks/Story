@@ -10,6 +10,7 @@
     <!-- Essential security scripts must be loaded first -->
     <script src="/static/js/secureDOM.js"></script>
     <script src="/static/js/csrf.js"></script>
+    <script src="/static/js/authUtils.js"></script>
     
     <div class="container mx-auto px-4 py-8">
         <h1 class="text-3xl font-bold mb-8">Admin Dashboard</h1>
@@ -117,16 +118,78 @@
             }
         });
         
+        // Admin login functionality
+        async function handleAdminLogin() {
+            const username = document.getElementById('admin-username').value;
+            const password = document.getElementById('admin-password').value;
+            
+            if (!username || !password) {
+                alert('Please enter both username and password');
+                return;
+            }
+            
+            try {
+                const response = await fetch('/api/signin', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ username, password })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.status === 'success') {
+                    localStorage.setItem('token', data.token);
+                    document.getElementById('welcome-username').textContent = `Welcome, ${username}!`;
+                    document.getElementById('login-section').style.display = 'none';
+                    document.getElementById('signOutButton').style.display = 'block';
+                    
+                    // Now try to load users
+                    if (typeof fetchAndRenderUsers === 'function') {
+                        fetchAndRenderUsers();
+                    }
+                } else {
+                    alert('Login failed: ' + (data.message || 'Invalid credentials'));
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                alert('Login failed: ' + error.message);
+            }
+        }
+        
+        // Sign out functionality
+        function handleSignOut() {
+            localStorage.removeItem('token');
+            document.getElementById('welcome-username').textContent = '';
+            document.getElementById('login-section').style.display = 'block';
+            document.getElementById('signOutButton').style.display = 'none';
+            
+            // Clear user table
+            const userTableBody = document.getElementById('user-table-body');
+            if (userTableBody) {
+                userTableBody.innerHTML = '<tr><td colspan="4" class="px-6 py-4 text-center">Please login to view users</td></tr>';
+            }
+        }
+        
         document.addEventListener('DOMContentLoaded', function() {
             console.log('iygrighukijh.html script loaded.');
             
-            // Initialize admin functionality
-            if (typeof fetchAndRenderUsers === 'function') {
-                fetchAndRenderUsers();
-            }
+            // Add event listeners
+            document.getElementById('loginButton').addEventListener('click', handleAdminLogin);
+            document.getElementById('signOutButton').addEventListener('click', handleSignOut);
             
-            // Initialize admin API connection
-            loadFromAPI();
+            // Check if already logged in
+            const token = localStorage.getItem('token');
+            if (token) {
+                document.getElementById('login-section').style.display = 'none';
+                document.getElementById('signOutButton').style.display = 'block';
+                
+                // Try to load users if already authenticated
+                if (typeof fetchAndRenderUsers === 'function') {
+                    fetchAndRenderUsers();
+                }
+            }
         });
     </script>
 </body>
