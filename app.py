@@ -590,7 +590,7 @@ def get_curriculum_table():
         conn = get_db_connection()
         cursor = conn.cursor()
         
-        # Fixed query without lesson_id reference
+        # Fixed query using correct table relationships
         query = """
             SELECT DISTINCT
                 g.gradename,
@@ -600,7 +600,8 @@ def get_curriculum_table():
             FROM tbl_topic t
             LEFT JOIN tbl_topicsubject ts ON t.id = ts.topicid
             LEFT JOIN tbl_subject s ON ts.subjectid = s.id
-            LEFT JOIN tbl_grade g ON g.subjectid = s.id
+            LEFT JOIN tbl_topicgrade tg ON t.id = tg.topicid
+            LEFT JOIN tbl_grade g ON tg.gradeid = g.id
             ORDER BY gradename, curriculumtype, unitname, topicname
         """
         cursor.execute(query)

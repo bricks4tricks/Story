@@ -2,6 +2,13 @@
 // Fetches the user list and renders table rows dynamically.
 
 (function() {
+  // Wait for SecureDOM to be available
+  if (typeof SecureDOM === 'undefined') {
+    console.error('SecureDOM is not available. Retrying in 100ms...');
+    setTimeout(arguments.callee, 100);
+    return;
+  }
+  
   const userTableBody = document.getElementById('user-table-body');
   if (!userTableBody) return;
   const filterInput = document.getElementById('user-filter');
