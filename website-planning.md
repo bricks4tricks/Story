@@ -1010,7 +1010,526 @@ Error: Error Red border and text
 - Keyboard navigation
 - High contrast options
 
-## 10. Implementation Phases
+## 10. Database Schema Design
+
+### Schema Overview
+
+The Logic And Stories database is designed to support:
+- **Multi-tenant user management** (students, parents, teachers)
+- **Hierarchical content structure** (stories, chapters, activities)
+- **Detailed progress tracking** and analytics
+- **Curriculum alignment** with Florida B.E.S.T. standards
+- **Scalable subscription management**
+
+### Core Database Tables
+
+#### User Management
+
+##### users
+```sql
+CREATE TABLE users (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    user_type ENUM('student', 'parent', 'teacher', 'admin') NOT NULL,
+    first_name VARCHAR(100) NOT NULL,
+    last_name VARCHAR(100) NOT NULL,
+    date_of_birth DATE,
+    grade_level VARCHAR(10), -- For students: 'K', '1', '2', ... '12'
+    avatar_url TEXT,
+    timezone VARCHAR(50) DEFAULT 'UTC',
+    locale VARCHAR(10) DEFAULT 'en_US',
+    is_active BOOLEAN DEFAULT true,
+    email_verified BOOLEAN DEFAULT false,
+    last_login_at TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+##### user_profiles
+```sql
+CREATE TABLE user_profiles (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    learning_style ENUM('visual', 'auditory', 'kinesthetic', 'reading_writing'),
+    math_anxiety_level INTEGER CHECK (math_anxiety_level >= 1 AND math_anxiety_level <= 5),
+    preferred_story_types TEXT[], -- Array of story genres
+    accessibility_needs TEXT[], -- Screen reader, high contrast, etc.
+    parent_notification_preferences JSONB,
+    privacy_settings JSONB,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+##### family_relationships
+```sql
+CREATE TABLE family_relationships (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    parent_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    child_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    relationship_type ENUM('parent', 'guardian', 'tutor') DEFAULT 'parent',
+    can_view_progress BOOLEAN DEFAULT true,
+    can_modify_settings BOOLEAN DEFAULT true,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(parent_id, child_id)
+);
+```
+
+##### classroom_memberships
+```sql
+CREATE TABLE classroom_memberships (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    teacher_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    student_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    classroom_name VARCHAR(255) NOT NULL,
+    school_name VARCHAR(255),
+    academic_year VARCHAR(9), -- e.g., '2024-2025'
+    is_active BOOLEAN DEFAULT true,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(teacher_id, student_id, academic_year)
+);
+```
+
+#### Content Management
+
+##### curriculum_standards
+```sql
+CREATE TABLE curriculum_standards (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    standard_code VARCHAR(50) UNIQUE NOT NULL, -- e.g., 'MA.3.AR.1.1'
+    standard_name VARCHAR(500) NOT NULL,
+    grade_level VARCHAR(10) NOT NULL,
+    subject_strand ENUM('NSO', 'AR', 'GR', 'DP', 'FR', 'M', 'F', 'C', 'T', 'FL', 'LDT', 'MTR'),
+    description TEXT,
+    prerequisite_standards TEXT[], -- Array of prerequisite standard codes
+    is_active BOOLEAN DEFAULT true,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+##### stories
+```sql
+CREATE TABLE stories (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
+    slug VARCHAR(255) UNIQUE NOT NULL,
+    author_name VARCHAR(255),
+    target_grade_levels VARCHAR(10)[] NOT NULL, -- e.g., ['3', '4', '5']
+    story_type ENUM('adventure', 'mystery', 'sci_fi', 'fantasy', 'real_world'),
+    difficulty_level INTEGER CHECK (difficulty_level >= 1 AND difficulty_level <= 5),
+    estimated_duration_minutes INTEGER,
+    thumbnail_url TEXT,
+    cover_image_url TEXT,
+    audio_narration_url TEXT,
+    is_published BOOLEAN DEFAULT false,
+    is_featured BOOLEAN DEFAULT false,
+    publication_date DATE,
+    last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    
+    -- SEO and discovery
+    meta_title VARCHAR(60),
+    meta_description VARCHAR(160),
+    keywords TEXT[],
+    
+    -- Content flags
+    requires_parent_guidance BOOLEAN DEFAULT false,
+    contains_mild_challenges BOOLEAN DEFAULT false
+);
+```
+
+##### story_standards_mapping
+```sql
+CREATE TABLE story_standards_mapping (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    story_id UUID NOT NULL REFERENCES stories(id) ON DELETE CASCADE,
+    standard_id UUID NOT NULL REFERENCES curriculum_standards(id) ON DELETE CASCADE,
+    alignment_strength ENUM('primary', 'secondary', 'tertiary') DEFAULT 'primary',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(story_id, standard_id)
+);
+```
+
+##### story_chapters
+```sql
+CREATE TABLE story_chapters (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    story_id UUID NOT NULL REFERENCES stories(id) ON DELETE CASCADE,
+    chapter_number INTEGER NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    content TEXT NOT NULL,
+    audio_url TEXT,
+    estimated_reading_time_minutes INTEGER,
+    has_interactive_elements BOOLEAN DEFAULT false,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(story_id, chapter_number)
+);
+```
+
+##### math_activities
+```sql
+CREATE TABLE math_activities (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    story_id UUID NOT NULL REFERENCES stories(id) ON DELETE CASCADE,
+    chapter_id UUID REFERENCES story_chapters(id) ON DELETE CASCADE,
+    activity_type ENUM('multiple_choice', 'fill_in_blank', 'drag_drop', 'drawing', 'word_problem'),
+    question TEXT NOT NULL,
+    correct_answer JSONB NOT NULL, -- Flexible structure for different answer types
+    possible_answers JSONB, -- For multiple choice, drag/drop options
+    hints TEXT[],
+    explanation TEXT,
+    points_possible INTEGER DEFAULT 10,
+    difficulty_level INTEGER CHECK (difficulty_level >= 1 AND difficulty_level <= 5),
+    position_in_story INTEGER,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+#### Progress Tracking & Analytics
+
+##### user_story_progress
+```sql
+CREATE TABLE user_story_progress (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    story_id UUID NOT NULL REFERENCES stories(id) ON DELETE CASCADE,
+    status ENUM('not_started', 'in_progress', 'completed', 'paused') DEFAULT 'not_started',
+    current_chapter_id UUID REFERENCES story_chapters(id),
+    progress_percentage DECIMAL(5,2) CHECK (progress_percentage >= 0 AND progress_percentage <= 100),
+    total_time_spent_minutes INTEGER DEFAULT 0,
+    last_accessed_at TIMESTAMP,
+    completed_at TIMESTAMP,
+    started_at TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(user_id, story_id)
+);
+```
+
+##### activity_attempts
+```sql
+CREATE TABLE activity_attempts (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    activity_id UUID NOT NULL REFERENCES math_activities(id) ON DELETE CASCADE,
+    attempt_number INTEGER NOT NULL,
+    user_answer JSONB NOT NULL,
+    is_correct BOOLEAN NOT NULL,
+    points_earned INTEGER DEFAULT 0,
+    time_spent_seconds INTEGER,
+    hints_used INTEGER DEFAULT 0,
+    attempted_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    
+    -- Detailed tracking for analytics
+    keystroke_data JSONB, -- For analyzing problem-solving process
+    confidence_level INTEGER CHECK (confidence_level >= 1 AND confidence_level <= 5)
+);
+```
+
+##### learning_sessions
+```sql
+CREATE TABLE learning_sessions (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    session_start TIMESTAMP NOT NULL,
+    session_end TIMESTAMP,
+    total_duration_minutes INTEGER,
+    stories_accessed UUID[],
+    activities_completed INTEGER DEFAULT 0,
+    activities_correct INTEGER DEFAULT 0,
+    device_type ENUM('desktop', 'tablet', 'mobile'),
+    browser_info VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+##### skill_assessments
+```sql
+CREATE TABLE skill_assessments (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    standard_id UUID NOT NULL REFERENCES curriculum_standards(id) ON DELETE CASCADE,
+    mastery_level ENUM('not_assessed', 'emerging', 'developing', 'proficient', 'advanced'),
+    confidence_score DECIMAL(3,2) CHECK (confidence_score >= 0 AND confidence_score <= 1),
+    evidence_activities UUID[], -- Array of activity attempt IDs that support this assessment
+    assessed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    assessor_type ENUM('system', 'teacher', 'self') DEFAULT 'system',
+    notes TEXT,
+    UNIQUE(user_id, standard_id, assessed_at::date)
+);
+```
+
+#### Subscription & Billing
+
+##### subscription_plans
+```sql
+CREATE TABLE subscription_plans (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    name VARCHAR(100) NOT NULL,
+    description TEXT,
+    plan_type ENUM('individual', 'family', 'classroom', 'school', 'district'),
+    price_cents INTEGER NOT NULL,
+    billing_cycle ENUM('monthly', 'yearly', 'one_time'),
+    max_students INTEGER,
+    features JSONB, -- Feature flags and limits
+    is_active BOOLEAN DEFAULT true,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+##### user_subscriptions
+```sql
+CREATE TABLE user_subscriptions (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    plan_id UUID NOT NULL REFERENCES subscription_plans(id),
+    status ENUM('active', 'canceled', 'expired', 'past_due', 'trial') NOT NULL,
+    trial_ends_at TIMESTAMP,
+    current_period_start TIMESTAMP NOT NULL,
+    current_period_end TIMESTAMP NOT NULL,
+    cancel_at_period_end BOOLEAN DEFAULT false,
+    stripe_subscription_id VARCHAR(255),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+#### Analytics & Reporting
+
+##### daily_usage_stats
+```sql
+CREATE TABLE daily_usage_stats (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    date DATE NOT NULL,
+    user_id UUID REFERENCES users(id) ON DELETE CASCADE,
+    total_time_minutes INTEGER DEFAULT 0,
+    stories_accessed INTEGER DEFAULT 0,
+    activities_completed INTEGER DEFAULT 0,
+    activities_correct INTEGER DEFAULT 0,
+    new_skills_introduced INTEGER DEFAULT 0,
+    skills_mastered INTEGER DEFAULT 0,
+    login_count INTEGER DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(date, user_id)
+);
+```
+
+##### learning_insights
+```sql
+CREATE TABLE learning_insights (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    insight_type ENUM('strength', 'challenge', 'recommendation', 'milestone'),
+    title VARCHAR(255) NOT NULL,
+    description TEXT NOT NULL,
+    priority ENUM('low', 'medium', 'high') DEFAULT 'medium',
+    is_actionable BOOLEAN DEFAULT false,
+    action_url TEXT, -- Link to specific activity or resource
+    generated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    acknowledged_at TIMESTAMP,
+    parent_notified BOOLEAN DEFAULT false,
+    
+    -- Data that generated this insight
+    supporting_data JSONB
+);
+```
+
+### Database Relationships & Indexes
+
+#### Key Relationships
+```sql
+-- User hierarchy and permissions
+ALTER TABLE family_relationships 
+ADD CONSTRAINT valid_relationship 
+CHECK (parent_id != child_id);
+
+-- Progress tracking constraints
+ALTER TABLE user_story_progress 
+ADD CONSTRAINT valid_progress_percentage 
+CHECK (progress_percentage >= 0 AND progress_percentage <= 100);
+
+-- Activity attempt sequencing
+CREATE UNIQUE INDEX idx_activity_attempts_sequence 
+ON activity_attempts(user_id, activity_id, attempt_number);
+
+-- Standards hierarchy (self-referencing for prerequisite relationships)
+ALTER TABLE curriculum_standards 
+ADD COLUMN parent_standard_id UUID REFERENCES curriculum_standards(id);
+```
+
+#### Performance Indexes
+```sql
+-- User lookup and authentication
+CREATE INDEX idx_users_email ON users(email);
+CREATE INDEX idx_users_type_active ON users(user_type, is_active);
+
+-- Story discovery and search
+CREATE INDEX idx_stories_published_grade ON stories(is_published, target_grade_levels) 
+WHERE is_published = true;
+CREATE INDEX idx_stories_featured ON stories(is_featured, publication_date) 
+WHERE is_featured = true;
+CREATE INDEX idx_stories_difficulty ON stories(difficulty_level, target_grade_levels);
+
+-- Progress tracking queries
+CREATE INDEX idx_user_progress_status ON user_story_progress(user_id, status, last_accessed_at);
+CREATE INDEX idx_user_progress_story ON user_story_progress(story_id, status);
+
+-- Activity performance analytics
+CREATE INDEX idx_activity_attempts_user_date ON activity_attempts(user_id, attempted_at);
+CREATE INDEX idx_activity_attempts_activity ON activity_attempts(activity_id, is_correct, attempted_at);
+
+-- Learning sessions analytics
+CREATE INDEX idx_learning_sessions_user_date ON learning_sessions(user_id, session_start);
+
+-- Daily stats aggregation
+CREATE UNIQUE INDEX idx_daily_stats_user_date ON daily_usage_stats(user_id, date);
+
+-- Standards and curriculum alignment
+CREATE INDEX idx_story_standards ON story_standards_mapping(story_id, alignment_strength);
+CREATE INDEX idx_standards_grade ON curriculum_standards(grade_level, subject_strand);
+
+-- Subscription management
+CREATE INDEX idx_user_subscriptions_active ON user_subscriptions(user_id, status, current_period_end) 
+WHERE status = 'active';
+```
+
+### Data Privacy & Security
+
+#### COPPA Compliance Features
+```sql
+-- Child data protection flags
+ALTER TABLE users ADD COLUMN requires_parental_consent BOOLEAN DEFAULT false;
+ALTER TABLE users ADD COLUMN parental_consent_date TIMESTAMP;
+ALTER TABLE users ADD COLUMN data_retention_period INTEGER DEFAULT 7300; -- Days (20 years default)
+
+-- Data anonymization for analytics
+CREATE TABLE anonymized_usage_data (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    anonymized_user_id VARCHAR(64) NOT NULL, -- One-way hash of user ID
+    grade_level VARCHAR(10),
+    usage_date DATE NOT NULL,
+    session_duration_minutes INTEGER,
+    activities_completed INTEGER,
+    accuracy_rate DECIMAL(5,2),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+```
+
+#### Data Encryption
+```sql
+-- Sensitive data encryption at rest
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+
+-- Example of encrypted field storage
+ALTER TABLE user_profiles ADD COLUMN encrypted_notes TEXT;
+
+-- Function for storing encrypted data
+CREATE OR REPLACE FUNCTION encrypt_sensitive_data(data TEXT)
+RETURNS TEXT AS $$
+BEGIN
+    RETURN encode(encrypt(data::bytea, 'encryption_key_here', 'aes'), 'base64');
+END;
+$$ LANGUAGE plpgsql;
+```
+
+### Analytics Views
+
+#### Student Progress Summary View
+```sql
+CREATE VIEW student_progress_summary AS
+SELECT 
+    u.id as user_id,
+    u.first_name,
+    u.last_name,
+    u.grade_level,
+    COUNT(DISTINCT usp.story_id) as stories_started,
+    COUNT(DISTINCT CASE WHEN usp.status = 'completed' THEN usp.story_id END) as stories_completed,
+    AVG(usp.progress_percentage) as avg_progress,
+    SUM(usp.total_time_spent_minutes) as total_time_minutes,
+    COUNT(DISTINCT sa.standard_id) as standards_assessed,
+    COUNT(DISTINCT CASE WHEN sa.mastery_level IN ('proficient', 'advanced') 
+                   THEN sa.standard_id END) as standards_mastered
+FROM users u
+LEFT JOIN user_story_progress usp ON u.id = usp.user_id
+LEFT JOIN skill_assessments sa ON u.id = sa.user_id
+WHERE u.user_type = 'student' AND u.is_active = true
+GROUP BY u.id, u.first_name, u.last_name, u.grade_level;
+```
+
+#### Teacher Dashboard View
+```sql
+CREATE VIEW teacher_classroom_overview AS
+SELECT 
+    t.id as teacher_id,
+    t.first_name as teacher_name,
+    cm.classroom_name,
+    COUNT(DISTINCT cm.student_id) as total_students,
+    AVG(sps.stories_completed) as avg_stories_completed,
+    AVG(sps.avg_progress) as classroom_avg_progress,
+    COUNT(DISTINCT CASE WHEN sps.total_time_minutes > 0 THEN cm.student_id END) as active_students,
+    MAX(usp.last_accessed_at) as last_class_activity
+FROM users t
+JOIN classroom_memberships cm ON t.id = cm.teacher_id
+JOIN student_progress_summary sps ON cm.student_id = sps.user_id
+LEFT JOIN user_story_progress usp ON cm.student_id = usp.user_id
+WHERE t.user_type = 'teacher' AND cm.is_active = true
+GROUP BY t.id, t.first_name, cm.classroom_name;
+```
+
+### Backup & Data Retention
+
+#### Data Retention Policies
+```sql
+-- Automated cleanup of old session data (older than 2 years)
+CREATE OR REPLACE FUNCTION cleanup_old_sessions()
+RETURNS void AS $$
+BEGIN
+    DELETE FROM learning_sessions 
+    WHERE session_start < NOW() - INTERVAL '2 years';
+    
+    DELETE FROM daily_usage_stats 
+    WHERE date < NOW() - INTERVAL '2 years';
+END;
+$$ LANGUAGE plpgsql;
+
+-- Schedule daily cleanup (requires pg_cron extension)
+SELECT cron.schedule('cleanup-old-data', '0 2 * * *', 'SELECT cleanup_old_sessions();');
+```
+
+#### Database Backup Strategy
+```sql
+-- Point-in-time recovery setup
+ALTER SYSTEM SET wal_level = replica;
+ALTER SYSTEM SET archive_mode = on;
+ALTER SYSTEM SET archive_command = 'cp %p /backup/archive/%f';
+
+-- Continuous backup to cloud storage (implementation depends on provider)
+-- Daily full backup + continuous WAL shipping
+-- 30-day retention for full backups
+-- 7-day retention for WAL files
+```
+
+### Migration Strategy
+
+#### Version Control for Schema Changes
+```sql
+CREATE TABLE schema_migrations (
+    version VARCHAR(255) PRIMARY KEY,
+    applied_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    description TEXT
+);
+
+-- Example migration tracking
+INSERT INTO schema_migrations (version, description) 
+VALUES ('2024_01_01_001', 'Initial schema creation');
+```
+
+This comprehensive database schema supports all the core functionality needed for the Logic And Stories platform while maintaining scalability, security, and COPPA compliance for children's educational data.
+
+## 11. Implementation Phases
 
 ### Phase 1: Foundation (Weeks 1-4)
 - Brand identity and design system
