@@ -3,7 +3,12 @@
     "allow": [
       "Bash(pip install:*)",
       "Bash(curl:*)",
-      "Bash(python:*)"
+      "Bash(python:*)",
+      "mcp__render__list_services",
+      "mcp__render__list_workspaces",
+      "mcp__render__list_deploys",
+      "mcp__render__get_deploy",
+      "mcp__render__list_logs"
     ],
     "deny": [],
     "ask": []
