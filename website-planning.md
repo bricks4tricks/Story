@@ -40,71 +40,349 @@
 - Parent satisfaction scores
 - Teacher adoption rates
 
-## 3. Site Structure & Navigation
+## 3. Site Structure & Navigation Template
 
-### Main Navigation
+### Navigation Design Philosophy
+
+**User-First Approach:** Navigation should answer "What can I do here?" for each visitor type
+**Age-Appropriate Paths:** Different navigation complexity for different age groups
+**Quick Discovery:** Users should find relevant content within 2-clicks
+**Clear Intent:** Every navigation item should have a clear, predictable outcome
+
+### Primary Navigation Structure
+
+#### Top-Level Navigation (Always Visible)
+
 ```
-Home
-├── About Us
-├── Our Stories
-│   ├── By Grade Level
-│   │   ├── Elementary (K-2)
-│   │   ├── Primary (3-5) 
-│   │   ├── Middle School (6-8)
-│   │   └── High School (9-12)
-│   ├── By Math Strand (Florida B.E.S.T. Standards)
-│   │   ├── Number Sense and Operations
-│   │   ├── Algebraic Reasoning
-│   │   ├── Geometric Reasoning
-│   │   ├── Data Analysis and Probability
-│   │   ├── Fractions
-│   │   ├── Measurement
-│   │   ├── Functions
-│   │   ├── Calculus
-│   │   ├── Trigonometry
-│   │   ├── Financial Literacy
-│   │   └── Logic and Discrete Theory
-│   └── Featured Stories
-├── For Parents
-│   ├── How It Works
-│   ├── Benefits
+┌─ LOGO ─┬─ Discover Stories ─┬─ For Parents ─┬─ For Teachers ─┬─ [User Account] ─┐
+         │                   │               │              │                  │
+         │                   │               │              │    - Dashboard   │
+         │                   │               │              │    - Settings    │
+         │                   │               │              │    - Help        │
+         │                   │               │              │    - Sign Out    │
+         │                   │               │              │                  │
+         └───────────────────┴───────────────┴──────────────┴──────────────────┘
+```
+
+### User-Specific Navigation Paths
+
+#### 1. "Discover Stories" - Main Content Hub
+
+**Smart Navigation Based on User Profile:**
+
+##### For New/Guest Users:
+```
+Discover Stories
+├── Start Here (Onboarding)
+│   ├── What's Your Grade? (K-2, 3-5, 6-8, 9-12)
+│   ├── Try a Sample Story
+│   └── See How It Works
+├── Popular Stories
+│   ├── Most Loved by Kids
+│   ├── Teacher Recommended
+│   └── Parent Favorites
+└── Browse by Topic
+    ├── Numbers & Counting
+    ├── Shapes & Patterns
+    ├── Problem Solving
+    └── Real World Math
+```
+
+##### For Registered Students:
+```
+My Learning
+├── Continue Learning
+│   ├── Where You Left Off
+│   ├── Recommended Next
+│   └── Quick Review
+├── My Progress
+│   ├── Stories Completed
+│   ├── Skills Mastered
+│   └── Achievements
+├── Explore New Stories
+│   ├── Your Grade Level
+│   ├── Challenge Mode (+1 Grade)
+│   └── Review Mode (-1 Grade)
+└── Fun Zone
+    ├── Math Games
+    ├── Story Creator
+    └── Share with Friends
+```
+
+##### For Parents (when viewing with child):
+```
+Family Learning
+├── Learning Together
+│   ├── Stories to Read Together
+│   ├── Discussion Guides
+│   └── Extension Activities
+├── Track Progress
+│   ├── [Child Name]'s Journey
+│   ├── Skills Development
+│   └── Time Spent Learning
+└── Support Learning
+    ├── How to Help at Home
+    ├── Math Talk Tips
+    └── When to Challenge/Support
+```
+
+#### 2. "For Parents" - Parent-Specific Resources
+
+```
+For Parents
+├── Get Started
+│   ├── How Logic & Stories Works
+│   ├── Setting Up Your Family
+│   └── First Steps Guide
+├── Your Child's Learning
+│   ├── Progress Dashboard
+│   ├── Skills Assessment
+│   ├── Learning Reports
+│   └── Goal Setting
+├── Support & Resources
+│   ├── Math at Home Tips
+│   ├── Common Questions
+│   ├── Learning Difficulties Help
+│   └── Parent Community
+├── Account & Settings
+│   ├── Manage Children
+│   ├── Privacy Settings
+│   ├── Subscription & Billing
+│   └── Notifications
+└── Plans & Pricing
+    ├── Compare Plans
+    ├── Family Options
+    └── Gift Subscriptions
+```
+
+#### 3. "For Teachers" - Educator Resources
+
+```
+For Teachers
+├── Classroom Setup
+│   ├── Getting Started Guide
+│   ├── Student Account Management
+│   └── Curriculum Integration
+├── Teaching Tools
+│   ├── Lesson Plans
+│   ├── Assessment Tools
 │   ├── Progress Tracking
-│   └── Pricing
-├── For Teachers
-│   ├── Classroom Resources
-│   ├── Curriculum Alignment
-│   └── Bulk Licensing
-├── Free Trial
-└── Contact
+│   └── Printable Resources
+├── Professional Development
+│   ├── Training Videos
+│   ├── Best Practices
+│   ├── Teacher Community
+│   └── Webinars & Events
+├── Classroom Management
+│   ├── Student Dashboard
+│   ├── Assignment Center
+│   ├── Parent Communication
+│   └── Data & Reports
+└── School Solutions
+    ├── District Licensing
+    ├── Implementation Support
+    └── Custom Solutions
 ```
 
-### Key Pages Detail
+### Age-Appropriate Navigation Variations
 
-#### Homepage
-- Hero section with engaging video/animation
-- Value proposition for parents
-- Sample story preview
-- Social proof (testimonials, user count)
-- Call-to-action for free trial
+#### Elementary (K-2): Visual-First Navigation
 
-#### Our Stories Section
-- Interactive story library
-- Filter by age, grade, math concept
-- Preview functionality
-- Progress indicators
-- Difficulty ratings
+**Main Navigation:**
+```
+[HOME ICON] [STORIES ICON] [PROGRESS STAR] [HELP ICON]
+    Home        My Stories      My Stars       Get Help
 
-#### For Parents
-- Clear explanation of methodology
-- Progress tracking dashboard
-- Pricing tiers
-- Success stories and testimonials
+Visual Elements:
+- Large, colorful icons (48px+)
+- Picture labels with minimal text
+- High contrast colors
+- Touch-friendly spacing (60px+ buttons)
+```
 
-#### For Teachers
-- Curriculum mapping
-- Classroom implementation guides
-- Student progress reports
-- Group management tools
+**Story Navigation:**
+```
+🏠 Home
+📚 Stories
+   ├── 🔢 Numbers (with counting dots)
+   ├── 🔶 Shapes (with shape icons)
+   ├── ➕ Adding (with plus symbol)
+   └── 📏 Measuring (with ruler icon)
+⭐ My Stars
+👋 Ask for Help
+```
+
+#### Primary (3-5): Icon + Text Navigation
+
+**Main Navigation:**
+```
+🏠 Home  |  📖 Stories  |  📊 Progress  |  👨‍👩‍👧 Family  |  ⚙️ Settings
+```
+
+**Enhanced Features:**
+- Search bar with predictive text
+- "Recently Viewed" quick access
+- Achievement notifications
+- Simple breadcrumbs
+
+#### Middle School (6-8): Standard Web Navigation
+
+**Main Navigation:**
+```
+Home | Explore | My Learning | Friends | Resources | Account
+```
+
+**Advanced Features:**
+- Full search functionality
+- Content filtering
+- Social features (with parental controls)
+- Detailed progress analytics
+
+#### High School (9-12): Academic-Style Navigation
+
+**Main Navigation:**
+```
+Dashboard | Course Library | Analytics | Collaboration | Resources | Profile
+```
+
+**Professional Features:**
+- Advanced search and filters
+- Learning path customization
+- Peer collaboration tools
+- Integration with school systems
+
+### Mobile Navigation Strategy
+
+#### Responsive Breakpoints
+
+**Mobile (320px - 767px):**
+```
+☰ Menu | LOGO | 👤 Profile
+```
+
+**Hamburger Menu Structure:**
+```
+☰ MENU
+├── 🏠 Home
+├── 📚 My Stories
+├── ⭐ Progress
+├── 👨‍👩‍👧 Family (if parent account)
+├── ⚙️ Settings
+└── ❓ Help
+```
+
+**Tablet (768px - 1023px):**
+```
+LOGO | Stories | Progress | Family | Account ▼
+```
+
+**Desktop (1024px+):**
+Full horizontal navigation with dropdowns
+
+### Smart Navigation Features
+
+#### Contextual Navigation
+
+**Location-Aware Breadcrumbs:**
+```
+Home > Grade 3 > Multiplication Stories > "The Pizza Party Problem"
+```
+
+**Quick Actions (Always Available):**
+```
+🔍 Search | 🔖 Bookmarks | 📢 Help | 🏠 Home
+```
+
+#### Personalized Navigation
+
+**For Struggling Students:**
+- Emphasize review content
+- Highlight confidence-building activities
+- Easy access to help resources
+
+**For Advanced Students:**
+- Surface challenge content
+- Show acceleration opportunities
+- Peer collaboration features
+
+**For Parents with Multiple Children:**
+- Child switcher in header
+- Combined progress views
+- Family activity suggestions
+
+### Footer Navigation
+
+#### Primary Footer (Always Visible)
+```
+Company                Support              Resources
+├── About Us          ├── Help Center      ├── Blog
+├── Our Mission       ├── Contact Us       ├── Research
+├── Careers           ├── System Status    ├── Developer API
+└── Press Kit         └── Community        └── Accessibility
+
+Legal                 Connect              Account
+├── Privacy Policy    ├── Newsletter       ├── Sign In
+├── Terms of Use      ├── Facebook         ├── Create Account
+├── COPPA Info        ├── Twitter          └── Forgot Password?
+└── Accessibility     └── YouTube
+```
+
+### Search & Discovery Navigation
+
+#### Smart Search Features
+
+**Autocomplete Suggestions:**
+```
+Search: "frac"
+├── 📊 Fractions (Topic)
+├── 📖 "The Fraction Factory" (Story)
+├── 📚 Grade 4 Fraction Stories (Collection)
+└── 🎯 Fraction Skills Assessment (Tool)
+```
+
+**Filter Options:**
+```
+🎚️ Filters
+├── 📚 Grade Level (K-2, 3-5, 6-8, 9-12)
+├── ⏱️ Duration (5min, 10min, 15min+)
+├── 🎯 Difficulty (Easy, Medium, Hard)
+├── 📖 Story Type (Adventure, Mystery, Sci-Fi)
+└── ✅ Completion Status (New, In Progress, Completed)
+```
+
+### Accessibility Navigation Features
+
+#### Screen Reader Optimization
+- Skip navigation links
+- Proper heading hierarchy
+- ARIA labels for all interactive elements
+- Keyboard navigation support
+
+#### Visual Accessibility
+- High contrast mode toggle
+- Font size adjustment
+- Motion reduction options
+- Color-blind friendly alternatives
+
+### Implementation Notes
+
+#### Technical Considerations
+- Progressive enhancement from mobile-first
+- Fast loading with cached navigation states
+- Offline navigation for downloaded content
+- Cross-device synchronization
+
+#### User Testing Priorities
+1. **Task Completion:** Can users find specific content?
+2. **Cognitive Load:** Is navigation intuitive for each age group?
+3. **Error Recovery:** Can users easily get back on track?
+4. **Accessibility:** Does navigation work for all abilities?
+
+#### Analytics & Optimization
+- Track most common navigation paths
+- Monitor bounce rates by entry point
+- A/B test navigation labels and structures
+- Heat mapping for mobile navigation usage
 
 ## 4. Curriculum Alignment (Florida B.E.S.T. Standards)
 
