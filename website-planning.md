@@ -9,14 +9,14 @@
 
 ### Primary Audiences
 1. **Parents (Primary Decision Makers)**
-   - Age: 25-45
+   - Age: 25-50
    - Concerned about child's math education
    - Looking for engaging, effective learning tools
    - Tech-savvy but prioritize ease of use
 
 2. **Children (Primary Users)**
    - Age: 4-18 years old (K-12)
-   - Love stories and interactive content
+   - Make the kids love math using stories and interactive content
    - Visual learners who need engaging content
    - Attention spans vary by age group (K-2: 5-10 min, 3-5: 10-15 min, 6-8: 15-25 min, 9-12: 20-30+ min)
    - Need curriculum-aligned content for school success
