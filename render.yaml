@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: logic-stories-website
+    name: LogicAndStories
     env: python
     region: oregon
     plan: free

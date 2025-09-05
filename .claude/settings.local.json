@@ -8,7 +8,10 @@
       "mcp__render__list_workspaces",
       "mcp__render__list_deploys",
       "mcp__render__get_deploy",
-      "mcp__render__list_logs"
+      "mcp__render__list_logs",
+      "Bash(git add:*)",
+      "mcp__render__get_service",
+      "mcp__render__update_web_service"
     ],
     "deny": [],
     "ask": []
