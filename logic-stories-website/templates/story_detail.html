@@ -1,0 +1,602 @@
+{% extends "base.html" %}
+
+{% block title %}{{ story.title }} - Logic And Stories{% endblock %}
+
+{% block content %}
+<!-- Story Header -->
+<section class="bg-gradient-to-br from-indigo-50 to-blue-100 py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div>
+                <div class="flex items-center space-x-4 mb-4">
+                    <span class="bg-primary text-white px-3 py-1 rounded-full text-sm font-medium">{{ story.benchmark }}</span>
+                    <span class="bg-secondary text-white px-3 py-1 rounded-full text-sm font-medium">{{ story.difficulty }}</span>
+                </div>
+                
+                <h1 class="heading-font text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+                    {{ story.title }}
+                </h1>
+                
+                <p class="text-xl text-gray-600 mb-8">
+                    {{ story.description }}
+                </p>
+                
+                <div class="grid grid-cols-2 gap-6 mb-8">
+                    <div>
+                        <div class="text-2xl font-bold text-primary">{{ story.duration }}</div>
+                        <div class="text-sm text-gray-600">Estimated Time</div>
+                    </div>
+                    <div>
+                        <div class="text-2xl font-bold text-secondary">Interactive</div>
+                        <div class="text-sm text-gray-600">Story Type</div>
+                    </div>
+                </div>
+                
+                <div class="flex space-x-4">
+                    <button id="start-story-btn" class="bg-secondary text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-green-600 transition-colors">
+                        <i class="fas fa-play mr-2"></i>Start Story
+                    </button>
+                    <button class="border-2 border-primary text-primary px-8 py-4 rounded-lg text-lg font-semibold hover:bg-primary hover:text-white transition-colors">
+                        <i class="fas fa-eye mr-2"></i>Preview
+                    </button>
+                </div>
+            </div>
+            
+            <div>
+                <!-- Story Preview Card -->
+                <div class="bg-white rounded-2xl shadow-xl p-8">
+                    <div class="text-center">
+                        <div class="w-32 h-32 bg-gradient-to-br from-primary to-secondary rounded-full mx-auto mb-6 flex items-center justify-center">
+                            <i class="fas fa-book-open text-white text-4xl"></i>
+                        </div>
+                        
+                        <h3 class="heading-font text-2xl font-bold text-gray-800 mb-4">Story Details</h3>
+                        
+                        <div class="space-y-4 text-left">
+                            <div class="flex items-center">
+                                <i class="fas fa-tag text-primary mr-3"></i>
+                                <div>
+                                    <div class="font-semibold text-gray-800">Math Strand</div>
+                                    <div class="text-gray-600">{{ story.strand }}</div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center">
+                                <i class="fas fa-graduation-cap text-primary mr-3"></i>
+                                <div>
+                                    <div class="font-semibold text-gray-800">FL B.E.S.T. Standard</div>
+                                    <div class="text-gray-600">{{ story.benchmark }}</div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center">
+                                <i class="fas fa-clock text-primary mr-3"></i>
+                                <div>
+                                    <div class="font-semibold text-gray-800">Duration</div>
+                                    <div class="text-gray-600">{{ story.duration }}</div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-center">
+                                <i class="fas fa-signal text-primary mr-3"></i>
+                                <div>
+                                    <div class="font-semibold text-gray-800">Difficulty</div>
+                                    <div class="text-gray-600">{{ story.difficulty }}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Story Player (Initially Hidden) -->
+<section id="story-player" class="hidden py-12 bg-gray-50">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
+            <!-- Story Progress Bar -->
+            <div class="bg-primary p-4">
+                <div class="flex items-center justify-between text-white mb-2">
+                    <span class="font-semibold">{{ story.title }}</span>
+                    <span id="progress-text">0% Complete</span>
+                </div>
+                <div class="w-full bg-blue-300 rounded-full h-2">
+                    <div id="progress-bar" class="bg-white h-2 rounded-full transition-all duration-500" style="width: 0%"></div>
+                </div>
+            </div>
+            
+            <!-- Story Content Area -->
+            <div class="p-8">
+                <div id="story-content">
+                    <!-- Story content will be loaded here dynamically -->
+                    <div class="text-center">
+                        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+                        <p class="text-gray-600">Loading your mathematical adventure...</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Story Controls -->
+            <div class="border-t bg-gray-50 p-6">
+                <div class="flex items-center justify-between">
+                    <button id="prev-btn" class="bg-gray-200 text-gray-600 px-6 py-2 rounded-lg hover:bg-gray-300 transition-colors" disabled>
+                        <i class="fas fa-arrow-left mr-2"></i>Previous
+                    </button>
+                    
+                    <div class="flex items-center space-x-4">
+                        <button id="hint-btn" class="bg-accent text-white px-4 py-2 rounded-lg hover:bg-yellow-500 transition-colors">
+                            <i class="fas fa-lightbulb mr-2"></i>Hint
+                        </button>
+                        <button id="audio-btn" class="bg-purple-500 text-white px-4 py-2 rounded-lg hover:bg-purple-600 transition-colors">
+                            <i class="fas fa-volume-up mr-2"></i>Audio
+                        </button>
+                    </div>
+                    
+                    <button id="next-btn" class="bg-primary text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition-colors">
+                        Next<i class="fas fa-arrow-right ml-2"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Story Preview/Overview -->
+<section class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+            <!-- Learning Objectives -->
+            <div>
+                <h3 class="heading-font text-2xl font-bold text-gray-900 mb-6">Learning Objectives</h3>
+                <div class="space-y-4">
+                    {% if story.id == 'k_counting_forest' %}
+                        <div class="flex items-start">
+                            <i class="fas fa-check-circle text-secondary mt-1 mr-3"></i>
+                            <div>
+                                <div class="font-semibold">Count objects 0-20</div>
+                                <div class="text-sm text-gray-600">Practice one-to-one correspondence</div>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <i class="fas fa-check-circle text-secondary mt-1 mr-3"></i>
+                            <div>
+                                <div class="font-semibold">Number recognition</div>
+                                <div class="text-sm text-gray-600">Identify numerals and quantities</div>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <i class="fas fa-check-circle text-secondary mt-1 mr-3"></i>
+                            <div>
+                                <div class="font-semibold">Problem solving</div>
+                                <div class="text-sm text-gray-600">Apply counting to solve problems</div>
+                            </div>
+                        </div>
+                    {% elif story.id == 'g5_coordinate_treasure' %}
+                        <div class="flex items-start">
+                            <i class="fas fa-check-circle text-secondary mt-1 mr-3"></i>
+                            <div>
+                                <div class="font-semibold">Coordinate plane navigation</div>
+                                <div class="text-sm text-gray-600">Plot points using (x,y) coordinates</div>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <i class="fas fa-check-circle text-secondary mt-1 mr-3"></i>
+                            <div>
+                                <div class="font-semibold">Grid relationships</div>
+                                <div class="text-sm text-gray-600">Understand quadrants and axes</div>
+                            </div>
+                        </div>
+                    {% elif story.id == 'hs_financial_freedom' %}
+                        <div class="flex items-start">
+                            <i class="fas fa-check-circle text-secondary mt-1 mr-3"></i>
+                            <div>
+                                <div class="font-semibold">Credit understanding</div>
+                                <div class="text-sm text-gray-600">Learn about credit scores and impact</div>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <i class="fas fa-check-circle text-secondary mt-1 mr-3"></i>
+                            <div>
+                                <div class="font-semibold">Debt management</div>
+                                <div class="text-sm text-gray-600">Strategies for managing and reducing debt</div>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="flex items-start">
+                            <i class="fas fa-check-circle text-secondary mt-1 mr-3"></i>
+                            <div>
+                                <div class="font-semibold">Core concept mastery</div>
+                                <div class="text-sm text-gray-600">Master key mathematical concepts</div>
+                            </div>
+                        </div>
+                        <div class="flex items-start">
+                            <i class="fas fa-check-circle text-secondary mt-1 mr-3"></i>
+                            <div>
+                                <div class="font-semibold">Problem-solving skills</div>
+                                <div class="text-sm text-gray-600">Apply math to real-world scenarios</div>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Story Structure -->
+            <div>
+                <h3 class="heading-font text-2xl font-bold text-gray-900 mb-6">Story Structure</h3>
+                <div class="space-y-4">
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <div class="flex items-center mb-2">
+                            <div class="w-8 h-8 bg-primary rounded-full flex items-center justify-center text-white text-sm font-bold mr-3">1</div>
+                            <div class="font-semibold">Introduction</div>
+                        </div>
+                        <div class="text-sm text-gray-600 ml-11">Meet characters and understand the challenge</div>
+                    </div>
+                    
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <div class="flex items-center mb-2">
+                            <div class="w-8 h-8 bg-secondary rounded-full flex items-center justify-center text-white text-sm font-bold mr-3">2</div>
+                            <div class="font-semibold">Mathematical Discovery</div>
+                        </div>
+                        <div class="text-sm text-gray-600 ml-11">Explore concepts through interactive problems</div>
+                    </div>
+                    
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <div class="flex items-center mb-2">
+                            <div class="w-8 h-8 bg-accent rounded-full flex items-center justify-center text-white text-sm font-bold mr-3">3</div>
+                            <div class="font-semibold">Application</div>
+                        </div>
+                        <div class="text-sm text-gray-600 ml-11">Apply learning to solve the story's main challenge</div>
+                    </div>
+                    
+                    <div class="bg-gray-50 p-4 rounded-lg">
+                        <div class="flex items-center mb-2">
+                            <div class="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center text-white text-sm font-bold mr-3">4</div>
+                            <div class="font-semibold">Reflection</div>
+                        </div>
+                        <div class="text-sm text-gray-600 ml-11">Review concepts and celebrate success</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Related Standards -->
+            <div>
+                <h3 class="heading-font text-2xl font-bold text-gray-900 mb-6">Related Standards</h3>
+                <div class="space-y-3">
+                    <div class="bg-blue-50 border-l-4 border-primary p-4 rounded">
+                        <div class="font-semibold text-primary">{{ story.benchmark }}</div>
+                        <div class="text-sm text-gray-600 mt-1">Primary standard addressed in this story</div>
+                    </div>
+                    
+                    {% if story.strand == 'Number Sense and Operations' %}
+                        <div class="bg-gray-50 border-l-4 border-gray-300 p-4 rounded">
+                            <div class="font-semibold text-gray-700">MA.K.NSO.1.2</div>
+                            <div class="text-sm text-gray-600 mt-1">Count forward and backward</div>
+                        </div>
+                        <div class="bg-gray-50 border-l-4 border-gray-300 p-4 rounded">
+                            <div class="font-semibold text-gray-700">MA.K.NSO.2.1</div>
+                            <div class="text-sm text-gray-600 mt-1">Recite number sequence</div>
+                        </div>
+                    {% elif story.strand == 'Geometric Reasoning' %}
+                        <div class="bg-gray-50 border-l-4 border-gray-300 p-4 rounded">
+                            <div class="font-semibold text-gray-700">MA.5.GR.3.2</div>
+                            <div class="text-sm text-gray-600 mt-1">Coordinate plane quadrants</div>
+                        </div>
+                    {% elif story.strand == 'Financial Literacy' %}
+                        <div class="bg-gray-50 border-l-4 border-gray-300 p-4 rounded">
+                            <div class="font-semibold text-gray-700">MA.912.FL.3.4</div>
+                            <div class="text-sm text-gray-600 mt-1">Interest calculations</div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Related Stories -->
+<section class="py-16 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <h2 class="heading-font text-3xl font-bold text-gray-900 mb-8 text-center">More Stories You Might Like</h2>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Sample related stories would be dynamically generated -->
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <div class="w-16 h-16 bg-primary rounded-lg flex items-center justify-center mb-4">
+                    <i class="fas fa-shapes text-white text-2xl"></i>
+                </div>
+                <h3 class="heading-font text-xl font-bold text-gray-900 mb-2">Shape Detective Adventures</h3>
+                <p class="text-gray-600 mb-4">Identify and classify 2D and 3D shapes in a magical kingdom</p>
+                <button class="text-primary hover:text-blue-600 font-medium">Explore Story →</button>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <div class="w-16 h-16 bg-secondary rounded-lg flex items-center justify-center mb-4">
+                    <i class="fas fa-plus text-white text-2xl"></i>
+                </div>
+                <h3 class="heading-font text-xl font-bold text-gray-900 mb-2">The Addition Bakery</h3>
+                <p class="text-gray-600 mb-4">Help a baker solve addition problems while creating delicious treats</p>
+                <button class="text-primary hover:text-blue-600 font-medium">Explore Story →</button>
+            </div>
+            
+            <div class="bg-white rounded-xl shadow-lg p-6">
+                <div class="w-16 h-16 bg-accent rounded-lg flex items-center justify-center mb-4">
+                    <i class="fas fa-chart-bar text-white text-2xl"></i>
+                </div>
+                <h3 class="heading-font text-xl font-bold text-gray-900 mb-2">Data Detective Agency</h3>
+                <p class="text-gray-600 mb-4">Collect and analyze data to solve mysterious cases</p>
+                <button class="text-primary hover:text-blue-600 font-medium">Explore Story →</button>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const startBtn = document.getElementById('start-story-btn');
+    const storyPlayer = document.getElementById('story-player');
+    const progressBar = document.getElementById('progress-bar');
+    const progressText = document.getElementById('progress-text');
+    const storyContent = document.getElementById('story-content');
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+    const hintBtn = document.getElementById('hint-btn');
+    const audioBtn = document.getElementById('audio-btn');
+    
+    let currentStep = 0;
+    const totalSteps = 4;
+    
+    // Sample story content based on the story type
+    const storySteps = {
+        'k_counting_forest': [
+            {
+                content: `
+                    <div class="text-center">
+                        <h3 class="text-2xl font-bold mb-4">🌲 Welcome to the Enchanted Forest! 🌲</h3>
+                        <p class="text-lg mb-6">A magical forest where friendly creatures need your help counting their treasures!</p>
+                        <div class="bg-yellow-50 p-4 rounded-lg">
+                            <p><strong>Forest Fairy:</strong> "Welcome, young mathematician! The forest animals have collected many treasures, but they need help counting them. Can you help us?"</p>
+                        </div>
+                    </div>
+                `,
+                hint: "Look for the Forest Fairy's question and get ready to help!"
+            },
+            {
+                content: `
+                    <div>
+                        <h3 class="text-2xl font-bold mb-4">🐰 Bunny's Carrot Collection</h3>
+                        <p class="mb-4">Bunny has found some carrots! Let's count them together.</p>
+                        <div class="grid grid-cols-5 gap-2 mb-6 justify-center">
+                            <div class="text-4xl">🥕</div>
+                            <div class="text-4xl">🥕</div>
+                            <div class="text-4xl">🥕</div>
+                            <div class="text-4xl">🥕</div>
+                            <div class="text-4xl">🥕</div>
+                        </div>
+                        <div class="bg-blue-50 p-4 rounded-lg">
+                            <p class="font-semibold mb-2">How many carrots does Bunny have?</p>
+                            <div class="flex space-x-3">
+                                <button class="answer-btn bg-white border-2 border-gray-300 px-4 py-2 rounded-lg hover:border-primary" data-answer="3">3</button>
+                                <button class="answer-btn bg-white border-2 border-gray-300 px-4 py-2 rounded-lg hover:border-primary" data-answer="5">5</button>
+                                <button class="answer-btn bg-white border-2 border-gray-300 px-4 py-2 rounded-lg hover:border-primary" data-answer="7">7</button>
+                            </div>
+                        </div>
+                    </div>
+                `,
+                hint: "Count each carrot one by one: 1, 2, 3, 4, 5!"
+            },
+            {
+                content: `
+                    <div>
+                        <h3 class="text-2xl font-bold mb-4">🦝 Raccoon's Acorn Challenge</h3>
+                        <p class="mb-4">Great job! Now Raccoon needs help with a bigger collection.</p>
+                        <div class="grid grid-cols-6 gap-2 mb-6 justify-center">
+                            <div class="text-4xl">🌰</div>
+                            <div class="text-4xl">🌰</div>
+                            <div class="text-4xl">🌰</div>
+                            <div class="text-4xl">🌰</div>
+                            <div class="text-4xl">🌰</div>
+                            <div class="text-4xl">🌰</div>
+                            <div class="text-4xl">🌰</div>
+                            <div class="text-4xl">🌰</div>
+                        </div>
+                        <div class="bg-green-50 p-4 rounded-lg">
+                            <p class="font-semibold mb-2">How many acorns does Raccoon have?</p>
+                            <input type="number" id="acorn-answer" class="border-2 border-gray-300 px-4 py-2 rounded-lg" placeholder="Type your answer">
+                            <button id="check-acorns" class="bg-primary text-white px-4 py-2 ml-2 rounded-lg">Check</button>
+                        </div>
+                        <div id="acorn-feedback" class="mt-4 hidden"></div>
+                    </div>
+                `,
+                hint: "Count carefully! Try counting by twos: 2, 4, 6, 8!"
+            },
+            {
+                content: `
+                    <div class="text-center">
+                        <h3 class="text-2xl font-bold mb-4">🎉 Congratulations! 🎉</h3>
+                        <p class="text-lg mb-6">You've helped all the forest animals count their treasures!</p>
+                        <div class="bg-green-50 p-6 rounded-lg">
+                            <h4 class="font-bold text-green-800 mb-2">What You Learned:</h4>
+                            <ul class="text-left text-green-700 space-y-1">
+                                <li>• Counted objects from 1 to 8</li>
+                                <li>• Used one-to-one correspondence</li>
+                                <li>• Recognized number patterns</li>
+                                <li>• Applied counting to solve problems</li>
+                            </ul>
+                        </div>
+                        <div class="mt-6">
+                            <div class="text-3xl mb-2">⭐⭐⭐</div>
+                            <p class="font-semibold">You earned 3 stars for completing this adventure!</p>
+                        </div>
+                    </div>
+                `,
+                hint: "You did amazing! The forest animals are so grateful for your help!"
+            }
+        ],
+        'default': [
+            {
+                content: `
+                    <div class="text-center">
+                        <h3 class="text-2xl font-bold mb-4">Welcome to Your Mathematical Adventure!</h3>
+                        <p class="text-lg mb-6">Get ready to explore exciting concepts through an engaging story.</p>
+                        <div class="bg-blue-50 p-4 rounded-lg">
+                            <p>This interactive story will guide you through key mathematical concepts aligned with Florida B.E.S.T. standards.</p>
+                        </div>
+                    </div>
+                `,
+                hint: "Read the introduction carefully and get ready for your adventure!"
+            },
+            {
+                content: `
+                    <div class="text-center">
+                        <h3 class="text-2xl font-bold mb-4">Mathematical Discovery</h3>
+                        <p class="mb-6">Let's explore the key concepts through interactive problems.</p>
+                        <div class="bg-yellow-50 p-6 rounded-lg">
+                            <p class="mb-4">This is where you'll work through mathematical challenges that are woven into the story narrative.</p>
+                            <button class="bg-primary text-white px-6 py-2 rounded-lg">Try a Problem</button>
+                        </div>
+                    </div>
+                `,
+                hint: "Take your time to understand each concept before moving forward!"
+            },
+            {
+                content: `
+                    <div class="text-center">
+                        <h3 class="text-2xl font-bold mb-4">Apply Your Learning</h3>
+                        <p class="mb-6">Now use what you've learned to solve the main challenge!</p>
+                        <div class="bg-green-50 p-6 rounded-lg">
+                            <p class="mb-4">This is where the story reaches its climax and you apply your mathematical knowledge to help the characters succeed.</p>
+                            <button class="bg-secondary text-white px-6 py-2 rounded-lg">Solve the Challenge</button>
+                        </div>
+                    </div>
+                `,
+                hint: "Think about all the concepts you've learned in this story!"
+            },
+            {
+                content: `
+                    <div class="text-center">
+                        <h3 class="text-2xl font-bold mb-4">🎉 Story Complete! 🎉</h3>
+                        <p class="text-lg mb-6">Excellent work! You've successfully completed this mathematical adventure.</p>
+                        <div class="bg-blue-50 p-6 rounded-lg">
+                            <h4 class="font-bold mb-2">Key Concepts Mastered:</h4>
+                            <ul class="text-left space-y-1">
+                                <li>• {{ story.strand }} concepts</li>
+                                <li>• Problem-solving strategies</li>
+                                <li>• Real-world applications</li>
+                            </ul>
+                        </div>
+                    </div>
+                `,
+                hint: "Congratulations on completing your mathematical journey!"
+            }
+        ]
+    };
+    
+    const currentStory = '{{ story.id }}' in storySteps ? storySteps['{{ story.id }}'] : storySteps['default'];
+    
+    startBtn.addEventListener('click', function() {
+        storyPlayer.classList.remove('hidden');
+        storyPlayer.scrollIntoView({ behavior: 'smooth' });
+        loadStoryStep(0);
+    });
+    
+    function loadStoryStep(step) {
+        currentStep = step;
+        const progress = ((step + 1) / totalSteps) * 100;
+        
+        progressBar.style.width = progress + '%';
+        progressText.textContent = Math.round(progress) + '% Complete';
+        
+        storyContent.innerHTML = currentStory[step].content;
+        
+        // Update navigation buttons
+        prevBtn.disabled = step === 0;
+        prevBtn.className = step === 0 ? 
+            'bg-gray-200 text-gray-400 px-6 py-2 rounded-lg cursor-not-allowed' :
+            'bg-gray-200 text-gray-600 px-6 py-2 rounded-lg hover:bg-gray-300 transition-colors';
+            
+        nextBtn.disabled = step === totalSteps - 1;
+        if (step === totalSteps - 1) {
+            nextBtn.innerHTML = '<i class="fas fa-check mr-2"></i>Finish';
+            nextBtn.className = 'bg-secondary text-white px-6 py-2 rounded-lg hover:bg-green-600 transition-colors';
+        } else {
+            nextBtn.innerHTML = 'Next<i class="fas fa-arrow-right ml-2"></i>';
+            nextBtn.className = 'bg-primary text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition-colors';
+        }
+        
+        // Add interactivity for specific steps
+        addStepInteractivity(step);
+    }
+    
+    function addStepInteractivity(step) {
+        // Add answer button functionality for kindergarten story
+        if ('{{ story.id }}' === 'k_counting_forest') {
+            if (step === 1) {
+                const answerBtns = document.querySelectorAll('.answer-btn');
+                answerBtns.forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const answer = this.dataset.answer;
+                        answerBtns.forEach(b => {
+                            b.className = 'answer-btn bg-white border-2 border-gray-300 px-4 py-2 rounded-lg';
+                        });
+                        
+                        if (answer === '5') {
+                            this.className = 'answer-btn bg-green-100 border-2 border-green-500 px-4 py-2 rounded-lg text-green-700';
+                            setTimeout(() => nextBtn.click(), 1000);
+                        } else {
+                            this.className = 'answer-btn bg-red-100 border-2 border-red-500 px-4 py-2 rounded-lg text-red-700';
+                        }
+                    });
+                });
+            }
+            
+            if (step === 2) {
+                const checkBtn = document.getElementById('check-acorns');
+                const answerInput = document.getElementById('acorn-answer');
+                const feedback = document.getElementById('acorn-feedback');
+                
+                checkBtn.addEventListener('click', function() {
+                    const answer = parseInt(answerInput.value);
+                    feedback.classList.remove('hidden');
+                    
+                    if (answer === 8) {
+                        feedback.innerHTML = '<div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">🎉 Excellent! You counted all 8 acorns correctly!</div>';
+                        setTimeout(() => nextBtn.click(), 1500);
+                    } else {
+                        feedback.innerHTML = '<div class="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded">Try again! Count each acorn carefully.</div>';
+                    }
+                });
+            }
+        }
+    }
+    
+    nextBtn.addEventListener('click', function() {
+        if (currentStep < totalSteps - 1) {
+            loadStoryStep(currentStep + 1);
+        } else {
+            // Story completed
+            alert('Congratulations! You completed the story. Redirecting to story library...');
+            window.location.href = '{{ url_for("stories") }}';
+        }
+    });
+    
+    prevBtn.addEventListener('click', function() {
+        if (currentStep > 0) {
+            loadStoryStep(currentStep - 1);
+        }
+    });
+    
+    hintBtn.addEventListener('click', function() {
+        alert(currentStory[currentStep].hint);
+    });
+    
+    audioBtn.addEventListener('click', function() {
+        // Placeholder for audio functionality
+        alert('Audio narration would play here in the full version!');
+    });
+});
+</script>
+{% endblock %}

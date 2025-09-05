@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: logic-stories-website
+    env: python
+    region: oregon
+    plan: free
+    buildCommand: "pip install -r requirements.txt && python migrate_database.py"
+    startCommand: "gunicorn --bind 0.0.0.0:$PORT app:app"
+    envVars:
+      - key: FLASK_ENV
+        value: production
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: logic-stories-db
+          property: connectionString
+    
+databases:
+  - name: logic-stories-db
+    databaseName: logicandstories
+    user: logicandstories
+    plan: free

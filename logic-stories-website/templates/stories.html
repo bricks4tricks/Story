@@ -1,0 +1,374 @@
+{% extends "base.html" %}
+
+{% block title %}Our Stories - Logic And Stories{% endblock %}
+
+{% block content %}
+<!-- Page Header -->
+<section class="bg-gradient-to-br from-indigo-50 to-blue-100 py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center">
+            <h1 class="heading-font text-4xl md:text-5xl font-bold text-gray-900 mb-6">
+                Math Story Library
+            </h1>
+            <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+                Discover engaging mathematical adventures aligned with Florida B.E.S.T. standards across all K-12 grade levels.
+            </p>
+        </div>
+    </div>
+</section>
+
+<!-- Filter Section -->
+<section class="py-8 bg-white border-b">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-wrap items-center justify-between gap-4">
+            <div class="flex flex-wrap items-center gap-4">
+                <label class="font-medium text-gray-700">Filter by:</label>
+                <select id="grade-filter" class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary">
+                    <option value="all">All Grades</option>
+                    <option value="elementary">Elementary (K-2)</option>
+                    <option value="primary">Primary (3-5)</option>
+                    <option value="middle_school">Middle School (6-8)</option>
+                    <option value="high_school">High School (9-12)</option>
+                </select>
+                <select id="strand-filter" class="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary">
+                    <option value="all">All Math Strands</option>
+                    <option value="number_sense">Number Sense and Operations</option>
+                    <option value="algebraic_reasoning">Algebraic Reasoning</option>
+                    <option value="geometric_reasoning">Geometric Reasoning</option>
+                    <option value="data_analysis">Data Analysis and Probability</option>
+                    <option value="fractions">Fractions</option>
+                    <option value="measurement">Measurement</option>
+                    <option value="functions">Functions</option>
+                    <option value="calculus">Calculus</option>
+                    <option value="financial_literacy">Financial Literacy</option>
+                </select>
+            </div>
+            <div class="flex items-center gap-2">
+                <span class="text-sm text-gray-600">View:</span>
+                <button id="grid-view" class="p-2 rounded bg-primary text-white">
+                    <i class="fas fa-th"></i>
+                </button>
+                <button id="list-view" class="p-2 rounded bg-gray-200 text-gray-600 hover:bg-gray-300">
+                    <i class="fas fa-list"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Stories Grid -->
+<section class="py-12 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <!-- Elementary Stories (K-2) -->
+        <div class="story-section" data-level="elementary">
+            <div class="flex items-center mb-8">
+                <div class="w-1 h-12 bg-red-400 mr-4"></div>
+                <div>
+                    <h2 class="heading-font text-2xl font-bold text-gray-900">Elementary (K-2)</h2>
+                    <p class="text-gray-600">Ages 4-7 • 75 Florida B.E.S.T. Standards</p>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+                {% for grade, data in curriculum_data.elementary.items() %}
+                    {% for story in data.sample_stories %}
+                    <div class="story-card bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow border-l-4 border-red-400" 
+                         data-grade="{{ grade }}" 
+                         data-strand="{{ story.strand.lower().replace(' ', '_').replace('and_', '') }}">
+                        <div class="p-6">
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="bg-red-100 text-red-700 px-3 py-1 rounded-full text-sm font-medium">
+                                    {{ data.name }}
+                                </span>
+                                <span class="text-sm text-gray-500">{{ story.duration }}</span>
+                            </div>
+                            
+                            <h3 class="heading-font text-xl font-bold text-gray-900 mb-2">{{ story.title }}</h3>
+                            <p class="text-gray-600 mb-4">{{ story.description }}</p>
+                            
+                            <div class="space-y-2 mb-6">
+                                <div class="flex items-center text-sm text-gray-600">
+                                    <i class="fas fa-tag mr-2"></i>
+                                    {{ story.strand }}
+                                </div>
+                                <div class="flex items-center text-sm text-gray-600">
+                                    <i class="fas fa-graduation-cap mr-2"></i>
+                                    {{ story.benchmark }}
+                                </div>
+                                <div class="flex items-center text-sm text-gray-600">
+                                    <i class="fas fa-signal mr-2"></i>
+                                    {{ story.difficulty }}
+                                </div>
+                            </div>
+                            
+                            <div class="flex space-x-3">
+                                <a href="{{ url_for('story_detail', story_id=story.id) }}" 
+                                   class="flex-1 bg-red-100 text-red-700 py-3 px-4 rounded-lg text-center font-semibold hover:bg-red-200 transition-colors">
+                                    Start Story
+                                </a>
+                                <button class="p-3 border border-gray-300 rounded-lg hover:bg-gray-50">
+                                    <i class="fas fa-heart text-gray-400"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% endfor %}
+            </div>
+        </div>
+        
+        <!-- Primary Stories (3-5) -->
+        <div class="story-section" data-level="primary">
+            <div class="flex items-center mb-8">
+                <div class="w-1 h-12 bg-teal-400 mr-4"></div>
+                <div>
+                    <h2 class="heading-font text-2xl font-bold text-gray-900">Primary (3-5)</h2>
+                    <p class="text-gray-600">Ages 8-10 • 109 Florida B.E.S.T. Standards</p>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+                {% for grade, data in curriculum_data.primary.items() %}
+                    {% for story in data.sample_stories %}
+                    <div class="story-card bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow border-l-4 border-teal-400" 
+                         data-grade="{{ grade }}" 
+                         data-strand="{{ story.strand.lower().replace(' ', '_').replace('and_', '') }}">
+                        <div class="p-6">
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="bg-teal-100 text-teal-700 px-3 py-1 rounded-full text-sm font-medium">
+                                    {{ data.name }}
+                                </span>
+                                <span class="text-sm text-gray-500">{{ story.duration }}</span>
+                            </div>
+                            
+                            <h3 class="heading-font text-xl font-bold text-gray-900 mb-2">{{ story.title }}</h3>
+                            <p class="text-gray-600 mb-4">{{ story.description }}</p>
+                            
+                            <div class="space-y-2 mb-6">
+                                <div class="flex items-center text-sm text-gray-600">
+                                    <i class="fas fa-tag mr-2"></i>
+                                    {{ story.strand }}
+                                </div>
+                                <div class="flex items-center text-sm text-gray-600">
+                                    <i class="fas fa-graduation-cap mr-2"></i>
+                                    {{ story.benchmark }}
+                                </div>
+                                <div class="flex items-center text-sm text-gray-600">
+                                    <i class="fas fa-signal mr-2"></i>
+                                    {{ story.difficulty }}
+                                </div>
+                            </div>
+                            
+                            <div class="flex space-x-3">
+                                <a href="{{ url_for('story_detail', story_id=story.id) }}" 
+                                   class="flex-1 bg-teal-100 text-teal-700 py-3 px-4 rounded-lg text-center font-semibold hover:bg-teal-200 transition-colors">
+                                    Start Story
+                                </a>
+                                <button class="p-3 border border-gray-300 rounded-lg hover:bg-gray-50">
+                                    <i class="fas fa-heart text-gray-400"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% endfor %}
+            </div>
+        </div>
+        
+        <!-- Middle School Stories (6-8) -->
+        <div class="story-section" data-level="middle_school">
+            <div class="flex items-center mb-8">
+                <div class="w-1 h-12 bg-blue-400 mr-4"></div>
+                <div>
+                    <h2 class="heading-font text-2xl font-bold text-gray-900">Middle School (6-8)</h2>
+                    <p class="text-gray-600">Ages 11-13 • 114 Florida B.E.S.T. Standards</p>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+                {% for grade, data in curriculum_data.middle_school.items() %}
+                    {% for story in data.sample_stories %}
+                    <div class="story-card bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow border-l-4 border-blue-400" 
+                         data-grade="{{ grade }}" 
+                         data-strand="{{ story.strand.lower().replace(' ', '_').replace('and_', '') }}">
+                        <div class="p-6">
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-medium">
+                                    {{ data.name }}
+                                </span>
+                                <span class="text-sm text-gray-500">{{ story.duration }}</span>
+                            </div>
+                            
+                            <h3 class="heading-font text-xl font-bold text-gray-900 mb-2">{{ story.title }}</h3>
+                            <p class="text-gray-600 mb-4">{{ story.description }}</p>
+                            
+                            <div class="space-y-2 mb-6">
+                                <div class="flex items-center text-sm text-gray-600">
+                                    <i class="fas fa-tag mr-2"></i>
+                                    {{ story.strand }}
+                                </div>
+                                <div class="flex items-center text-sm text-gray-600">
+                                    <i class="fas fa-graduation-cap mr-2"></i>
+                                    {{ story.benchmark }}
+                                </div>
+                                <div class="flex items-center text-sm text-gray-600">
+                                    <i class="fas fa-signal mr-2"></i>
+                                    {{ story.difficulty }}
+                                </div>
+                            </div>
+                            
+                            <div class="flex space-x-3">
+                                <a href="{{ url_for('story_detail', story_id=story.id) }}" 
+                                   class="flex-1 bg-blue-100 text-blue-700 py-3 px-4 rounded-lg text-center font-semibold hover:bg-blue-200 transition-colors">
+                                    Start Story
+                                </a>
+                                <button class="p-3 border border-gray-300 rounded-lg hover:bg-gray-50">
+                                    <i class="fas fa-heart text-gray-400"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% endfor %}
+            </div>
+        </div>
+        
+        <!-- High School Stories (9-12) -->
+        <div class="story-section" data-level="high_school">
+            <div class="flex items-center mb-8">
+                <div class="w-1 h-12 bg-green-400 mr-4"></div>
+                <div>
+                    <h2 class="heading-font text-2xl font-bold text-gray-900">High School (9-12)</h2>
+                    <p class="text-gray-600">Ages 14-18 • 337 Florida B.E.S.T. Standards</p>
+                </div>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+                {% for grade, data in curriculum_data.high_school.items() %}
+                    {% for story in data.sample_stories %}
+                    <div class="story-card bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow border-l-4 border-green-400" 
+                         data-grade="{{ grade }}" 
+                         data-strand="{{ story.strand.lower().replace(' ', '_').replace('and_', '') }}">
+                        <div class="p-6">
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-medium">
+                                    {{ data.name }}
+                                </span>
+                                <span class="text-sm text-gray-500">{{ story.duration }}</span>
+                            </div>
+                            
+                            <h3 class="heading-font text-xl font-bold text-gray-900 mb-2">{{ story.title }}</h3>
+                            <p class="text-gray-600 mb-4">{{ story.description }}</p>
+                            
+                            <div class="space-y-2 mb-6">
+                                <div class="flex items-center text-sm text-gray-600">
+                                    <i class="fas fa-tag mr-2"></i>
+                                    {{ story.strand }}
+                                </div>
+                                <div class="flex items-center text-sm text-gray-600">
+                                    <i class="fas fa-graduation-cap mr-2"></i>
+                                    {{ story.benchmark }}
+                                </div>
+                                <div class="flex items-center text-sm text-gray-600">
+                                    <i class="fas fa-signal mr-2"></i>
+                                    {{ story.difficulty }}
+                                </div>
+                            </div>
+                            
+                            <div class="flex space-x-3">
+                                <a href="{{ url_for('story_detail', story_id=story.id) }}" 
+                                   class="flex-1 bg-green-100 text-green-700 py-3 px-4 rounded-lg text-center font-semibold hover:bg-green-200 transition-colors">
+                                    Start Story
+                                </a>
+                                <button class="p-3 border border-gray-300 rounded-lg hover:bg-gray-50">
+                                    <i class="fas fa-heart text-gray-400"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const gradeFilter = document.getElementById('grade-filter');
+    const strandFilter = document.getElementById('strand-filter');
+    const gridView = document.getElementById('grid-view');
+    const listView = document.getElementById('list-view');
+    const storySections = document.querySelectorAll('.story-section');
+    const storyCards = document.querySelectorAll('.story-card');
+
+    // Filter functionality
+    function filterStories() {
+        const selectedGrade = gradeFilter.value;
+        const selectedStrand = strandFilter.value;
+
+        storySections.forEach(section => {
+            const sectionLevel = section.dataset.level;
+            let showSection = selectedGrade === 'all' || selectedGrade === sectionLevel;
+            
+            if (showSection) {
+                section.style.display = 'block';
+                
+                // Filter cards within this section
+                const cards = section.querySelectorAll('.story-card');
+                let hasVisibleCards = false;
+                
+                cards.forEach(card => {
+                    const cardStrand = card.dataset.strand;
+                    const showCard = selectedStrand === 'all' || selectedStrand === cardStrand;
+                    
+                    card.style.display = showCard ? 'block' : 'none';
+                    if (showCard) hasVisibleCards = true;
+                });
+                
+                // Hide section if no visible cards
+                if (!hasVisibleCards) {
+                    section.style.display = 'none';
+                }
+            } else {
+                section.style.display = 'none';
+            }
+        });
+    }
+
+    gradeFilter.addEventListener('change', filterStories);
+    strandFilter.addEventListener('change', filterStories);
+
+    // View toggle functionality
+    gridView.addEventListener('click', function() {
+        gridView.classList.remove('bg-gray-200', 'text-gray-600');
+        gridView.classList.add('bg-primary', 'text-white');
+        listView.classList.remove('bg-primary', 'text-white');
+        listView.classList.add('bg-gray-200', 'text-gray-600');
+        
+        // Apply grid layout
+        const grids = document.querySelectorAll('.grid');
+        grids.forEach(grid => {
+            grid.classList.remove('grid-cols-1');
+            grid.classList.add('grid-cols-1', 'md:grid-cols-2', 'lg:grid-cols-3');
+        });
+    });
+
+    listView.addEventListener('click', function() {
+        listView.classList.remove('bg-gray-200', 'text-gray-600');
+        listView.classList.add('bg-primary', 'text-white');
+        gridView.classList.remove('bg-primary', 'text-white');
+        gridView.classList.add('bg-gray-200', 'text-gray-600');
+        
+        // Apply list layout
+        const grids = document.querySelectorAll('.grid');
+        grids.forEach(grid => {
+            grid.classList.remove('md:grid-cols-2', 'lg:grid-cols-3');
+            grid.classList.add('grid-cols-1');
+        });
+    });
+});
+</script>
+{% endblock %}

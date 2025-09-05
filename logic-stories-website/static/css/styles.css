@@ -1,0 +1,200 @@
+/* Custom CSS for Logic And Stories */
+
+/* Smooth transitions for all elements */
+* {
+    transition: all 0.3s ease;
+}
+
+/* Age-specific button styles */
+.btn-elementary {
+    font-size: 1.25rem;
+    padding: 1rem 2rem;
+    border-radius: 0.75rem;
+}
+
+.btn-primary {
+    font-size: 1.125rem;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+}
+
+.btn-middle {
+    font-size: 1rem;
+    padding: 0.625rem 1.25rem;
+    border-radius: 0.5rem;
+}
+
+.btn-high {
+    font-size: 0.875rem;
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+}
+
+/* Hover effects for cards */
+.story-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* Custom animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in-up {
+    animation: fadeInUp 0.6s ease-out;
+}
+
+/* Gradient backgrounds */
+.gradient-primary {
+    background: linear-gradient(135deg, #4A90E2 0%, #357ABD 100%);
+}
+
+.gradient-secondary {
+    background: linear-gradient(135deg, #7ED321 0%, #5BA818 100%);
+}
+
+.gradient-accent {
+    background: linear-gradient(135deg, #F5A623 0%, #D4941A 100%);
+}
+
+/* Loading animation */
+.loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #4A90E2;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Progress bars */
+.progress-bar {
+    background: linear-gradient(90deg, #7ED321 0%, #5BA818 100%);
+    height: 8px;
+    border-radius: 4px;
+    transition: width 0.5s ease;
+}
+
+/* Story difficulty indicators */
+.difficulty-beginner {
+    background-color: #d1ecf1;
+    color: #0c5460;
+}
+
+.difficulty-intermediate {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.difficulty-advanced {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.difficulty-expert {
+    background-color: #e2e3e5;
+    color: #383d41;
+}
+
+/* Responsive typography */
+@media (max-width: 640px) {
+    .heading-font {
+        line-height: 1.2;
+    }
+    
+    .btn-elementary {
+        font-size: 1.125rem;
+        padding: 0.875rem 1.75rem;
+    }
+}
+
+/* Interactive elements */
+.interactive-button:hover {
+    transform: scale(1.05);
+}
+
+.interactive-button:active {
+    transform: scale(0.95);
+}
+
+/* Story player specific styles */
+.story-content {
+    min-height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.story-controls {
+    position: sticky;
+    bottom: 0;
+    background: rgba(249, 250, 251, 0.95);
+    backdrop-filter: blur(10px);
+}
+
+/* Math problem styling */
+.math-problem {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    border: 2px solid #cbd5e0;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin: 1rem 0;
+}
+
+.math-problem.correct {
+    background: linear-gradient(135deg, #f0fff4 0%, #c6f6d5 100%);
+    border-color: #68d391;
+}
+
+.math-problem.incorrect {
+    background: linear-gradient(135deg, #fff5f5 0%, #fed7d7 100%);
+    border-color: #fc8181;
+}
+
+/* Award/Achievement styles */
+.achievement-star {
+    color: #f6e05e;
+    text-shadow: 0 0 10px rgba(246, 224, 94, 0.5);
+}
+
+/* Accessibility improvements */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .bg-primary { background-color: #000080 !important; }
+    .bg-secondary { background-color: #008000 !important; }
+    .bg-accent { background-color: #ff8c00 !important; }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
