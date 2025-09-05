@@ -346,7 +346,7 @@ Search: "frac"
 ├── 📚 Grade Level (K-2, 3-5, 6-8, 9-12)
 ├── ⏱️ Duration (5min, 10min, 15min+)
 ├── 🎯 Difficulty (Easy, Medium, Hard)
-├── 📖 Story Type (Adventure, Mystery, Sci-Fi)
+├── 📖 Story Type (Fantasy, Mystery, Indian Epics)
 └── ✅ Completion Status (New, In Progress, Completed)
 ```
 
@@ -1118,7 +1118,7 @@ CREATE TABLE stories (
     slug VARCHAR(255) UNIQUE NOT NULL,
     author_name VARCHAR(255),
     target_grade_levels VARCHAR(10)[] NOT NULL, -- e.g., ['3', '4', '5']
-    story_type ENUM('adventure', 'mystery', 'sci_fi', 'fantasy', 'real_world'),
+    story_type ENUM('fantasy', 'mystery', 'indian_epics'),
     difficulty_level INTEGER CHECK (difficulty_level >= 1 AND difficulty_level <= 5),
     estimated_duration_minutes INTEGER,
     thumbnail_url TEXT,
