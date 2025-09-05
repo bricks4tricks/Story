@@ -1,0 +1,2804 @@
+================================================================================
+ALL MATHEMATICS STANDARDS - COMPLETE TEXT
+Extracted from Export.xlsx
+Total Standards: 643
+================================================================================
+
+================================================================================
+GRADE K STANDARDS
+================================================================================
+
+--- ALGEBRAIC REASONING ---
+
+Standard: MA.K.AR.1.1
+Description: For any number from 1 to 9, find the number that makes 10 when added to the given number.
+Full Standard: Represent and solve addition problems with sums between 0 and 10 and subtraction problems using related facts.
+
+Standard: MA.K.AR.1.2
+Description: Given a number from 0 to 10, find the different ways it can be represented as the sum of two numbers.
+Full Standard: Represent and solve addition problems with sums between 0 and 10 and subtraction problems using related facts.
+
+Standard: MA.K.AR.1.3
+Description: Solve addition and subtraction real-world problems using objects, drawings or equations to represent the problem.
+Full Standard: Represent and solve addition problems with sums between 0 and 10 and subtraction problems using related facts.
+
+Standard: MA.K.AR.2.1
+Description: Explain why addition or subtraction equations are true using objects or drawings.
+Full Standard: Develop an understanding of the equal sign.
+
+
+--- DATA ANALYSIS AND PROBABILITY ---
+
+Standard: MA.K.DP.1.1
+Description: Collect and sort objects into categories and compare the categories by counting the objects in each category. Report the results verbally, with a written numeral or with drawings.
+Full Standard: Develop an understanding for collecting, representing and comparing data.
+
+
+--- GEOMETRIC REASONING ---
+
+Standard: MA.K.GR.1.1
+Description: Identify two- and three-dimensional figures regardless of their size or orientation. Figures are limited to circles, triangles, rectangles, squares, spheres, cubes, cones and cylinders.
+Full Standard: Identify, compare and compose two- and three-dimensional figures.
+
+Standard: MA.K.GR.1.2
+Description: Compare two-dimensional figures based on their similarities, differences and positions. Sort two-dimensional figures based on their similarities and differences. Figures are limited to circles, triangles, rectangles and squares.
+Full Standard: Identify, compare and compose two- and three-dimensional figures.
+
+Standard: MA.K.GR.1.3
+Description: Compare three-dimensional figures based on their similarities, differences and positions. Sort three-dimensional figures based on their similarities and differences. Figures are limited to spheres, cubes, cones and cylinders.
+Full Standard: Identify, compare and compose two- and three-dimensional figures.
+
+Standard: MA.K.GR.1.4
+Description: Find real-world objects that can be modeled by a given two- or three-dimensional figure. Figures are limited to circles, triangles, rectangles, squares, spheres, cubes, cones and cylinders.
+Full Standard: Identify, compare and compose two- and three-dimensional figures.
+
+Standard: MA.K.GR.1.5
+Description: Combine two-dimensional figures to form a given composite figure. Figures used to form a composite shape are limited to triangles, rectangles and squares.
+Full Standard: Identify, compare and compose two- and three-dimensional figures.
+
+
+--- MEASUREMENT ---
+
+Standard: MA.K.M.1.1
+Description: Identify the attributes of a single object that can be measured such as length, volume or weight.
+Full Standard: Identify and compare measurable attributes of objects.
+
+Standard: MA.K.M.1.2
+Description: Directly compare two objects that have an attribute which can be measured in common. Express the comparison using language to describe the difference.
+Full Standard: Identify and compare measurable attributes of objects.
+
+Standard: MA.K.M.1.3
+Description: Express the length of an object, up to 20 units long, as a whole number of lengths by laying non-standard objects end to end with no gaps or overlaps.
+Full Standard: Identify and compare measurable attributes of objects.
+
+
+--- NUMBER SENSE AND OPERATIONS ---
+
+Standard: MA.K.NSO.1.1
+Description: Given a group of up to 20 objects, count the number of objects in that group and represent the number of objects with a written numeral. State the number of objects in a rearrangement of that group without recounting.
+Full Standard: Develop an understanding for counting using objects in a set.
+
+Standard: MA.K.NSO.1.2
+Description: Given a number from 0 to 20, count out that many objects.
+Full Standard: Develop an understanding for counting using objects in a set.
+
+Standard: MA.K.NSO.1.3
+Description: Identify positions of objects within a sequence using the words &ldquo;first,&rdquo; &ldquo;second,&rdquo; &ldquo;third,&rdquo; &ldquo;fourth&rdquo; or &ldquo;fifth.&rdquo;
+Full Standard: Develop an understanding for counting using objects in a set.
+
+Standard: MA.K.NSO.1.4
+Description: Compare the number of objects from 0 to 20 in two groups using the terms less than, equal to or greater than.
+Full Standard: Develop an understanding for counting using objects in a set.
+
+Standard: MA.K.NSO.2.1
+Description: Recite the number names to 100 by ones and by tens. Starting at a given number, count forward within 100 and backward within 20.
+Full Standard: Recite number names sequentially within 100 and develop an understanding for place value.
+
+Standard: MA.K.NSO.2.2
+Description: Represent whole numbers from 10 to 20, using a unit of ten and a group of ones, with objects, drawings and expressions or equations.
+Full Standard: Recite number names sequentially within 100 and develop an understanding for place value.
+
+Standard: MA.K.NSO.2.3
+Description: Locate, order and compare numbers from 0 to 20 using the number line and terms less than, equal to or greater than.
+Full Standard: Recite number names sequentially within 100 and develop an understanding for place value.
+
+Standard: MA.K.NSO.3.1
+Description: Explore addition of two whole numbers from 0 to 10, and related subtraction facts.
+Full Standard: Develop an understanding of addition and subtraction operations with one-digit whole numbers.
+
+Standard: MA.K.NSO.3.2
+Description: Add two one-digit whole numbers with sums from 0 to 10 and subtract using related facts with procedural reliability.
+Full Standard: Develop an understanding of addition and subtraction operations with one-digit whole numbers.
+
+
+
+================================================================================
+GRADE 1 STANDARDS
+================================================================================
+
+--- ALGEBRAIC REASONING ---
+
+Standard: MA.1.AR.1.1
+Description: Apply properties of addition to find a sum of three or more whole numbers.
+Full Standard: Solve addition problems with sums between 0 and 20 and subtraction problems using related facts.
+
+Standard: MA.1.AR.1.2
+Description: Solve addition and subtraction real-world problems using objects, drawings or equations to represent the problem.
+Full Standard: Solve addition problems with sums between 0 and 20 and subtraction problems using related facts.
+
+Standard: MA.1.AR.2.1
+Description: Restate a subtraction problem as a missing addend problem using the relationship between addition and subtraction.
+Full Standard: Develop an understanding of the relationship between addition and subtraction.
+
+Standard: MA.1.AR.2.2
+Description: Determine and explain if equations involving addition or subtraction are true or false.
+Full Standard: Develop an understanding of the relationship between addition and subtraction.
+
+Standard: MA.1.AR.2.3
+Description: Determine the unknown whole number in an addition or subtraction equation, relating three whole numbers, with the unknown in any position.
+Full Standard: Develop an understanding of the relationship between addition and subtraction.
+
+
+--- DATA ANALYSIS AND PROBABILITY ---
+
+Standard: MA.1.DP.1.1
+Description: Collect data into categories and represent the results using tally marks or pictographs.
+Full Standard: Collect, represent and interpret data using pictographs and tally marks.
+
+Standard: MA.1.DP.1.2
+Description: Interpret data represented with tally marks or pictographs by calculating the total number of data points and comparing the totals of different categories.
+Full Standard: Collect, represent and interpret data using pictographs and tally marks.
+
+
+--- FRACTIONS ---
+
+Standard: MA.1.FR.1.1
+Description: Partition circles and rectangles into two and four equal-sized parts. Name the parts of the whole using appropriate language including halves or fourths.
+Full Standard: Develop an understanding of fractions by partitioning shapes into halves and fourths.
+
+
+--- GEOMETRIC REASONING ---
+
+Standard: MA.1.GR.1.1
+Description: Identify, compare and sort two- and three-dimensional figures based on their defining attributes. Figures are limited to circles, semi-circles, triangles, rectangles, squares, trapezoids, hexagons, spheres, cubes, rectangular prisms, cones and cylinders.
+Full Standard: Identify and analyze two- and three-dimensional figures based on their defining attributes.
+
+Standard: MA.1.GR.1.2
+Description: Sketch two-dimensional figures when given defining attributes. Figures are limited to triangles, rectangles, squares and hexagons.
+Full Standard: Identify and analyze two- and three-dimensional figures based on their defining attributes.
+
+Standard: MA.1.GR.1.3
+Description: Compose and decompose two- and three-dimensional figures. Figures are limited to semi-circles, triangles, rectangles, squares, trapezoids, hexagons, cubes, rectangular prisms, cones and cylinders.
+Full Standard: Identify and analyze two- and three-dimensional figures based on their defining attributes.
+
+Standard: MA.1.GR.1.4
+Description: Given a real-world object, identify parts that are modeled by two- and three-dimensional figures. Figures are limited to semi-circles, triangles, rectangles, squares and hexagons, spheres, cubes, rectangular prisms, cones and cylinders.
+Full Standard: Identify and analyze two- and three-dimensional figures based on their defining attributes.
+
+
+--- MEASUREMENT ---
+
+Standard: MA.1.M.1.1
+Description: Estimate the length of an object to the nearest inch. Measure the length of an object to the nearest inch or centimeter.
+Full Standard: Compare and measure the length of objects.
+
+Standard: MA.1.M.1.2
+Description: Compare and order the length of up to three objects using direct and indirect comparison.
+Full Standard: Compare and measure the length of objects.
+
+Standard: MA.1.M.2.1
+Description: Using analog and digital clocks, tell and write time in hours and half-hours.
+Full Standard: Tell time and identify the value of coins and combinations of coins and dollar bills.
+
+Standard: MA.1.M.2.2
+Description: Identify pennies, nickels, dimes and quarters, and express their values using the &cent; symbol. State how many of each coin equal a dollar.
+Full Standard: Tell time and identify the value of coins and combinations of coins and dollar bills.
+
+Standard: MA.1.M.2.3
+Description: Find the value of combinations of pennies, nickels and dimes up to one dollar, and the value of combinations of one, five and ten dollar bills up to $100. Use the &cent; and $ symbols appropriately.
+Full Standard: Tell time and identify the value of coins and combinations of coins and dollar bills.
+
+
+--- NUMBER SENSE AND OPERATIONS ---
+
+Standard: MA.1.NSO.1.1
+Description: Starting at a given number, count forward and backwards within 120 by ones. Skip count by 2s to 20 and by 5s to 100.
+Full Standard: Extend counting sequences and understand the place value of two-digit numbers.
+
+Standard: MA.1.NSO.1.2
+Description: Read numbers from 0 to 100 written in standard form, expanded form and word form. Write numbers from 0 to 100 using standard form and expanded form.
+Full Standard: Extend counting sequences and understand the place value of two-digit numbers.
+
+Standard: MA.1.NSO.1.3
+Description: Compose and decompose two-digit numbers in multiple ways using tens and ones. Demonstrate each composition or decomposition with objects, drawings and expressions or equations.
+Full Standard: Extend counting sequences and understand the place value of two-digit numbers.
+
+Standard: MA.1.NSO.1.4
+Description: Plot, order and compare whole numbers up to 100.
+Full Standard: Extend counting sequences and understand the place value of two-digit numbers.
+
+Standard: MA.1.NSO.2.1
+Description: Recall addition facts with sums to 10 and related subtraction facts with automaticity.
+Full Standard: Develop an understanding of addition and subtraction operations with one- and two-digit numbers.
+
+Standard: MA.1.NSO.2.2
+Description: Add two whole numbers with sums from 0 to 20, and subtract using related facts with procedural reliability.
+Full Standard: Develop an understanding of addition and subtraction operations with one- and two-digit numbers.
+
+Standard: MA.1.NSO.2.3
+Description: Identify the number that is one more, one less, ten more and ten less than a given two-digit number.
+Full Standard: Develop an understanding of addition and subtraction operations with one- and two-digit numbers.
+
+Standard: MA.1.NSO.2.4
+Description: Explore the addition of a two-digit number and a one-digit number with sums to 100.
+Full Standard: Develop an understanding of addition and subtraction operations with one- and two-digit numbers.
+
+Standard: MA.1.NSO.2.5
+Description: Explore subtraction of a one-digit number from a two-digit number.
+Full Standard: Develop an understanding of addition and subtraction operations with one- and two-digit numbers.
+
+
+
+================================================================================
+GRADE 2 STANDARDS
+================================================================================
+
+--- ALGEBRAIC REASONING ---
+
+Standard: MA.2.AR.1.1
+Description: Solve one- and two-step addition and subtraction real-world problems.
+Full Standard: Solve addition problems with sums between 0 and 100 and related subtraction problems.
+
+Standard: MA.2.AR.2.1
+Description: Determine and explain whether equations involving addition and subtraction are true or false.
+Full Standard: Demonstrate an understanding of equality and addition and subtraction.
+
+Standard: MA.2.AR.2.2
+Description: Determine the unknown whole number in an addition or subtraction equation, relating three or four whole numbers, with the unknown in any position.
+Full Standard: Demonstrate an understanding of equality and addition and subtraction.
+
+Standard: MA.2.AR.3.1
+Description: Represent an even number using two equal groups or two equal addends. Represent an odd number using two equal groups with one left over or two equal addends plus 1.
+Full Standard: Develop an understanding of multiplication.
+
+Standard: MA.2.AR.3.2
+Description: Use repeated addition to find the total number of objects in a collection of equal groups. Represent the total number of objects using rectangular arrays and equations.
+Full Standard: Develop an understanding of multiplication.
+
+
+--- DATA ANALYSIS AND PROBABILITY ---
+
+Standard: MA.2.DP.1.1
+Description: Collect, categorize and represent data using tally marks, tables, pictographs or bar graphs. Use appropriate titles, labels and units.
+Full Standard: Collect, categorize, represent and interpret data using appropriate titles, labels and units.
+
+Standard: MA.2.DP.1.2
+Description: Interpret data represented with tally marks, tables, pictographs or bar graphs including solving addition and subtraction problems.
+Full Standard: Collect, categorize, represent and interpret data using appropriate titles, labels and units.
+
+
+--- FRACTIONS ---
+
+Standard: MA.2.FR.1.1
+Description: Partition circles and rectangles into two, three or four equal-sized parts. Name the parts using appropriate language, and describe the whole as two halves, three thirds or four fourths.
+Full Standard: Develop an understanding of fractions.
+
+Standard: MA.2.FR.1.2
+Description: Partition rectangles into two, three or four equal-sized parts in two different ways showing that equal-sized parts of the same whole may have different shapes.
+Full Standard: Develop an understanding of fractions.
+
+
+--- GEOMETRIC REASONING ---
+
+Standard: MA.2.GR.1.1
+Description: Identify and draw two-dimensional figures based on their defining attributes. Figures are limited to triangles, rectangles, squares, pentagons, hexagons and octagons.
+Full Standard: Identify and analyze two-dimensional figures and identify lines of symmetry.
+
+Standard: MA.2.GR.1.2
+Description: Categorize two-dimensional figures based on the number and length of sides, number of vertices, whether they are closed or not and whether the edges are curved or straight.
+Full Standard: Identify and analyze two-dimensional figures and identify lines of symmetry.
+
+Standard: MA.2.GR.1.3
+Description: Identify line(s) of symmetry for a two-dimensional figure.
+Full Standard: Identify and analyze two-dimensional figures and identify lines of symmetry.
+
+Standard: MA.2.GR.2.1
+Description: Explore perimeter as an attribute of a figure by placing unit segments along the boundary without gaps or overlaps. Find perimeters of rectangles by counting unit segments.
+Full Standard: Describe perimeter and find the perimeter of polygons.
+
+Standard: MA.2.GR.2.2
+Description: Find the perimeter of a polygon with whole-number side lengths. Polygons are limited to triangles, rectangles, squares and pentagons.
+Full Standard: Describe perimeter and find the perimeter of polygons.
+
+
+--- MEASUREMENT ---
+
+Standard: MA.2.M.1.1
+Description: Estimate and measure the length of an object to the nearest inch, foot, yard, centimeter or meter by selecting and using an appropriate tool.
+Full Standard: Measure the length of objects and solve problems involving length.
+
+Standard: MA.2.M.1.2
+Description: Measure the lengths of two objects using the same unit and determine the difference between their measurements.
+Full Standard: Measure the length of objects and solve problems involving length.
+
+Standard: MA.2.M.1.3
+Description: Solve one- and two-step real-world measurement problems involving addition and subtraction of lengths given in the same units.
+Full Standard: Measure the length of objects and solve problems involving length.
+
+Standard: MA.2.M.2.1
+Description: Using analog and digital clocks, tell and write time to the nearest five minutes using a.m. and p.m. appropriately. Express portions of an hour using the fractional terms half an hour, half past, quarter of an hour, quarter after and quarter til.
+Full Standard: Tell time and solve problems involving money.
+
+Standard: MA.2.M.2.2
+Description: Solve one- and two-step addition and subtraction real-world problems involving either dollar bills within $100 or coins within 100&cent; using $ and &cent; symbols appropriately.
+Full Standard: Tell time and solve problems involving money.
+
+
+--- NUMBER SENSE AND OPERATIONS ---
+
+Standard: MA.2.NSO.1.1
+Description: Read and write numbers from 0 to 1,000 using standard form, expanded form and word form.
+Full Standard: Understand the place value of three-digit numbers.
+
+Standard: MA.2.NSO.1.2
+Description: Compose and decompose three-digit numbers in multiple ways using hundreds, tens and ones. Demonstrate each composition or decomposition with objects, drawings and expressions or equations.
+Full Standard: Understand the place value of three-digit numbers.
+
+Standard: MA.2.NSO.1.3
+Description: Plot, order and compare whole numbers up to 1,000.
+Full Standard: Understand the place value of three-digit numbers.
+
+Standard: MA.2.NSO.1.4
+Description: Round whole numbers from 0 to 100 to the nearest 10.
+Full Standard: Understand the place value of three-digit numbers.
+
+Standard: MA.2.NSO.2.1
+Description: Recall addition facts with sums to 20 and related subtraction facts with automaticity.
+Full Standard: Add and subtract two- and three-digit whole numbers.
+
+Standard: MA.2.NSO.2.2
+Description: Identify the number that is ten more, ten less, one hundred more and one hundred less than a given three-digit number.
+Full Standard: Add and subtract two- and three-digit whole numbers.
+
+Standard: MA.2.NSO.2.3
+Description: Add two whole numbers with sums up to 100 with procedural reliability. Subtract a whole number from a whole number, each no larger than 100, with procedural reliability.
+Full Standard: Add and subtract two- and three-digit whole numbers.
+
+Standard: MA.2.NSO.2.4
+Description: Explore the addition of two whole numbers with sums up to 1,000. Explore the subtraction of a whole number from a whole number, each no larger than 1,000.
+Full Standard: Add and subtract two- and three-digit whole numbers.
+
+
+
+================================================================================
+GRADE 3 STANDARDS
+================================================================================
+
+--- ALGEBRAIC REASONING ---
+
+Standard: MA.3.AR.1.1
+Description: Apply the distributive property to multiply a one-digit number and two-digit number. Apply properties of multiplication to find a product of one-digit whole numbers.
+Full Standard: Solve multiplication and division problems.
+
+Standard: MA.3.AR.1.2
+Description: Solve one- and two-step real-world problems involving any of four operations with whole numbers.
+Full Standard: Solve multiplication and division problems.
+
+Standard: MA.3.AR.2.1
+Description: Restate a division problem as a missing factor problem using the relationship between multiplication and division.
+Full Standard: Develop an understanding of equality and multiplication and division.
+
+Standard: MA.3.AR.2.2
+Description: Determine and explain whether an equation involving multiplication or division is true or false.
+Full Standard: Develop an understanding of equality and multiplication and division.
+
+Standard: MA.3.AR.2.3
+Description: Determine the unknown whole number in a multiplication or division equation, relating three whole numbers, with the unknown in any position.
+Full Standard: Develop an understanding of equality and multiplication and division.
+
+Standard: MA.3.AR.3.1
+Description: Determine and explain whether a whole number from 1 to 1,000 is even or odd.
+Full Standard: Identify numerical patterns, including multiplicative patterns.
+
+Standard: MA.3.AR.3.2
+Description: Determine whether a whole number from 1 to 144 is a multiple of a given one-digit number.
+Full Standard: Identify numerical patterns, including multiplicative patterns.
+
+Standard: MA.3.AR.3.3
+Description: Identify, create and extend numerical patterns.
+Full Standard: Identify numerical patterns, including multiplicative patterns.
+
+
+--- DATA ANALYSIS AND PROBABILITY ---
+
+Standard: MA.3.DP.1.1
+Description: Collect and represent numerical and categorical data with whole-number values using tables, scaled pictographs, scaled bar graphs or line plots. Use appropriate titles, labels and units.
+Full Standard: Collect, represent and interpret numerical and categorical data.
+
+Standard: MA.3.DP.1.2
+Description: Interpret data with whole-number values represented with tables, scaled pictographs, circle graphs, scaled bar graphs or line plots by solving one- and two-step problems.
+Full Standard: Collect, represent and interpret numerical and categorical data.
+
+
+--- FRACTIONS ---
+
+Standard: MA.3.FR.1.1
+Description: Represent and interpret unit fractions in the form 1/n as the quantity formed by one part when a whole is partitioned into n equal parts.
+Full Standard: Understand fractions as numbers and represent fractions.
+
+Standard: MA.3.FR.1.2
+Description: Represent and interpret fractions, including fractions greater than one, in the form of mn as the result of adding the unit fraction 1n to itself m times.
+Full Standard: Understand fractions as numbers and represent fractions.
+
+Standard: MA.3.FR.1.3
+Description: Read and write fractions, including fractions greater than one, using standard form, numeral-word form and word form.
+Full Standard: Understand fractions as numbers and represent fractions.
+
+Standard: MA.3.FR.2.1
+Description: Plot, order and compare fractional numbers with the same numerator or the same denominator.
+Full Standard: Order and compare fractions and identify equivalent fractions.
+
+Standard: MA.3.FR.2.2
+Description: Identify equivalent fractions and explain why they are equivalent.
+Full Standard: Order and compare fractions and identify equivalent fractions.
+
+
+--- GEOMETRIC REASONING ---
+
+Standard: MA.3.GR.1.1
+Description: Describe and draw points, lines, line segments, rays, intersecting lines, perpendicular lines and parallel lines. Identify these in two-dimensional figures.
+Full Standard: Describe and identify relationships between lines and classify quadrilaterals.
+
+Standard: MA.3.GR.1.2
+Description: Identify and draw quadrilaterals based on their defining attributes. Quadrilaterals include parallelograms, rhombi, rectangles, squares and trapezoids.
+Full Standard: Describe and identify relationships between lines and classify quadrilaterals.
+
+Standard: MA.3.GR.1.3
+Description: Draw line(s) of symmetry in a two-dimensional figure and identify line-symmetric two-dimensional figures.
+Full Standard: Describe and identify relationships between lines and classify quadrilaterals.
+
+Standard: MA.3.GR.2.1
+Description: Explore area as an attribute of a two-dimensional figure by covering the figure with unit squares without gaps or overlaps. Find areas of rectangles by counting unit squares.
+Full Standard: Solve problems involving the perimeter and area of rectangles.
+
+Standard: MA.3.GR.2.2
+Description: Find the area of a rectangle with whole-number side lengths using a visual model and a multiplication formula.
+Full Standard: Solve problems involving the perimeter and area of rectangles.
+
+Standard: MA.3.GR.2.3
+Description: Solve mathematical and real-world problems involving the perimeter and area of rectangles with whole-number side lengths using a visual model and a formula.
+Full Standard: Solve problems involving the perimeter and area of rectangles.
+
+Standard: MA.3.GR.2.4
+Description: Solve mathematical and real-world problems involving the perimeter and area of composite figures composed of non-overlapping rectangles with whole-number side lengths.
+Full Standard: Solve problems involving the perimeter and area of rectangles.
+
+
+--- MEASUREMENT ---
+
+Standard: MA.3.M.1.1
+Description: Select and use appropriate tools to measure the length of an object, the volume of liquid within a beaker and temperature.
+Full Standard: Measure attributes of objects and solve problems involving measurement.
+
+Standard: MA.3.M.1.2
+Description: Solve real-world problems involving any of the four operations with whole-number lengths, masses, weights, temperatures or liquid volumes.
+Full Standard: Measure attributes of objects and solve problems involving measurement.
+
+Standard: MA.3.M.2.1
+Description: Using analog and digital clocks tell and write time to the nearest minute using a.m. and p.m. appropriately.
+Full Standard: Tell and write time and solve problems involving time.
+
+Standard: MA.3.M.2.2
+Description: Solve one- and two-step real-world problems involving elapsed time.
+Full Standard: Tell and write time and solve problems involving time.
+
+
+--- NUMBER SENSE AND OPERATIONS ---
+
+Standard: MA.3.NSO.1.1
+Description: Read and write numbers from 0 to 10,000 using standard form, expanded form and word form.
+Full Standard: Understand the place value of four-digit numbers.
+
+Standard: MA.3.NSO.1.2
+Description: Compose and decompose four-digit numbers in multiple ways using thousands, hundreds, tens and ones. Demonstrate each composition or decomposition using objects, drawings and expressions or equations.
+Full Standard: Understand the place value of four-digit numbers.
+
+Standard: MA.3.NSO.1.3
+Description: Plot, order and compare whole numbers up to 10,000.
+Full Standard: Understand the place value of four-digit numbers.
+
+Standard: MA.3.NSO.1.4
+Description: Round whole numbers from 0 to 1,000 to the nearest 10 or 100.
+Full Standard: Understand the place value of four-digit numbers.
+
+Standard: MA.3.NSO.2.1
+Description: Add and subtract multi-digit whole numbers including using a standard algorithm with procedural fluency.
+Full Standard: Add and subtract multi-digit whole numbers. Build an understanding of multiplication and division operations.
+
+Standard: MA.3.NSO.2.2
+Description: Explore multiplication of two whole numbers with products from 0 to 144, and related division facts.
+Full Standard: Add and subtract multi-digit whole numbers. Build an understanding of multiplication and division operations.
+
+Standard: MA.3.NSO.2.3
+Description: Multiply a one-digit whole number by a multiple of 10, up to 90, or a multiple of 100, up to 900, with procedural reliability.
+Full Standard: Add and subtract multi-digit whole numbers. Build an understanding of multiplication and division operations.
+
+Standard: MA.3.NSO.2.4
+Description: Multiply two whole numbers from 0 to 12 and divide using related facts with procedural reliability.
+Full Standard: Add and subtract multi-digit whole numbers. Build an understanding of multiplication and division operations.
+
+
+
+================================================================================
+GRADE 4 STANDARDS
+================================================================================
+
+--- ALGEBRAIC REASONING ---
+
+Standard: MA.4.AR.1.1
+Description: Solve real-world problems involving multiplication and division of whole numbers including problems in which remainders must be interpreted within the context.
+Full Standard: Represent and solve problems involving the four operations with whole numbers and fractions.
+
+Standard: MA.4.AR.1.2
+Description: Solve real-world problems involving addition and subtraction of fractions with like denominators, including mixed numbers and fractions greater than one.
+Full Standard: Represent and solve problems involving the four operations with whole numbers and fractions.
+
+Standard: MA.4.AR.1.3
+Description: Solve real-world problems involving multiplication of a fraction by a whole number or a whole number by a fraction.
+Full Standard: Represent and solve problems involving the four operations with whole numbers and fractions.
+
+Standard: MA.4.AR.2.1
+Description: Determine and explain whether an equation involving any of the four operations with whole numbers is true or false.
+Full Standard: Demonstrate an understanding of equality and operations with whole numbers.
+
+Standard: MA.4.AR.2.2
+Description: Given a mathematical or real-world context, write an equation involving multiplication or division to determine the unknown whole number with the unknown in any position.
+Full Standard: Demonstrate an understanding of equality and operations with whole numbers.
+
+Standard: MA.4.AR.3.1
+Description: Determine factor pairs for a whole number from 0 to 144. Determine whether a whole number from 0 to 144 is prime, composite or neither.
+Full Standard: Recognize numerical patterns, including patterns that follow a given rule.
+
+Standard: MA.4.AR.3.2
+Description: Generate, describe and extend a numerical pattern that follows a given rule.
+Full Standard: Recognize numerical patterns, including patterns that follow a given rule.
+
+
+--- DATA ANALYSIS AND PROBABILITY ---
+
+Standard: MA.4.DP.1.1
+Description: Collect and represent numerical data, including fractional values, using tables, stem-and-leaf plots or line plots.
+Full Standard: Collect, represent and interpret data and find the mode, median and range of a data set.
+
+Standard: MA.4.DP.1.2
+Description: Determine the mode, median or range to interpret numerical data including fractional values, represented with tables, stem-and-leaf plots or line plots.
+Full Standard: Collect, represent and interpret data and find the mode, median and range of a data set.
+
+Standard: MA.4.DP.1.3
+Description: Solve real-world problems involving numerical data.
+Full Standard: Collect, represent and interpret data and find the mode, median and range of a data set.
+
+
+--- FRACTIONS ---
+
+Standard: MA.4.FR.1.1
+Description: Model and express a fraction, including mixed numbers and fractions greater than one, with the denominator 10 as an equivalent fraction with the denominator 100.
+Full Standard: Develop an understanding of the relationship between different fractions and the relationship between fractions and decimals.
+
+Standard: MA.4.FR.1.2
+Description: Use decimal notation to represent fractions with denominators of 10 or 100, including mixed numbers and fractions greater than 1, and use fractional notation with denominators of 10 or 100 to represent decimals.
+Full Standard: Develop an understanding of the relationship between different fractions and the relationship between fractions and decimals.
+
+Standard: MA.4.FR.1.3
+Description: Identify and generate equivalent fractions, including fractions greater than one. Describe how the numerator and denominator are affected when the equivalent fraction is created.
+Full Standard: Develop an understanding of the relationship between different fractions and the relationship between fractions and decimals.
+
+Standard: MA.4.FR.1.4
+Description: Plot, order and compare fractions, including mixed numbers and fractions greater than one, with different numerators and different denominators.
+Full Standard: Develop an understanding of the relationship between different fractions and the relationship between fractions and decimals.
+
+Standard: MA.4.FR.2.1
+Description: Decompose a fraction, including mixed numbers and fractions greater than one, into a sum of fractions with the same denominator in multiple ways. Demonstrate each decomposition with objects, drawings and equations.
+Full Standard: Build a foundation of addition, subtraction and multiplication operations with fractions.
+
+Standard: MA.4.FR.2.2
+Description: Add and subtract fractions with like denominators, including mixed numbers and fractions greater than one, with procedural reliability.
+Full Standard: Build a foundation of addition, subtraction and multiplication operations with fractions.
+
+Standard: MA.4.FR.2.3
+Description: Explore the addition of a fraction with denominator of 10 to a fraction with denominator of 100 using equivalent fractions.
+Full Standard: Build a foundation of addition, subtraction and multiplication operations with fractions.
+
+Standard: MA.4.FR.2.4
+Description: Extend previous understanding of multiplication to explore the multiplication of a fraction by a whole number or a whole number by a fraction.
+Full Standard: Build a foundation of addition, subtraction and multiplication operations with fractions.
+
+
+--- GEOMETRIC REASONING ---
+
+Standard: MA.4.GR.1.1
+Description: Informally explore angles as an attribute of two-dimensional figures. Identify and classify angles as acute, right, obtuse, straight or reflex.
+Full Standard: Draw, classify and measure angles.
+
+Standard: MA.4.GR.1.2
+Description: Estimate angle measures. Using a protractor, measure angles in whole-number degrees and draw angles of specified measure in whole-number degrees. Demonstrate that angle measure is additive.
+Full Standard: Draw, classify and measure angles.
+
+Standard: MA.4.GR.1.3
+Description: Solve real-world and mathematical problems involving unknown whole-number angle measures. Write an equation to represent the unknown.
+Full Standard: Draw, classify and measure angles.
+
+Standard: MA.4.GR.2.1
+Description: Solve perimeter and area mathematical and real-world problems, including problems with unknown sides, for rectangles with whole-number side lengths.
+Full Standard: Solve problems involving the perimeter and area of rectangles.
+
+Standard: MA.4.GR.2.2
+Description: Solve problems involving rectangles with the same perimeter and different areas or with the same area and different perimeters.
+Full Standard: Solve problems involving the perimeter and area of rectangles.
+
+
+--- MEASUREMENT ---
+
+Standard: MA.4.M.1.1
+Description: Select and use appropriate tools to measure attributes of objects.
+Full Standard: Measure the length of objects and solve problems involving measurement.
+
+Standard: MA.4.M.1.2
+Description: Convert within a single system of measurement using the units: yards, feet, inches; kilometers, meters, centimeters, millimeters; pounds, ounces; kilograms, grams; gallons, quarts, pints, cups; liter, milliliter; and hours, minutes, seconds.
+Full Standard: Measure the length of objects and solve problems involving measurement.
+
+Standard: MA.4.M.2.1
+Description: Solve two-step real-world problems involving distances and intervals of time using any combination of the four operations.
+Full Standard: Solve problems involving time and money.
+
+Standard: MA.4.M.2.2
+Description: Solve one- and two-step addition and subtraction real-world problems involving money using decimal notation.
+Full Standard: Solve problems involving time and money.
+
+
+--- NUMBER SENSE AND OPERATIONS ---
+
+Standard: MA.4.NSO.1.1
+Description: Express how the value of a digit in a multi-digit whole number changes if the digit moves one place to the left or right.
+Full Standard: Understand place value for multi-digit numbers.
+
+Standard: MA.4.NSO.1.2
+Description: Read and write multi-digit whole numbers from 0 to 1,000,000 using standard form, expanded form and word form.
+Full Standard: Understand place value for multi-digit numbers.
+
+Standard: MA.4.NSO.1.3
+Description: Plot, order and compare multi-digit whole numbers up to 1,000,000.
+Full Standard: Understand place value for multi-digit numbers.
+
+Standard: MA.4.NSO.1.4
+Description: Round whole numbers from 0 to 10,000 to the nearest 10, 100 or 1,000.
+Full Standard: Understand place value for multi-digit numbers.
+
+Standard: MA.4.NSO.1.5
+Description: Plot, order and compare decimals up to the hundredths.
+Full Standard: Understand place value for multi-digit numbers.
+
+Standard: MA.4.NSO.2.1
+Description: Recall multiplication facts with factors up to 12 and related division facts with automaticity.
+Full Standard: Build an understanding of operations with multi-digit numbers including decimals.
+
+Standard: MA.4.NSO.2.2
+Description: Multiply two whole numbers, up to three digits by up to two digits, with procedural reliability.
+Full Standard: Build an understanding of operations with multi-digit numbers including decimals.
+
+Standard: MA.4.NSO.2.3
+Description: Multiply two whole numbers, each up to two digits, including using a standard algorithm with procedural fluency.
+Full Standard: Build an understanding of operations with multi-digit numbers including decimals.
+
+Standard: MA.4.NSO.2.4
+Description: Divide a whole number up to four digits by a one-digit whole number with procedural reliability. Represent remainders as fractional parts of the divisor.
+Full Standard: Build an understanding of operations with multi-digit numbers including decimals.
+
+Standard: MA.4.NSO.2.5
+Description: Explore the multiplication and division of multi-digit whole numbers using estimation, rounding and place value.
+Full Standard: Build an understanding of operations with multi-digit numbers including decimals.
+
+Standard: MA.4.NSO.2.6
+Description: Identify the number that is one-tenth more, one-tenth less, one-hundredth more and one-hundredth less than a given number.
+Full Standard: Build an understanding of operations with multi-digit numbers including decimals.
+
+Standard: MA.4.NSO.2.7
+Description: Explore the addition and subtraction of multi-digit numbers with decimals to the hundredths.
+Full Standard: Build an understanding of operations with multi-digit numbers including decimals.
+
+
+
+================================================================================
+GRADE 5 STANDARDS
+================================================================================
+
+--- ALGEBRAIC REASONING ---
+
+Standard: MA.5.AR.1.1
+Description: Solve multi-step real-world problems involving any combination of the four operations with whole numbers, including problems in which remainders must be interpreted within the context.
+Full Standard: Solve problems involving the four operations with whole numbers and fractions.
+
+Standard: MA.5.AR.1.2
+Description: Solve real-world problems involving the addition, subtraction or multiplication of fractions, including mixed numbers and fractions greater than 1.
+Full Standard: Solve problems involving the four operations with whole numbers and fractions.
+
+Standard: MA.5.AR.1.3
+Description: Solve real-world problems involving division of a unit fraction by a whole number and a whole number by a unit fraction.
+Full Standard: Solve problems involving the four operations with whole numbers and fractions.
+
+Standard: MA.5.AR.2.1
+Description: Translate written real-world and mathematical descriptions into numerical expressions and numerical expressions into written mathematical descriptions.
+Full Standard: Demonstrate an understanding of equality, the order of operations and equivalent numerical expressions.
+
+Standard: MA.5.AR.2.2
+Description: Evaluate multi-step numerical expressions using order of operations.
+Full Standard: Demonstrate an understanding of equality, the order of operations and equivalent numerical expressions.
+
+Standard: MA.5.AR.2.3
+Description: Determine and explain whether an equation involving any of the four operations is true or false.
+Full Standard: Demonstrate an understanding of equality, the order of operations and equivalent numerical expressions.
+
+Standard: MA.5.AR.2.4
+Description: Given a mathematical or real-world context, write an equation involving any of the four operations to determine the unknown whole number with the unknown in any position.
+Full Standard: Demonstrate an understanding of equality, the order of operations and equivalent numerical expressions.
+
+Standard: MA.5.AR.3.1
+Description: Given a numerical pattern, identify and write a rule that can describe the pattern as an expression.
+Full Standard: Analyze patterns and relationships between inputs and outputs.
+
+Standard: MA.5.AR.3.2
+Description: Given a rule for a numerical pattern, use a two-column table to record the inputs and outputs.
+Full Standard: Analyze patterns and relationships between inputs and outputs.
+
+
+--- DATA ANALYSIS AND PROBABILITY ---
+
+Standard: MA.5.DP.1.1
+Description: Collect and represent numerical data, including fractional and decimal values, using tables, line graphs or line plots.
+Full Standard: Collect, represent and interpret data and find the mean, mode, median or range of a data set.
+
+Standard: MA.5.DP.1.2
+Description: Interpret numerical data, with whole-number values, represented with tables or line plots by determining the mean, mode, median or range.
+Full Standard: Collect, represent and interpret data and find the mean, mode, median or range of a data set.
+
+
+--- FRACTIONS ---
+
+Standard: MA.5.FR.1.1
+Description: Given a mathematical or real-world problem, represent the division of two whole numbers as a fraction.
+Full Standard: Interpret a fraction as an answer to a division problem.
+
+Standard: MA.5.FR.2.1
+Description: Add and subtract fractions with unlike denominators, including mixed numbers and fractions greater than 1, with procedural reliability.
+Full Standard: Perform operations with fractions.
+
+Standard: MA.5.FR.2.2
+Description: Extend previous understanding of multiplication to multiply a fraction by a fraction, including mixed numbers and fractions greater than 1, with procedural reliability.
+Full Standard: Perform operations with fractions.
+
+Standard: MA.5.FR.2.3
+Description: When multiplying a given number by a fraction less than 1 or a fraction greater than 1, predict and explain the relative size of the product to the given number without calculating.
+Full Standard: Perform operations with fractions.
+
+Standard: MA.5.FR.2.4
+Description: Extend previous understanding of division to explore the division of a unit fraction by a whole number and a whole number by a unit fraction.
+Full Standard: Perform operations with fractions.
+
+
+--- GEOMETRIC REASONING ---
+
+Standard: MA.5.GR.1.1
+Description: Classify triangles or quadrilaterals into different categories based on shared defining attributes. Explain why a triangle or quadrilateral would or would not belong to a category.
+Full Standard: Classify two-dimensional figures and three-dimensional figures based on defining attributes.
+
+Standard: MA.5.GR.1.2
+Description: Identify and classify three-dimensional figures into categories based on their defining attributes. Figures are limited to right pyramids, right prisms, right circular cylinders, right circular cones and spheres.
+Full Standard: Classify two-dimensional figures and three-dimensional figures based on defining attributes.
+
+Standard: MA.5.GR.2.1
+Description: Find the perimeter and area of a rectangle with fractional or decimal side lengths using visual models and formulas.
+Full Standard: Find the perimeter and area of rectangles with fractional or decimal side lengths.
+
+Standard: MA.5.GR.3.1
+Description: Explore volume as an attribute of three-dimensional figures by packing them with unit cubes without gaps. Find the volume of a right rectangular prism with whole-number side lengths by counting unit cubes.
+Full Standard: Solve problems involving the volume of right rectangular prisms.
+
+Standard: MA.5.GR.3.2
+Description: Find the volume of a right rectangular prism with whole-number side lengths using a visual model and a formula.
+Full Standard: Solve problems involving the volume of right rectangular prisms.
+
+Standard: MA.5.GR.3.3
+Description: Solve real-world problems involving the volume of right rectangular prisms, including problems with an unknown edge length, with whole-number edge lengths using a visual model or a formula. Write an equation with a variable for the unknown to represent the problem.
+Full Standard: Solve problems involving the volume of right rectangular prisms.
+
+Standard: MA.5.GR.4.1
+Description: Identify the origin and axes in the coordinate system. Plot and label ordered pairs in the first quadrant of the coordinate plane.
+Full Standard: Plot points and represent problems on the coordinate plane
+
+Standard: MA.5.GR.4.2
+Description: Represent mathematical and real-world problems by plotting points in the first quadrant of the coordinate plane and interpret coordinate values of points in the context of the situation.
+Full Standard: Plot points and represent problems on the coordinate plane
+
+
+--- MEASUREMENT ---
+
+Standard: MA.5.M.1.1
+Description: Solve multi-step real-world problems that involve converting measurement units to equivalent measurements within a single system of measurement.
+Full Standard: Convert measurement units to solve multi-step problems.
+
+Standard: MA.5.M.2.1
+Description: Solve multi-step real-world problems involving money using decimal notation.
+Full Standard: Solve problems involving money.
+
+
+--- NUMBER SENSE AND OPERATIONS ---
+
+Standard: MA.5.NSO.1.1
+Description: Express how the value of a digit in a multi-digit number with decimals to the thousandths changes if the digit moves one or more places to the left or right.
+Full Standard: Understand the place value of multi-digit numbers with decimals to the thousandths place.
+
+Standard: MA.5.NSO.1.2
+Description: Read and write multi-digit numbers with decimals to the thousandths using standard form, word form and expanded form.
+Full Standard: Understand the place value of multi-digit numbers with decimals to the thousandths place.
+
+Standard: MA.5.NSO.1.3
+Description: Compose and decompose multi-digit numbers with decimals to the thousandths in multiple ways using the values of the digits in each place. Demonstrate the compositions or decompositions using objects, drawings and expressions or equations.
+Full Standard: Understand the place value of multi-digit numbers with decimals to the thousandths place.
+
+Standard: MA.5.NSO.1.4
+Description: Plot, order and compare multi-digit numbers with decimals up to the thousandths.
+Full Standard: Understand the place value of multi-digit numbers with decimals to the thousandths place.
+
+Standard: MA.5.NSO.1.5
+Description: Round multi-digit numbers with decimals to the thousandths to the nearest hundredth, tenth or whole number.
+Full Standard: Understand the place value of multi-digit numbers with decimals to the thousandths place.
+
+Standard: MA.5.NSO.2.1
+Description: Multiply multi-digit whole numbers including using a standard algorithm with procedural fluency.
+Full Standard: Add, subtract, multiply and divide multi-digit numbers.
+
+Standard: MA.5.NSO.2.2
+Description: Divide multi-digit whole numbers, up to five digits by two digits, including using a standard algorithm with procedural fluency. Represent remainders as fractions.
+Full Standard: Add, subtract, multiply and divide multi-digit numbers.
+
+Standard: MA.5.NSO.2.3
+Description: Add and subtract multi-digit numbers with decimals to the thousandths, including using a standard algorithm with procedural fluency.
+Full Standard: Add, subtract, multiply and divide multi-digit numbers.
+
+Standard: MA.5.NSO.2.4
+Description: Explore the multiplication and division of multi-digit numbers with decimals to the hundredths using estimation, rounding and place value.
+Full Standard: Add, subtract, multiply and divide multi-digit numbers.
+
+Standard: MA.5.NSO.2.5
+Description: Multiply and divide a multi-digit number with decimals to the tenths by one-tenth and one-hundredth with procedural reliability.
+Full Standard: Add, subtract, multiply and divide multi-digit numbers.
+
+
+
+================================================================================
+GRADE 6 STANDARDS
+================================================================================
+
+--- ALGEBRAIC REASONING ---
+
+Standard: MA.6.AR.1.1
+Description: Given a mathematical or real-world context, translate written descriptions into algebraic expressions and translate algebraic expressions into written descriptions.
+Full Standard: Apply previous understanding of arithmetic expressions to algebraic expressions.
+
+Standard: MA.6.AR.1.2
+Description: Translate a real-world written description into an algebraic inequality in the form of x > a, x < a, x &ge; a or x &le; a. Represent the inequality on a number line.
+Full Standard: Apply previous understanding of arithmetic expressions to algebraic expressions.
+
+Standard: MA.6.AR.1.3
+Description: Evaluate algebraic expressions using substitution and order of operations.
+Full Standard: Apply previous understanding of arithmetic expressions to algebraic expressions.
+
+Standard: MA.6.AR.1.4
+Description: Apply the properties of operations to generate equivalent algebraic expressions with integer coefficients.
+Full Standard: Apply previous understanding of arithmetic expressions to algebraic expressions.
+
+Standard: MA.6.AR.2.1
+Description: Given an equation or inequality and a specified set of integer values, determine which values make the equation or inequality true or false.
+Full Standard: Develop an understanding for solving equations and inequalities. Write and solve one-step equations in one variable.
+
+Standard: MA.6.AR.2.2
+Description: Write and solve one-step equations in one variable within a mathematical or real-world context using addition and subtraction, where all terms and solutions are integers.
+Full Standard: Develop an understanding for solving equations and inequalities. Write and solve one-step equations in one variable.
+
+Standard: MA.6.AR.2.3
+Description: Write and solve one-step equations in one variable within a mathematical or real-world context using multiplication and division, where all terms and solutions are integers.
+Full Standard: Develop an understanding for solving equations and inequalities. Write and solve one-step equations in one variable.
+
+Standard: MA.6.AR.2.4
+Description: Determine the unknown decimal or fraction in an equation involving any of the four operations, relating three numbers, with the unknown in any position.
+Full Standard: Develop an understanding for solving equations and inequalities. Write and solve one-step equations in one variable.
+
+Standard: MA.6.AR.3.1
+Description: Given a real-world context, write and interpret ratios to show the relative sizes of two quantities using appropriate notation: , a to b, or a:b where b &ne; 0.
+Full Standard: Understand ratio and unit rate concepts and use them to solve problems.
+
+Standard: MA.6.AR.3.2
+Description: Given a real-world context, determine a rate for a ratio of quantities with different units. Calculate and interpret the corresponding unit rate.
+Full Standard: Understand ratio and unit rate concepts and use them to solve problems.
+
+Standard: MA.6.AR.3.3
+Description: Extend previous understanding of fractions and numerical patterns to generate or complete a two- or three-column table to display equivalent part-to-part ratios and part-to-part-to-whole ratios.
+Full Standard: Understand ratio and unit rate concepts and use them to solve problems.
+
+Standard: MA.6.AR.3.4
+Description: Apply ratio relationships to solve mathematical and real-world problems involving percentages using the relationship between two quantities.
+Full Standard: Understand ratio and unit rate concepts and use them to solve problems.
+
+Standard: MA.6.AR.3.5
+Description: Solve mathematical and real-world problems involving ratios, rates and unit rates, including comparisons, mixtures, ratios of lengths and conversions within the same measurement system.
+Full Standard: Understand ratio and unit rate concepts and use them to solve problems.
+
+
+--- DATA ANALYSIS AND PROBABILITY ---
+
+Standard: MA.6.DP.1.1
+Description: Recognize and formulate a statistical question that would generate numerical data.
+Full Standard: Develop an understanding of statistics and determine measures of center and measures of variability. Summarize statistical distributions graphically and numerically.
+
+Standard: MA.6.DP.1.2
+Description: Given a numerical data set within a real-world context, find and interpret mean, median, mode and range.
+Full Standard: Develop an understanding of statistics and determine measures of center and measures of variability. Summarize statistical distributions graphically and numerically.
+
+Standard: MA.6.DP.1.3
+Description: Given a box plot within a real-world context, determine the minimum, the lower quartile, the median, the upper quartile and the maximum. Use this summary of the data to describe the spread and distribution of the data.
+Full Standard: Develop an understanding of statistics and determine measures of center and measures of variability. Summarize statistical distributions graphically and numerically.
+
+Standard: MA.6.DP.1.4
+Description: Given a histogram or line plot within a real-world context, qualitatively describe and interpret the spread and distribution of the data, including any symmetry, skewness, gaps, clusters, outliers and the range.
+Full Standard: Develop an understanding of statistics and determine measures of center and measures of variability. Summarize statistical distributions graphically and numerically.
+
+Standard: MA.6.DP.1.5
+Description: Create box plots and histograms to represent sets of numerical data within real-world contexts.
+Full Standard: Develop an understanding of statistics and determine measures of center and measures of variability. Summarize statistical distributions graphically and numerically.
+
+Standard: MA.6.DP.1.6
+Description: Given a real-world scenario, determine and describe how changes in data values impact measures of center and variation.
+Full Standard: Develop an understanding of statistics and determine measures of center and measures of variability. Summarize statistical distributions graphically and numerically.
+
+
+--- GEOMETRIC REASONING ---
+
+Standard: MA.6.GR.1.1
+Description: Extend previous understanding of the coordinate plane to plot rational number ordered pairs in all four quadrants and on both axes. Identify the x- or y-axis as the line of reflection when two ordered pairs have an opposite x- or y-coordinate.
+Full Standard: Apply previous understanding of the coordinate plane to solve problems.
+
+Standard: MA.6.GR.1.2
+Description: Find distances between ordered pairs, limited to the same x-coordinate or the same y-coordinate, represented on the coordinate plane.
+Full Standard: Apply previous understanding of the coordinate plane to solve problems.
+
+Standard: MA.6.GR.1.3
+Description: Solve mathematical and real-world problems by plotting points on a coordinate plane, including finding the perimeter or area of a rectangle.
+Full Standard: Apply previous understanding of the coordinate plane to solve problems.
+
+Standard: MA.6.GR.2.1
+Description: Derive a formula for the area of a right triangle using a rectangle. Apply a formula to find the area of a triangle.
+Full Standard: Model and solve problems involving two-dimensional figures and three-dimensional figures.
+
+Standard: MA.6.GR.2.2
+Description: Solve mathematical and real-world problems involving the area of quadrilaterals and composite figures by decomposing them into triangles or rectangles.
+Full Standard: Model and solve problems involving two-dimensional figures and three-dimensional figures.
+
+Standard: MA.6.GR.2.3
+Description: Solve mathematical and real-world problems involving the volume of right rectangular prisms with positive rational number edge lengths using a visual model and a formula.
+Full Standard: Model and solve problems involving two-dimensional figures and three-dimensional figures.
+
+Standard: MA.6.GR.2.4
+Description: Given a mathematical or real-world context, find the surface area of right rectangular prisms and right rectangular pyramids using the figure&rsquo;s net.
+Full Standard: Model and solve problems involving two-dimensional figures and three-dimensional figures.
+
+
+--- NUMBER SENSE AND OPERATIONS ---
+
+Standard: MA.6.NSO.1.1
+Description: Extend previous understanding of numbers to define rational numbers. Plot, order and compare rational numbers.
+Full Standard: Extend knowledge of numbers to negative numbers and develop an understanding of absolute value.
+
+Standard: MA.6.NSO.1.2
+Description: Given a mathematical or real-world context, represent quantities that have opposite direction using rational numbers. Compare them on a number line and explain the meaning of zero within its context.
+Full Standard: Extend knowledge of numbers to negative numbers and develop an understanding of absolute value.
+
+Standard: MA.6.NSO.1.3
+Description: Given a mathematical or real-world context, interpret the absolute value of a number as the distance from zero on a number line. Find the absolute value of rational numbers.
+Full Standard: Extend knowledge of numbers to negative numbers and develop an understanding of absolute value.
+
+Standard: MA.6.NSO.1.4
+Description: Solve mathematical and real-world problems involving absolute value, including the comparison of absolute value.
+Full Standard: Extend knowledge of numbers to negative numbers and develop an understanding of absolute value.
+
+Standard: MA.6.NSO.2.1
+Description: Multiply and divide positive multi-digit numbers with decimals to the thousandths, including using a standard algorithm with procedural fluency.
+Full Standard: Add, subtract, multiply and divide positive rational numbers.
+
+Standard: MA.6.NSO.2.2
+Description: Extend previous understanding of multiplication and division to compute products and quotients of positive fractions by positive fractions, including mixed numbers, with procedural fluency.
+Full Standard: Add, subtract, multiply and divide positive rational numbers.
+
+Standard: MA.6.NSO.2.3
+Description: Solve multi-step real-world problems involving any of the four operations with positive multi-digit decimals or positive fractions, including mixed numbers.
+Full Standard: Add, subtract, multiply and divide positive rational numbers.
+
+Standard: MA.6.NSO.3.1
+Description: Given a mathematical or real-world context, find the greatest common factor and least common multiple of two whole numbers.
+Full Standard: Apply properties of operations to rewrite numbers in equivalent forms.
+
+Standard: MA.6.NSO.3.2
+Description: Rewrite the sum of two composite whole numbers having a common factor, as a common factor multiplied by the sum of two whole numbers.
+Full Standard: Apply properties of operations to rewrite numbers in equivalent forms.
+
+Standard: MA.6.NSO.3.3
+Description: Evaluate positive rational numbers and integers with natural number exponents.
+Full Standard: Apply properties of operations to rewrite numbers in equivalent forms.
+
+Standard: MA.6.NSO.3.4
+Description: Express composite whole numbers as a product of prime factors with natural number exponents.
+Full Standard: Apply properties of operations to rewrite numbers in equivalent forms.
+
+Standard: MA.6.NSO.3.5
+Description: Rewrite positive rational numbers in different but equivalent forms including fractions, terminating decimals and percentages.
+Full Standard: Apply properties of operations to rewrite numbers in equivalent forms.
+
+Standard: MA.6.NSO.4.1
+Description: Apply and extend previous understandings of operations with whole numbers to add and subtract integers with procedural fluency.
+Full Standard: Extend understanding of operations with integers.
+
+Standard: MA.6.NSO.4.2
+Description: Apply and extend previous understandings of operations with whole numbers to multiply and divide integers with procedural fluency.
+Full Standard: Extend understanding of operations with integers.
+
+
+
+================================================================================
+GRADE 7 STANDARDS
+================================================================================
+
+--- ALGEBRAIC REASONING ---
+
+Standard: MA.7.AR.1.1
+Description: Apply properties of operations to add and subtract linear expressions with rational coefficients.
+Full Standard: Rewrite algebraic expressions in equivalent forms.
+
+Standard: MA.7.AR.1.2
+Description: Determine whether two linear expressions are equivalent.
+Full Standard: Rewrite algebraic expressions in equivalent forms.
+
+Standard: MA.7.AR.2.1
+Description: Write and solve one-step inequalities in one variable within a mathematical context and represent solutions algebraically or graphically.
+Full Standard: Write and solve equations and inequalities in one variable.
+
+Standard: MA.7.AR.2.2
+Description: Write and solve two-step equations in one variable within a mathematical or real-world context, where all terms are rational numbers.
+Full Standard: Write and solve equations and inequalities in one variable.
+
+Standard: MA.7.AR.3.1
+Description: Apply previous understanding of percentages and ratios to solve multi-step real-world percent problems.
+Full Standard: Use percentages and proportional reasoning to solve problems.
+
+Standard: MA.7.AR.3.2
+Description: Apply previous understanding of ratios to solve real-world problems involving proportions.
+Full Standard: Use percentages and proportional reasoning to solve problems.
+
+Standard: MA.7.AR.3.3
+Description: Solve mathematical and real-world problems involving the conversion of units across different measurement systems.
+Full Standard: Use percentages and proportional reasoning to solve problems.
+
+Standard: MA.7.AR.4.1
+Description: Determine whether two quantities have a proportional relationship by examining a table, graph or written description.
+Full Standard: Analyze and represent two-variable proportional relationships.
+
+Standard: MA.7.AR.4.2
+Description: Determine the constant of proportionality within a mathematical or real-world context given a table, graph or written description of a proportional relationship.
+Full Standard: Analyze and represent two-variable proportional relationships.
+
+Standard: MA.7.AR.4.3
+Description: Given a mathematical or real-world context, graph proportional relationships from a table, equation or a written description.
+Full Standard: Analyze and represent two-variable proportional relationships.
+
+Standard: MA.7.AR.4.4
+Description: Given any representation of a proportional relationship, translate the representation to a written description, table or equation.
+Full Standard: Analyze and represent two-variable proportional relationships.
+
+Standard: MA.7.AR.4.5
+Description: Solve real-world problems involving proportional relationships.
+Full Standard: Analyze and represent two-variable proportional relationships.
+
+
+--- DATA ANALYSIS AND PROBABILITY ---
+
+Standard: MA.7.DP.1.1
+Description: Determine an appropriate measure of center or measure of variation to summarize numerical data, represented numerically or graphically, taking into consideration the context and any outliers.
+Full Standard: Represent and interpret numerical and categorical data.
+
+Standard: MA.7.DP.1.2
+Description: Given two numerical or graphical representations of data, use the measure(s) of center and measure(s) of variability to make comparisons, interpret results and draw conclusions about the two populations.
+Full Standard: Represent and interpret numerical and categorical data.
+
+Standard: MA.7.DP.1.3
+Description: Given categorical data from a random sample, use proportional relationships to make predictions about a population.
+Full Standard: Represent and interpret numerical and categorical data.
+
+Standard: MA.7.DP.1.4
+Description: Use proportional reasoning to construct, display and interpret data in circle graphs.
+Full Standard: Represent and interpret numerical and categorical data.
+
+Standard: MA.7.DP.1.5
+Description: Given a real-world numerical or categorical data set, choose and create an appropriate graphical representation.
+Full Standard: Represent and interpret numerical and categorical data.
+
+Standard: MA.7.DP.2.1
+Description: Determine the sample space for a simple experiment.
+Full Standard: Develop an understanding of probability. Find and compare experimental and theoretical probabilities.
+
+Standard: MA.7.DP.2.2
+Description: Given the probability of a chance event, interpret the likelihood of it occurring. Compare the probabilities of chance events.
+Full Standard: Develop an understanding of probability. Find and compare experimental and theoretical probabilities.
+
+Standard: MA.7.DP.2.3
+Description: Find the theoretical probability of an event related to a simple experiment.
+Full Standard: Develop an understanding of probability. Find and compare experimental and theoretical probabilities.
+
+Standard: MA.7.DP.2.4
+Description: Use a simulation of a simple experiment to find experimental probabilities and compare them to theoretical probabilities.
+Full Standard: Develop an understanding of probability. Find and compare experimental and theoretical probabilities.
+
+
+--- GEOMETRIC REASONING ---
+
+Standard: MA.7.GR.1.1
+Description: Apply formulas to find the areas of trapezoids, parallelograms and rhombi.
+Full Standard: Solve problems involving two-dimensional figures, including circles.
+
+Standard: MA.7.GR.1.2
+Description: Solve mathematical or real-world problems involving the area of polygons or composite figures by decomposing them into triangles or quadrilaterals.
+Full Standard: Solve problems involving two-dimensional figures, including circles.
+
+Standard: MA.7.GR.1.3
+Description: Explore the proportional relationship between circumferences and diameters of circles. Apply a formula for the circumference of a circle to solve mathematical and real-world problems.
+Full Standard: Solve problems involving two-dimensional figures, including circles.
+
+Standard: MA.7.GR.1.4
+Description: Explore and apply a formula to find the area of a circle to solve mathematical and real-world problems.
+Full Standard: Solve problems involving two-dimensional figures, including circles.
+
+Standard: MA.7.GR.1.5
+Description: Solve mathematical and real-world problems involving dimensions and areas of geometric figures, including scale drawings and scale factors.
+Full Standard: Solve problems involving two-dimensional figures, including circles.
+
+Standard: MA.7.GR.2.1
+Description: Given a mathematical or real-world context, find the surface area of a right circular cylinder using the figure&rsquo;s net.
+Full Standard: Solve problems involving three-dimensional figures, including right circular cylinders.
+
+Standard: MA.7.GR.2.2
+Description: Solve real-world problems involving surface area of right circular cylinders.
+Full Standard: Solve problems involving three-dimensional figures, including right circular cylinders.
+
+Standard: MA.7.GR.2.3
+Description: Solve mathematical and real-world problems involving volume of right circular cylinders.
+Full Standard: Solve problems involving three-dimensional figures, including right circular cylinders.
+
+
+--- NUMBER SENSE AND OPERATIONS ---
+
+Standard: MA.7.NSO.1.1
+Description: Know and apply the Laws of Exponents to evaluate numerical expressions and generate equivalent numerical expressions, limited to whole-number exponents and rational number bases.
+Full Standard: Rewrite numbers in equivalent forms.
+
+Standard: MA.7.NSO.1.2
+Description: Rewrite rational numbers in different but equivalent forms including fractions, mixed numbers, repeating decimals and percentages to solve mathematical and real-world problems.
+Full Standard: Rewrite numbers in equivalent forms.
+
+Standard: MA.7.NSO.2.1
+Description: Solve mathematical problems using multi-step order of operations with rational numbers including grouping symbols, whole-number exponents and absolute value.
+Full Standard: Add, subtract, multiply and divide rational numbers.
+
+Standard: MA.7.NSO.2.2
+Description: Add, subtract, multiply and divide rational numbers with procedural fluency.
+Full Standard: Add, subtract, multiply and divide rational numbers.
+
+Standard: MA.7.NSO.2.3
+Description: Solve real-world problems involving any of the four operations with rational numbers.
+Full Standard: Add, subtract, multiply and divide rational numbers.
+
+
+
+================================================================================
+GRADE 8 STANDARDS
+================================================================================
+
+--- ALGEBRAIC REASONING ---
+
+Standard: MA.8.AR.1.1
+Description: Apply the Laws of Exponents to generate equivalent algebraic expressions, limited to integer exponents and monomial bases.
+Full Standard: Generate equivalent algebraic expressions.
+
+Standard: MA.8.AR.1.2
+Description: Apply properties of operations to multiply two linear expressions with rational coefficients.
+Full Standard: Generate equivalent algebraic expressions.
+
+Standard: MA.8.AR.1.3
+Description: Rewrite the sum of two algebraic expressions having a common monomial factor as a common factor multiplied by the sum of two algebraic expressions.
+Full Standard: Generate equivalent algebraic expressions.
+
+Standard: MA.8.AR.2.1
+Description: Solve multi-step linear equations in one variable, with rational number coefficients. Include equations with variables on both sides.
+Full Standard: Solve multi-step one-variable equations and inequalities.
+
+Standard: MA.8.AR.2.2
+Description: Solve two-step linear inequalities in one variable and represent solutions algebraically and graphically.
+Full Standard: Solve multi-step one-variable equations and inequalities.
+
+Standard: MA.8.AR.2.3
+Description: Given an equation in the form of x&sup2;=p and x&sup3;=q, where p is a whole number and q is an integer, determine the real solutions.
+Full Standard: Solve multi-step one-variable equations and inequalities.
+
+Standard: MA.8.AR.3.1
+Description: Determine if a linear relationship is also a proportional relationship.
+Full Standard: Extend understanding of proportional relationships to two-variable linear equations.
+
+Standard: MA.8.AR.3.2
+Description: Given a table, graph or written description of a linear relationship, determine the slope.
+Full Standard: Extend understanding of proportional relationships to two-variable linear equations.
+
+Standard: MA.8.AR.3.3
+Description: Given a table, graph or written description of a linear relationship, write an equation in slope-intercept form.
+Full Standard: Extend understanding of proportional relationships to two-variable linear equations.
+
+Standard: MA.8.AR.3.4
+Description: Given a mathematical or real-world context, graph a two-variable linear equation from a written description, a table or an equation in slope-intercept form.
+Full Standard: Extend understanding of proportional relationships to two-variable linear equations.
+
+Standard: MA.8.AR.3.5
+Description: Given a real-world context, determine and interpret the slope and y-intercept of a two-variable linear equation from a written description, a table, a graph or an equation in slope-intercept form.
+Full Standard: Extend understanding of proportional relationships to two-variable linear equations.
+
+Standard: MA.8.AR.4.1
+Description: Given a system of two linear equations and a specified set of possible solutions, determine which ordered pairs satisfy the system of linear equations.
+Full Standard: Develop an understanding of two-variable systems of equations.
+
+Standard: MA.8.AR.4.2
+Description: Given a system of two linear equations represented graphically on the same coordinate plane, determine whether there is one solution, no solution or infinitely many solutions.
+Full Standard: Develop an understanding of two-variable systems of equations.
+
+Standard: MA.8.AR.4.3
+Description: Given a mathematical or real-world context, solve systems of two linear equations by graphing.
+Full Standard: Develop an understanding of two-variable systems of equations.
+
+
+--- DATA ANALYSIS AND PROBABILITY ---
+
+Standard: MA.8.DP.1.1
+Description: Given a set of real-world bivariate numerical data, construct a scatter plot or a line graph as appropriate for the context.
+Full Standard: Represent and investigate numerical bivariate data.
+
+Standard: MA.8.DP.1.2
+Description: Given a scatter plot within a real-world context, describe patterns of association.
+Full Standard: Represent and investigate numerical bivariate data.
+
+Standard: MA.8.DP.1.3
+Description: Given a scatter plot with a linear association, informally fit a straight line.
+Full Standard: Represent and investigate numerical bivariate data.
+
+Standard: MA.8.DP.2.1
+Description: Determine the sample space for a repeated experiment.
+Full Standard: Represent and find probabilities of repeated experiments.
+
+Standard: MA.8.DP.2.2
+Description: Find the theoretical probability of an event related to a repeated experiment.
+Full Standard: Represent and find probabilities of repeated experiments.
+
+Standard: MA.8.DP.2.3
+Description: Solve real-world problems involving probabilities related to single or repeated experiments, including making predictions based on theoretical probability.
+Full Standard: Represent and find probabilities of repeated experiments.
+
+
+--- FUNCTIONS ---
+
+Standard: MA.8.F.1.1
+Description: Given a set of ordered pairs, a table, a graph or mapping diagram, determine whether the relationship is a function. Identify the domain and range of the relation.
+Full Standard: Define, evaluate and compare functions.
+
+Standard: MA.8.F.1.2
+Description: Given a function defined by a graph or an equation, determine whether the function is a linear function. Given an input-output table, determine whether it could represent a linear function.
+Full Standard: Define, evaluate and compare functions.
+
+Standard: MA.8.F.1.3
+Description: Analyze a real-world written description or graphical representation of a functional relationship between two quantities and identify where the function is increasing, decreasing or constant.
+Full Standard: Define, evaluate and compare functions.
+
+
+--- GEOMETRIC REASONING ---
+
+Standard: MA.8.GR.1.1
+Description: Apply the Pythagorean Theorem to solve mathematical and real-world problems involving unknown side lengths in right triangles.
+Full Standard: Develop an understanding of the Pythagorean Theorem and angle relationships involving triangles.
+
+Standard: MA.8.GR.1.2
+Description: Apply the Pythagorean Theorem to solve mathematical and real-world problems involving the distance between two points in a coordinate plane.
+Full Standard: Develop an understanding of the Pythagorean Theorem and angle relationships involving triangles.
+
+Standard: MA.8.GR.1.3
+Description: Use the Triangle Inequality Theorem to determine if a triangle can be formed from a given set of sides. Use the converse of the Pythagorean Theorem to determine if a right triangle can be formed from a given set of sides.
+Full Standard: Develop an understanding of the Pythagorean Theorem and angle relationships involving triangles.
+
+Standard: MA.8.GR.1.4
+Description: Solve mathematical problems involving the relationships between supplementary, complementary, vertical or adjacent angles.
+Full Standard: Develop an understanding of the Pythagorean Theorem and angle relationships involving triangles.
+
+Standard: MA.8.GR.1.5
+Description: Solve problems involving the relationships of interior and exterior angles of a triangle.
+Full Standard: Develop an understanding of the Pythagorean Theorem and angle relationships involving triangles.
+
+Standard: MA.8.GR.1.6
+Description: Develop and use formulas for the sums of the interior angles of regular polygons by decomposing them into triangles.
+Full Standard: Develop an understanding of the Pythagorean Theorem and angle relationships involving triangles.
+
+Standard: MA.8.GR.2.1
+Description: Given a preimage and image generated by a single transformation, identify the transformation that describes the relationship.
+Full Standard: Understand similarity and congruence using models and transformations.
+
+Standard: MA.8.GR.2.2
+Description: Given a preimage and image generated by a single dilation, identify the scale factor that describes the relationship.
+Full Standard: Understand similarity and congruence using models and transformations.
+
+Standard: MA.8.GR.2.3
+Description: Describe and apply the effect of a single transformation on two-dimensional figures using coordinates and the coordinate plane.
+Full Standard: Understand similarity and congruence using models and transformations.
+
+Standard: MA.8.GR.2.4
+Description: Solve mathematical and real-world problems involving proportional relationships between similar triangles.
+Full Standard: Understand similarity and congruence using models and transformations.
+
+
+--- NUMBER SENSE AND OPERATIONS ---
+
+Standard: MA.8.NSO.1.1
+Description: Extend previous understanding of rational numbers to define irrational numbers within the real number system. Locate an approximate value of a numerical expression involving irrational numbers on a number line.
+Full Standard: Solve problems involving rational numbers, including numbers in scientific notation, and extend the understanding of rational numbers to irrational numbers.
+
+Standard: MA.8.NSO.1.2
+Description: Plot, order and compare rational and irrational numbers, represented in various forms.
+Full Standard: Solve problems involving rational numbers, including numbers in scientific notation, and extend the understanding of rational numbers to irrational numbers.
+
+Standard: MA.8.NSO.1.3
+Description: Extend previous understanding of the Laws of Exponents to include integer exponents. Apply the Laws of Exponents to evaluate numerical expressions and generate equivalent numerical expressions, limited to integer exponents and rational number bases, with procedural fluency.
+Full Standard: Solve problems involving rational numbers, including numbers in scientific notation, and extend the understanding of rational numbers to irrational numbers.
+
+Standard: MA.8.NSO.1.4
+Description: Express numbers in scientific notation to represent and approximate very large or very small quantities. Determine how many times larger or smaller one number is compared to a second number.
+Full Standard: Solve problems involving rational numbers, including numbers in scientific notation, and extend the understanding of rational numbers to irrational numbers.
+
+Standard: MA.8.NSO.1.5
+Description: Add, subtract, multiply and divide numbers expressed in scientific notation with procedural fluency.
+Full Standard: Solve problems involving rational numbers, including numbers in scientific notation, and extend the understanding of rational numbers to irrational numbers.
+
+Standard: MA.8.NSO.1.6
+Description: Solve real-world problems involving operations with numbers expressed in scientific notation.
+Full Standard: Solve problems involving rational numbers, including numbers in scientific notation, and extend the understanding of rational numbers to irrational numbers.
+
+Standard: MA.8.NSO.1.7
+Description: Solve multi-step mathematical and real-world problems involving the order of operations with rational numbers including exponents and radicals.
+Full Standard: Solve problems involving rational numbers, including numbers in scientific notation, and extend the understanding of rational numbers to irrational numbers.
+
+
+
+================================================================================
+GRADE 912 STANDARDS
+================================================================================
+
+--- ALGEBRAIC REASONING ---
+
+Standard: MA.912.AR.1.1
+Description: Identify and interpret parts of an equation or expression that represent a quantity in terms of a mathematical or real-world context, including viewing one or more of its parts as a single entity.
+Full Standard: Interpret and rewrite algebraic expressions and equations in equivalent forms.
+
+Standard: MA.912.AR.1.10
+Description: Solve mathematical and real-world problems involving addition, subtraction, multiplication or division of rational algebraic expressions.
+Full Standard: Interpret and rewrite algebraic expressions and equations in equivalent forms.
+
+Standard: MA.912.AR.1.11
+Description: Apply the Binomial Theorem to create equivalent polynomial expressions.
+Full Standard: Interpret and rewrite algebraic expressions and equations in equivalent forms.
+
+Standard: MA.912.AR.1.2
+Description: Rearrange equations or formulas to isolate a quantity of interest.
+Full Standard: Interpret and rewrite algebraic expressions and equations in equivalent forms.
+
+Standard: MA.912.AR.1.3
+Description: Add, subtract and multiply polynomial expressions with rational number coefficients.
+Full Standard: Interpret and rewrite algebraic expressions and equations in equivalent forms.
+
+Standard: MA.912.AR.1.4
+Description: Divide a polynomial expression by a monomial expression with rational number coefficients.
+Full Standard: Interpret and rewrite algebraic expressions and equations in equivalent forms.
+
+Standard: MA.912.AR.1.5
+Description: Divide polynomial expressions using long division, synthetic division or algebraic manipulation.
+Full Standard: Interpret and rewrite algebraic expressions and equations in equivalent forms.
+
+Standard: MA.912.AR.1.6
+Description: Solve mathematical and real-world problems involving addition, subtraction, multiplication or division of polynomials.
+Full Standard: Interpret and rewrite algebraic expressions and equations in equivalent forms.
+
+Standard: MA.912.AR.1.7
+Description: Rewrite a polynomial expression as a product of polynomials over the real number system.
+Full Standard: Interpret and rewrite algebraic expressions and equations in equivalent forms.
+
+Standard: MA.912.AR.1.8
+Description: Rewrite a polynomial expression as a product of polynomials over the real or complex number system.
+Full Standard: Interpret and rewrite algebraic expressions and equations in equivalent forms.
+
+Standard: MA.912.AR.1.9
+Description: Apply previous understanding of rational number operations to add, subtract, multiply and divide rational algebraic expressions.
+Full Standard: Interpret and rewrite algebraic expressions and equations in equivalent forms.
+
+Standard: MA.912.AR.10.1
+Description: Given a mathematical or real-world context, write and solve problems involving arithmetic sequences.
+Full Standard: Solve problems involving sequences and series.
+
+Standard: MA.912.AR.10.2
+Description: Given a mathematical or real-world context, write and solve problems involving geometric sequences.
+Full Standard: Solve problems involving sequences and series.
+
+Standard: MA.912.AR.10.3
+Description: Recognize and apply the formula for the sum of a finite arithmetic series to solve mathematical and real-world problems.
+Full Standard: Solve problems involving sequences and series.
+
+Standard: MA.912.AR.10.4
+Description: Recognize and apply the formula for the sum of a finite or an infinite geometric series to solve mathematical and real-world problems.
+Full Standard: Solve problems involving sequences and series.
+
+Standard: MA.912.AR.10.5
+Description: Given a mathematical or real-world context, write a sequence using function notation, defined explicitly or recursively, to represent relationships between quantities from a written description.
+Full Standard: Solve problems involving sequences and series.
+
+Standard: MA.912.AR.10.6
+Description: Given a mathematical or real-world context, find the domain of a given sequence defined recursively or explicitly.
+Full Standard: Solve problems involving sequences and series.
+
+Standard: MA.912.AR.2.1
+Description: Given a real-world context, write and solve one-variable multi-step linear equations.
+Full Standard: Write, solve and graph linear equations, functions and inequalities in one and two variables.
+
+Standard: MA.912.AR.2.2
+Description: Write a linear two-variable equation to represent the relationship between two quantities from a graph, a written description or a table of values within a mathematical or real-world context.
+Full Standard: Write, solve and graph linear equations, functions and inequalities in one and two variables.
+
+Standard: MA.912.AR.2.3
+Description: Write a linear two-variable equation for a line that is parallel or perpendicular to a given line and goes through a given point.
+Full Standard: Write, solve and graph linear equations, functions and inequalities in one and two variables.
+
+Standard: MA.912.AR.2.4
+Description: Given a table, equation or written description of a linear function, graph that function, and determine and interpret its key features.
+Full Standard: Write, solve and graph linear equations, functions and inequalities in one and two variables.
+
+Standard: MA.912.AR.2.5
+Description: Solve and graph mathematical and real-world problems that are modeled with linear functions. Interpret key features and determine constraints in terms of the context.
+Full Standard: Write, solve and graph linear equations, functions and inequalities in one and two variables.
+
+Standard: MA.912.AR.2.6
+Description: Given a mathematical or real-world context, write and solve one-variable linear inequalities, including compound inequalities. Represent solutions algebraically or graphically.
+Full Standard: Write, solve and graph linear equations, functions and inequalities in one and two variables.
+
+Standard: MA.912.AR.2.7
+Description: Write two-variable linear inequalities to represent relationships between quantities from a graph or a written description within a mathematical or real-world context.
+Full Standard: Write, solve and graph linear equations, functions and inequalities in one and two variables.
+
+Standard: MA.912.AR.2.8
+Description: Given a mathematical or real-world context, graph the solution set to a two-variable linear inequality.
+Full Standard: Write, solve and graph linear equations, functions and inequalities in one and two variables.
+
+Standard: MA.912.AR.3.1
+Description: Given a mathematical or real-world context, write and solve one-variable quadratic equations over the real number system.
+Full Standard: Write, solve and graph quadratic equations, functions and inequalities in one and two variables.
+
+Standard: MA.912.AR.3.10
+Description: Given a mathematical or real-world context, graph the solution set to a two-variable quadratic inequality.
+Full Standard: Write, solve and graph quadratic equations, functions and inequalities in one and two variables.
+
+Standard: MA.912.AR.3.2
+Description: Given a mathematical or real-world context, write and solve one-variable quadratic equations over the real and complex number systems.
+Full Standard: Write, solve and graph quadratic equations, functions and inequalities in one and two variables.
+
+Standard: MA.912.AR.3.3
+Description: Given a mathematical or real-world context, write and solve one-variable quadratic inequalities over the real number system. Represent solutions algebraically or graphically.
+Full Standard: Write, solve and graph quadratic equations, functions and inequalities in one and two variables.
+
+Standard: MA.912.AR.3.4
+Description: Write a quadratic function to represent the relationship between two quantities from a graph, a written description or a table of values within a mathematical or real-world context.
+Full Standard: Write, solve and graph quadratic equations, functions and inequalities in one and two variables.
+
+Standard: MA.912.AR.3.5
+Description: Given the x-intercepts and another point on the graph of a quadratic function, write the equation for the function.
+Full Standard: Write, solve and graph quadratic equations, functions and inequalities in one and two variables.
+
+Standard: MA.912.AR.3.6
+Description: Given an expression or equation representing a quadratic function, determine the vertex and zeros and interpret them in terms of a real-world context.
+Full Standard: Write, solve and graph quadratic equations, functions and inequalities in one and two variables.
+
+Standard: MA.912.AR.3.7
+Description: Given a table, equation or written description of a quadratic function, graph that function, and determine and interpret its key features.
+Full Standard: Write, solve and graph quadratic equations, functions and inequalities in one and two variables.
+
+Standard: MA.912.AR.3.8
+Description: Solve and graph mathematical and real-world problems that are modeled with quadratic functions. Interpret key features and determine constraints in terms of the context.
+Full Standard: Write, solve and graph quadratic equations, functions and inequalities in one and two variables.
+
+Standard: MA.912.AR.3.9
+Description: Given a mathematical or real-world context, write two-variable quadratic inequalities to represent relationships between quantities from a graph or a written description.
+Full Standard: Write, solve and graph quadratic equations, functions and inequalities in one and two variables.
+
+Standard: MA.912.AR.4.1
+Description: Given a mathematical or real-world context, write and solve one-variable absolute value equations.
+Full Standard: Write, solve and graph absolute value equations, functions and inequalities in one and two variables.
+
+Standard: MA.912.AR.4.2
+Description: Given a mathematical or real-world context, write and solve one-variable absolute value inequalities. Represent solutions algebraically or graphically.
+Full Standard: Write, solve and graph absolute value equations, functions and inequalities in one and two variables.
+
+Standard: MA.912.AR.4.3
+Description: Given a table, equation or written description of an absolute value function, graph that function and determine its key features.
+Full Standard: Write, solve and graph absolute value equations, functions and inequalities in one and two variables.
+
+Standard: MA.912.AR.4.4
+Description: Solve and graph mathematical and real-world problems that are modeled with absolute value functions. Interpret key features and determine constraints in terms of the context.
+Full Standard: Write, solve and graph absolute value equations, functions and inequalities in one and two variables.
+
+Standard: MA.912.AR.5.1
+Description: Solve one-variable exponential equations using the properties of exponents.
+Full Standard: Write, solve and graph exponential and logarithmic equations and functions in one and two variables.
+
+Standard: MA.912.AR.5.2
+Description: Solve one-variable equations involving logarithms or exponential expressions. Interpret solutions as viable in terms of the context and identify any extraneous solutions.
+Full Standard: Write, solve and graph exponential and logarithmic equations and functions in one and two variables.
+
+Standard: MA.912.AR.5.3
+Description: Given a mathematical or real-world context, classify an exponential function as representing growth or decay.
+Full Standard: Write, solve and graph exponential and logarithmic equations and functions in one and two variables.
+
+Standard: MA.912.AR.5.4
+Description: Write an exponential function to represent a relationship between two quantities from a graph, a written description or a table of values within a mathematical or real-world context.
+Full Standard: Write, solve and graph exponential and logarithmic equations and functions in one and two variables.
+
+Standard: MA.912.AR.5.5
+Description: Given an expression or equation representing an exponential function, reveal the constant percent rate of change per unit interval using the properties of exponents. Interpret the constant percent rate of change in terms of a real-world context.
+Full Standard: Write, solve and graph exponential and logarithmic equations and functions in one and two variables.
+
+Standard: MA.912.AR.5.6
+Description: Given a table, equation or written description of an exponential function, graph that function and determine its key features.
+Full Standard: Write, solve and graph exponential and logarithmic equations and functions in one and two variables.
+
+Standard: MA.912.AR.5.7
+Description: Solve and graph mathematical and real-world problems that are modeled with exponential functions. Interpret key features and determine constraints in terms of the context.
+Full Standard: Write, solve and graph exponential and logarithmic equations and functions in one and two variables.
+
+Standard: MA.912.AR.5.8
+Description: Given a table, equation or written description of a logarithmic function, graph that function and determine its key features.
+Full Standard: Write, solve and graph exponential and logarithmic equations and functions in one and two variables.
+
+Standard: MA.912.AR.5.9
+Description: Solve and graph mathematical and real-world problems that are modeled with logarithmic functions. Interpret key features and determine constraints in terms of the context.
+Full Standard: Write, solve and graph exponential and logarithmic equations and functions in one and two variables.
+
+Standard: MA.912.AR.6.1
+Description: Given a mathematical or real-world context, when suitable factorization is possible, solve one-variable polynomial equations of degree 3 or higher over the real and complex number systems.
+Full Standard: Solve and graph polynomial equations and functions in one and two variables.
+
+Standard: MA.912.AR.6.2
+Description: Explain and apply the Remainder Theorem to solve mathematical and real-world problems.
+Full Standard: Solve and graph polynomial equations and functions in one and two variables.
+
+Standard: MA.912.AR.6.3
+Description: Explain and apply theorems for polynomials to solve mathematical and real-world problems.
+Full Standard: Solve and graph polynomial equations and functions in one and two variables.
+
+Standard: MA.912.AR.6.4
+Description: Given a table, equation or written description of a polynomial function of degree 3 or higher, graph that function and determine its key features.
+Full Standard: Solve and graph polynomial equations and functions in one and two variables.
+
+Standard: MA.912.AR.6.5
+Description: Sketch a rough graph of a polynomial function of degree 3 or higher using zeros, multiplicity and knowledge of end behavior.
+Full Standard: Solve and graph polynomial equations and functions in one and two variables.
+
+Standard: MA.912.AR.6.6
+Description: Solve and graph mathematical and real-world problems that are modeled with polynomial functions of degree 3 or higher. Interpret key features and determine constraints in terms of the context.
+Full Standard: Solve and graph polynomial equations and functions in one and two variables.
+
+Standard: MA.912.AR.7.1
+Description: Solve one-variable radical equations. Interpret solutions as viable in terms of context and identify any extraneous solutions.
+Full Standard: Solve and graph radical equations and functions in one and two variables.
+
+Standard: MA.912.AR.7.2
+Description: Given a table, equation or written description of a square root or cube root function, graph that function and determine its key features.
+Full Standard: Solve and graph radical equations and functions in one and two variables.
+
+Standard: MA.912.AR.7.3
+Description: Solve and graph mathematical and real-world problems that are modeled with square root or cube root functions. Interpret key features and determine constraints in terms of the context.
+Full Standard: Solve and graph radical equations and functions in one and two variables.
+
+Standard: MA.912.AR.7.4
+Description: Solve and graph mathematical and real-world problems that are modeled with radical functions. Interpret key features and determine constraints in terms of the context.
+Full Standard: Solve and graph radical equations and functions in one and two variables.
+
+Standard: MA.912.AR.8.1
+Description: Write and solve one-variable rational equations. Interpret solutions as viable in terms of the context and identify any extraneous solutions.
+Full Standard: Solve and graph rational equations and functions in one and two variables.
+
+Standard: MA.912.AR.8.2
+Description: Given a table, equation or written description of a rational function, graph that function and determine its key features.
+Full Standard: Solve and graph rational equations and functions in one and two variables.
+
+Standard: MA.912.AR.8.3
+Description: Solve and graph mathematical and real-world problems that are modeled with rational functions. Interpret key features and determine constraints in terms of the context.
+Full Standard: Solve and graph rational equations and functions in one and two variables.
+
+Standard: MA.912.AR.9.1
+Description: Given a mathematical or real-world context, write and solve a system of two-variable linear equations algebraically or graphically.
+Full Standard: Write and solve a system of two- and three-variable equations and inequalities that describe quantities or relationships.
+
+Standard: MA.912.AR.9.10
+Description: Solve and graph mathematical and real-world problems that are modeled with piecewise functions. Interpret key features and determine constraints in terms of the context.
+Full Standard: Write and solve a system of two- and three-variable equations and inequalities that describe quantities or relationships.
+
+Standard: MA.912.AR.9.2
+Description: Given a mathematical or real-world context, solve a system consisting of a two-variable linear equation and a non-linear equation algebraically or graphically.
+Full Standard: Write and solve a system of two- and three-variable equations and inequalities that describe quantities or relationships.
+
+Standard: MA.912.AR.9.3
+Description: Given a mathematical or real-world context, solve a system consisting of two-variable linear or non-linear equations algebraically or graphically.
+Full Standard: Write and solve a system of two- and three-variable equations and inequalities that describe quantities or relationships.
+
+Standard: MA.912.AR.9.4
+Description: Graph the solution set of a system of two-variable linear inequalities.
+Full Standard: Write and solve a system of two- and three-variable equations and inequalities that describe quantities or relationships.
+
+Standard: MA.912.AR.9.5
+Description: Graph the solution set of a system of two-variable inequalities.
+Full Standard: Write and solve a system of two- and three-variable equations and inequalities that describe quantities or relationships.
+
+Standard: MA.912.AR.9.6
+Description: Given a real-world context, represent constraints as systems of linear equations or inequalities. Interpret solutions to problems as viable or non-viable options.
+Full Standard: Write and solve a system of two- and three-variable equations and inequalities that describe quantities or relationships.
+
+Standard: MA.912.AR.9.7
+Description: Given a real-world context, represent constraints as systems of linear and non-linear equations or inequalities. Interpret solutions to problems as viable or non-viable options.
+Full Standard: Write and solve a system of two- and three-variable equations and inequalities that describe quantities or relationships.
+
+Standard: MA.912.AR.9.8
+Description: Solve real-world problems involving linear programming in two variables.
+Full Standard: Write and solve a system of two- and three-variable equations and inequalities that describe quantities or relationships.
+
+Standard: MA.912.AR.9.9
+Description: Given a mathematical or real-world context, solve a system of three-variable linear equations algebraically.
+Full Standard: Write and solve a system of two- and three-variable equations and inequalities that describe quantities or relationships.
+
+
+--- CALCULUS ---
+
+Standard: MA.912.C.1.1
+Description: Demonstrate understanding of the concept of a limit and estimate limits from graphs and tables of values.
+Full Standard: Develop an understanding for limits and continuity. Determine limits and continuity.
+
+Standard: MA.912.C.1.10
+Description: Given the graph of a function, identify whether a function is continuous at a point. If not, identify the type of discontinuity for the given function.
+Full Standard: Develop an understanding for limits and continuity. Determine limits and continuity.
+
+Standard: MA.912.C.1.11
+Description: Apply the Intermediate Value Theorem and the Extreme Value Theorem.
+Full Standard: Develop an understanding for limits and continuity. Determine limits and continuity.
+
+Standard: MA.912.C.1.2
+Description: Determine the value of a limit if it exists algebraically using limits of sums, differences, products, quotients and compositions of continuous functions.
+Full Standard: Develop an understanding for limits and continuity. Determine limits and continuity.
+
+Standard: MA.912.C.1.3
+Description: Find limits of rational functions that are undefined at a point.
+Full Standard: Develop an understanding for limits and continuity. Determine limits and continuity.
+
+Standard: MA.912.C.1.4
+Description: Find one-sided limits.
+Full Standard: Develop an understanding for limits and continuity. Determine limits and continuity.
+
+Standard: MA.912.C.1.5
+Description: Find limits at infinity.
+Full Standard: Develop an understanding for limits and continuity. Determine limits and continuity.
+
+Standard: MA.912.C.1.6
+Description: Decide when a limit is infinite and use limits involving infinity to describe asymptotic behavior.
+Full Standard: Develop an understanding for limits and continuity. Determine limits and continuity.
+
+Standard: MA.912.C.1.7
+Description: Find special limits by using the Squeeze Theorem or algebraic manipulation.
+Full Standard: Develop an understanding for limits and continuity. Determine limits and continuity.
+
+Standard: MA.912.C.1.8
+Description: Find limits of indeterminate forms using L'H&ocirc;pital's Rule.
+Full Standard: Develop an understanding for limits and continuity. Determine limits and continuity.
+
+Standard: MA.912.C.1.9
+Description: Define continuity in terms of limits.
+Full Standard: Develop an understanding for limits and continuity. Determine limits and continuity.
+
+Standard: MA.912.C.2.1
+Description: State, understand and apply the definition of derivative. Apply and interpret derivatives geometrically and numerically.
+Full Standard: Develop an understanding for and determine derivatives.
+
+Standard: MA.912.C.2.10
+Description: Apply the Mean Value Theorem.
+Full Standard: Develop an understanding for and determine derivatives.
+
+Standard: MA.912.C.2.2
+Description: Interpret the derivative as an instantaneous rate of change or as the slope of the tangent line.
+Full Standard: Develop an understanding for and determine derivatives.
+
+Standard: MA.912.C.2.3
+Description: Prove the rules for finding derivatives of constants, sums, products, quotients and the Chain Rule.
+Full Standard: Develop an understanding for and determine derivatives.
+
+Standard: MA.912.C.2.4
+Description: Apply the rules for finding derivatives of constants, sums, products, quotients and the Chain Rule to solve problems with functions limited to algebraic, trigonometric, inverse trigonometric, logarithmic and exponential.
+Full Standard: Develop an understanding for and determine derivatives.
+
+Standard: MA.912.C.2.5
+Description: Find the derivatives of implicitly defined functions.
+Full Standard: Develop an understanding for and determine derivatives.
+
+Standard: MA.912.C.2.6
+Description: Find derivatives of inverse functions.
+Full Standard: Develop an understanding for and determine derivatives.
+
+Standard: MA.912.C.2.7
+Description: Find second derivatives and derivatives of higher order.
+Full Standard: Develop an understanding for and determine derivatives.
+
+Standard: MA.912.C.2.8
+Description: Find derivatives using logarithmic differentiation.
+Full Standard: Develop an understanding for and determine derivatives.
+
+Standard: MA.912.C.2.9
+Description: Demonstrate and use the relationship between differentiability and continuity.
+Full Standard: Develop an understanding for and determine derivatives.
+
+Standard: MA.912.C.3.1
+Description: Find the slope of a curve at a point, including points at which there are vertical tangent lines.
+Full Standard: Apply derivatives to solve problems.
+
+Standard: MA.912.C.3.10
+Description: Model and solve problems involving rates of change, including related rates.
+Full Standard: Apply derivatives to solve problems.
+
+Standard: MA.912.C.3.2
+Description: Find an equation for the tangent line to a curve at a point and use it to make local linear approximation.
+Full Standard: Apply derivatives to solve problems.
+
+Standard: MA.912.C.3.3
+Description: Determine where a function is decreasing and increasing using its derivative.
+Full Standard: Apply derivatives to solve problems.
+
+Standard: MA.912.C.3.4
+Description: Find local and absolute maximum and minimum points of a function.
+Full Standard: Apply derivatives to solve problems.
+
+Standard: MA.912.C.3.5
+Description: Determine the concavity and points of inflection of a function using its second derivative.
+Full Standard: Apply derivatives to solve problems.
+
+Standard: MA.912.C.3.6
+Description: Sketch graphs by using first and second derivatives. Compare the corresponding characteristics of the graphs of f, f' and f".
+Full Standard: Apply derivatives to solve problems.
+
+Standard: MA.912.C.3.7
+Description: Solve optimization problems using derivatives.
+Full Standard: Apply derivatives to solve problems.
+
+Standard: MA.912.C.3.8
+Description: Find average and instantaneous rates of change. Explain the instantaneous rate of change as the limit of the average rate of change. Interpret a derivative as a rate of change in applications, including velocity, speed and acceleration.
+Full Standard: Apply derivatives to solve problems.
+
+Standard: MA.912.C.3.9
+Description: Find the velocity and acceleration of a particle moving in a straight line.
+Full Standard: Apply derivatives to solve problems.
+
+Standard: MA.912.C.4.1
+Description: Interpret a definite integral as a limit of Riemann sums. Calculate the values of Riemann sums over equal subdivisions using left, right and midpoint evaluation points.
+Full Standard: Develop an understanding for and determine integrals.
+
+Standard: MA.912.C.4.2
+Description: Apply Riemann sums, the Trapezoidal Rule and technology to approximate definite integrals of functions represented algebraically, geometrically and by tables of values.
+Full Standard: Develop an understanding for and determine integrals.
+
+Standard: MA.912.C.4.3
+Description: Interpret a definite integral of the rate of change of a quantity over an interval as the change of the quantity over the interval.
+Full Standard: Develop an understanding for and determine integrals.
+
+Standard: MA.912.C.4.4
+Description: Evaluate definite integrals by using the Fundamental Theorem of Calculus.
+Full Standard: Develop an understanding for and determine integrals.
+
+Standard: MA.912.C.4.5
+Description: Analyze function graphs by using derivative graphs and the Fundamental Theorem of Calculus.
+Full Standard: Develop an understanding for and determine integrals.
+
+Standard: MA.912.C.4.6
+Description: Evaluate or solve problems using the properties of definite integrals. Properties are limited to the following:
+Full Standard: Develop an understanding for and determine integrals.
+
+Standard: MA.912.C.4.7
+Description: Evaluate definite and indefinite integrals by using integration by substitution.
+Full Standard: Develop an understanding for and determine integrals.
+
+Standard: MA.912.C.5.1
+Description: Find specific antiderivatives using initial conditions, including finding velocity functions from acceleration functions, finding position functions from velocity functions and solving applications related to motion along a line.
+Full Standard: Apply integrals to solve problems.
+
+Standard: MA.912.C.5.2
+Description: Solve separable differential equations.
+Full Standard: Apply integrals to solve problems.
+
+Standard: MA.912.C.5.3
+Description: Solve differential equations of the form as applied to growth and decay problems.
+Full Standard: Apply integrals to solve problems.
+
+Standard: MA.912.C.5.4
+Description: Display a graphic representation of the solution to a differential equation by using slope fields, and locate particular solutions to the equation.
+Full Standard: Apply integrals to solve problems.
+
+Standard: MA.912.C.5.5
+Description: Find the area between a curve and the x-axis or between two curves by using definite integrals.
+Full Standard: Apply integrals to solve problems.
+
+Standard: MA.912.C.5.6
+Description: Find the average value of a function over a closed interval by using definite integrals.
+Full Standard: Apply integrals to solve problems.
+
+Standard: MA.912.C.5.7
+Description: Find the volume of a figure with known cross-sectional area, including figures of revolution, by using definite integrals.
+Full Standard: Apply integrals to solve problems.
+
+
+--- DATA ANALYSIS AND PROBABILITY ---
+
+Standard: MA.912.DP.1.1
+Description: Given a set of data, select an appropriate method to represent the data, depending on whether it is numerical or categorical data and on whether it is univariate or bivariate.
+Full Standard: Summarize, represent and interpret categorical and numerical data with one and two variables.
+
+Standard: MA.912.DP.1.2
+Description: Interpret data distributions represented in various ways. State whether the data is numerical or categorical, whether it is univariate or bivariate and interpret the different components and quantities in the display.
+Full Standard: Summarize, represent and interpret categorical and numerical data with one and two variables.
+
+Standard: MA.912.DP.1.3
+Description: Explain the difference between correlation and causation in the contexts of both numerical and categorical data.
+Full Standard: Summarize, represent and interpret categorical and numerical data with one and two variables.
+
+Standard: MA.912.DP.1.4
+Description: Estimate a population total, mean or percentage using data from a sample survey; develop a margin of error through the use of simulation.
+Full Standard: Summarize, represent and interpret categorical and numerical data with one and two variables.
+
+Standard: MA.912.DP.1.5
+Description: Interpret the margin of error of a mean or percentage from a data set. Interpret the confidence level corresponding to the margin of error.
+Full Standard: Summarize, represent and interpret categorical and numerical data with one and two variables.
+
+Standard: MA.912.DP.2.1
+Description: For two or more sets of numerical univariate data, calculate and compare the appropriate measures of center and measures of variability, accounting for possible effects of outliers. Interpret any notable features of the shape of the data distribution.
+Full Standard: Solve problems involving univariate and bivariate numerical data.
+
+Standard: MA.912.DP.2.2
+Description: Use the mean and standard deviation of a data set to fit it to a normal distribution and to estimate population percentages. Recognize that there are data sets for which such a procedure is not appropriate.
+Full Standard: Solve problems involving univariate and bivariate numerical data.
+
+Standard: MA.912.DP.2.3
+Description: Estimate population percentages from data that has been fit to the normal distribution.
+Full Standard: Solve problems involving univariate and bivariate numerical data.
+
+Standard: MA.912.DP.2.4
+Description: Fit a linear function to bivariate numerical data that suggests a linear association and interpret the slope and y-intercept of the model. Use the model to solve real-world problems in terms of the context of the data.
+Full Standard: Solve problems involving univariate and bivariate numerical data.
+
+Standard: MA.912.DP.2.5
+Description: Given a scatter plot that represents bivariate numerical data, assess the fit of a given linear function by plotting and analyzing residuals.
+Full Standard: Solve problems involving univariate and bivariate numerical data.
+
+Standard: MA.912.DP.2.6
+Description: Given a scatter plot with a line of fit and residuals, determine the strength and direction of the correlation. Interpret strength and direction within a real-world context.
+Full Standard: Solve problems involving univariate and bivariate numerical data.
+
+Standard: MA.912.DP.2.7
+Description: Compute the correlation coefficient of a linear model using technology. Interpret the strength and direction of the correlation coefficient.
+Full Standard: Solve problems involving univariate and bivariate numerical data.
+
+Standard: MA.912.DP.2.8
+Description: Fit a quadratic function to bivariate numerical data that suggests a quadratic association and interpret any intercepts or the vertex of the model. Use the model to solve real-world problems in terms of the context of the data.
+Full Standard: Solve problems involving univariate and bivariate numerical data.
+
+Standard: MA.912.DP.2.9
+Description: Fit an exponential function to bivariate numerical data that suggests an exponential association. Use the model to solve real-world problems in terms of the context of the data.
+Full Standard: Solve problems involving univariate and bivariate numerical data.
+
+Standard: MA.912.DP.3.1
+Description: Construct a two-way frequency table summarizing bivariate categorical data. Interpret joint and marginal frequencies and determine possible associations in terms of a real-world context.
+Full Standard: Solve problems involving categorical data.
+
+Standard: MA.912.DP.3.2
+Description: Given marginal and conditional relative frequencies, construct a two-way relative frequency table summarizing categorical bivariate data.
+Full Standard: Solve problems involving categorical data.
+
+Standard: MA.912.DP.3.3
+Description: Given a two-way relative frequency table or segmented bar graph summarizing categorical bivariate data, interpret joint, marginal and conditional relative frequencies in terms of a real-world context.
+Full Standard: Solve problems involving categorical data.
+
+Standard: MA.912.DP.3.4
+Description: Given a relative frequency table, construct and interpret a segmented bar graph.
+Full Standard: Solve problems involving categorical data.
+
+Standard: MA.912.DP.3.5
+Description: Solve real-world problems involving univariate and bivariate categorical data.
+Full Standard: Solve problems involving categorical data.
+
+Standard: MA.912.DP.4.1
+Description: Describe events as subsets of a sample space using characteristics, or categories, of the outcomes, or as unions, intersections or complements of other events.
+Full Standard: Use and interpret independence and probability.
+
+Standard: MA.912.DP.4.10
+Description: Given a mathematical or real-world situation, calculate the appropriate permutation or combination.
+Full Standard: Use and interpret independence and probability.
+
+Standard: MA.912.DP.4.2
+Description: Determine if events A and B are independent by calculating the product of their probabilities.
+Full Standard: Use and interpret independence and probability.
+
+Standard: MA.912.DP.4.3
+Description: Calculate the conditional probability of two events and interpret the result in terms of its context.
+Full Standard: Use and interpret independence and probability.
+
+Standard: MA.912.DP.4.4
+Description: Interpret the independence of two events using conditional probability.
+Full Standard: Use and interpret independence and probability.
+
+Standard: MA.912.DP.4.5
+Description: Given a two-way table containing data from a population, interpret the joint and marginal relative frequencies as empirical probabilities and the conditional relative frequencies as empirical conditional probabilities. Use those probabilities to determine whether characteristics in the population are approximately independent.
+Full Standard: Use and interpret independence and probability.
+
+Standard: MA.912.DP.4.6
+Description: Recognize and explain the concepts of conditional probability and independence in everyday language and everyday situations.
+Full Standard: Use and interpret independence and probability.
+
+Standard: MA.912.DP.4.7
+Description: Apply the addition rule for probability, taking into consideration whether the events are mutually exclusive, and interpret the result in terms of the model and its context.
+Full Standard: Use and interpret independence and probability.
+
+Standard: MA.912.DP.4.8
+Description: Apply the general multiplication rule for probability, taking into consideration whether the events are independent, and interpret the result in terms of the context.
+Full Standard: Use and interpret independence and probability.
+
+Standard: MA.912.DP.4.9
+Description: Apply the addition and multiplication rules for counting to solve mathematical and real-world problems, including problems involving probability.
+Full Standard: Use and interpret independence and probability.
+
+Standard: MA.912.DP.5.1
+Description: Distinguish between a population parameter and a sample statistic.
+Full Standard: Determine methods of data collection and make inferences from collected data.
+
+Standard: MA.912.DP.5.10
+Description: Determine whether differences between parameters are significant using simulations.
+Full Standard: Determine methods of data collection and make inferences from collected data.
+
+Standard: MA.912.DP.5.11
+Description: Evaluate reports based on data from diverse media, print and digital resources by interpreting graphs and tables; evaluating data-based arguments; determining whether a valid sampling method was used; or interpreting provided statistics.
+Full Standard: Determine methods of data collection and make inferences from collected data.
+
+Standard: MA.912.DP.5.2
+Description: Explain how random sampling produces data that is representative of a population.
+Full Standard: Determine methods of data collection and make inferences from collected data.
+
+Standard: MA.912.DP.5.3
+Description: Compare and contrast sampling methods.
+Full Standard: Determine methods of data collection and make inferences from collected data.
+
+Standard: MA.912.DP.5.4
+Description: Generate multiple samples or simulated samples of the same size to measure the variation in estimates or predictions.
+Full Standard: Determine methods of data collection and make inferences from collected data.
+
+Standard: MA.912.DP.5.5
+Description: Determine if a specific model is consistent within a given process by analyzing the data distribution from a data-generating process.
+Full Standard: Determine methods of data collection and make inferences from collected data.
+
+Standard: MA.912.DP.5.6
+Description: Determine the appropriate design, survey, experiment or observational study, based on the purpose. Articulate the types of questions appropriate for each type of design.
+Full Standard: Determine methods of data collection and make inferences from collected data.
+
+Standard: MA.912.DP.5.7
+Description: Compare and contrast surveys, experiments and observational studies.
+Full Standard: Determine methods of data collection and make inferences from collected data.
+
+Standard: MA.912.DP.5.8
+Description: Draw inferences about two populations using data and statistical analysis from two random samples.
+Full Standard: Determine methods of data collection and make inferences from collected data.
+
+Standard: MA.912.DP.5.9
+Description: Compare two treatments using data from an experiment in which the treatments are assigned randomly.
+Full Standard: Determine methods of data collection and make inferences from collected data.
+
+Standard: MA.912.DP.6.1
+Description: Define a random variable for a quantity of interest by assigning a numerical value to each individual outcome in a sample space; graph the corresponding probability distribution using the same graphical displays as for data distributions.
+Full Standard: Use probability distributions to solve problems.
+
+Standard: MA.912.DP.6.2
+Description: Develop a probability distribution for a discrete random variable using theoretical probabilities. Find the expected value and interpret it as the mean of the discrete distribution.
+Full Standard: Use probability distributions to solve problems.
+
+Standard: MA.912.DP.6.3
+Description: Develop a probability distribution for a discrete random variable using empirical probabilities. Find the expected value and interpret it as the mean of the discrete distribution.
+Full Standard: Use probability distributions to solve problems.
+
+Standard: MA.912.DP.6.4
+Description: Given a binomial distribution, calculate and interpret the expected value. Solve real-world problems involving binomial distributions.
+Full Standard: Use probability distributions to solve problems.
+
+Standard: MA.912.DP.6.5
+Description: Solve real-world problems involving geometric distributions.
+Full Standard: Use probability distributions to solve problems.
+
+Standard: MA.912.DP.6.6
+Description: Solve real-world problems involving Poisson distributions.
+Full Standard: Use probability distributions to solve problems.
+
+Standard: MA.912.DP.6.7
+Description: Weigh the possible outcomes of a decision by assigning probabilities to payoff values and finding expected values and standard deviations. Evaluate and compare strategies on the basis of the calculated expected values and standard deviations.
+Full Standard: Use probability distributions to solve problems.
+
+Standard: MA.912.DP.6.8
+Description: Apply probabilities to make fair decisions, such as drawing from lots or using a random number generator.
+Full Standard: Use probability distributions to solve problems.
+
+
+--- FUNCTIONS ---
+
+Standard: MA.912.F.1.1
+Description: Given an equation or graph that defines a function, determine the function type. Given an input-output table, determine a function type that could represent it.
+Full Standard: Understand, compare and analyze properties of functions.
+
+Standard: MA.912.F.1.2
+Description: Given a function represented in function notation, evaluate the function for an input in its domain. For a real-world context, interpret the output.
+Full Standard: Understand, compare and analyze properties of functions.
+
+Standard: MA.912.F.1.3
+Description: Calculate and interpret the average rate of change of a real-world situation represented graphically, algebraically or in a table over a specified interval.
+Full Standard: Understand, compare and analyze properties of functions.
+
+Standard: MA.912.F.1.4
+Description: Write an algebraic expression that represents the difference quotient of a function. Calculate the numerical value of the difference quotient at a given pair of points.
+Full Standard: Understand, compare and analyze properties of functions.
+
+Standard: MA.912.F.1.5
+Description: Compare key features of linear functions each represented algebraically, graphically, in tables or written descriptions.
+Full Standard: Understand, compare and analyze properties of functions.
+
+Standard: MA.912.F.1.6
+Description: Compare key features of linear and nonlinear functions each represented algebraically, graphically, in tables or written descriptions.
+Full Standard: Understand, compare and analyze properties of functions.
+
+Standard: MA.912.F.1.7
+Description: Compare key features of two functions each represented algebraically, graphically, in tables or written descriptions.
+Full Standard: Understand, compare and analyze properties of functions.
+
+Standard: MA.912.F.1.8
+Description: Determine whether a linear, quadratic or exponential function best models a given real-world situation.
+Full Standard: Understand, compare and analyze properties of functions.
+
+Standard: MA.912.F.1.9
+Description: Determine whether a function is even, odd or neither when represented algebraically, graphically or in a table.
+Full Standard: Understand, compare and analyze properties of functions.
+
+Standard: MA.912.F.2.1
+Description: Identify the effect on the graph or table of a given function after replacing f(x) by f(x)+k,kf(x), f(kx) and f(x+k) for specific values of k.
+Full Standard: Identify and describe the effects of transformations on functions. Create new functions given transformations.
+
+Standard: MA.912.F.2.2
+Description: Identify the effect on the graph of a given function of two or more transformations defined by adding a real number to the x- or y- values or multiplying the x- or y- values by a real number.
+Full Standard: Identify and describe the effects of transformations on functions. Create new functions given transformations.
+
+Standard: MA.912.F.2.3
+Description: Given the graph or table of f(x) and the graph or table of f(x)+k,kf(x), f(kx) and f(x+k), state the type of transformation and find the value of the real number k.
+Full Standard: Identify and describe the effects of transformations on functions. Create new functions given transformations.
+
+Standard: MA.912.F.2.4
+Description: Given the graph or table of values of two or more transformations of a function, state the type of transformation and find the values of the real number that defines the transformation.
+Full Standard: Identify and describe the effects of transformations on functions. Create new functions given transformations.
+
+Standard: MA.912.F.2.5
+Description: Given a table, equation or graph that represents a function, create a corresponding table, equation or graph of the transformed function defined by adding a real number to the x- or y-values or multiplying the x- or y-values by a real number.
+Full Standard: Identify and describe the effects of transformations on functions. Create new functions given transformations.
+
+Standard: MA.912.F.3.1
+Description: Given a mathematical or real-world context, combine two functions, limited to linear and quadratic, using arithmetic operations. When appropriate, include domain restrictions for the new function.
+Full Standard: Create new functions from existing functions.
+
+Standard: MA.912.F.3.2
+Description: Given a mathematical or real-world context, combine two or more functions, limited to linear, quadratic, exponential and polynomial, using arithmetic operations. When appropriate, include domain restrictions for the new function.
+Full Standard: Create new functions from existing functions.
+
+Standard: MA.912.F.3.3
+Description: Solve mathematical and real-world problems involving functions that have been combined using arithmetic operations.
+Full Standard: Create new functions from existing functions.
+
+Standard: MA.912.F.3.4
+Description: Represent the composition of two functions algebraically or in a table. Determine the domain and range of the composite function.
+Full Standard: Create new functions from existing functions.
+
+Standard: MA.912.F.3.5
+Description: Solve mathematical and real-world problems involving composite functions.
+Full Standard: Create new functions from existing functions.
+
+Standard: MA.912.F.3.6
+Description: Determine whether an inverse function exists by analyzing tables, graphs and equations.
+Full Standard: Create new functions from existing functions.
+
+Standard: MA.912.F.3.7
+Description: Represent the inverse of a function algebraically, graphically or in a table. Use composition of functions to verify that one function is the inverse of the other.
+Full Standard: Create new functions from existing functions.
+
+Standard: MA.912.F.3.8
+Description: Produce an invertible function from a non-invertible function by restricting the domain.
+Full Standard: Create new functions from existing functions.
+
+Standard: MA.912.F.3.9
+Description: Solve mathematical and real-world problems involving inverse functions.
+Full Standard: Create new functions from existing functions.
+
+
+--- FINANCIAL LITERACY ---
+
+Standard: MA.912.FL.1.1
+Description: Extend previous knowledge of operations of fractions, percentages and decimals to solve real-world problems involving money and business.
+Full Standard: Build mathematical foundations for financial literacy.
+
+Standard: MA.912.FL.1.2
+Description: Extend previous knowledge of ratios and proportional relationships to solve real-world problems involving money and business.
+Full Standard: Build mathematical foundations for financial literacy.
+
+Standard: MA.912.FL.1.3
+Description: Solve real-world problems involving weighted averages using spreadsheets and other technology.
+Full Standard: Build mathematical foundations for financial literacy.
+
+Standard: MA.912.FL.2.1
+Description: Given assets and liabilities, calculate net worth using spreadsheets and other technology.
+Full Standard: Develop an understanding of basic accounting and economic principles.
+
+Standard: MA.912.FL.2.2
+Description: Solve real-world problems involving profits, costs and revenues using spreadsheets and other technology.
+Full Standard: Develop an understanding of basic accounting and economic principles.
+
+Standard: MA.912.FL.2.3
+Description: Explain how consumer price index (CPI), gross domestic product (GDP), stock indices, unemployment rate and trade deficit are calculated. Interpret their value in terms of the context.
+Full Standard: Develop an understanding of basic accounting and economic principles.
+
+Standard: MA.912.FL.2.4
+Description: Given current exchange rates, convert between currencies. Solve real-world problems involving exchange rates.
+Full Standard: Develop an understanding of basic accounting and economic principles.
+
+Standard: MA.912.FL.2.5
+Description: Develop budgets that fit within various incomes using spreadsheets and other technology.
+Full Standard: Develop an understanding of basic accounting and economic principles.
+
+Standard: MA.912.FL.2.6
+Description: Given a real-world scenario, complete and calculate federal income tax using spreadsheets and other technology.
+Full Standard: Develop an understanding of basic accounting and economic principles.
+
+Standard: MA.912.FL.3.1
+Description: Compare simple, compound and continuously compounded interest over time.
+Full Standard: Describe the advantages and disadvantages of short-term and long-term purchases.
+
+Standard: MA.912.FL.3.10
+Description: Analyze credit scores qualitatively. Explain how short-term and long-term purchases, including deferred payments, may increase or decrease credit scores. Explain how credit scores influence buying power.
+Full Standard: Describe the advantages and disadvantages of short-term and long-term purchases.
+
+Standard: MA.912.FL.3.11
+Description: Given a real-world scenario, establish a plan to pay off debt.
+Full Standard: Describe the advantages and disadvantages of short-term and long-term purchases.
+
+Standard: MA.912.FL.3.12
+Description: Given fixed costs, per item costs and selling price, determine the break-even point for sales volume.
+Full Standard: Describe the advantages and disadvantages of short-term and long-term purchases.
+
+Standard: MA.912.FL.3.2
+Description: Solve real-world problems involving simple, compound and continuously compounded interest.
+Full Standard: Describe the advantages and disadvantages of short-term and long-term purchases.
+
+Standard: MA.912.FL.3.3
+Description: Solve real-world problems involving present value and future value of money
+Full Standard: Describe the advantages and disadvantages of short-term and long-term purchases.
+
+Standard: MA.912.FL.3.4
+Description: Explain the relationship between simple interest and linear growth. Explain the relationship between compound interest and exponential growth and the relationship between continuously compounded interest and exponential growth.
+Full Standard: Describe the advantages and disadvantages of short-term and long-term purchases.
+
+Standard: MA.912.FL.3.5
+Description: Compare the advantages and disadvantages of using cash versus personal financing options.
+Full Standard: Describe the advantages and disadvantages of short-term and long-term purchases.
+
+Standard: MA.912.FL.3.6
+Description: Calculate the finance charges and total amount due on a bill using various forms of credit using estimation, spreadsheets and other technology.
+Full Standard: Describe the advantages and disadvantages of short-term and long-term purchases.
+
+Standard: MA.912.FL.3.7
+Description: Compare the advantages and disadvantages of different types of student loans by manipulating a variety of variables and calculating the total cost using spreadsheets and other technology.
+Full Standard: Describe the advantages and disadvantages of short-term and long-term purchases.
+
+Standard: MA.912.FL.3.8
+Description: Calculate using spreadsheets and other technology the total cost of purchasing consumer durables over time given different monthly payments, down payments, financing options and fees.
+Full Standard: Describe the advantages and disadvantages of short-term and long-term purchases.
+
+Standard: MA.912.FL.3.9
+Description: Compare the advantages and disadvantages of different types of mortgage loans by manipulating a variety of variables and calculating fees and total cost using spreadsheets and other technology.
+Full Standard: Describe the advantages and disadvantages of short-term and long-term purchases.
+
+Standard: MA.912.FL.4.1
+Description: Calculate and compare various options, deductibles and fees for various types of insurance policies using spreadsheets and other technology.
+Full Standard: Describe the advantages and disadvantages of financial and investment plans, including insurances.
+
+Standard: MA.912.FL.4.2
+Description: Compare the advantages and disadvantages for adding on a one-time warranty to a purchase using spreadsheets and other technology.
+Full Standard: Describe the advantages and disadvantages of financial and investment plans, including insurances.
+
+Standard: MA.912.FL.4.3
+Description: Compare the advantages and disadvantages of various retirement savings plans using spreadsheets and other technology.
+Full Standard: Describe the advantages and disadvantages of financial and investment plans, including insurances.
+
+Standard: MA.912.FL.4.4
+Description: Collect, organize and interpret data to determine an effective retirement savings plan to meet personal financial goals using spreadsheets and other technology.
+Full Standard: Describe the advantages and disadvantages of financial and investment plans, including insurances.
+
+Standard: MA.912.FL.4.5
+Description: Compare different ways that portfolios can be diversified in investments.
+Full Standard: Describe the advantages and disadvantages of financial and investment plans, including insurances.
+
+Standard: MA.912.FL.4.6
+Description: Simulate the purchase of a stock portfolio with a set amount of money, and evaluate its worth over time considering gains, losses and selling, taking into account any associated fees.
+Full Standard: Describe the advantages and disadvantages of financial and investment plans, including insurances.
+
+
+--- GEOMETRIC REASONING ---
+
+Standard: MA.912.GR.1.1
+Description: Prove relationships and theorems about lines and angles. Solve mathematical and real-world problems involving postulates, relationships and theorems of lines and angles.
+Full Standard: Prove and apply geometric theorems to solve problems.
+
+Standard: MA.912.GR.1.2
+Description: Prove triangle congruence or similarity using Side-Side-Side, Side-Angle-Side, Angle-Side-Angle, Angle-Angle-Side, Angle-Angle and Hypotenuse-Leg.
+Full Standard: Prove and apply geometric theorems to solve problems.
+
+Standard: MA.912.GR.1.3
+Description: Prove relationships and theorems about triangles. Solve mathematical and real-world problems involving postulates, relationships and theorems of triangles.
+Full Standard: Prove and apply geometric theorems to solve problems.
+
+Standard: MA.912.GR.1.4
+Description: Prove relationships and theorems about parallelograms. Solve mathematical and real-world problems involving postulates, relationships and theorems of parallelograms.
+Full Standard: Prove and apply geometric theorems to solve problems.
+
+Standard: MA.912.GR.1.5
+Description: Prove relationships and theorems about trapezoids. Solve mathematical and real-world problems involving postulates, relationships and theorems of trapezoids.
+Full Standard: Prove and apply geometric theorems to solve problems.
+
+Standard: MA.912.GR.1.6
+Description: Solve mathematical and real-world problems involving congruence or similarity in two-dimensional figures.
+Full Standard: Prove and apply geometric theorems to solve problems.
+
+Standard: MA.912.GR.2.1
+Description: Given a preimage and image, describe the transformation and represent the transformation algebraically using coordinates.
+Full Standard: Apply properties of transformations to describe congruence or similarity.
+
+Standard: MA.912.GR.2.2
+Description: Identify transformations that do or do not preserve distance.
+Full Standard: Apply properties of transformations to describe congruence or similarity.
+
+Standard: MA.912.GR.2.3
+Description: Identify a sequence of transformations that will map a given figure onto itself or onto another congruent or similar figure.
+Full Standard: Apply properties of transformations to describe congruence or similarity.
+
+Standard: MA.912.GR.2.4
+Description: Determine symmetries of reflection, symmetries of rotation and symmetries of translation of a geometric figure.
+Full Standard: Apply properties of transformations to describe congruence or similarity.
+
+Standard: MA.912.GR.2.5
+Description: Given a geometric figure and a sequence of transformations, draw the transformed figure on a coordinate plane.
+Full Standard: Apply properties of transformations to describe congruence or similarity.
+
+Standard: MA.912.GR.2.6
+Description: Apply rigid transformations to map one figure onto another to justify that the two figures are congruent.
+Full Standard: Apply properties of transformations to describe congruence or similarity.
+
+Standard: MA.912.GR.2.7
+Description: Justify the criteria for triangle congruence using the definition of congruence in terms of rigid transformations.
+Full Standard: Apply properties of transformations to describe congruence or similarity.
+
+Standard: MA.912.GR.2.8
+Description: Apply an appropriate transformation to map one figure onto another to justify that the two figures are similar.
+Full Standard: Apply properties of transformations to describe congruence or similarity.
+
+Standard: MA.912.GR.2.9
+Description: Justify the criteria for triangle similarity using the definition of similarity in terms of non-rigid transformations.
+Full Standard: Apply properties of transformations to describe congruence or similarity.
+
+Standard: MA.912.GR.3.1
+Description: Determine the weighted average of two or more points on a line.
+Full Standard: Use coordinate geometry to solve problems or prove relationships.
+
+Standard: MA.912.GR.3.2
+Description: Given a mathematical context, use coordinate geometry to classify or justify definitions, properties and theorems involving circles, triangles or quadrilaterals.
+Full Standard: Use coordinate geometry to solve problems or prove relationships.
+
+Standard: MA.912.GR.3.3
+Description: Use coordinate geometry to solve mathematical and real-world geometric problems involving lines, circles, triangles and quadrilaterals.
+Full Standard: Use coordinate geometry to solve problems or prove relationships.
+
+Standard: MA.912.GR.3.4
+Description: Use coordinate geometry to solve mathematical and real-world problems on the coordinate plane involving perimeter or area of polygons.
+Full Standard: Use coordinate geometry to solve problems or prove relationships.
+
+Standard: MA.912.GR.4.1
+Description: Identify the shapes of two-dimensional cross-sections of three-dimensional figures.
+Full Standard: Use geometric measurement and dimensions to solve problems.
+
+Standard: MA.912.GR.4.2
+Description: Identify three-dimensional objects generated by rotations of two-dimensional figures.
+Full Standard: Use geometric measurement and dimensions to solve problems.
+
+Standard: MA.912.GR.4.3
+Description: Extend previous understanding of scale drawings and scale factors to determine how dilations affect the area of two-dimensional figures and the surface area or volume of three-dimensional figures.
+Full Standard: Use geometric measurement and dimensions to solve problems.
+
+Standard: MA.912.GR.4.4
+Description: Solve mathematical and real-world problems involving the area of two-dimensional figures.
+Full Standard: Use geometric measurement and dimensions to solve problems.
+
+Standard: MA.912.GR.4.5
+Description: Solve mathematical and real-world problems involving the volume of three-dimensional figures limited to cylinders, pyramids, prisms, cones and spheres.
+Full Standard: Use geometric measurement and dimensions to solve problems.
+
+Standard: MA.912.GR.4.6
+Description: Solve mathematical and real-world problems involving the surface area of three-dimensional figures limited to cylinders, pyramids, prisms, cones and spheres.
+Full Standard: Use geometric measurement and dimensions to solve problems.
+
+Standard: MA.912.GR.5.1
+Description: Construct a copy of a segment or an angle.
+Full Standard: Make formal geometric constructions with a variety of tools and methods.
+
+Standard: MA.912.GR.5.2
+Description: Construct the bisector of a segment or an angle, including the perpendicular bisector of a line segment.
+Full Standard: Make formal geometric constructions with a variety of tools and methods.
+
+Standard: MA.912.GR.5.3
+Description: Construct the inscribed and circumscribed circles of a triangle.
+Full Standard: Make formal geometric constructions with a variety of tools and methods.
+
+Standard: MA.912.GR.5.4
+Description: Construct a regular polygon inscribed in a circle. Regular polygons are limited to triangles, quadrilaterals and hexagons.
+Full Standard: Make formal geometric constructions with a variety of tools and methods.
+
+Standard: MA.912.GR.5.5
+Description: Given a point outside a circle, construct a line tangent to the circle that passes through the given point.
+Full Standard: Make formal geometric constructions with a variety of tools and methods.
+
+Standard: MA.912.GR.6.1
+Description: Solve mathematical and real-world problems involving the length of a secant, tangent, segment or chord in a given circle.
+Full Standard: Use properties and theorems related to circles.
+
+Standard: MA.912.GR.6.2
+Description: Solve mathematical and real-world problems involving the measures of arcs and related angles.
+Full Standard: Use properties and theorems related to circles.
+
+Standard: MA.912.GR.6.3
+Description: Solve mathematical problems involving triangles and quadrilaterals inscribed in a circle.
+Full Standard: Use properties and theorems related to circles.
+
+Standard: MA.912.GR.6.4
+Description: Solve mathematical and real-world problems involving the arc length and area of a sector in a given circle.
+Full Standard: Use properties and theorems related to circles.
+
+Standard: MA.912.GR.6.5
+Description: Apply transformations to prove that all circles are similar.
+Full Standard: Use properties and theorems related to circles.
+
+Standard: MA.912.GR.7.1
+Description: Given a conic section, describe how it can result from the slicing of two cones.
+Full Standard: Apply geometric and algebraic representations of conic sections.
+
+Standard: MA.912.GR.7.2
+Description: Given a mathematical or real-world context, derive and create the equation of a circle using key features.
+Full Standard: Apply geometric and algebraic representations of conic sections.
+
+Standard: MA.912.GR.7.3
+Description: Graph and solve mathematical and real-world problems that are modeled with an equation of a circle. Determine and interpret key features in terms of the context.
+Full Standard: Apply geometric and algebraic representations of conic sections.
+
+Standard: MA.912.GR.7.4
+Description: Given a mathematical or real-world context, derive and create the equation of a parabola using key features.
+Full Standard: Apply geometric and algebraic representations of conic sections.
+
+Standard: MA.912.GR.7.5
+Description: Graph and solve mathematical and real-world problems that are modeled with an equation of a parabola. Determine and interpret key features in terms of the context.
+Full Standard: Apply geometric and algebraic representations of conic sections.
+
+Standard: MA.912.GR.7.6
+Description: Given a mathematical or real-world context, derive and create the equation of an ellipse using key features.
+Full Standard: Apply geometric and algebraic representations of conic sections.
+
+Standard: MA.912.GR.7.7
+Description: Graph and solve mathematical and real-world problems that are modeled with an equation of an ellipse. Determine and interpret key features in terms of the context.
+Full Standard: Apply geometric and algebraic representations of conic sections.
+
+Standard: MA.912.GR.7.8
+Description: Given a mathematical or real-world context, derive and create the equation of a hyperbola using key features.
+Full Standard: Apply geometric and algebraic representations of conic sections.
+
+Standard: MA.912.GR.7.9
+Description: Graph and solve mathematical and real-world problems that are modeled with an equation of a hyperbola. Determine and interpret key features in terms of the context.
+Full Standard: Apply geometric and algebraic representations of conic sections.
+
+
+--- LOGIC AND DISCRETE THEORY ---
+
+Standard: MA.912.LT.1.1
+Description: Apply recursive and iterative thinking to solve problems.
+Full Standard: Apply recursive methods to solve problems.
+
+Standard: MA.912.LT.1.2
+Description: Solve problems involving recurrence relations.
+Full Standard: Apply recursive methods to solve problems.
+
+Standard: MA.912.LT.1.3
+Description: Apply mathematical induction in a variety of applications.
+Full Standard: Apply recursive methods to solve problems.
+
+Standard: MA.912.LT.2.1
+Description: Define and explain the basic concepts of Graph Theory.
+Full Standard: Apply optimization and techniques from Graph Theory to solve problems.
+
+Standard: MA.912.LT.2.2
+Description: Solve problems involving paths in graphs.
+Full Standard: Apply optimization and techniques from Graph Theory to solve problems.
+
+Standard: MA.912.LT.2.3
+Description: Solve scheduling problems using critical path analysis and Gantt charts. Create a schedule using critical path analysis.
+Full Standard: Apply optimization and techniques from Graph Theory to solve problems.
+
+Standard: MA.912.LT.2.4
+Description: Apply graph coloring techniques to solve problems.
+Full Standard: Apply optimization and techniques from Graph Theory to solve problems.
+
+Standard: MA.912.LT.2.5
+Description: Apply spanning trees, rooted trees, binary trees and decision trees to solve problems.
+Full Standard: Apply optimization and techniques from Graph Theory to solve problems.
+
+Standard: MA.912.LT.2.6
+Description: Solve problems concerning optimizing resource usage using bin-packing techniques.
+Full Standard: Apply optimization and techniques from Graph Theory to solve problems.
+
+Standard: MA.912.LT.2.7
+Description: Solve problems involving optimal strategies in Game Theory.
+Full Standard: Apply optimization and techniques from Graph Theory to solve problems.
+
+Standard: MA.912.LT.3.1
+Description: Define and explain the basic concepts of Election Theory and voting.
+Full Standard: Apply techniques from Election Theory and Fair Division Theory to solve problems.
+
+Standard: MA.912.LT.3.2
+Description: Analyze election data using election theory techniques. Explain how Arrow&rsquo;s Impossibility Theorem may be related to the fairness of the outcome of the election.
+Full Standard: Apply techniques from Election Theory and Fair Division Theory to solve problems.
+
+Standard: MA.912.LT.3.3
+Description: Decide voting power within a group using weighted voting techniques. Provide real-world examples of weighted voting and its pros and cons.
+Full Standard: Apply techniques from Election Theory and Fair Division Theory to solve problems.
+
+Standard: MA.912.LT.3.4
+Description: Solve problems using fair division and apportionment techniques.
+Full Standard: Apply techniques from Election Theory and Fair Division Theory to solve problems.
+
+Standard: MA.912.LT.4.1
+Description: Translate propositional statements into logical arguments using propositional variables and logical connectives.
+Full Standard: Develop an understanding of the fundamentals of propositional logic, arguments and methods of proof.
+
+Standard: MA.912.LT.4.10
+Description: Judge the validity of arguments and give counterexamples to disprove statements.
+Full Standard: Develop an understanding of the fundamentals of propositional logic, arguments and methods of proof.
+
+Standard: MA.912.LT.4.2
+Description: Determine truth values of simple and compound statements using truth tables.
+Full Standard: Develop an understanding of the fundamentals of propositional logic, arguments and methods of proof.
+
+Standard: MA.912.LT.4.3
+Description: Identify and accurately interpret &ldquo;if&hellip;then,&rdquo; &ldquo;if and only if,&rdquo; &ldquo;all&rdquo; and &ldquo;not&rdquo; statements. Find the converse, inverse and contrapositive of a statement.
+Full Standard: Develop an understanding of the fundamentals of propositional logic, arguments and methods of proof.
+
+Standard: MA.912.LT.4.4
+Description: Represent logic operations, such as AND, OR, NOT, NOR, and XOR, using logical symbolism to solve problems.
+Full Standard: Develop an understanding of the fundamentals of propositional logic, arguments and methods of proof.
+
+Standard: MA.912.LT.4.5
+Description: Determine whether two propositions are logically equivalent.
+Full Standard: Develop an understanding of the fundamentals of propositional logic, arguments and methods of proof.
+
+Standard: MA.912.LT.4.6
+Description: Apply methods of direct and indirect proof and determine whether a logical argument is valid.
+Full Standard: Develop an understanding of the fundamentals of propositional logic, arguments and methods of proof.
+
+Standard: MA.912.LT.4.7
+Description: Identify and give examples of undefined terms; axioms; theorems; proofs, including proofs using mathematical induction; and inductive and deductive reasoning.
+Full Standard: Develop an understanding of the fundamentals of propositional logic, arguments and methods of proof.
+
+Standard: MA.912.LT.4.8
+Description: Construct proofs, including proofs by contradiction.
+Full Standard: Develop an understanding of the fundamentals of propositional logic, arguments and methods of proof.
+
+Standard: MA.912.LT.4.9
+Description: Construct logical arguments using laws of detachment, syllogism, tautology, contradiction and Euler Diagrams.
+Full Standard: Develop an understanding of the fundamentals of propositional logic, arguments and methods of proof.
+
+Standard: MA.912.LT.5.1
+Description: Given two sets, determine whether the two sets are equivalent and whether one set is a subset of another. Given one set, determine its power set.
+Full Standard: Apply properties from Set Theory to solve problems.
+
+Standard: MA.912.LT.5.2
+Description: Given a relation on two sets, determine whether the relation is a function, determine the inverse of the relation if it exists and identify if the relation is bijective.
+Full Standard: Apply properties from Set Theory to solve problems.
+
+Standard: MA.912.LT.5.3
+Description: Partition a set into disjoint subsets and determine an equivalence class given the equivalence relation on a set.
+Full Standard: Apply properties from Set Theory to solve problems.
+
+Standard: MA.912.LT.5.4
+Description: Perform the set operations of taking the complement of a set and the union, intersection, difference and product of two sets.
+Full Standard: Apply properties from Set Theory to solve problems.
+
+Standard: MA.912.LT.5.5
+Description: Explore relationships and patterns and make arguments about relationships between sets using Venn Diagrams.
+Full Standard: Apply properties from Set Theory to solve problems.
+
+Standard: MA.912.LT.5.6
+Description: Prove set relations, including DeMorgan&rsquo;s Laws and equivalence relations.
+Full Standard: Apply properties from Set Theory to solve problems.
+
+
+--- NUMBER SENSE AND OPERATIONS ---
+
+Standard: MA.912.NSO.1.1
+Description: Extend previous understanding of the Laws of Exponents to include rational exponents. Apply the Laws of Exponents to evaluate numerical expressions and generate equivalent numerical expressions involving rational exponents.
+Full Standard: Generate equivalent expressions and perform operations with expressions involving exponents, radicals or logarithms.
+
+Standard: MA.912.NSO.1.2
+Description: Generate equivalent algebraic expressions using the properties of exponents.
+Full Standard: Generate equivalent expressions and perform operations with expressions involving exponents, radicals or logarithms.
+
+Standard: MA.912.NSO.1.3
+Description: Generate equivalent algebraic expressions involving radicals or rational exponents using the properties of exponents.
+Full Standard: Generate equivalent expressions and perform operations with expressions involving exponents, radicals or logarithms.
+
+Standard: MA.912.NSO.1.4
+Description: Apply previous understanding of operations with rational numbers to add, subtract, multiply and divide numerical radicals.
+Full Standard: Generate equivalent expressions and perform operations with expressions involving exponents, radicals or logarithms.
+
+Standard: MA.912.NSO.1.5
+Description: Add, subtract, multiply and divide algebraic expressions involving radicals.
+Full Standard: Generate equivalent expressions and perform operations with expressions involving exponents, radicals or logarithms.
+
+Standard: MA.912.NSO.1.6
+Description: Given a numerical logarithmic expression, evaluate and generate equivalent numerical expressions using the properties of logarithms or exponents.
+Full Standard: Generate equivalent expressions and perform operations with expressions involving exponents, radicals or logarithms.
+
+Standard: MA.912.NSO.1.7
+Description: Given an algebraic logarithmic expression, generate an equivalent algebraic expression using the properties of logarithms or exponents.
+Full Standard: Generate equivalent expressions and perform operations with expressions involving exponents, radicals or logarithms.
+
+Standard: MA.912.NSO.2.1
+Description: Extend previous understanding of the real number system to include the complex number system. Add, subtract, multiply and divide complex numbers.
+Full Standard: Represent and perform operations with expressions within the complex number system.
+
+Standard: MA.912.NSO.2.2
+Description: Represent addition, subtraction, multiplication and conjugation of complex numbers geometrically on the complex plane.
+Full Standard: Represent and perform operations with expressions within the complex number system.
+
+Standard: MA.912.NSO.2.3
+Description: Calculate the distance and midpoint between two numbers on the complex coordinate plane.
+Full Standard: Represent and perform operations with expressions within the complex number system.
+
+Standard: MA.912.NSO.2.4
+Description: Solve mathematical and real-world problems involving complex numbers represented algebraically or on the coordinate plane.
+Full Standard: Represent and perform operations with expressions within the complex number system.
+
+Standard: MA.912.NSO.2.5
+Description: Represent complex numbers on the complex plane in rectangular and polar forms.
+Full Standard: Represent and perform operations with expressions within the complex number system.
+
+Standard: MA.912.NSO.2.6
+Description: Rewrite complex numbers to trigonometric form. Multiply complex numbers in trigonometric form.
+Full Standard: Represent and perform operations with expressions within the complex number system.
+
+Standard: MA.912.NSO.3.1
+Description: Apply appropriate notation and symbols to represent vectors in the plane as directed line segments. Determine the magnitude and direction of a vector in component form.
+Full Standard: Represent and perform operations with vectors.
+
+Standard: MA.912.NSO.3.2
+Description: Represent vectors in component form, linear form or trigonometric form. Rewrite vectors from one form to another.
+Full Standard: Represent and perform operations with vectors.
+
+Standard: MA.912.NSO.3.3
+Description: Solve mathematical and real-world problems involving velocity and other quantities that can be represented by vectors.
+Full Standard: Represent and perform operations with vectors.
+
+Standard: MA.912.NSO.3.4
+Description: Solve mathematical and real-world problems involving vectors in two dimensions using the dot product and vector projections.
+Full Standard: Represent and perform operations with vectors.
+
+Standard: MA.912.NSO.3.5
+Description: Solve mathematical and real-world problems involving vectors in three dimensions using the dot product and cross product.
+Full Standard: Represent and perform operations with vectors.
+
+Standard: MA.912.NSO.3.6
+Description: Multiply a vector by a scalar algebraically or graphically.
+Full Standard: Represent and perform operations with vectors.
+
+Standard: MA.912.NSO.3.7
+Description: Compute the magnitude and direction of a vector scalar multiple.
+Full Standard: Represent and perform operations with vectors.
+
+Standard: MA.912.NSO.3.8
+Description: Add and subtract vectors algebraically or graphically.
+Full Standard: Represent and perform operations with vectors.
+
+Standard: MA.912.NSO.3.9
+Description: Given the magnitude and direction of two or more vectors, determine the magnitude and direction of their sum.
+Full Standard: Represent and perform operations with vectors.
+
+Standard: MA.912.NSO.4.1
+Description: Given a mathematical or real-world context, represent and manipulate data using matrices.
+Full Standard: Represent and perform operations with matrices.
+
+Standard: MA.912.NSO.4.2
+Description: Given a mathematical or real-world context, represent and solve a system of two- or three-variable linear equations using matrices.
+Full Standard: Represent and perform operations with matrices.
+
+Standard: MA.912.NSO.4.3
+Description: Solve mathematical and real-world problems involving addition, subtraction and multiplication of matrices.
+Full Standard: Represent and perform operations with matrices.
+
+Standard: MA.912.NSO.4.4
+Description: Solve mathematical and real-world problems using the inverse and determinant of matrices.
+Full Standard: Represent and perform operations with matrices.
+
+
+--- TRIGONOMETRY ---
+
+Standard: MA.912.T.1.1
+Description: Define trigonometric ratios for acute angles in right triangles.
+Full Standard: Define and use trigonometric ratios, identities or functions to solve problems.
+
+Standard: MA.912.T.1.2
+Description: Solve mathematical and real-world problems involving right triangles using trigonometric ratios and the Pythagorean Theorem.
+Full Standard: Define and use trigonometric ratios, identities or functions to solve problems.
+
+Standard: MA.912.T.1.3
+Description: Apply the Law of Sines and the Law of Cosines to solve mathematical and real-world problems involving triangles.
+Full Standard: Define and use trigonometric ratios, identities or functions to solve problems.
+
+Standard: MA.912.T.1.4
+Description: Solve mathematical problems involving finding the area of a triangle given two sides and the included angle.
+Full Standard: Define and use trigonometric ratios, identities or functions to solve problems.
+
+Standard: MA.912.T.1.5
+Description: Prove Pythagorean Identities. Apply Pythagorean Identities to calculate trigonometric ratios and to solve problems.
+Full Standard: Define and use trigonometric ratios, identities or functions to solve problems.
+
+Standard: MA.912.T.1.6
+Description: Prove the Double-Angle, Half-Angle, Angle Sum and Difference formulas for sine, cosine, and tangent. Apply these formulas to solve problems.
+Full Standard: Define and use trigonometric ratios, identities or functions to solve problems.
+
+Standard: MA.912.T.1.7
+Description: Simplify expressions using trigonometric identities.
+Full Standard: Define and use trigonometric ratios, identities or functions to solve problems.
+
+Standard: MA.912.T.1.8
+Description: Solve mathematical and real-world problems involving one-variable trigonometric ratios.
+Full Standard: Define and use trigonometric ratios, identities or functions to solve problems.
+
+Standard: MA.912.T.2.1
+Description: Given any positive or negative angle measure in degrees or radians, identify its corresponding angle measure between 0&deg; and 360&deg; or between 0 and 2&pi;. Convert between degrees and radians.
+Full Standard: Extend trigonometric functions to the unit circle.
+
+Standard: MA.912.T.2.2
+Description: Define the six basic trigonometric functions for all real numbers by identifying corresponding angle measures and using right triangles drawn in the unit circle.
+Full Standard: Extend trigonometric functions to the unit circle.
+
+Standard: MA.912.T.2.3
+Description: Determine the values of the six basic trigonometric functions for 0,, and and their multiples using special triangles.
+Full Standard: Extend trigonometric functions to the unit circle.
+
+Standard: MA.912.T.2.4
+Description: Use the unit circle to express the values of sine, cosine and tangent for &pi;-x, &pi;+x, and 2&pi;-x in terms of their values for x, where x is any real number.
+Full Standard: Extend trigonometric functions to the unit circle.
+
+Standard: MA.912.T.2.5
+Description: Given angles measured in radians or degrees, calculate the values of the six basic trigonometric functions using the unit circle, trigonometric identities or technology.
+Full Standard: Extend trigonometric functions to the unit circle.
+
+Standard: MA.912.T.3.1
+Description: Given a mathematical or real-world context, choose sine, cosine or tangent trigonometric functions to model periodic phenomena with specified amplitude, frequency, horizontal shift and midline.
+Full Standard: Graph and apply trigonometric relations and functions.
+
+Standard: MA.912.T.3.2
+Description: Given a table, equation or written description of a trigonometric function, graph that function and determine key features.
+Full Standard: Graph and apply trigonometric relations and functions.
+
+Standard: MA.912.T.3.3
+Description: Solve and graph mathematical and real-world problems that are modeled with trigonometric functions. Interpret key features and determine constraints in terms of the context.
+Full Standard: Graph and apply trigonometric relations and functions.
+
+Standard: MA.912.T.4.1
+Description: Define and plot polar coordinates. Convert between polar coordinates and rectangular coordinates with and without the use of technology.
+Full Standard: Extend rectangular coordinates and equations to polar and parametric forms.
+
+Standard: MA.912.T.4.2
+Description: Represent equations given in rectangular coordinates in terms of polar coordinates. Represent equations given in polar coordinates in terms of rectangular coordinates.
+Full Standard: Extend rectangular coordinates and equations to polar and parametric forms.
+
+Standard: MA.912.T.4.3
+Description: Graph equations in the polar coordinate plane with and without the use of graphing technology.
+Full Standard: Extend rectangular coordinates and equations to polar and parametric forms.
+
+Standard: MA.912.T.4.4
+Description: Identify and graph special polar equations, including circles, cardioids, limacons, rose curves and lemniscates.
+Full Standard: Extend rectangular coordinates and equations to polar and parametric forms.
+
+Standard: MA.912.T.4.5
+Description: Sketch the graph of a curve in the plane represented parametrically, indicating the direction of motion.
+Full Standard: Extend rectangular coordinates and equations to polar and parametric forms.
+
+Standard: MA.912.T.4.6
+Description: Convert from a parametric representation of a plane curve to a rectangular equation, and convert from a rectangular equation to a parametric representation of a plane curve.
+Full Standard: Extend rectangular coordinates and equations to polar and parametric forms.
+
+Standard: MA.912.T.4.7
+Description: Apply parametric equations to model applications involving motion in the plane.
+Full Standard: Extend rectangular coordinates and equations to polar and parametric forms.
+
+
+
+================================================================================
+GRADE K12 STANDARDS
+================================================================================
+
+--- MATHEMATICAL THINKING AND REASONING ---
+
+Standard: MA.K12.MTR.1.1
+Description: Actively participate in effortful learning both individually and collectively. Mathematicians who participate in effortful learning both individually and with others: Analyze the problem in a way that makes sense given the task. Ask questions that will help with solving the task. Build perseverance by modifying methods as needed while solving a challenging task. Stay engaged and maintain a positive mindset when working to solve tasks. Help and support each other when attempting a new method or approach.
+Full Standard: Actively participate in effortful learning both individually and collectively.
+
+Standard: MA.K12.MTR.2.1
+Description: Demonstrate understanding by representing problems in multiple ways. Mathematicians who demonstrate understanding by representing problems in multiple ways: Build understanding through modeling and using manipulatives.Represent solutions to problems in multiple ways using objects, drawings, tables, graphs and equations.Progress from modeling problems with objects and drawings to using algorithms and equations.Express connections between concepts and representations.Choose a representation based on the given context or purpose.
+Full Standard: Demonstrate understanding by representing problems in multiple ways.
+
+Standard: MA.K12.MTR.3.1
+Description: Complete tasks with mathematical fluency. Mathematicians who complete tasks with mathematical fluency:Select efficient and appropriate methods for solving problems within the given context.Maintain flexibility and accuracy while performing procedures and mental calculations.Complete tasks accurately and with confidence.Adapt procedures to apply them to a new context.Use feedback to improve efficiency when performing calculations.
+Full Standard: Complete tasks with mathematical fluency.
+
+Standard: MA.K12.MTR.4.1
+Description: Engage in discussions that reflect on the mathematical thinking of self and others. Mathematicians who engage in discussions that reflect on the mathematical thinking of self and others:Communicate mathematical ideas, vocabulary and methods effectively.Analyze the mathematical thinking of others.Compare the efficiency of a method to those expressed by others.Recognize errors and suggest how to correctly solve the task.Justify results by explaining methods and processes.Construct possible arguments based on evidence.
+Full Standard: Engage in discussions that reflect on the mathematical thinking of self and others.
+
+Standard: MA.K12.MTR.5.1
+Description: Use patterns and structure to help understand and connect mathematical concepts. Mathematicians who use patterns and structure to help understand and connect mathematical concepts:Focus on relevant details within a problem.Create plans and procedures to logically order events, steps or ideas to solve problems.Decompose a complex problem into manageable parts.Relate previously learned concepts to new concepts.Look for similarities among problems.Connect solutions of problems to more complicated large-scale situations.
+Full Standard: Use patterns and structure to help understand and connect mathematical concepts.
+
+Standard: MA.K12.MTR.6.1
+Description: Assess the reasonableness of solutions. Mathematicians who assess the reasonableness of solutions: Estimate to discover possible solutions.Use benchmark quantities to determine if a solution makes sense.Check calculations when solving problems.Verify possible solutions by explaining the methods used.Evaluate results based on the given context.
+Full Standard: Assess the reasonableness of solutions.
+
+Standard: MA.K12.MTR.7.1
+Description: Apply mathematics to real-world contexts. Mathematicians who apply mathematics to real-world contexts:Connect mathematical concepts to everyday experiences.Use models and methods to understand, represent and solve problems.Perform investigations to gather data or determine if a method is appropriate. &bull; Redesign models and methods to improve accuracy or efficiency.
+Full Standard: Apply mathematics to real-world contexts.
+
+
+
+END OF STANDARDS DOCUMENT

@@ -11,7 +11,8 @@
       "mcp__render__list_logs",
       "Bash(git add:*)",
       "mcp__render__get_service",
-      "mcp__render__update_web_service"
+      "mcp__render__update_web_service",
+      "Read(//home/vihaan/Downloads/**)"
     ],
     "deny": [],
     "ask": []
