@@ -512,12 +512,8 @@ Based on your provided curriculum (642 mathematics benchmarks), the content will
 - MA.912.C.1.2: "Limits and Continuity Adventures"
 
 ### Story Format Standards
-- **Engagement Hook:** Every story starts with a compelling problem or mystery
-- **Mathematical Integration:** Math concepts woven naturally into the narrative
-- **Interactive Elements:** Decision points that require mathematical reasoning
-- **Progress Checkpoints:** Built-in assessment moments
-- **Real-world Connections:** Stories connect to students' everyday experiences
-- **Differentiated Difficulty:** Multiple complexity levels within each story
+- **Rulebook:** Should Follow rulebook to a exactly
+- **Interactive Elements:** Should be filled with Ineractive elements
 
 ### Florida B.E.S.T. Standards Integration Features
 - **Benchmark Tagging:** Each story mapped to specific FL B.E.S.T. benchmarks
