@@ -1,0 +1,232 @@
+2025-08-29 12:52:58,070 - epic_enhanced_generator_fixed - INFO - Epic Image Generator initialized successfully
+2025-08-29 12:52:58,071 - epic_enhanced_generator_fixed - INFO - Detected theme: mahabharata, characters: ['krishna']
+2025-08-29 12:52:58,071 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 620
+2025-08-29 12:52:58,071 - epic_enhanced_generator_fixed - INFO - Detected theme: ramayana, characters: ['rama']
+2025-08-29 12:52:58,071 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 634
+2025-08-29 12:52:58,071 - epic_enhanced_generator_fixed - INFO - Detected theme: fantasy, characters: []
+2025-08-29 12:52:58,072 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 511
+2025-08-29 12:52:58,073 - epic_enhanced_generator_fixed - INFO - Epic Image Generator initialized successfully
+2025-08-29 12:52:58,073 - epic_enhanced_generator_fixed - INFO - Epic Image Generator initialized successfully
+2025-08-29 12:52:58,073 - epic_enhanced_generator_fixed - WARNING - Prompt truncated from 2000 to 1000 characters
+2025-08-29 12:52:58,073 - epic_enhanced_generator_fixed - WARNING - Suspicious pattern detected in input: SELECT\s+.*FROM
+2025-08-29 12:52:58,074 - epic_enhanced_generator_fixed - INFO - Epic Image Generator initialized successfully
+2025-08-29 12:52:58,074 - epic_enhanced_generator_fixed - INFO - Detected theme: mahabharata, characters: ['krishna']
+2025-08-29 12:52:58,074 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 621
+2025-08-29 12:53:18,965 - epic_enhanced_generator_fixed - INFO - Epic Image Generator initialized successfully
+2025-08-29 12:53:18,966 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,966 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 460
+2025-08-29 12:53:18,967 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,967 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 460
+2025-08-29 12:53:18,967 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,967 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 460
+2025-08-29 12:53:18,967 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,967 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 460
+2025-08-29 12:53:18,967 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,967 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 460
+2025-08-29 12:53:18,967 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,967 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 460
+2025-08-29 12:53:18,968 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,968 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 460
+2025-08-29 12:53:18,968 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,968 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 460
+2025-08-29 12:53:18,968 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,968 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 460
+2025-08-29 12:53:18,968 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,968 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 460
+2025-08-29 12:53:18,968 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,968 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 461
+2025-08-29 12:53:18,968 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,968 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 461
+2025-08-29 12:53:18,968 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,969 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 461
+2025-08-29 12:53:18,969 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,969 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 461
+2025-08-29 12:53:18,969 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,969 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 461
+2025-08-29 12:53:18,969 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,969 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 461
+2025-08-29 12:53:18,969 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,970 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 461
+2025-08-29 12:53:18,970 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,970 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 461
+2025-08-29 12:53:18,970 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,970 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 461
+2025-08-29 12:53:18,970 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,970 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 461
+2025-08-29 12:53:18,971 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,971 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 461
+2025-08-29 12:53:18,971 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,971 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 461
+2025-08-29 12:53:18,971 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,971 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 461
+2025-08-29 12:53:18,971 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,971 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 461
+2025-08-29 12:53:18,971 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,971 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 461
+2025-08-29 12:53:18,972 - epic_enhanced_generator_fixed - INFO - Epic Image Generator initialized successfully
+2025-08-29 12:53:18,972 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,973 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 460
+2025-08-29 12:53:18,973 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,973 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 460
+2025-08-29 12:53:18,973 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,973 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 460
+2025-08-29 12:53:18,973 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,974 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 460
+2025-08-29 12:53:18,974 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,974 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 460
+2025-08-29 12:53:18,974 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,974 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 460
+2025-08-29 12:53:18,974 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,974 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 460
+2025-08-29 12:53:18,974 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,974 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 460
+2025-08-29 12:53:18,975 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,975 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 460
+2025-08-29 12:53:18,975 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,975 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 460
+2025-08-29 12:53:18,975 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,975 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 461
+2025-08-29 12:53:18,975 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,975 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 461
+2025-08-29 12:53:18,975 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,975 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 461
+2025-08-29 12:53:18,975 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,976 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 461
+2025-08-29 12:53:18,976 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,976 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 461
+2025-08-29 12:53:18,976 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,976 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 461
+2025-08-29 12:53:18,976 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,976 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 461
+2025-08-29 12:53:18,976 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,976 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 461
+2025-08-29 12:53:18,976 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,977 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 461
+2025-08-29 12:53:18,977 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,977 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 461
+2025-08-29 12:53:18,977 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,977 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 461
+2025-08-29 12:53:18,977 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,977 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 461
+2025-08-29 12:53:18,977 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,977 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 461
+2025-08-29 12:53:18,977 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,977 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 461
+2025-08-29 12:53:18,977 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,977 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 461
+2025-08-29 12:53:18,978 - epic_enhanced_generator_fixed - INFO - Epic Image Generator initialized successfully
+2025-08-29 12:53:18,978 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,979 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 460
+2025-08-29 12:53:18,979 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,979 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 460
+2025-08-29 12:53:18,979 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,979 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 460
+2025-08-29 12:53:18,979 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,979 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 460
+2025-08-29 12:53:18,979 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,979 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 460
+2025-08-29 12:53:18,979 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,980 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 460
+2025-08-29 12:53:18,980 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,980 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 460
+2025-08-29 12:53:18,980 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,980 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 460
+2025-08-29 12:53:18,980 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,980 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 460
+2025-08-29 12:53:18,980 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,980 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 460
+2025-08-29 12:53:18,980 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,980 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 461
+2025-08-29 12:53:18,981 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,981 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 461
+2025-08-29 12:53:18,981 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,981 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 461
+2025-08-29 12:53:18,981 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,981 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 461
+2025-08-29 12:53:18,981 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,981 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 461
+2025-08-29 12:53:18,981 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,981 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 461
+2025-08-29 12:53:18,981 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,981 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 461
+2025-08-29 12:53:18,981 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,982 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 461
+2025-08-29 12:53:18,982 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,982 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 461
+2025-08-29 12:53:18,982 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,982 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 461
+2025-08-29 12:53:18,982 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,982 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 461
+2025-08-29 12:53:18,982 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,982 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 461
+2025-08-29 12:53:18,983 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,983 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 461
+2025-08-29 12:53:18,983 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,983 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 461
+2025-08-29 12:53:18,983 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,983 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 461
+2025-08-29 12:53:18,984 - epic_enhanced_generator_fixed - INFO - Epic Image Generator initialized successfully
+2025-08-29 12:53:18,984 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,984 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 460
+2025-08-29 12:53:18,984 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,985 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 460
+2025-08-29 12:53:18,985 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,985 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 460
+2025-08-29 12:53:18,985 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,985 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 460
+2025-08-29 12:53:18,985 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,985 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 460
+2025-08-29 12:53:18,985 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,985 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 460
+2025-08-29 12:53:18,985 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,985 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 460
+2025-08-29 12:53:18,985 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,986 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 460
+2025-08-29 12:53:18,986 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,986 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 460
+2025-08-29 12:53:18,986 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,986 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 460
+2025-08-29 12:53:18,986 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,986 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 461
+2025-08-29 12:53:18,986 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,986 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 461
+2025-08-29 12:53:18,986 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,986 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 461
+2025-08-29 12:53:18,986 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,986 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 461
+2025-08-29 12:53:18,987 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,987 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 461
+2025-08-29 12:53:18,987 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,987 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 461
+2025-08-29 12:53:18,987 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,987 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 461
+2025-08-29 12:53:18,987 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,987 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 461
+2025-08-29 12:53:18,987 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,987 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 461
+2025-08-29 12:53:18,987 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,987 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 461
+2025-08-29 12:53:18,987 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,987 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 461
+2025-08-29 12:53:18,988 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,988 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 461
+2025-08-29 12:53:18,988 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,988 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 461
+2025-08-29 12:53:18,988 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,988 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 461
+2025-08-29 12:53:18,988 - epic_enhanced_generator_fixed - INFO - Detected theme: general_epic, characters: []
+2025-08-29 12:53:18,988 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 461
+2025-08-29 12:53:19,023 - epic_enhanced_generator_fixed - INFO - Epic Image Generator initialized successfully
+2025-08-29 12:53:19,023 - epic_enhanced_generator_fixed - INFO - Detected theme: mahabharata, characters: ['krishna']
+2025-08-29 12:53:19,023 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 620
+2025-08-29 12:53:19,023 - epic_enhanced_generator_fixed - INFO - Detected theme: ramayana, characters: ['rama']
+2025-08-29 12:53:19,023 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 634
+2025-08-29 12:53:19,023 - epic_enhanced_generator_fixed - INFO - Detected theme: fantasy, characters: []
+2025-08-29 12:53:19,023 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 511
+2025-08-29 12:53:19,023 - epic_enhanced_generator_fixed - INFO - Epic Image Generator initialized successfully
+2025-08-29 12:53:19,023 - epic_enhanced_generator_fixed - INFO - Epic Image Generator initialized successfully
+2025-08-29 12:53:19,023 - epic_enhanced_generator_fixed - WARNING - Prompt truncated from 2000 to 1000 characters
+2025-08-29 12:53:19,023 - epic_enhanced_generator_fixed - WARNING - Suspicious pattern detected in input: SELECT\s+.*FROM
+2025-08-29 12:53:19,023 - epic_enhanced_generator_fixed - INFO - Epic Image Generator initialized successfully
+2025-08-29 12:53:19,023 - epic_enhanced_generator_fixed - INFO - Detected theme: mahabharata, characters: ['krishna']
+2025-08-29 12:53:19,023 - epic_enhanced_generator_fixed - INFO - Enhanced prompt length: 621
