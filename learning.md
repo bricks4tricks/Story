@@ -508,23 +508,13 @@ Before generating Grade N story:
 
 ### Advanced Engagement Techniques
 
-**Series Elements and Continuity:**
-- Develop recurring characters across different mathematical topics
-- Include references to previous adventures and character growth
-- Build expanding mythology within each theme world
-- Create character relationships that develop over multiple stories
+**Story Continuity:**
+- Use recurring characters across mathematical topics (with 3+ grade separation for plot reuse)
+- Build character relationships that enhance learning engagement
 
-**Interactive Reader Connection:**
-- Use direct reader address: "What would you do in this situation?"
-- Have characters ask for reader's help solving story problems
-- Make readers feel like part of the story team and adventure
-- Include moments where characters acknowledge the reader's presence
-
-**Cliffhanger and Suspense Elements:**
-- End story sections on suspenseful moments when possible
-- Mathematical solutions unlock next story developments
-- "What happens next?" curiosity drives completion motivation
-- Build anticipation for resolution throughout the story
+**Reader Engagement:**
+- Include direct questions to readers during story development
+- Make mathematical solutions unlock story progress
 
 ### Emotional Authenticity Standards
 
