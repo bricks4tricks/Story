@@ -534,6 +534,37 @@ Before generating Grade N story:
 
 ## Mathematical Integration Standards
 
+### Math-Theme Compatibility Framework
+
+**Integration Strategy:** Mathematical concepts are categorized by how naturally they fit within each story theme:
+
+**Category 1 - Natural Fit (40%):** Direct integration - concepts naturally belong in theme contexts
+- **Mystery:** Probability (suspect guilt odds), statistics (evidence analysis), geometry (crime scene measurements)
+- **Indian Epic:** Geometry (temple architecture), ratios (army formations), time/distance (journey calculations)
+- **Fantasy:** Patterns (spell sequences), proportions (potion mixing), coordinates (treasure maps)
+
+**Category 2 - Context Adaptation (35%):** Situational integration - require theme-appropriate scenarios
+- **Mystery:** Algebra (decoding messages), fractions (evidence portions)
+- **Indian Epic:** Percentages (victory chances), decimals (precise measurements)
+- **Fantasy:** Functions (magic power levels), inequalities (spell limitations)
+
+**Category 3 - Creative Bridging (20%):** Metaphorical integration - abstract concepts through theme analogies
+- **Mystery:** Complex functions (crime pattern analysis)
+- **Indian Epic:** Abstract algebra (cosmic mathematical principles)
+- **Fantasy:** Calculus concepts (magical transformation rates)
+
+**Category 4 - Character Knowledge (5%):** Wisdom transfer - characters naturally possess advanced mathematical knowledge
+- **Mystery:** Detective with statistical expertise
+- **Indian Epic:** Sage with cosmic mathematical wisdom
+- **Fantasy:** Ancient wizard with mathematical powers
+
+### Plot Reuse Strategy
+
+**Efficiency Rule:** Story plots can be reused across different mathematical concepts with minimum 3-grade separation:
+- **Example:** Hanuman's journey story used for Grade 2 (basic counting), Grade 5 (multiplication), Grade 8 (algebra)
+- **Benefits:** Character familiarity, content efficiency, developmental appropriateness
+- **Requirements:** Same basic scenario, escalated mathematical complexity, age-appropriate language
+
 ### Grade-Level Math Alignment (Florida B.E.S.T. Standards)
 
 **CRITICAL REQUIREMENT:** Each of the 600 mathematical topics below must be implemented in ALL 3 themes (Mystery, Indian Epic, Fantasy)
