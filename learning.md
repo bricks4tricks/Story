@@ -1025,52 +1025,16 @@ Move to next story with updated classification
 - **Multiple Senses**: Say, see, write, and hear math facts
 - **Real-World Application**: Use math in cooking, shopping, sports
 
-**Advanced Mathematical Traps and Prevention**
+**Common Student Misconceptions to Address in Stories:**
+- Addition/multiplication misconceptions (zero effects, fraction multiplication)
+- Fraction comparison errors (denominator size confusion)
+- Equals sign misunderstanding (balance vs "find answer")
+- Order of operations and negative number rules
 
-*Grade 1-3 Common Traps:*
-- **Trap**: "Add zero makes it bigger" → **Reality**: Adding zero doesn't change the number → **Fix**: Use physical objects to demonstrate
-- **Trap**: "Multiplication always makes bigger" → **Reality**: Multiplying by fractions less than 1 makes numbers smaller → **Fix**: Use real-world examples (half of something)
-- **Trap**: Carrying/Borrowing confusion → **Reality**: Students forget what they're actually doing → **Fix**: Use place value blocks, explain the "why"
-
-*Grade 4-6 Advanced Traps:*
-- **Trap**: "When you multiply by 10, just add a zero" → **Reality**: This doesn't work with decimals → **Correct rule**: Move decimal point one place right
-- **Trap**: "Larger denominator means larger fraction" → **Reality**: 1/8 < 1/4 even though 8 > 4 → **Fix**: Use pizza/pie examples, visual models
-- **Trap**: "Equals sign means 'find the answer'" → **Reality**: Equals sign means "same as" or "balanced" → **Fix**: Use balance scales, write equations like 8 = 5 + 3
-- **Trap**: Rounding confusion (4.5 rounds to 4?) → **Reality**: 4.5 rounds up to 5 (standard rounding rules) → **Fix**: Use number lines consistently
-
-*Grade 7-8 Complex Traps:*
-- **Trap**: "Negative × Negative = Negative" → **Reality**: Negative × Negative = Positive → **Memory aid**: "The enemy of my enemy is my friend"
-- **Trap**: Order of operations confusion → **Reality**: Many students forget PEMDAS/BODMAS order → **Fix**: Create visual aids, practice consistently
-- **Trap**: "Square root of x² is x" → **Reality**: Square root of x² is |x| (absolute value) → **Fix**: Show examples with negative numbers
-- **Trap**: Linear vs. exponential growth confusion → **Reality**: Students often can't distinguish patterns → **Fix**: Use real-world examples, tables, graphs
-
-**Sophisticated Shortcuts for Advanced Students**
-
-*Advanced Multiplication Techniques:*
-- **Line Method (Visual Multiplication)**: Draw lines to represent digits, count intersections (Best for 2-digit × 2-digit)
-- **Multiplication by 15**: Multiply by 10, then add half original (24 × 15 = 240 + 12 = 252)
-- **Advanced 11 Multiplication for 3-digit**: 123 × 11 → Write first digit (1), add adjacent digits (1+2=3, 2+3=5), write last digit (3) → Result: 1353
-- **Sophisticated 5-ending squares**: 85² = (80×90) + 25 = 7200 + 25 = 7225
-
-*Advanced Division Techniques:*
-- **Division by 15**: Divide by 10, then multiply by 2/3 (90 ÷ 15 = 9 × 2/3 = 6)
-- **Enhanced Divisibility by 7**: Double last digit, subtract from remaining number. If result divisible by 7, original number is too
-- **Divisibility by 11**: Alternating sum of digits divisible by 11
-- **Divisibility by 12**: Must be divisible by both 3 and 4
-
-*Advanced Fraction Mastery:*
-- **Cross-multiplication for comparing**: To compare a/b and c/d, calculate a×d and b×c. Larger product indicates larger fraction
-- **Speed adding unlike fractions**: a/b + c/d = (a×d + b×c)/(b×d)
-- **Extended decimal conversions**: 1/6=0.1666..., 1/7≈0.143, 1/9=0.111..., 2/9=0.222...
-
-*Complex Percentage Calculations:*
-- **Advanced percentages**: 12.5%=1/8, 16.67%≈1/6, 37.5%=3/8
-- **Percentage increase/decrease**: New amount = Original × (1 ± %/100)
-- **Example**: $120 after 15% increase = $120 × 1.15 = $138
-
-*Square Root Mastery:*
-- **Perfect square recognition by last digits**: Squares ending in 1 (original ends 1 or 9), ending in 4 (original ends 2 or 8), etc.
-- **Estimation method**: Find perfect squares above/below, determine which is closer, adjust estimate
+**Advanced Techniques for Gifted Students:**
+- Include mathematical shortcuts and alternative methods in competitive questions
+- Characters with advanced mathematical knowledge can demonstrate sophisticated techniques
+- Use Category 4 (Character Knowledge) approach for complex computational methods
 
 **Error Analysis and Self-Check Techniques**
 
