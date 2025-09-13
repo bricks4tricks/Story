@@ -23,6 +23,7 @@ This document serves as the SINGLE SOURCE OF TRUTH for all Logic and Stories sys
 
 #### For Struggling Students:
 - **3 engaging story variations** per concept (eliminates boredom)
+- **Clear, exam-style questions** with no shortcuts or abbreviated language (complete sentences, full context)
 - **Highly detailed step-by-step explanations** (100% of ALL questions - every question, no matter how simple, gets multi-step detailed breakdown)
 - **2-grade-level-down scaffolding** support maintains dignity
 - **Self-sufficient learning** (no tutor/parent help needed)
@@ -62,7 +63,9 @@ This document serves as the SINGLE SOURCE OF TRUTH for all Logic and Stories sys
 ## Complete Learning Package Components
 **Each Mathematical Topic Includes:**
 1. **Story (Pure Narrative)** - Engaging adventure in chosen theme
-2. **30 Tiered Questions per Story** - 10 easy, 10 medium, 10 hard questions with step-by-step explanations
+2. **30 Tiered Questions per Story** - 10 easy, 10 medium, 10 hard questions
+   - **Question Format:** Clear, complete, exam-style questions with no shortcuts or abbreviated language
+   - **Answer Format:** 100% detailed step-by-step explanations for every question, no matter how simple
 3. **Story Summary** - Key learning consolidation and reinforcement
 4. **Competitive Challenge Questions** - Advanced problems for gifted students
 5. **Step-by-Step Solutions** - Detailed explanations for all 36,000 questions
