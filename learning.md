@@ -23,7 +23,7 @@ This document serves as the SINGLE SOURCE OF TRUTH for all Logic and Stories sys
 
 #### For Struggling Students:
 - **3 engaging story variations** per concept (eliminates boredom)
-- **Highly detailed step-by-step explanations** (90% of questions)
+- **Highly detailed step-by-step explanations** (100% of ALL questions - every question, no matter how simple, gets multi-step detailed breakdown)
 - **2-grade-level-down scaffolding** support maintains dignity
 - **Self-sufficient learning** (no tutor/parent help needed)
 
@@ -71,9 +71,24 @@ This document serves as the SINGLE SOURCE OF TRUTH for all Logic and Stories sys
 
 ## Story Themes (Grades 1-8)
 **Only 3 Approved Themes - ALL MATH TOPICS MUST BE TAUGHT USING ALL 3 THEMES:**
-1. **Mystery** - Detective scenarios, puzzles to solve, investigations  
+1. **Mystery** - Detective scenarios, puzzles to solve, investigations
 2. **Indian Epic - Ramayana and Mahabharata** - Well-known epic stories and characters
 3. **Fantasy** - Magical worlds, mythical creatures, adventures
+
+### Dialogue-Based Learning Approach
+**CRITICAL REQUIREMENT:** All mathematical explanations must be delivered through natural dialogue between characters, making students feel like participants in conversations rather than passive readers of textbook explanations.
+
+**Dialogue Benefits:**
+- Creates natural learning flow through question-and-answer exchanges
+- Builds emotional connection as students identify with questioning characters
+- Enables step-by-step mathematical discovery through conversation
+- Maintains engagement through character interaction and relationship dynamics
+
+**Implementation Standards:**
+- Every mathematical concept taught through character conversations
+- Characters ask questions students would naturally ask
+- Explanations emerge organically from dialogue exchanges
+- Maintain respectful tone appropriate to each theme's cultural context
 
 ### Epic Content Guidelines
 **Claude-Generated Epic Stories:**
@@ -214,7 +229,7 @@ This document serves as the SINGLE SOURCE OF TRUTH for all Logic and Stories sys
 **Solution Strategy 3: Character Knowledge Integration**
 - Identify theme characters who would naturally possess advanced mathematical understanding
 - Develop consistent character personalities that incorporate mathematical reasoning
-- Create authentic dialogue patterns that teach mathematics through character interactions
+- Create authentic dialogue patterns that teach mathematics through respectful character interactions - maintain cultural reverence for Indian epics, dignity for mystery characters, and heroic nature for fantasy characters
 
 #### Continuous Improvement and Validation
 
