@@ -1064,25 +1064,6 @@ Move to next story with updated classification
 4. **Not checking answers** (always verify if possible)
 5. **Leaving questions blank** (make educated guesses)
 
-**Technology Integration Strategies**
-
-*Calculator Best Practices:*
-- **Estimation first**: Always estimate before calculating
-- **Parentheses usage**: Use liberally to ensure correct order of operations
-- **Memory functions**: Store commonly used values
-- **Reasonableness check**: Does calculator answer make sense?
-
-*Khan Academy Study Methods:*
-- **Master learning approach**: Reach 100% mastery before moving on
-- **Strategic hint usage**: Try first, then use hints if needed
-- **Multiple video viewing**: Rewatch difficult concepts
-- **Consistent practice**: 15-20 minutes daily better than cramming
-
-*IXL Best Practices:*
-- **Aim for SmartScore 80+**: Indicates true understanding
-- **Quality over speed**: Don't rush through problems
-- **Learn from mistakes**: Read explanations carefully
-- **Supplement learning**: Use alongside classroom instruction
 
 *Advanced Mental Math Strategies:*
 - **Enhanced breaking apart**: 47 + 39 = (50-3) + (40-1) = 90 - 4 = 86
