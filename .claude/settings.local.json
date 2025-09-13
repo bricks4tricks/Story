@@ -12,7 +12,9 @@
       "Bash(git add:*)",
       "mcp__render__get_service",
       "mcp__render__update_web_service",
-      "Read(//home/vihaan/Downloads/**)"
+      "Read(//home/vihaan/Downloads/**)",
+      "Bash(find:*)",
+      "Read(//c/Users/magrawal/Downloads/New folder (3)/**)"
     ],
     "deny": [],
     "ask": []
