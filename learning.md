@@ -1235,9 +1235,45 @@ Middle School (6-8):
 
 ## Quality Standards
 
-### Claude-Generated Quality Standards
+### Mathematical Accuracy Standards
+
+**Sequential Step Verification Protocol:**
+Every mathematical solution must follow this verification process:
+
+**Step 1: Problem Definition Check**
+- ✅ Is the problem clearly stated with all necessary information?
+- ✅ Are units consistent and appropriate?
+- **Revision checkpoint:** Fix any ambiguities before proceeding
+
+**Step 2: Method Selection Verification**
+- ✅ Is the chosen mathematical approach correct for this problem type?
+- ✅ Are we using appropriate formulas/concepts for the grade level?
+- **Revision checkpoint:** Confirm method validity before calculation
+
+**Step 3: Calculation Verification**
+- ✅ Execute each mathematical step systematically
+- ✅ Check arithmetic accuracy at each substep
+- **Revision checkpoint:** Verify each calculation before moving forward
+
+**Step 4: Solution Validation**
+- ✅ Does the final answer make logical sense?
+- ✅ Are units correct and appropriately rounded?
+- ✅ Is the answer within reasonable range for the problem?
+- **Revision checkpoint:** Logic-test the result
+
+**Step 5: Explanation Accuracy**
+- ✅ Does each step-by-step explanation match the actual calculation?
+- ✅ Are mathematical terms used correctly?
+- **Final revision:** Ensure explanation accuracy matches solution accuracy
+
+**Benefits:**
+- Catches errors immediately before they compound
+- Forces systematic mathematical thinking
+- Self-correcting process prevents error propagation
+- Maintains educational credibility across all 36,000 questions
+
+### Content Quality Standards
 **Automated Quality Control:**
-- Mathematical accuracy checked by Claude
 - Age-appropriate language and complexity
 - Cultural respect in epic stories
 - Natural integration of math concepts
