@@ -2587,6 +2587,138 @@ Every Inner Voice explanation must follow this pattern:
 - **Checkpoint 5:** Question quality and distribution verification
 - **Checkpoint 6:** Student testing and feedback integration
 
+### Epic Authenticity Verification System
+
+#### Canonical Source Requirements
+**MANDATORY: All epic stories must reference verified canonical incidents from:**
+
+**Ramayana Sources (in order of priority):**
+1. **Valmiki Ramayana** - Original Sanskrit text (primary authority)
+2. **Tulsi Das Ramcharitmanas** - Widely accepted Hindi version
+3. **Kamban Ramayana** - Tamil version for regional authenticity
+4. **Goswami Tulsidas versions** - For devotional context
+
+**Mahabharata Sources (in order of priority):**
+1. **Vyasa Mahabharata** - Original Sanskrit text (primary authority)
+2. **Critical Edition** - BORI (Bhandarkar Oriental Research Institute) version
+3. **Regional versions** - Bharatha Muni, Kashmirian, Bengali traditions
+4. **Bhagavad Gita sections** - For philosophical contexts
+
+#### Incident Verification Protocol
+
+**Step 1: Source Citation Requirement**
+- Every epic story MUST cite specific canonical sources used
+- **Single Incident Stories** (Primary approach): "Based on [Epic Name], [Book/Kanda], Chapter [X], Verses [Y-Z]"
+- **Multi-Chapter Stories** (Connected sequence): "Based on [Epic Name], [Book/Kanda], Chapters [X-Y]"
+- **Character Arc Stories** (Multiple episodes): "Based on [Character]'s episodes from [Epic Name], [Book/Kanda], Chapters [A, B, C]"
+
+**Citation Examples:**
+- Single: "Based on Valmiki Ramayana, Ayodhya Kanda, Chapter 15, Verses 1-25"
+- Multi: "Based on Valmiki Ramayana, Sundara Kanda, Chapters 13-15 (Hanuman's Lanka mission)"
+- Character: "Based on Hanuman's service episodes from Sundara Kanda, Chapters 1, 13, 35"
+
+**Step 2: Character Authenticity Check**
+- Verify character names match canonical spellings
+- Confirm character relationships and roles
+- Validate character personality traits and motivations
+- Check character presence in specified incident
+
+**Step 3: Plot Incident Verification**
+- Confirm the described incident actually occurs in canonical source
+- Verify sequence of events matches canonical narrative
+- Check geographical locations mentioned
+- Validate timeline consistency with epic chronology
+
+**Step 4: Cultural Context Validation**
+- Ensure dharmic principles accurately represented
+- Verify social customs and practices authentic to epic period
+- Check that values and morals align with canonical teachings
+- Confirm respectful portrayal of religious elements
+
+#### Approved Epic Incident Categories
+
+**Ramayana - Grade-Appropriate Incidents:**
+
+**Grades 1-3 (Single Incident Focus):**
+- Hanuman's devotion and service examples (single chapter episodes)
+- Rama's kindness to animals and sages (individual acts of compassion)
+- Simple forest life episodes (daily life incidents)
+- Helpful friend stories (Sugriva, Jatayu individual heroic acts)
+
+**Grades 4-5 (Multi-Chapter Sequences):**
+- Bridge construction to Lanka (planning through completion, multiple chapters)
+- Hanuman's leap across ocean (preparation, journey, return sequence)
+- Finding Sita through logical searching (systematic search across episodes)
+- Organizing rescue efforts (strategy development across multiple planning sessions)
+
+**Grades 6-8 (Complex Character Arcs):**
+- Strategic planning for Lanka battle (war council sequences, multiple chapters)
+- Diplomatic missions and negotiations (embassy episodes, multi-chapter diplomacy)
+- Complex moral decisions and consequences (character development across incidents)
+- Leadership and governance examples (Rama's rule, multiple administrative episodes)
+
+**Mahabharata - Grade-Appropriate Incidents:**
+
+**Grades 1-3 (Single Incident Focus):**
+- Krishna's childhood stories (individual episodes: butter stealing, lifting Govardhan)
+- Pandava brotherhood examples (single acts of unity and support)
+- Simple court life episodes (individual court interactions)
+- Kindness to animals and nature (single compassionate acts)
+
+**Grades 4-5 (Multi-Chapter Sequences):**
+- Draupadi's swayamvara (preparation, competition, resolution sequence)
+- Building Indraprastha (planning, construction, completion phases)
+- Yudhishthira's truthfulness examples (interconnected honesty episodes)
+- Arjuna's focus and dedication stories (training progression across multiple episodes)
+
+**Grades 6-8 (Complex Character Arcs):**
+- Kurukshetra war strategy and tactics (multiple planning councils, strategic development)
+- Bhagavad Gita philosophical discussions (adapted dialogue sequences across multiple conversations)
+- Complex dharmic dilemmas and resolutions (character moral development across incidents)
+- Governance and justice examples (administrative decisions across multiple episodes)
+
+#### Forbidden/Inappropriate Epic Elements
+**NEVER use these elements in children's stories:**
+- Explicit violence or warfare details
+- Adult relationship complications
+- Death scenes or graphic descriptions
+- Complex philosophical debates beyond age comprehension
+- Controversial interpretations or disputed incidents
+- Modern political interpretations of epic events
+
+#### Expert Validation Requirement
+**Human Epic Scholar Review (Mandatory):**
+- Sanskrit literature expert verification
+- Cultural authenticity consultant approval
+- Religious sensitivity reviewer confirmation
+- Educational appropriateness assessment
+
+**Expert Qualifications Required:**
+- Advanced degree in Sanskrit Literature OR Indology
+- Published research on Ramayana/Mahabharata
+- Minimum 5 years teaching/research experience
+- Cultural sensitivity training for children's content
+
+#### Documentation Standards
+**Each epic story must include:**
+1. **Source Citation**: Exact canonical reference
+2. **Cultural Context**: Historical/mythological background
+3. **Character Profiles**: Authentic personality traits from source
+4. **Incident Summary**: Original canonical version vs. adapted version
+5. **Educational Purpose**: How mathematical concepts connect authentically
+
+#### Quality Assurance Process
+1. **AI Generation**: Create story based on verified canonical incident(s) - single chapter, multi-chapter sequence, or character arc
+2. **Source Verification**: Cross-reference all details with canonical texts, ensuring authentic connection across all referenced chapters
+3. **Narrative Coherence Check**: Verify multi-chapter stories maintain logical flow and authentic character consistency
+4. **Expert Review**: Submit to qualified Sanskrit/Epic literature expert for canonical accuracy across all referenced sources
+5. **Cultural Sensitivity Check**: Ensure respectful representation throughout entire narrative arc
+6. **Age Appropriateness**: Confirm suitable complexity level for target grade (simple incidents for lower grades, complex arcs for higher grades)
+7. **Mathematical Integration**: Verify natural connection to math concepts regardless of story sourcing approach
+8. **Final Approval**: Expert sign-off before production release
+
+This system ensures every epic story maintains authentic cultural integrity while serving educational purposes effectively.
+
 ---
 
 *This master specification document ensures all Logic and Stories components are built on solid educational foundations with consistent standards across all implementation files.*
