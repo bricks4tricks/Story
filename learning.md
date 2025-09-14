@@ -62,8 +62,8 @@ This document serves as the SINGLE SOURCE OF TRUTH for all Logic and Stories sys
 
 ## Complete Learning Package Components
 **Each Mathematical Topic Includes:**
-1. **Story (Pure Narrative)** - Engaging adventure in chosen theme
-2. **30 Tiered Questions per Story** - 10 easy, 10 medium, 10 hard questions
+1. **Story with Embedded Math Moments** - Engaging adventure containing 3-5 mathematical problems woven into the narrative
+2. **25-27 Separate Practice Questions** - Exam-style questions outside the story (mix of easy, medium, hard)
    - **Question Format:** Clear, complete, exam-style questions with no shortcuts or abbreviated language
    - **Answer Format:** 100% detailed step-by-step explanations for every question, no matter how simple
 3. **Story Summary** - Key learning consolidation and reinforcement
@@ -1451,12 +1451,23 @@ Generate story followed by 30 embedded questions:
 #### Question Generation Framework (30 Questions Per Story)
 
 **Question Distribution System:**
-1. **5 Example Questions** (Guided Learning)
-   - Show step-by-step solution process
-   - Introduce mathematical concept clearly
-   - Reference early story events
-   - Use encouraging, teaching tone
-   - Include visual aids when helpful
+1. **3-5 Example Questions** (Embedded Within Story Narrative - Math Fear Reduction for Struggling Students)
+   - **WOVEN INTO the story itself** - characters solve these problems during the adventure
+   - **PRIMARY PURPOSE:** Remove math fear/anxiety by showing characters naturally solving problems
+   - Mathematical moments occur naturally within the plot progression
+   - Characters demonstrate thinking process through dialogue
+   - Students experience math discovery alongside story characters
+   - Problems emerge organically from story situations and conflicts
+
+   **Math Fear Reduction Strategies:**
+   - **Emotional Safety:** Characters express confusion, make mistakes, try again without judgment
+   - **Normalize Struggle:** "This feels confusing, but let me try..." / "Everyone makes mistakes when learning"
+   - **Mistake Appreciation:** "Good mistake!" / "That teaches us something important!" / "Now I understand what NOT to do"
+   - **Growth Mindset Language:** "I learned something new" instead of "I was wrong"
+   - **Collaborative Problem-Solving:** Characters help each other without shame or pressure
+   - **Adventure-Driven Math:** Math becomes tool for solving story problems, not academic exercise
+   - **Multiple Attempts Shown:** Characters try approach A (wrong) → learn why it doesn't work → discover approach B (correct)
+   - **Confidence Building:** Mathematical success leads to story success, making math feel heroic
 
 2. **7 Struggling Level Questions** (Scaffolded Support)
    - Break complex problems into smaller steps
