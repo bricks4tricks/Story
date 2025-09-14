@@ -63,7 +63,7 @@ This document serves as the SINGLE SOURCE OF TRUTH for all Logic and Stories sys
 ## Complete Learning Package Components
 **Each Mathematical Topic Includes:**
 1. **Educational Story with Engaging Elements** - Learning-focused narrative containing 5 mathematical problems designed to reduce math anxiety and build understanding
-2. **25 Separate Practice Questions** - Exam-style questions outside the story (7 easy + 10 medium + 8 hard)
+2. **25 Separate Questions** - Exam-style questions outside the story (7 easy + 10 medium + 8 hard)
    - **Question Format:** Clear, complete, exam-style questions with no shortcuts or abbreviated language
    - **Answer Format:** 100% detailed step-by-step explanations for every question, no matter how simple
 3. **Story Summary** - Key learning consolidation and reinforcement
@@ -389,24 +389,24 @@ Before generating Grade N story:
 #### Elementary (1-2): Ages 6-8
 - **Story Length:** 200-300 words (REDUCED for attention span)
 - **Reading Time:** 2-3 minutes  
-- **Questions:** 30 tiered questions per story (10 easy, 10 medium, 10 hard)
-- **Question Distribution:** 10 easy, 10 medium, 10 hard
+- **Questions:** 30 tiered questions per story (5 embedded + 7 easy + 10 medium + 8 hard)
+- **Question Distribution:** 5 embedded examples + 7 easy + 10 medium + 8 hard
 - **Question Types:** Simple multiple choice, visual aids
 - **Session Length:** Story + adaptive question selection based on student level
 
 #### Primary (3-5): Ages 8-11
 - **Story Length:** 300-450 words (REDUCED for attention span)
 - **Reading Time:** 3-4 minutes
-- **Questions:** 30 tiered questions per story (10 easy, 10 medium, 10 hard)
-- **Question Distribution:** 10 easy, 10 medium, 10 hard
+- **Questions:** 30 tiered questions per story (5 embedded + 7 easy + 10 medium + 8 hard)
+- **Question Distribution:** 5 embedded examples + 7 easy + 10 medium + 8 hard
 - **Question Types:** Multiple choice, short answer, explanations
 - **Session Length:** Story + adaptive question selection based on student level
 
 #### Middle School (6-8): Ages 11-14
 - **Story Length:** 500-700 words (REDUCED for attention span)
 - **Reading Time:** 5-6 minutes
-- **Questions:** 30 tiered questions per story (10 easy, 10 medium, 10 hard)
-- **Question Distribution:** 10 easy, 10 medium, 10 hard
+- **Questions:** 30 tiered questions per story (5 embedded + 7 easy + 10 medium + 8 hard)
+- **Question Distribution:** 5 embedded examples + 7 easy + 10 medium + 8 hard
 - **Question Types:** Mixed format, multi-part, analysis
 - **Session Length:** Story + adaptive question selection based on student level
 
@@ -1289,7 +1289,7 @@ Every mathematical solution must follow this verification process:
 
 **Mathematical Integration Validation:**
 - [ ] All 30 questions directly reference story context
-- [ ] Question distribution: exactly 10 easy, 10 medium, 10 hard
+- [ ] Question distribution: exactly 5 embedded + 7 easy + 10 medium + 8 hard
 - [ ] Mathematical concepts arise naturally from character needs
 - [ ] All calculations verified for accuracy
 - [ ] Step-by-step explanations provided for all questions
@@ -1593,7 +1593,7 @@ Generate story followed by 30 embedded questions:
 
 **Tier 1: AI Generation**
 1. **Story Creation:** Claude AI generates stories following strict specifications
-2. **Question Creation:** AI generates 30 tiered questions (5 examples + 25 practice) per story
+2. **Question Creation:** AI generates 30 tiered questions (5 embedded + 7 easy + 10 medium + 8 hard) per story
 3. **Mathematical Accuracy:** AI ensures all calculations and solutions are correct
 4. **Format Compliance:** AI follows story structure, word count, and formatting requirements
 
@@ -1662,7 +1662,7 @@ Systematic framework for producing 1,200 stories (400 mathematical topics × 3 t
 
 **Claude-Only Generation Process:**
 1. Generate mathematical story for selected concept and theme
-2. Create 30 tiered questions (10 easy, 10 medium, 10 hard)
+2. Create 30 tiered questions (5 embedded + 7 easy + 10 medium + 8 hard)
 3. Run complete validation checklist
 4. Output complete story package with all components
 
